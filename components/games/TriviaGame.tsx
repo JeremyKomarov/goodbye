@@ -90,7 +90,7 @@ export function TriviaGame({
 
   if (!round) {
     return (
-      <div className="rounded-3xl bg-panel/90 p-6 text-center">
+      <div className="my-auto rounded-3xl bg-panel/90 p-6 text-center">
         <p className="mb-5 text-lg text-ink/85">
           {ROUND} שאלות על וואטסאפ, חיי משרד ואנשים שפוטרו והצליחו. {SECONDS}{" "}
           שניות לכל שאלה, ותשובה מהירה שווה יותר.
@@ -113,7 +113,7 @@ export function TriviaGame({
   const last = index === ROUND - 1;
 
   return (
-    <div className="rounded-3xl bg-panel/90 p-4">
+    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain rounded-3xl bg-panel/90 p-4">
       <div className="mb-3 flex items-center justify-between text-sm text-mute">
         <span>
           שאלה {index + 1} מתוך {ROUND}

@@ -23,6 +23,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: "#0b141a",
   viewportFit: "cover",
+  // Android: shrink the layout when the keyboard opens so the composer stays visible.
+  interactiveWidget: "resizes-content",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

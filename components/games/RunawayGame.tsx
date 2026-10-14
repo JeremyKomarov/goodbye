@@ -50,8 +50,9 @@ export function RunawayGame({ onFinish }: { onFinish: (ms: number) => void }) {
   function dodge(px: number, py: number) {
     const arena = arenaRef.current;
     if (!arena) return;
-    const halfW = arena.clientWidth / 2 - 90;
-    const halfH = arena.clientHeight / 2 - 32;
+    // Keep the whole button inside the arena, with room for the small spring overshoot.
+    const halfW = Math.max(0, arena.clientWidth / 2 - 100);
+    const halfH = Math.max(0, arena.clientHeight / 2 - 48);
     let best = pos;
     let bestDist = -1;
     for (let i = 0; i < 12; i++) {
@@ -100,7 +101,7 @@ export function RunawayGame({ onFinish }: { onFinish: (ms: number) => void }) {
   const elapsed = playing && now ? Math.max(0, now - startedAt) : 0;
 
   return (
-    <div>
+    <div className="flex min-h-0 flex-1 flex-col">
       <div className="mb-3 flex items-center justify-between px-1 text-sm">
         <span className="text-mute">
           {playing ? `התחמקויות: ${dodges}` : "הכפתור מתעייף עם כל בריחה"}
@@ -112,7 +113,7 @@ export function RunawayGame({ onFinish }: { onFinish: (ms: number) => void }) {
       <div
         ref={arenaRef}
         onPointerMove={onArenaMove}
-        className="relative h-[26rem] touch-none select-none overflow-hidden rounded-3xl bg-panel/90"
+        className="relative min-h-[16rem] flex-1 touch-none select-none overflow-hidden rounded-3xl bg-panel/90"
         style={{
           backgroundImage:
             "radial-gradient(circle at 50% 50%, rgb(241 92 109 / 0.08), transparent 70%)",
@@ -140,10 +141,11 @@ export function RunawayGame({ onFinish }: { onFinish: (ms: number) => void }) {
             onPointerDown={onButtonDown}
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-2xl bg-exit px-5 py-3.5 font-semibold text-night shadow-[0_8px_30px_-6px] shadow-exit/70"
             animate={{ x: pos.x, y: pos.y, scale }}
+            // Nearly bounce-free so big jumps don't overshoot the arena; quicker as it tires.
             transition={{
               type: "spring",
-              damping: 18,
-              stiffness: 300 + dodges * 40,
+              bounce: 0.1,
+              duration: Math.max(0.14, 0.35 - dodges * 0.012),
             }}
           >
             {TAUNTS[dodges % TAUNTS.length]}

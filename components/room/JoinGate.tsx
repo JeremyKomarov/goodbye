@@ -37,14 +37,14 @@ export function JoinGate({ room, voterCount, onJoin }: Props) {
     <div className="fixed inset-0 z-50 overflow-y-auto bg-night/95 backdrop-blur-sm">
       <motion.form
         onSubmit={submit}
-        className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-6 px-6 py-10"
+        className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-6 px-6 py-10 short:gap-4 short:py-6"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", damping: 22, stiffness: 220 }}
       >
         <div>
           <p className="text-mute">{room.group_name}</p>
-          <h1 className="mt-1 font-display text-[4.25rem] font-bold leading-[0.85]">
+          <h1 className="mt-1 font-display text-[min(4.25rem,17vw)] font-bold short:text-[3.25rem] leading-[0.85]">
             {room.status === "voting"
               ? `מתי ${room.host_name} ${verb} מהקבוצה?`
               : `${room.host_name} ${verb} מהקבוצה`}

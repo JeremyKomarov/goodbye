@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   useCallback,
   useEffect,
@@ -19,7 +20,7 @@ import {
   undoExit,
 } from "@/app/r/[slug]/admin/actions";
 import { SystemPill } from "@/components/ui/SystemPill";
-import { loadAdminToken, saveAdminToken } from "@/lib/admin-storage";
+import { forgetAdminToken, loadAdminToken, saveAdminToken } from "@/lib/admin-storage";
 import { formatHour, formatSlot } from "@/lib/hebrew";
 import { getBrowserClient } from "@/lib/supabase/browser";
 import type { Room, WallMessage } from "@/lib/types";
@@ -93,6 +94,7 @@ function Panel({
   room: Room;
   onRoom: (room: Room) => void;
 }) {
+  const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [closeLocal, setCloseLocal] = useState(() =>
@@ -147,8 +149,10 @@ function Panel({
         : `יצאת בשעה ${room.exited_at ? formatHour(Date.parse(room.exited_at), tz) : ""}`;
 
   return (
-    <main className="mx-auto flex min-h-dvh max-w-md flex-col gap-5 px-4 pb-16 pt-8">
-      <div>
+    <main className="flex h-dvh flex-col overflow-hidden">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+      <div className="mx-auto grid max-w-5xl gap-5 px-4 pb-10 pt-[max(2rem,env(safe-area-inset-top))] lg:grid-cols-2 lg:items-start lg:gap-8 lg:px-8 lg:pt-12">
+      <div className="lg:col-span-2">
         <Link href={`/r/${slug}`} className="text-sm text-tick">
           חזרה לחדר
         </Link>
@@ -156,7 +160,10 @@ function Panel({
           ניהול החדר
         </h1>
         <p className="mt-2 text-ink/80">{room.group_name}</p>
+        <p className="mt-1 text-sm text-mute">רק מי שיש לו את קישור הניהול רואה את הדף הזה. לא לשלוח אותו לקבוצה.</p>
       </div>
+
+      <div className="flex flex-col gap-5">
 
       <div className="rounded-3xl bg-panel p-5">
         <p className="text-sm text-mute">מצב עכשיו</p>
@@ -255,6 +262,21 @@ function Panel({
         </div>
       )}
 
+      <div>
+        <button
+          type="button"
+          onClick={() => {
+            forgetAdminToken(slug);
+            router.push(`/r/${slug}`);
+          }}
+          className="text-sm text-mute underline-offset-2 hover:text-ink hover:underline"
+        >
+          לשכוח את הניהול במכשיר הזה
+        </button>
+        <p className="mt-1 text-xs text-mute">למחשב משותף. אפשר לחזור לניהול בכל רגע עם קישור הניהול.</p>
+      </div>
+      </div>
+
       <section className="rounded-3xl bg-panel p-5">
         <div className="mb-3 flex items-baseline justify-between">
           <h2 className="font-semibold">הודעות בקיר</h2>
@@ -301,6 +323,8 @@ function Panel({
           </ul>
         )}
       </section>
+      </div>
+      </div>
     </main>
   );
 }

@@ -54,7 +54,7 @@ export function Leaderboard({
   const maxCount = topSlots[0]?.count ?? 0;
 
   return (
-    <div className="flex flex-col gap-4 pt-3">
+    <div className="mx-auto grid max-w-5xl gap-4 pt-3 lg:grid-cols-2 lg:items-start lg:pt-0">
       <section className="rounded-3xl bg-panel/90 p-4 backdrop-blur-sm">
         <h2 className="mb-3 text-lg font-semibold">השעות המבוקשות</h2>
         {topSlots.length === 0 ? (

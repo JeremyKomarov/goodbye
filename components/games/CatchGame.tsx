@@ -157,7 +157,7 @@ export function CatchGame({ onFinish }: { onFinish: (score: number) => void }) {
   }
 
   return (
-    <div>
+    <div className="flex min-h-0 flex-1 flex-col">
       <div className="mb-3 flex items-center justify-between px-1">
         <span className="font-display text-3xl tabular-nums leading-none">
           {frame.score} נק׳
@@ -170,7 +170,7 @@ export function CatchGame({ onFinish }: { onFinish: (score: number) => void }) {
       </div>
       <div
         ref={arenaRef}
-        className="relative h-[28rem] touch-none select-none overflow-hidden rounded-3xl bg-panel/90"
+        className="relative min-h-[18rem] flex-1 touch-none select-none overflow-hidden rounded-3xl bg-panel/90"
       >
         {!playing && (
           <div className="absolute inset-0 z-10 grid place-items-center p-6 text-center">

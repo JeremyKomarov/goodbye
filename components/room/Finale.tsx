@@ -110,7 +110,7 @@ export function Finale({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center gap-7 px-6 py-12 text-center">
+      <div className="mx-auto flex min-h-dvh max-w-lg flex-col items-center justify-center gap-7 px-6 py-12 text-center short:gap-4 short:py-6">
         <motion.div
           className="w-full"
           initial={{ y: -80, opacity: 0, scale: 0.6 }}
@@ -123,7 +123,7 @@ export function Finale({
         </motion.div>
 
         <motion.h2
-          className="font-display text-[5.5rem] font-bold leading-[0.85]"
+          className="font-display text-[min(5.5rem,20vw)] font-bold short:text-[3.5rem] lg:text-[6.5rem] leading-[0.85]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.1, type: "spring", damping: 16 }}
@@ -147,7 +147,7 @@ export function Finale({
 
         {champions.length > 0 && (
           <motion.div
-            className="w-full"
+            className="w-full short:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2 }}

@@ -2,22 +2,19 @@
 
 import { motion } from "motion/react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { initial } from "@/lib/colors";
-import { pad, splitCountdown } from "@/lib/hebrew";
+import { onlineLabel, pad, splitCountdown } from "@/lib/hebrew";
 import type { OnlineUser, Typer } from "@/lib/hooks/useRoom";
 import type { Room } from "@/lib/types";
 
 export type Tab = "vote" | "games" | "wall" | "board";
 
-type HeaderProps = {
-  room: Room;
-  now: number;
-  online: OnlineUser[];
-  typers: Typer[];
-  showClock: boolean;
-  adminHref: string | null;
-  onParty: () => void;
-};
+function typingLine(typers: Typer[]) {
+  if (typers.length === 1) return `${typers[0].name} מקליד/ה…`;
+  if (typers.length > 1) return `${typers.length} אנשים מקלידים…`;
+  return null;
+}
 
 function compactClock(room: Room, now: number) {
   if (!now || room.status === "exited") return null;
@@ -31,6 +28,16 @@ function compactClock(room: Room, now: number) {
   return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
 
+type HeaderProps = {
+  room: Room;
+  now: number;
+  online: OnlineUser[];
+  typers: Typer[];
+  showClock: boolean;
+  adminHref: string | null;
+  onParty: () => void;
+};
+
 /** The chat header: group avatar, name, live subtitle. */
 export function RoomHeader({
   room,
@@ -41,11 +48,12 @@ export function RoomHeader({
   adminHref,
   onParty,
 }: HeaderProps) {
+  const typing = typingLine(typers);
   const clock = showClock ? compactClock(room, now) : null;
 
   return (
-    <header className="sticky top-0 z-30 bg-panel/95 pt-[env(safe-area-inset-top)] backdrop-blur">
-      <div className="flex items-center gap-3 px-3 py-2.5">
+    <header className="shrink-0 bg-panel pt-[env(safe-area-inset-top)]">
+      <div className="flex h-16 items-center gap-3 px-3">
         <div className="grid size-10 shrink-0 place-items-center rounded-full bg-kraft font-display text-2xl font-bold text-night">
           {initial(room.group_name)}
         </div>
@@ -54,16 +62,13 @@ export function RoomHeader({
             {room.group_name}
           </h1>
           <p
-            className={`truncate text-xs ${typers.length ? "text-signal" : "text-mute"}`}
+            className={`truncate text-xs ${typing ? "text-signal" : "text-mute"}`}
             aria-live="polite"
           >
-            {typers.length === 1
-              ? `${typers[0].name} מקליד/ה…`
-              : typers.length > 1
-                ? `${typers.length} אנשים מקלידים…`
-                : online.length > 0
-                  ? `${online.length} מחוברים עכשיו`
-                  : "מתחברים…"}
+            {typing ??
+              (online.length > 0
+                ? onlineLabel(online.length)
+                : "מתחברים…")}
           </p>
         </div>
         {clock && (
@@ -79,15 +84,17 @@ export function RoomHeader({
           whileTap={{ scale: 1.3, rotate: -12 }}
           onClick={onParty}
           aria-label="גשם של 🎉 לכל מי שבחדר"
-          className="grid size-10 place-items-center rounded-full text-xl hover:bg-raised"
+          title="גשם של 🎉 לכל מי שבחדר"
+          className="grid size-10 shrink-0 place-items-center rounded-full text-xl hover:bg-raised"
         >
           🎉
         </motion.button>
         {adminHref && (
           <Link
             href={adminHref}
-            aria-label="ניהול החדר"
-            className="grid size-10 place-items-center rounded-full text-mute hover:bg-raised"
+            aria-label="ניהול החדר (רק את/ה רואה את זה)"
+            title="ניהול החדר. רק את/ה רואה את זה, כי פתחת את החדר בדפדפן הזה"
+            className="grid size-10 shrink-0 place-items-center rounded-full text-mute hover:bg-raised"
           >
             <svg
               viewBox="0 0 24 24"
@@ -109,7 +116,7 @@ export function RoomHeader({
   );
 }
 
-const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
+export const TABS: { id: Tab; label: string; icon: ReactNode }[] = [
   {
     id: "vote",
     label: "הצבעה",
@@ -139,6 +146,38 @@ const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
   },
 ];
 
+function TabIcon({
+  tab,
+  className = "size-[22px]",
+}: {
+  tab: Tab;
+  className?: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={`relative ${className}`}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      {TABS.find((t) => t.id === tab)!.icon}
+    </svg>
+  );
+}
+
+function Badge({ count }: { count: number }) {
+  return (
+    <span className="grid h-[18px] min-w-[18px] place-items-center rounded-full bg-signal px-1 text-[11px] font-bold text-night">
+      {count > 99 ? "99+" : count}
+    </span>
+  );
+}
+
+/** Bottom navigation on phones and tablets. */
 export function TabBar({
   tab,
   onChange,
@@ -151,9 +190,9 @@ export function TabBar({
   return (
     <nav
       aria-label="ניווט בחדר"
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-line/60 bg-panel/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
+      className="shrink-0 border-t border-line/60 bg-panel pb-[env(safe-area-inset-bottom)] lg:hidden"
     >
-      <div className="mx-auto grid max-w-md grid-cols-4">
+      <div className="grid grid-cols-4">
         {TABS.map((t) => {
           const active = t.id === tab;
           return (
@@ -162,7 +201,7 @@ export function TabBar({
               type="button"
               onClick={() => onChange(t.id)}
               aria-current={active ? "page" : undefined}
-              className={`flex h-[4.25rem] flex-col items-center justify-center gap-1 text-xs ${active ? "font-semibold text-ink" : "text-mute"}`}
+              className={`flex h-16 flex-col items-center justify-center gap-1 text-xs ${active ? "font-semibold text-ink" : "text-mute"}`}
             >
               <span className="relative grid h-8 w-16 place-items-center">
                 {active && (
@@ -172,21 +211,10 @@ export function TabBar({
                     transition={{ type: "spring", damping: 26, stiffness: 380 }}
                   />
                 )}
-                <svg
-                  viewBox="0 0 24 24"
-                  className="relative size-[22px]"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.9"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  {t.icon}
-                </svg>
+                <TabIcon tab={t.id} />
                 {t.id === "wall" && unread > 0 && (
-                  <span className="absolute -top-1 left-2 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-signal px-1 text-[11px] font-bold text-night">
-                    {unread > 99 ? "99+" : unread}
+                  <span className="absolute -top-1 left-2">
+                    <Badge count={unread} />
                   </span>
                 )}
               </span>
@@ -196,5 +224,97 @@ export function TabBar({
         })}
       </div>
     </nav>
+  );
+}
+
+export type SectionSummary = {
+  subtitle: string;
+  meta?: string;
+  highlight?: boolean;
+};
+
+/** Desktop: the sections as a WhatsApp Web chat list, each with a live preview line. */
+export function SideNav({
+  tab,
+  onChange,
+  unread,
+  summaries,
+}: {
+  tab: Tab;
+  onChange: (t: Tab) => void;
+  unread: number;
+  summaries: Record<Tab, SectionSummary>;
+}) {
+  return (
+    <nav aria-label="ניווט בחדר" className="flex flex-col">
+      {TABS.map((t) => {
+        const active = t.id === tab;
+        const summary = summaries[t.id];
+        return (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => onChange(t.id)}
+            aria-current={active ? "page" : undefined}
+            className={`flex w-full items-center gap-3 px-3 text-start transition-colors ${active ? "bg-raised" : "hover:bg-raised/50"}`}
+          >
+            <span
+              className={`grid size-12 shrink-0 place-items-center rounded-full ${active ? "bg-bubble text-ink" : "bg-raised text-mute"}`}
+            >
+              <TabIcon tab={t.id} />
+            </span>
+            <span className="min-w-0 flex-1 border-b border-line/50 py-3.5">
+              <span className="flex items-baseline justify-between gap-2">
+                <span className="font-medium">{t.label}</span>
+                {summary.meta && (
+                  <span
+                    className={`shrink-0 text-xs ${t.id === "wall" && unread ? "text-signal" : "text-mute"}`}
+                  >
+                    {summary.meta}
+                  </span>
+                )}
+              </span>
+              <span className="mt-0.5 flex items-center justify-between gap-2">
+                <span
+                  className={`truncate text-sm ${summary.highlight ? "text-signal" : "text-mute"}`}
+                >
+                  {summary.subtitle}
+                </span>
+                {t.id === "wall" && unread > 0 && <Badge count={unread} />}
+              </span>
+            </span>
+          </button>
+        );
+      })}
+    </nav>
+  );
+}
+
+/** Desktop: header of the main pane, like the open chat's header in WhatsApp Web. */
+export function PaneHeader({
+  tab,
+  subtitle,
+  highlight,
+}: {
+  tab: Tab;
+  subtitle: string;
+  highlight?: boolean;
+}) {
+  return (
+    <div className="hidden h-16 shrink-0 items-center gap-3 border-b border-line/60 bg-panel px-4 lg:flex">
+      <span className="grid size-10 place-items-center rounded-full bg-raised text-mute">
+        <TabIcon tab={tab} className="size-5" />
+      </span>
+      <div className="min-w-0">
+        <h2 className="font-semibold leading-tight">
+          {TABS.find((t) => t.id === tab)!.label}
+        </h2>
+        <p
+          className={`truncate text-xs ${highlight ? "text-signal" : "text-mute"}`}
+        >
+          {subtitle}
+        </p>
+      </div>
+    </div>
   );
 }

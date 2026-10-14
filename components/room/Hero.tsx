@@ -81,7 +81,7 @@ export function Hero({ room, now, leader, voterCount, onReplayFinale }: Props) {
       : 0;
 
     return (
-      <section className="px-4 pb-6 pt-6 text-center">
+      <section className="px-4 pb-6 pt-6 text-center short:pb-4 short:pt-4">
         <p className="text-lg text-ink/85">
           {overtime
             ? "הזמן עבר לפני"
@@ -91,7 +91,7 @@ export function Hero({ room, now, leader, voterCount, onReplayFinale }: Props) {
           <DaysLine days={days} />
           <FlipDigits
             value={now ? text : "--:--:--"}
-            className={`text-[6.5rem] ${overtime ? "text-pill" : "text-exit"}`}
+            className={`text-[min(6.5rem,24vw)] short:text-[min(5rem,20vw)] lg:text-[5.5rem] ${overtime ? "text-pill" : "text-exit"}`}
           />
           <span className="sr-only">{formatDuration(Math.abs(remaining))}</span>
         </div>
@@ -102,7 +102,7 @@ export function Hero({ room, now, leader, voterCount, onReplayFinale }: Props) {
         </p>
 
         {/* WhatsApp's red "Exit group" row from the group info screen, filling up as the hour nears. */}
-        <div className="relative mx-auto mt-6 max-w-sm overflow-hidden rounded-2xl bg-panel text-start">
+        <div className="relative mx-auto mt-6 max-w-sm overflow-hidden rounded-2xl bg-raised/60 text-start short:mt-4">
           <motion.div
             className="absolute inset-y-0 start-0 bg-exit/20"
             initial={false}
@@ -138,19 +138,19 @@ export function Hero({ room, now, leader, voterCount, onReplayFinale }: Props) {
   const { days, text } = clock(remaining);
 
   return (
-    <section className="px-4 pb-6 pt-6 text-center">
+    <section className="px-4 pb-6 pt-6 text-center short:pb-4 short:pt-4">
       <SystemPill>
         {reason ? `${name} ${reason}. ` : ""}
         {`עכשיו הקבוצה מחליטה מתי ${g(he, "הוא יוצא", "היא יוצאת")} מ${room.group_name}.`}
       </SystemPill>
-      <p className="mt-6 text-lg text-ink/85">
+      <p className="mt-6 text-lg text-ink/85 short:mt-4">
         {counting ? "סופרים קולות…" : "ההצבעה נסגרת בעוד"}
       </p>
       <div className="mt-2">
         <DaysLine days={days} />
         <FlipDigits
           value={now ? text : "--:--:--"}
-          className="text-[6.5rem] text-ink"
+          className="text-[min(6.5rem,24vw)] short:text-[min(5rem,20vw)] lg:text-[5.5rem] text-ink"
         />
         <span className="sr-only">{formatDuration(remaining)}</span>
       </div>

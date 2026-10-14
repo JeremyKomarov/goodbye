@@ -91,3 +91,7 @@ export function votesLabel(count: number) {
 export function peopleLabel(count: number) {
   return count === 1 ? "אדם אחד" : `${count} אנשים`;
 }
+
+export function onlineLabel(count: number) {
+  return count === 1 ? "אדם אחד מחובר עכשיו" : `${count} מחוברים עכשיו`;
+}

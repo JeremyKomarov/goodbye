@@ -14,3 +14,9 @@ export function loadAdminToken(slug: string) {
     return null;
   }
 }
+
+export function forgetAdminToken(slug: string) {
+  try {
+    localStorage.removeItem(key(slug));
+  } catch {}
+}

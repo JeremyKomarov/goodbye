@@ -90,8 +90,8 @@ export function GamesHub({
   if (game) {
     const meta = GAME_META[game];
     return (
-      <div className="pt-3">
-        <div className="mb-3 flex items-center gap-2">
+      <div className="mx-auto flex min-h-0 w-full max-w-2xl flex-1 flex-col px-3 pb-3 pt-2 lg:py-5">
+        <div className="mb-2 flex shrink-0 items-center gap-2">
           <button
             type="button"
             onClick={() => {
@@ -121,7 +121,7 @@ export function GamesHub({
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="rounded-3xl bg-panel/90 p-6 text-center"
+            className="my-auto rounded-3xl bg-panel/90 p-6 text-center"
           >
             <p className="text-mute">
               {result.best ? "שיא אישי חדש" : "התוצאה שלך"}
@@ -169,7 +169,8 @@ export function GamesHub({
   }
 
   return (
-    <div className="flex flex-col gap-3 pt-3">
+    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-4 pt-3 lg:px-6 lg:py-6">
+    <div className="mx-auto grid max-w-3xl gap-3 lg:grid-cols-3">
       {TILES.map((tile, i) => {
         const best = myBest(tile.id);
         return (
@@ -181,7 +182,7 @@ export function GamesHub({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.06 }}
-            className="flex items-center gap-4 rounded-3xl bg-panel/90 p-4 text-start"
+            className="flex items-center gap-4 rounded-3xl bg-panel/90 p-4 text-start transition-colors hover:bg-raised/80 lg:flex-col lg:items-start lg:p-5"
           >
             <span
               className="grid size-16 shrink-0 place-items-center rounded-2xl text-3xl"
@@ -207,6 +208,7 @@ export function GamesHub({
           </motion.button>
         );
       })}
+    </div>
     </div>
   );
 }

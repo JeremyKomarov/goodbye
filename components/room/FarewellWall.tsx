@@ -87,8 +87,9 @@ export function FarewellWall({
   const tz = room.timezone;
 
   return (
-    <section aria-label="קיר פרידה" className="flex flex-col">
-      <div className="flex flex-col gap-1.5 px-1 pb-40 pt-3">
+    <section aria-label="קיר פרידה" className="flex min-h-0 flex-1 flex-col">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+      <div className="mx-auto flex min-h-full max-w-3xl flex-col justify-end gap-1.5 px-3 pb-3 pt-3 lg:px-8">
         <SystemPill className="mb-3">
           {`מה תרצו להגיד ל${room.host_name} לפני ש${g(room.host_gender, "הוא יוצא", "היא יוצאת")}? כל מי שבחדר רואה את ההודעות.`}
         </SystemPill>
@@ -159,10 +160,11 @@ export function FarewellWall({
         </AnimatePresence>
         <div ref={endRef} />
       </div>
+      </div>
 
-      {/* Composer, pinned above the tab bar. */}
-      <div className="fixed inset-x-0 bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-20">
-        <div className="mx-auto max-w-md px-2 pb-2">
+      {/* Composer */}
+      <div className="shrink-0 border-t border-line/40 bg-night/80 backdrop-blur">
+        <div className="mx-auto max-w-3xl px-2 pb-2 pt-2 lg:px-6">
           <div className="no-scrollbar mb-2 flex gap-2 overflow-x-auto px-1">
             {QUICK_EMOJI.map((emoji) => (
               <motion.button

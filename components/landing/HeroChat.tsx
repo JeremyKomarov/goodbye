@@ -66,8 +66,8 @@ export function HeroChat() {
   const typing = !reduce && step < SCRIPT.length && SCRIPT[step]?.kind === "in";
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-line/60 bg-night/80 shadow-2xl">
-      <div className="flex items-center gap-3 bg-panel px-4 py-3">
+    <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-line/60 bg-night/80 shadow-2xl">
+      <div className="flex shrink-0 items-center gap-3 bg-panel px-4 py-3">
         <div className="grid size-10 place-items-center rounded-full bg-raised text-xl">
           🚀
         </div>
@@ -79,7 +79,7 @@ export function HeroChat() {
         </div>
       </div>
 
-      <div className="flex min-h-[260px] flex-col gap-2 px-4 py-4">
+      <div className="flex min-h-0 flex-1 flex-col justify-end gap-2 overflow-hidden px-4 py-4">
         <AnimatePresence initial={false}>
           {SCRIPT.slice(0, shown).map((line, i) => (
             <motion.div

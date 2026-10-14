@@ -3,7 +3,14 @@
 import { AnimatePresence, MotionConfig } from "motion/react";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { GamesHub } from "@/components/games/GamesHub";
-import { RoomHeader, TabBar, type Tab } from "@/components/room/Chrome";
+import {
+  PaneHeader,
+  RoomHeader,
+  type SectionSummary,
+  SideNav,
+  type Tab,
+  TabBar,
+} from "@/components/room/Chrome";
 import { EmojiRain } from "@/components/room/EmojiRain";
 import { FarewellWall } from "@/components/room/FarewellWall";
 import { Finale } from "@/components/room/Finale";
@@ -13,12 +20,31 @@ import { Leaderboard } from "@/components/room/Leaderboard";
 import { StatusStories } from "@/components/room/StatusStories";
 import { VoteHeatmap } from "@/components/room/VoteHeatmap";
 import { loadAdminToken } from "@/lib/admin-storage";
+import { formatHour, formatSlot, onlineLabel } from "@/lib/hebrew";
 import { useNow } from "@/lib/hooks/useNow";
 import { useRoom } from "@/lib/hooks/useRoom";
+import { leftLine } from "@/lib/room-view";
 import { leadingSlot, slotMs, tallyVotes } from "@/lib/slots";
 import type { GameId, Room } from "@/lib/types";
 
 const noop = () => () => {};
+
+/** Scrollable content area for a tab; keyed by tab so each starts at the top. */
+function Scroll({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`min-h-0 flex-1 overflow-y-auto overscroll-contain ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
 
 export function RoomClient({ initialRoom }: { initialRoom: Room }) {
   const api = useRoom(initialRoom);
@@ -68,9 +94,18 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
     };
   }, [votingOver, finalize]);
 
-  const typers = Object.values(api.typers).filter((t) => t.until > now && t.userId !== me?.userId);
+  const typers = Object.values(api.typers).filter(
+    (t) => t.until > now && t.userId !== me?.userId,
+  );
+  const typingText =
+    typers.length === 1
+      ? `${typers[0].name} מקליד/ה…`
+      : typers.length > 1
+        ? `${typers.length} אנשים מקלידים…`
+        : null;
 
-  const newestMessageId = messages.at(-1)?.id ?? 0;
+  const lastMessage = messages.at(-1);
+  const newestMessageId = lastMessage?.id ?? 0;
   const seenUpTo = lastSeenMessageId ?? api.baselineMessageId ?? Infinity;
   const unread =
     tab === "wall"
@@ -83,83 +118,175 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
       setLastSeenMessageId(newestMessageId);
     if (next !== "games") setGame(null);
     setTab(next);
-    window.scrollTo({ top: 0 });
   }
+
+  const tz = room.timezone;
+  const voteStatus =
+    room.status === "exited"
+      ? leftLine(room)
+      : room.status === "locked" && room.locked_slot
+        ? `נבחרה: ${formatSlot(Date.parse(room.locked_slot), tz)}`
+        : leader
+          ? `מובילה: ${formatSlot(leader.ms, tz)}`
+          : "עוד אף אחד לא הצביע";
+  const players = new Set(api.leaderboard.map((r) => r.user_id)).size;
+
+  const summaries: Record<Tab, SectionSummary> = {
+    vote: {
+      subtitle: voteStatus,
+      meta: voteList.length ? `${voteList.length} הצביעו` : undefined,
+    },
+    games: { subtitle: "כפתור בורח, טריוויה ו-99+ הודעות" },
+    wall: typingText
+      ? { subtitle: typingText, highlight: true }
+      : lastMessage
+        ? {
+            subtitle: `${lastMessage.display_name}: ${lastMessage.body}`,
+            meta: formatHour(Date.parse(lastMessage.created_at), tz),
+          }
+        : { subtitle: "עוד אין הודעות פרידה" },
+    board: {
+      subtitle: players
+        ? `${players} ${players === 1 ? "שחקן" : "שחקנים"} בטבלה`
+        : "עוד אף אחד לא שיחק",
+    },
+  };
+  const paneSubtitle: Record<Tab, { text: string; highlight?: boolean }> = {
+    vote: {
+      text:
+        room.status === "voting"
+          ? `ההצבעה נסגרת ${formatSlot(Date.parse(room.voting_closes_at), tz)}`
+          : voteStatus,
+    },
+    games: { text: "השיאים נכנסים לטבלה של החדר" },
+    wall: typingText
+      ? { text: typingText, highlight: true }
+      : { text: onlineLabel(api.online.length) },
+    board: { text: "השיאים של כולם בחדר" },
+  };
 
   const showFinale =
     room.status === "exited" && !finaleDismissed && api.authState === "ready";
+  const myUserId = me?.userId ?? null;
+  const party = () => api.sendEmoji("🎉");
+  const hero = (
+    <Hero
+      room={room}
+      now={now}
+      leader={leader}
+      voterCount={voteList.length}
+      onReplayFinale={() => setFinaleDismissed(false)}
+    />
+  );
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="mx-auto min-h-dvh max-w-md">
-        <RoomHeader
-          room={room}
-          now={now}
-          online={api.online}
-          typers={typers}
-          showClock={tab !== "vote"}
-          adminHref={adminHref}
-          onParty={() => api.sendEmoji("🎉")}
-        />
-
-        <main className="px-3 pb-28">
-          {tab === "vote" && (
-            <>
-              <StatusStories />
-              <Hero
-                room={room}
-                now={now}
-                leader={leader}
-                voterCount={voteList.length}
-                onReplayFinale={() => setFinaleDismissed(false)}
-              />
-              <VoteHeatmap
-                room={room}
-                now={now}
-                tally={tally}
-                players={api.players}
-                myUserId={me?.userId ?? null}
-                mySlot={mySlot}
-                onVote={api.vote}
-              />
-            </>
-          )}
-          {tab === "games" && (
-            <GamesHub
-              game={game}
-              onGameChange={setGame}
-              leaderboard={api.leaderboard}
-              myUserId={me?.userId ?? null}
-              onScore={api.submitScore}
-            />
-          )}
-          {tab === "wall" && (
-            <FarewellWall
+      {/* App shell: exactly one viewport tall; only the content area scrolls. */}
+      <div className="h-dvh overflow-hidden lg:p-5">
+        <div className="mx-auto flex h-full max-w-xl flex-col bg-night/40 lg:max-w-[1440px] lg:flex-row lg:overflow-hidden lg:rounded-2xl lg:border lg:border-line/60 lg:shadow-2xl">
+          {/* Desktop sidebar */}
+          <aside className="hidden w-[25rem] shrink-0 flex-col border-e border-line/60 bg-panel lg:flex">
+            <RoomHeader
               room={room}
-              messages={messages}
-              myUserId={me?.userId ?? null}
+              now={now}
+              online={api.online}
               typers={typers}
-              onSend={api.postMessage}
-              onTyping={api.setTyping}
-              onEmoji={api.sendEmoji}
+              showClock={false}
+              adminHref={adminHref}
+              onParty={party}
             />
-          )}
-          {tab === "board" && (
-            <Leaderboard
-              room={room}
-              tally={tally}
-              leaderboard={api.leaderboard}
-              myUserId={me?.userId ?? null}
-              onPlay={(g) => {
-                changeTab("games");
-                setGame(g);
-              }}
+            <Scroll>
+              <StatusStories />
+              {hero}
+              <SideNav
+                tab={tab}
+                onChange={changeTab}
+                unread={unread}
+                summaries={summaries}
+              />
+            </Scroll>
+          </aside>
+
+          {/* Main column (the whole app on phones) */}
+          <section className="flex min-h-0 min-w-0 flex-1 flex-col">
+            <div className="lg:hidden">
+              <RoomHeader
+                room={room}
+                now={now}
+                online={api.online}
+                typers={typers}
+                showClock={tab !== "vote"}
+                adminHref={adminHref}
+                onParty={party}
+              />
+            </div>
+            <PaneHeader
+              tab={tab}
+              subtitle={paneSubtitle[tab].text}
+              highlight={paneSubtitle[tab].highlight}
             />
-          )}
-        </main>
+
+            <main className="flex min-h-0 flex-1 flex-col">
+              {tab === "vote" && (
+                <Scroll key="vote" className="px-3 pb-4 lg:px-6 lg:py-6">
+                  <div className="lg:hidden">
+                    <StatusStories />
+                    {hero}
+                  </div>
+                  <div className="mx-auto max-w-3xl">
+                    <VoteHeatmap
+                      room={room}
+                      now={now}
+                      tally={tally}
+                      players={api.players}
+                      myUserId={myUserId}
+                      mySlot={mySlot}
+                      onVote={api.vote}
+                    />
+                  </div>
+                </Scroll>
+              )}
+              {tab === "games" && (
+                <GamesHub
+                  game={game}
+                  onGameChange={setGame}
+                  leaderboard={api.leaderboard}
+                  myUserId={myUserId}
+                  onScore={api.submitScore}
+                />
+              )}
+              {tab === "wall" && (
+                <FarewellWall
+                  room={room}
+                  messages={messages}
+                  myUserId={myUserId}
+                  typers={typers}
+                  onSend={api.postMessage}
+                  onTyping={api.setTyping}
+                  onEmoji={api.sendEmoji}
+                />
+              )}
+              {tab === "board" && (
+                <Scroll key="board" className="px-3 pb-4 lg:px-6 lg:py-6">
+                  <Leaderboard
+                    room={room}
+                    tally={tally}
+                    leaderboard={api.leaderboard}
+                    myUserId={myUserId}
+                    onPlay={(g) => {
+                      changeTab("games");
+                      setGame(g);
+                    }}
+                  />
+                </Scroll>
+              )}
+            </main>
+
+            <TabBar tab={tab} onChange={changeTab} unread={unread} />
+          </section>
+        </div>
       </div>
 
-      <TabBar tab={tab} onChange={changeTab} unread={unread} />
       <EmojiRain subscribe={api.onRain} />
 
       <AnimatePresence>
