@@ -30,7 +30,7 @@ function shuffle<T>(list: T[]) {
 }
 
 /**
- * "מה בתמונה?": guess what one quarter shows, then the rest opens and you guess
+ * "מה בתמונה?": guess what the top quarter of a picture shows, then the rest opens and you guess
  * what the whole picture really is.
  */
 export function PictureGame({
@@ -83,7 +83,7 @@ export function PictureGame({
     setGained(points);
     if (points) setScore((v) => v + points);
     if (outcome === "missed") navigator.vibrate?.([30, 40, 30]);
-    // After the quarter, open the full picture on its own; after the twist, wait for "next".
+    // After the top quarter, open the full picture on its own; after the twist, wait for "next".
     if (s === "decoy")
       advance.current = setTimeout(
         () => ask(i, "truth"),
@@ -95,7 +95,7 @@ export function PictureGame({
     const picked = shuffle(PICTURES).slice(0, ROUND);
     // Warm the cache so covers flip onto fully drawn scenes.
     for (const icon of new Set(
-      picked.flatMap((p) => p.layers.map((l) => l.icon)),
+      picked.flatMap((p) => [...p.top, ...p.bottom].flatMap((l) => ("icon" in l ? [l.icon] : []))),
     )) {
       new window.Image().src = `/picture-game/${icon}.svg`;
     }

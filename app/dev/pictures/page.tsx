@@ -10,7 +10,7 @@ export default function PicturesPreview() {
       {PICTURES.map((p) => (
         <section key={p.id} className="rounded-2xl bg-panel p-3">
           <h2 className="mb-2 text-sm">
-            {p.id}: {p.decoy.label} → {p.truth.label} ({p.quarter})
+            {p.id}: {p.decoy.label} → {p.truth.label}
           </h2>
           <div className="grid grid-cols-2 gap-2">
             <PictureStage puzzle={p} revealed={false} />

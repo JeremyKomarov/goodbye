@@ -1,11 +1,14 @@
-// "מה בתמונה?" scenes. Each one shows a single quarter first (the decoy), then the
-// whole scene, which turns out to be something else (the truth).
+// "מה בתמונה?" pictures. Each picture is stitched from two things that have
+// nothing to do with each other: the top quarter is the top of one thing (a
+// banana, Trump's hair), and the rest is the bottom of something else entirely
+// (a train, a computer). Everyone guesses the top; the curtain drops on the rest.
 // Icons are Noto Emoji SVGs in /public/picture-game, named by codepoint.
-// Positions are % of a square stage, in physical (not RTL) coordinates.
+// Positions are % of the whole square stage, in physical (not RTL) coordinates.
 
-export type Quarter = "tl" | "tr" | "bl" | "br";
+/** % of the picture's height shown before the reveal. */
+export const TOP_SHOWN = 25;
 
-export type Layer = {
+export type IconLayer = {
   icon: string;
   x: number;
   y: number;
@@ -13,352 +16,312 @@ export type Layer = {
   rotate?: number;
   flip?: boolean;
 };
+/** A plain shape for parts no icon covers. */
+export type RectLayer = {
+  rect: {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    fill: string;
+    radius?: number;
+    rotate?: number;
+  };
+};
+export type Layer = IconLayer | RectLayer;
 
 export type PicturePuzzle = {
   id: string;
   bg: string;
-  quarter: Quarter;
   decoy: { label: string; answers: string[] };
   truth: { label: string; answers: string[] };
   reveal: string;
-  layers: Layer[];
+  /** Clipped to the top strip: the thing everyone will guess. */
+  top: Layer[];
+  /** Clipped to everything below the strip: what the picture really is. */
+  bottom: Layer[];
 };
 
 export const PICTURES: PicturePuzzle[] = [
   {
     id: "train",
     bg: "#cfe6f7",
-    quarter: "tr",
     decoy: { label: "בננה", answers: ["בננה", "בננות", "banana"] },
     truth: {
       label: "רכבת",
-      answers: ["רכבת", "קטר", "רכבת משא", "קרון", "train", "locomotive"],
+      answers: ["רכבת", "קטר", "רכבת קיטור", "train", "locomotive"],
     },
-    reveal: "הבננה בסך הכל תפסה טרמפ על רכבת 🍌🚂",
-    layers: [
-      { icon: "2601", x: 0, y: 10, size: 26 },
-      { icon: "1f682", x: 2, y: 32, size: 52 },
-      { icon: "1f683", x: 50, y: 35, size: 50 },
-      { icon: "1f34c", x: 62, y: 12, size: 38 },
+    reveal: "למעלה בננה, ומתחת... רכבת 🍌🚂",
+    top: [{ icon: "1f34c", x: 6, y: 2, size: 42 }],
+    bottom: [
+      { icon: "1f682", x: 12, y: 25, size: 75 },
+      { icon: "1f34c", x: 6, y: 2, size: 42 },
     ],
   },
   {
-    id: "snowman",
-    bg: "#dfeaf3",
-    quarter: "tr",
-    decoy: { label: "גזר", answers: ["גזר", "carrot"] },
-    truth: {
-      label: "איש שלג",
-      answers: ["איש שלג", "בובת שלג", "אשת שלג", "שלג", "snowman"],
-    },
-    reveal: "הגזר היה האף של איש השלג ⛄",
-    layers: [
-      { icon: "26aa", x: 8, y: 50, size: 46 },
-      { icon: "2601", x: 58, y: 70, size: 36 },
-      { icon: "26aa", x: 13, y: 18, size: 34 },
-      { icon: "1f9e3", x: 16, y: 40, size: 28 },
-      { icon: "26ab", x: 21, y: 28, size: 6 },
-      { icon: "26ab", x: 31, y: 28, size: 6 },
-      { icon: "26ab", x: 28, y: 64, size: 6 },
-      { icon: "26ab", x: 28, y: 76, size: 6 },
-      { icon: "1f3a9", x: 15, y: 0, size: 30 },
-      { icon: "1f955", x: 52, y: 12, size: 32 },
-    ],
-  },
-  {
-    id: "mouse",
-    bg: "#f2e6d0",
-    quarter: "bl",
-    decoy: { label: "גבינה", answers: ["גבינה", "גבינה צהובה", "cheese"] },
-    truth: { label: "עכבר", answers: ["עכבר", "עכברון", "עכברה", "mouse"] },
-    reveal: "הגבינה כבר לא לבד. מישהו מתקרב 🐭",
-    layers: [
-      { icon: "1f401", x: 46, y: 10, size: 56 },
-      { icon: "1f9c0", x: 4, y: 56, size: 40 },
-    ],
-  },
-  {
-    id: "dog",
-    bg: "#dcefd2",
-    quarter: "br",
-    decoy: { label: "עצם", answers: ["עצם", "עצמות", "bone"] },
-    truth: {
-      label: "כלב",
-      answers: ["כלב", "כלבלב", "כלבה", "גור", "dog", "puppy"],
-    },
-    reveal: "העצם שייכת למישהו שמחכה לה 🐶",
-    layers: [
-      { icon: "2601", x: 58, y: 8, size: 30 },
-      { icon: "1f415", x: 0, y: 16, size: 50 },
-      { icon: "1f9b4", x: 56, y: 58, size: 38 },
-    ],
-  },
-  {
-    id: "bear",
-    bg: "#e3f1d8",
-    quarter: "bl",
-    decoy: { label: "דבש", answers: ["דבש", "צנצנת דבש", "honey"] },
-    truth: {
-      label: "דוב",
-      answers: ["דוב", "דובי", "דובון", "פו הדוב", "bear"],
-    },
-    reveal: "זה הדבש של הדוב. כדאי להחזיר 🐻",
-    layers: [
-      { icon: "1f43b", x: 44, y: 4, size: 56 },
-      { icon: "1f36f", x: 4, y: 54, size: 40 },
-    ],
-  },
-  {
-    id: "squirrel",
-    bg: "#e9f3df",
-    quarter: "br",
+    id: "trump",
+    bg: "#e4ecf7",
     decoy: {
-      label: "בוטן",
-      answers: ["בוטן", "בוטנים", "אגוז", "peanut", "nut"],
-    },
-    truth: {
-      label: "סנאי",
-      answers: ["סנאי", "סנאית", "squirrel", "chipmunk"],
-    },
-    reveal: "הבוטן הזה כבר שמור למישהו 🐿️",
-    layers: [
-      { icon: "1f43f", x: 0, y: 6, size: 52, flip: true },
-      { icon: "1f95c", x: 58, y: 58, size: 36, rotate: -20 },
-    ],
-  },
-  {
-    id: "cat",
-    bg: "#f5e3e8",
-    quarter: "bl",
-    decoy: { label: "דג", answers: ["דג", "דגים", "fish"] },
-    truth: {
-      label: "חתול",
-      answers: ["חתול", "חתולה", "חתלתול", "cat", "kitten"],
-    },
-    reveal: "הדג הוא בעצם ארוחת הערב של מישהו 🐱",
-    layers: [
-      { icon: "1f408", x: 50, y: 12, size: 50 },
-      { icon: "1f41f", x: 2, y: 58, size: 42 },
-    ],
-  },
-  {
-    id: "chicken",
-    bg: "#f6ecd2",
-    quarter: "br",
-    decoy: { label: "ביצה", answers: ["ביצה", "ביצים", "egg"] },
-    truth: {
-      label: "תרנגולת",
-      answers: ["תרנגולת", "תרנגול", "עוף", "chicken", "hen"],
-    },
-    reveal: "מי קדם למי? הפעם התרנגולת 🐔",
-    layers: [
-      { icon: "1f414", x: 4, y: 0, size: 50 },
-      { icon: "1f95a", x: 60, y: 56, size: 34 },
-    ],
-  },
-  {
-    id: "birthday",
-    bg: "#fbe2ea",
-    quarter: "tr",
-    decoy: { label: "נר", answers: ["נר", "נרות", "candle"] },
-    truth: {
-      label: "יום הולדת",
+      label: "טראמפ",
       answers: [
-        "יום הולדת",
-        "עוגת יום הולדת",
-        "עוגה",
-        "מסיבה",
-        "מסיבת יום הולדת",
-        "birthday",
-        "cake",
-        "party",
+        "טראמפ",
+        "דונלד טראמפ",
+        "שיער",
+        "שיער צהוב",
+        "בלונדיני",
+        "בלונדינית",
+        "פאה",
+        "איש",
+        "אישה",
+        "אדם",
+        "ראש",
+        "trump",
+        "hair",
+        "blonde",
       ],
     },
-    reveal: "נר אחד, עוגה אחת, מזל טוב 🎂",
-    layers: [
-      { icon: "1f389", x: 2, y: 4, size: 40 },
-      { icon: "1f388", x: 62, y: 54, size: 34 },
-      { icon: "1f382", x: 4, y: 52, size: 48 },
-      { icon: "1f56f", x: 60, y: 6, size: 38 },
-    ],
-  },
-  {
-    id: "rocket",
-    bg: "#16233f",
-    quarter: "bl",
-    decoy: {
-      label: "אש",
-      answers: ["אש", "להבה", "להבות", "מדורה", "שריפה", "fire", "flame"],
-    },
     truth: {
-      label: "טיל",
-      answers: ["טיל", "רקטה", "חללית", "שיגור", "rocket", "spaceship"],
-    },
-    reveal: "זו לא מדורה, זה שיגור 🚀",
-    layers: [
-      { icon: "2b50", x: 8, y: 8, size: 16 },
-      { icon: "2728", x: 62, y: 62, size: 28 },
-      { icon: "1f680", x: 48, y: 0, size: 50 },
-      { icon: "1f525", x: 14, y: 50, size: 36, rotate: 35 },
-    ],
-  },
-  {
-    id: "office",
-    bg: "linear-gradient(#e8eef5 58%, #c99b6d 58%)",
-    quarter: "br",
-    decoy: {
-      label: "קפה",
-      answers: ["קפה", "כוס קפה", "ספל", "ספל קפה", "coffee", "cup"],
-    },
-    truth: {
-      label: "משרד",
+      label: "מחשב",
       answers: [
-        "משרד",
-        "שולחן עבודה",
-        "עבודה",
-        "שולחן",
         "מחשב",
-        "office",
-        "desk",
+        "מסך",
+        "מחשב שולחני",
+        "מוניטור",
+        "computer",
+        "pc",
+        "monitor",
       ],
     },
-    reveal: "ככה נראה השולחן שהשארתם מאחור ☕",
-    layers: [
-      { icon: "1f4bb", x: 0, y: 4, size: 48 },
-      { icon: "1fab4", x: 58, y: 6, size: 38 },
-      { icon: "1f4ce", x: 6, y: 62, size: 22 },
-      { icon: "1f58a", x: 22, y: 60, size: 28 },
-      { icon: "2615", x: 58, y: 56, size: 36 },
-    ],
+    reveal: "השיער של טראמפ, ומתחתיו מחשב 💻",
+    top: [{ icon: "1f471", x: 18, y: 0, size: 64 }],
+    bottom: [{ icon: "1f5a5", x: 8, y: 20, size: 84 }],
   },
   {
-    id: "truck",
-    bg: "#d6ebfa",
-    quarter: "tr",
+    id: "penguin",
+    bg: "#e6f4ea",
+    decoy: { label: "אננס", answers: ["אננס", "pineapple", "עלים", "צמח"] },
+    truth: { label: "פינגווין", answers: ["פינגווין", "פינגוין", "penguin"] },
+    reveal: "העלים של אננס על פינגווין 🍍🐧",
+    top: [{ icon: "1f34d", x: 15, y: 0, size: 70 }],
+    bottom: [{ icon: "1f427", x: 10, y: 20, size: 80 }],
+  },
+  {
+    id: "couch",
+    bg: "#fff2d9",
     decoy: {
-      label: "קופסה",
-      answers: ["קופסה", "קופסא", "ארגז", "חבילה", "קרטון", "box", "package"],
+      label: "ג׳ירפה",
+      answers: ["ג׳ירפה", "גירפה", "ג'ירפה", "giraffe"],
     },
-    truth: {
-      label: "משאית",
-      answers: ["משאית", "משאית משלוחים", "משלוח", "טנדר", "truck"],
-    },
-    reveal: "החבילה שלכם בדרך 📦🚚",
-    layers: [
-      { icon: "2601", x: 4, y: 8, size: 32 },
-      { icon: "1f69a", x: 2, y: 30, size: 72 },
-      { icon: "1f4e6", x: 56, y: 12, size: 36 },
-    ],
+    truth: { label: "ספה", answers: ["ספה", "סלון", "כורסה", "couch", "sofa"] },
+    reveal: "ראש של ג׳ירפה וגוף של ספה 🦒🛋️",
+    top: [{ icon: "1f992", x: -10, y: -4, size: 120 }],
+    bottom: [{ icon: "1f6cb", x: 8, y: 22, size: 84 }],
   },
   {
-    id: "cocktail",
-    bg: "#ffe9c7",
-    quarter: "tl",
-    decoy: { label: "לימון", answers: ["לימון", "lemon"] },
-    truth: {
-      label: "קוקטייל",
-      answers: ["קוקטייל", "משקה", "שייק", "cocktail", "drink"],
-    },
-    reveal: "הלימון רק קישט את הקוקטייל 🍹",
-    layers: [
-      { icon: "1f30a", x: 0, y: 62, size: 38 },
-      { icon: "1f379", x: 38, y: 14, size: 62 },
-      { icon: "1f34b", x: 2, y: 4, size: 42 },
-    ],
-  },
-  {
-    id: "night",
-    bg: "#14203a",
-    quarter: "tr",
-    decoy: { label: "ירח", answers: ["ירח", "סהר", "moon"] },
-    truth: {
-      label: "לילה",
-      answers: ["לילה", "עיר", "עיר בלילה", "לילה בעיר", "night", "city"],
-    },
-    reveal: "הירח מעל עיר שלא ישנה 🌃",
-    layers: [
-      { icon: "2b50", x: 8, y: 10, size: 12 },
-      { icon: "2b50", x: 30, y: 26, size: 9 },
-      { icon: "2728", x: 18, y: 32, size: 12 },
-      { icon: "1f3e2", x: 0, y: 52, size: 40 },
-      { icon: "1f3e2", x: 32, y: 50, size: 48 },
-      { icon: "1f3e2", x: 68, y: 58, size: 34 },
-      { icon: "1f319", x: 58, y: 6, size: 38 },
-    ],
-  },
-  {
-    id: "surfer",
-    bg: "#cdeefa",
-    quarter: "bl",
-    decoy: { label: "גל", answers: ["גל", "גלים", "ים", "wave", "sea"] },
-    truth: {
-      label: "גולש",
-      answers: ["גולש", "גולשת", "גלישה", "גלשן", "surf", "surfer", "surfing"],
-    },
-    reveal: "הגל הזה כבר תפוס 🏄",
-    layers: [
-      { icon: "1f3c4", x: 48, y: 2, size: 50 },
-      { icon: "1f30a", x: 0, y: 50, size: 50 },
-    ],
-  },
-  {
-    id: "king",
-    bg: "#efe0ff",
-    quarter: "tr",
-    decoy: { label: "כתר", answers: ["כתר", "crown"] },
-    truth: { label: "מלך", answers: ["מלך", "מלכה", "king", "queen"] },
-    reveal: "הכתר לא הגיע לבד 👑",
-    layers: [
-      { icon: "1f3f0", x: 0, y: 2, size: 46 },
-      { icon: "2728", x: 8, y: 60, size: 30 },
-      { icon: "1f9d4", x: 52, y: 50, size: 46 },
-      { icon: "1f451", x: 56, y: 17, size: 38 },
-    ],
-  },
-  {
-    id: "magician",
-    bg: "#3b2a63",
-    quarter: "tl",
+    id: "tv",
+    bg: "#f0e6ff",
     decoy: {
-      label: "כובע",
-      answers: ["כובע", "כובע צילינדר", "צילינדר", "hat"],
+      label: "ארנב",
+      answers: ["ארנב", "ארנבת", "ארנבון", "שפן", "bunny", "rabbit"],
     },
     truth: {
-      label: "קוסם",
+      label: "טלוויזיה",
+      answers: ["טלוויזיה", "טלויזיה", "טלוויזיה ישנה", "tv", "television"],
+    },
+    reveal: "אוזני ארנב על טלוויזיה. האנטנה הכי חמודה 🐰📺",
+    top: [{ icon: "1f430", x: 0, y: 0, size: 100 }],
+    bottom: [{ icon: "1f4fa", x: 8, y: 20, size: 84 }],
+  },
+  {
+    id: "toilet",
+    bg: "#e3f1f3",
+    decoy: {
+      label: "סנטה",
+      answers: ["סנטה", "סנטה קלאוס", "כובע", "כובע של סנטה", "santa"],
+    },
+    truth: {
+      label: "אסלה",
+      answers: ["אסלה", "שירותים", "בית שימוש", "toilet"],
+    },
+    reveal: "הכובע של סנטה על אסלה. חג שמח 🎅🚽",
+    top: [{ icon: "1f385", x: 18, y: 0, size: 64 }],
+    bottom: [{ icon: "1f6bd", x: 10, y: 20, size: 80 }],
+  },
+  {
+    id: "turtle",
+    bg: "#e2f0fb",
+    decoy: {
+      label: "פסל החירות",
       answers: [
-        "קוסם",
-        "קוסמת",
-        "קסם",
-        "קסמים",
-        "מופע קסמים",
-        "ארנב",
-        "magic",
-        "magician",
+        "פסל החירות",
+        "פסל",
+        "חירות",
+        "ניו יורק",
+        "statue of liberty",
+        "liberty",
       ],
     },
-    reveal: "מהכובע יצא ארנב. קלאסי 🪄🐇",
-    layers: [
-      { icon: "1f3a9", x: 4, y: 8, size: 42 },
-      { icon: "1f407", x: 54, y: 6, size: 42 },
-      { icon: "1fa84", x: 6, y: 56, size: 38 },
-      { icon: "2728", x: 58, y: 58, size: 34 },
-    ],
+    truth: { label: "צב", answers: ["צב", "צבה", "turtle", "tortoise"] },
+    reveal: "פסל החירות? לא, צב עם לפיד 🗽🐢",
+    top: [{ icon: "1f5fd", x: 2, y: -2, size: 90 }],
+    bottom: [{ icon: "1f422", x: 8, y: 22, size: 84 }],
   },
   {
-    id: "goal",
-    bg: "#d7f0cf",
-    quarter: "br",
+    id: "car",
+    bg: "#ffe4ef",
     decoy: {
-      label: "כדור",
-      answers: ["כדור", "כדורגל", "ball", "football", "soccer"],
+      label: "גלידה",
+      answers: ["גלידה", "גלידה אמריקאית", "גביע גלידה", "ice cream"],
     },
-    truth: { label: "שער", answers: ["שער", "גול", "כדורגל", "שוער", "goal"] },
-    reveal: "גווווול! ⚽",
-    layers: [
-      { icon: "1f945", x: 0, y: 0, size: 52 },
-      { icon: "1f9e4", x: 60, y: 6, size: 32 },
-      { icon: "2728", x: 8, y: 62, size: 28 },
-      { icon: "26bd", x: 60, y: 60, size: 32 },
-    ],
+    truth: { label: "מכונית", answers: ["מכונית", "אוטו", "רכב", "car"] },
+    reveal: "גלידה למעלה, מכונית למטה 🍦🚗",
+    top: [{ icon: "1f366", x: 18, y: 0, size: 64 }],
+    bottom: [{ icon: "1f697", x: 4, y: 22, size: 92 }],
+  },
+  {
+    id: "tractor",
+    bg: "#fbefe0",
+    decoy: {
+      label: "חד קרן",
+      answers: ["חד קרן", "חדקרן", "סוס", "unicorn", "horse"],
+    },
+    truth: { label: "טרקטור", answers: ["טרקטור", "tractor"] },
+    reveal: "חד קרן? בכלל טרקטור 🦄🚜",
+    top: [{ icon: "1f984", x: 20, y: 2, size: 60 }],
+    bottom: [{ icon: "1f69c", x: 6, y: 22, size: 88 }],
+  },
+  {
+    id: "sheep",
+    bg: "#e8f3dc",
+    decoy: {
+      label: "בירה",
+      answers: ["בירה", "קצף", "ענן", "beer", "foam", "cloud"],
+    },
+    truth: { label: "כבשה", answers: ["כבשה", "כבש", "כבשים", "sheep"] },
+    reveal: "הקצף של הבירה הפך לצמר של כבשה 🍺🐑",
+    top: [{ icon: "1f37a", x: 20, y: 0, size: 60 }],
+    bottom: [{ icon: "1f411", x: 8, y: 20, size: 84 }],
+  },
+  {
+    id: "pig",
+    bg: "#eef7e4",
+    decoy: { label: "תות", answers: ["תות", "תות שדה", "תותים", "strawberry"] },
+    truth: { label: "חזיר", answers: ["חזיר", "חזרזיר", "pig"] },
+    reveal: "תות למעלה, חזיר למטה 🍓🐷",
+    top: [{ icon: "1f353", x: 20, y: 0, size: 60 }],
+    bottom: [{ icon: "1f416", x: 8, y: 20, size: 84 }],
+  },
+  {
+    id: "bicycle",
+    bg: "#e6f1ff",
+    decoy: {
+      label: "פטרייה",
+      answers: ["פטרייה", "פטריה", "פטריות", "mushroom"],
+    },
+    truth: {
+      label: "אופניים",
+      answers: ["אופניים", "אופנים", "אופני", "bicycle", "bike"],
+    },
+    reveal: "פטרייה שרוכבת על אופניים 🍄🚲",
+    top: [{ icon: "1f344", x: 15, y: 0, size: 70 }],
+    bottom: [{ icon: "1f6b2", x: 4, y: 22, size: 92 }],
+  },
+  {
+    id: "printer",
+    bg: "#efe9f7",
+    decoy: {
+      label: "קוסם",
+      answers: ["קוסם", "מכשף", "מכשפה", "כובע", "גנדלף", "wizard"],
+    },
+    truth: { label: "מדפסת", answers: ["מדפסת", "printer"] },
+    reveal: "הקוסם האמיתי של המשרד: המדפסת 🧙🖨️",
+    top: [{ icon: "1f9d9", x: 20, y: 0, size: 60 }],
+    bottom: [{ icon: "1f5a8", x: 8, y: 20, size: 84 }],
+  },
+  {
+    id: "duck",
+    bg: "#dff0f7",
+    decoy: { label: "טירה", answers: ["טירה", "ארמון", "מבצר", "castle"] },
+    truth: { label: "ברווז", answers: ["ברווז", "ברווזה", "duck"] },
+    reveal: "טירה על ברווז. ממלכה צפה 🏰🦆",
+    top: [{ icon: "1f3f0", x: 20, y: 0, size: 60 }],
+    bottom: [{ icon: "1f986", x: 8, y: 20, size: 84 }],
+  },
+  {
+    id: "cart",
+    bg: "#fff4dc",
+    decoy: { label: "כתר", answers: ["כתר", "crown", "מלך", "מלכה"] },
+    truth: {
+      label: "עגלת קניות",
+      answers: [
+        "עגלת קניות",
+        "עגלה",
+        "עגלת סופר",
+        "סופר",
+        "shopping cart",
+        "cart",
+      ],
+    },
+    reveal: "כתר על עגלת קניות. מלך הסופר 👑🛒",
+    top: [{ icon: "1f451", x: 20, y: -6, size: 60 }],
+    bottom: [{ icon: "1f6d2", x: 8, y: 20, size: 84 }],
+  },
+  {
+    id: "sneaker",
+    bg: "#fde8f0",
+    decoy: {
+      label: "קאפקייק",
+      answers: ["קאפקייק", "קפקייק", "מאפין", "עוגה", "cupcake", "muffin"],
+    },
+    truth: {
+      label: "נעל",
+      answers: ["נעל", "נעליים", "נעל ספורט", "סניקרס", "shoe", "sneaker"],
+    },
+    reveal: "קאפקייק? לא, נעל ספורט 🧁👟",
+    top: [{ icon: "1f9c1", x: 20, y: 0, size: 60 }],
+    bottom: [{ icon: "1f45f", x: 4, y: 22, size: 92 }],
+  },
+  {
+    id: "bathtub",
+    bg: "#ffeedd",
+    decoy: {
+      label: "הר געש",
+      answers: ["הר געש", "וולקן", "התפרצות", "volcano"],
+    },
+    truth: { label: "אמבטיה", answers: ["אמבטיה", "אמבט", "bathtub", "bath"] },
+    reveal: "הר געש? לא, אמבטיה חמה מדי 🌋🛁",
+    top: [{ icon: "1f30b", x: 26, y: 2, size: 48 }],
+    bottom: [{ icon: "1f6c1", x: 6, y: 22, size: 88 }],
+  },
+  {
+    id: "elephant",
+    bg: "#e4efe6",
+    decoy: {
+      label: "עץ חג המולד",
+      answers: [
+        "עץ חג המולד",
+        "עץ אשוח",
+        "אשוח",
+        "עץ",
+        "כריסמס",
+        "christmas tree",
+      ],
+    },
+    truth: { label: "פיל", answers: ["פיל", "elephant"] },
+    reveal: "עץ חג המולד שהתברר כפיל 🎄🐘",
+    top: [{ icon: "1f384", x: 20, y: 0, size: 60 }],
+    bottom: [{ icon: "1f418", x: 8, y: 20, size: 84 }],
+  },
+  {
+    id: "guitar",
+    bg: "#f6eadf",
+    decoy: {
+      label: "עוגת יום הולדת",
+      answers: ["עוגה", "עוגת יום הולדת", "יום הולדת", "נרות", "cake"],
+    },
+    truth: { label: "גיטרה", answers: ["גיטרה", "גיטרה חשמלית", "guitar"] },
+    reveal: "הנרות של העוגה על גיטרה. מזל טוב בסגנון רוק 🎂🎸",
+    top: [{ icon: "1f382", x: 20, y: 0, size: 60 }],
+    bottom: [{ icon: "1f3b8", x: 8, y: 20, size: 84 }],
   },
 ];
