@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300" fill="none" stroke="#e9edef" stroke-opacity=".05" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- door with exit arrow -->
+  <g transform="translate(24 22)"><path d="M0 44V4h22v40"/><path d="M22 4l-10 4v40l10-4"/><circle cx="16" cy="26" r="1.2"/><path d="M30 24h16m-6-6 6 6-6 6"/></g>
+  <!-- cardboard box -->
+  <g transform="translate(150 18)"><path d="M0 14h46v30H0z"/><path d="M0 14l8-12h30l8 12"/><path d="M17 14v10h12V14"/></g>
+  <!-- coffee mug -->
+  <g transform="translate(244 30)"><path d="M0 8h26v20a8 8 0 0 1-8 8h-10a8 8 0 0 1-8-8z"/><path d="M26 13h4a5 5 0 0 1 0 10h-4"/><path d="M8 0q-3 3 0 5M16 0q-3 3 0 5"/></g>
+  <!-- chat bubble with ticks -->
+  <g transform="translate(78 96)"><path d="M0 6a6 6 0 0 1 6-6h40a6 6 0 0 1 6 6v20a6 6 0 0 1-6 6H12l-8 7v-7a6 6 0 0 1-4-6z"/><path d="M28 17l3 3 6-7M34 20l1 0 6-7"/></g>
+  <!-- briefcase -->
+  <g transform="translate(196 100)"><path d="M0 10h48v28H0z"/><path d="M16 10V4h16v6"/><path d="M0 22h48"/></g>
+  <!-- clock -->
+  <g transform="translate(22 176)"><circle cx="20" cy="20" r="20"/><path d="M20 8v12l8 6"/></g>
+  <!-- paper plane -->
+  <g transform="translate(118 180)"><path d="M0 18 46 0 34 40 22 26z"/><path d="M46 0 22 26"/></g>
+  <!-- potted plant -->
+  <g transform="translate(232 176)"><path d="M4 30h24l-3 16H7z"/><path d="M16 30V14"/><path d="M16 18q-12-2-12-14 12 2 12 14zM16 14q10-2 12-12-12 0-12 12z"/></g>
+  <!-- phone with notification -->
+  <g transform="translate(60 248)"><rect x="0" y="0" width="24" height="40" rx="5"/><path d="M9 34h6"/><circle cx="24" cy="2" r="5"/></g>
+  <!-- waving hand-ish lines -->
+  <g transform="translate(172 252)"><path d="M0 20q10-20 20 0t20 0 20 0"/><path d="M6 34q8-8 16 0t16 0"/></g>
+</svg>
