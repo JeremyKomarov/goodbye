@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { StoryRing } from "@/components/room/StatusStories";
 import { initial } from "@/lib/colors";
 import { iso, onlineLabel, pad, splitCountdown } from "@/lib/hebrew";
 import type { OnlineUser, Typer } from "@/lib/hooks/useRoom";
@@ -53,10 +54,13 @@ export function RoomHeader({
 
   return (
     <header className="shrink-0 bg-panel pt-[env(safe-area-inset-top)]">
-      <div className="flex h-16 items-center gap-3 px-3">
-        <div className="grid size-10 shrink-0 place-items-center rounded-full bg-kraft font-display text-2xl font-bold text-night">
-          {initial(room.group_name)}
-        </div>
+      <div className="flex h-16 items-center gap-3 px-3 tiny:h-12">
+        {/* Like a contact with a status: the ring opens the fun-fact stories. */}
+        <StoryRing>
+          <span className="grid size-full place-items-center rounded-full bg-kraft font-display text-2xl font-bold text-night">
+            {initial(room.group_name)}
+          </span>
+        </StoryRing>
         <div className="min-w-0 flex-1">
           <h1 className="truncate font-semibold leading-tight">
             {room.group_name}
@@ -201,9 +205,9 @@ export function TabBar({
               type="button"
               onClick={() => onChange(t.id)}
               aria-current={active ? "page" : undefined}
-              className={`flex h-16 flex-col items-center justify-center gap-1 text-xs ${active ? "font-semibold text-ink" : "text-mute"}`}
+              className={`flex h-16 flex-col items-center justify-center gap-1 text-xs tiny:h-12 tiny:flex-row tiny:gap-1.5 ${active ? "font-semibold text-ink" : "text-mute"}`}
             >
-              <span className="relative grid h-8 w-16 place-items-center">
+              <span className="relative grid h-8 w-16 place-items-center tiny:w-12">
                 {active && (
                   <motion.span
                     layoutId="tab-pill"
@@ -239,14 +243,16 @@ export function SideNav({
   onChange,
   unread,
   summaries,
+  className = "",
 }: {
   tab: Tab;
   onChange: (t: Tab) => void;
   unread: number;
   summaries: Record<Tab, SectionSummary>;
+  className?: string;
 }) {
   return (
-    <nav aria-label="ניווט בחדר" className="flex flex-col">
+    <nav aria-label="ניווט בחדר" className={`flex flex-col ${className}`}>
       {TABS.map((t) => {
         const active = t.id === tab;
         const summary = summaries[t.id];
@@ -263,7 +269,7 @@ export function SideNav({
             >
               <TabIcon tab={t.id} />
             </span>
-            <span className="min-w-0 flex-1 border-b border-line/50 py-3.5">
+            <span className="min-w-0 flex-1 border-b border-line/50 py-3.5 short:py-2.5">
               <span className="flex items-baseline justify-between gap-2">
                 <span className="font-medium">{t.label}</span>
                 {summary.meta && (

@@ -112,7 +112,7 @@ export function Finale({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="mx-auto flex min-h-dvh max-w-lg flex-col items-center justify-center gap-7 px-6 py-12 text-center short:gap-4 short:py-6">
+      <div className="mx-auto flex min-h-dvh max-w-lg flex-col items-center justify-center gap-7 px-6 py-12 text-center short:gap-4 short:py-6 tiny:max-w-2xl tiny:gap-3 tiny:py-4">
         <motion.div
           className="w-full"
           initial={{ y: -80, opacity: 0, scale: 0.6 }}
@@ -125,7 +125,7 @@ export function Finale({
         </motion.div>
 
         <motion.h2
-          className="font-display text-[min(5.5rem,20vw)] font-bold short:text-[3.5rem] lg:text-[6.5rem] leading-[0.85]"
+          className="font-display text-[min(5.5rem,20vw)] font-bold leading-[0.85] lg:text-[6.5rem] short:text-[3.5rem] tiny:text-[2.75rem]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.1, type: "spring", damping: 16 }}
@@ -134,7 +134,7 @@ export function Finale({
         </motion.h2>
 
         <motion.dl
-          className="grid w-full grid-cols-2 gap-2"
+          className="grid w-full grid-cols-2 gap-2 tiny:grid-cols-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.6 }}
@@ -174,7 +174,7 @@ export function Finale({
         <motion.button
           type="button"
           onClick={onClose}
-          className="w-full rounded-2xl bg-raised px-6 py-4 font-semibold"
+          className="w-full rounded-2xl bg-raised px-6 py-4 font-semibold tiny:py-3"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2.3 }}

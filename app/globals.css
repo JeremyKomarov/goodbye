@@ -20,6 +20,8 @@
 
 /* Short screens (small phones, landscape): tighten type and spacing so screens fit 100dvh. */
 @custom-variant short (@media (max-height: 700px));
+/* Very short screens (phones in landscape): slimmer bars and side-by-side layouts. */
+@custom-variant tiny (@media (max-height: 500px));
 
 @theme inline {
   --font-sans: var(--font-rubik), system-ui, sans-serif;

@@ -158,7 +158,7 @@ export function CatchGame({ onFinish }: { onFinish: (score: number) => void }) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="mb-3 flex items-center justify-between px-1">
+      <div className="mb-3 flex items-center justify-between px-1 short:mb-2">
         <span className="font-display text-3xl tabular-nums leading-none">
           {frame.score} נק׳
         </span>
@@ -170,15 +170,15 @@ export function CatchGame({ onFinish }: { onFinish: (score: number) => void }) {
       </div>
       <div
         ref={arenaRef}
-        className="relative min-h-[18rem] flex-1 touch-none select-none overflow-hidden rounded-3xl bg-panel/90"
+        className="relative min-h-40 flex-1 touch-none select-none overflow-hidden rounded-3xl bg-panel/90"
       >
         {!playing && (
-          <div className="absolute inset-0 z-10 grid place-items-center p-6 text-center">
+          <div className="absolute inset-0 z-10 grid place-items-center p-6 text-center tiny:p-3">
             <div>
               <p className="mb-2 text-lg text-ink/85">
                 ההתראות נופלות. פוצצו כמה שיותר לפני שהן קוברות אתכם.
               </p>
-              <p className="mb-5 text-sm text-mute">
+              <p className="mb-5 text-sm text-mute tiny:mb-3">
                 פרחים של בוקר טוב שווים יותר, יציאה מהקבוצה שווה הכי הרבה, ועל
                 הבוס לא לוחצים.
               </p>
@@ -186,7 +186,7 @@ export function CatchGame({ onFinish }: { onFinish: (score: number) => void }) {
                 type="button"
                 whileTap={{ scale: 0.95 }}
                 onClick={start}
-                className="rounded-2xl bg-tick px-8 py-4 text-lg font-semibold text-night"
+                className="rounded-2xl bg-tick px-8 py-4 text-lg font-semibold text-night tiny:py-3"
               >
                 {frame.score ? "עוד סיבוב" : "התחלה"}
               </motion.button>

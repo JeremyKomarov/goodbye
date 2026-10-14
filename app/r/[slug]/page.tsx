@@ -35,15 +35,37 @@ async function Room({ slug }: { slug: string }) {
   return <RoomClient initialRoom={room} />;
 }
 
+/** Mirrors the room's app shell (header, content, tabs; sidebar on desktop) so nothing jumps on load. */
 function RoomSkeleton() {
   return (
-    <div className="mx-auto min-h-dvh max-w-md animate-pulse" aria-busy="true" aria-label="טוען את החדר">
-      <div className="flex items-center gap-3 bg-panel px-3 py-2.5">
-        <div className="size-10 rounded-full bg-raised" />
+    <div className="h-dvh overflow-hidden lg:p-5 lg:short:p-0" aria-busy="true" aria-label="טוען את החדר">
+      <div className="mx-auto flex h-full max-w-xl animate-pulse flex-col lg:max-w-[1440px] lg:flex-row lg:overflow-hidden lg:rounded-2xl lg:border lg:border-line/60 lg:short:rounded-none lg:short:border-0">
+        <div className="hidden w-[25rem] shrink-0 flex-col border-e border-line/60 bg-panel lg:flex">
+          <SkeletonHeader />
+          <div className="mx-auto my-auto h-32 w-64 rounded-2xl bg-raised/60" />
+          <div className="h-72 shrink-0 border-t border-line/60" />
+        </div>
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="lg:hidden">
+            <SkeletonHeader />
+          </div>
+          <div className="hidden h-16 shrink-0 border-b border-line/60 bg-panel lg:block" />
+          <div className="mx-auto mt-4 h-24 w-56 shrink-0 rounded-2xl bg-panel lg:hidden" />
+          <div className="m-3 min-h-0 flex-1 rounded-3xl bg-panel lg:m-6" />
+          <div className="h-16 shrink-0 border-t border-line/60 bg-panel pb-[env(safe-area-inset-bottom)] tiny:h-12 lg:hidden" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SkeletonHeader() {
+  return (
+    <div className="shrink-0 bg-panel pt-[env(safe-area-inset-top)]">
+      <div className="flex h-16 items-center gap-3 px-3 tiny:h-12">
+        <div className="size-11 rounded-full bg-raised tiny:size-9" />
         <div className="h-4 w-32 rounded bg-raised" />
       </div>
-      <div className="mx-auto mt-16 h-24 w-64 rounded-2xl bg-panel" />
-      <div className="mx-3 mt-10 h-80 rounded-3xl bg-panel" />
     </div>
   );
 }

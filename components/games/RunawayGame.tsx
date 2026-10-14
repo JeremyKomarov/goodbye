@@ -102,7 +102,7 @@ export function RunawayGame({ onFinish }: { onFinish: (ms: number) => void }) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="mb-3 flex items-center justify-between px-1 text-sm">
+      <div className="mb-3 flex items-center justify-between px-1 text-sm short:mb-2">
         <span className="text-mute">
           {playing ? `התחמקויות: ${dodges}` : "הכפתור מתעייף עם כל בריחה"}
         </span>
@@ -113,23 +113,23 @@ export function RunawayGame({ onFinish }: { onFinish: (ms: number) => void }) {
       <div
         ref={arenaRef}
         onPointerMove={onArenaMove}
-        className="relative min-h-[16rem] flex-1 touch-none select-none overflow-hidden rounded-3xl bg-panel/90"
+        className="relative min-h-40 flex-1 touch-none select-none overflow-hidden rounded-3xl bg-panel/90"
         style={{
           backgroundImage:
             "radial-gradient(circle at 50% 50%, rgb(241 92 109 / 0.08), transparent 70%)",
         }}
       >
         {!playing ? (
-          <div className="absolute inset-0 grid place-items-center p-6 text-center">
+          <div className="absolute inset-0 grid place-items-center p-6 text-center tiny:p-3">
             <div>
-              <p className="mb-5 text-lg text-ink/85">
+              <p className="mb-5 text-lg text-ink/85 tiny:mb-3">
                 הכפתור האדום בורח מכם. תפסו אותו כמה שיותר מהר.
               </p>
               <motion.button
                 type="button"
                 whileTap={{ scale: 0.95 }}
                 onClick={start}
-                className="rounded-2xl bg-exit px-8 py-4 text-lg font-semibold text-night"
+                className="rounded-2xl bg-exit px-8 py-4 text-lg font-semibold text-night tiny:py-3"
               >
                 התחלה
               </motion.button>

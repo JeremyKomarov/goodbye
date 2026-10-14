@@ -37,19 +37,19 @@ export function JoinGate({ room, voterCount, onJoin }: Props) {
     <div className="fixed inset-0 z-50 overflow-y-auto bg-night/95 backdrop-blur-sm">
       <motion.form
         onSubmit={submit}
-        className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-6 px-6 py-10 short:gap-4 short:py-6"
+        className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-6 px-6 py-10 short:gap-4 short:py-6 tiny:gap-3 tiny:py-4"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", damping: 22, stiffness: 220 }}
       >
         <div>
           <p className="text-mute"><bdi>{room.group_name}</bdi></p>
-          <h1 className="mt-1 font-display text-[min(4.25rem,17vw)] font-bold short:text-[3.25rem] leading-[0.85]">
+          <h1 className="mt-1 font-display text-[min(4.25rem,17vw)] font-bold leading-[0.85] short:text-[3.25rem] tiny:text-[2.5rem]">
             {room.status === "voting"
               ? `מתי ${iso(room.host_name)} ${verb} מהקבוצה?`
               : `${iso(room.host_name)} ${verb} מהקבוצה`}
           </h1>
-          <p className="mt-4 text-lg text-ink/80">
+          <p className="mt-4 text-lg text-ink/80 short:mt-3 tiny:mt-2 tiny:text-base">
             {room.reason
               ? `${iso(room.host_name)} ${REASONS[room.reason][he]}. `
               : ""}

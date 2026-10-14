@@ -7,7 +7,6 @@ import { PictureGame } from "@/components/games/PictureGame";
 import { RunawayGame } from "@/components/games/RunawayGame";
 import { TriviaGame } from "@/components/games/TriviaGame";
 import { GAME_META, rankRows } from "@/components/room/Leaderboard";
-import { initial, nameColor } from "@/lib/colors";
 import type { GameId, LeaderboardRow } from "@/lib/types";
 
 const TILES: { id: GameId; art: string; blurb: string; accent: string }[] = [
@@ -37,42 +36,49 @@ const TILES: { id: GameId; art: string; blurb: string; accent: string }[] = [
   },
 ];
 
-/** The room's record for a game, always on screen while playing it. Pops when the record changes. */
-function RecordBanner({ game, top, myUserId }: { game: GameId; top: LeaderboardRow | undefined; myUserId: string | null }) {
+/** The room's record for a game, under its title while playing (like a chat's subtitle). Pops when the record changes. */
+function RecordLine({
+  game,
+  top,
+  myUserId,
+}: {
+  game: GameId;
+  top: LeaderboardRow | undefined;
+  myUserId: string | null;
+}) {
   const mine = !!top && top.user_id === myUserId;
   return (
-    <div aria-live="polite" className="mb-2 shrink-0">
+    <div aria-live="polite" className="h-6 overflow-hidden">
       <AnimatePresence mode="popLayout" initial={false}>
-        <motion.div
+        <motion.p
           key={top ? `${top.user_id}:${top.score}` : "none"}
-          initial={{ opacity: 0, y: -10, scale: 0.94 }}
+          initial={{ opacity: 0, y: -12, scale: 0.94 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 10 }}
+          exit={{ opacity: 0, y: 12 }}
           transition={{ type: "spring", damping: 18, stiffness: 320 }}
-          className="flex items-center gap-3 rounded-2xl bg-pill/10 px-3 py-2 ring-1 ring-pill/25"
+          className="flex h-6 items-center gap-1.5 text-sm"
         >
-          <span className="text-xl" aria-hidden>
-            👑
-          </span>
+          <span aria-hidden>👑</span>
           {top ? (
             <>
-              <span
-                className="grid size-7 shrink-0 place-items-center rounded-full text-xs font-semibold text-night"
-                style={{ background: nameColor(top.user_id) }}
-                aria-hidden
-              >
-                {initial(top.display_name)}
+              <span className="shrink-0 text-mute">
+                {mine ? "השיא שלך" : "השיא:"}
               </span>
-              <span className="min-w-0 flex-1 truncate text-sm">
-                <span className="text-mute">{mine ? "השיא שלך" : "השיא: "}</span>
-                {!mine && <bdi className="font-semibold text-ink">{top.display_name}</bdi>}
+              {!mine && (
+                <bdi className="min-w-0 truncate font-semibold text-ink">
+                  {top.display_name}
+                </bdi>
+              )}
+              <span className="shrink-0 font-display text-xl leading-none text-pill tabular-nums">
+                {GAME_META[game].format(top.score)}
               </span>
-              <span className="shrink-0 font-display text-2xl leading-none text-pill tabular-nums">{GAME_META[game].format(top.score)}</span>
             </>
           ) : (
-            <span className="text-sm text-mute">עוד אין שיא בחדר. תהיו הראשונים לקבוע אותו.</span>
+            <span className="truncate text-mute">
+              עוד אין שיא בחדר. תהיו הראשונים
+            </span>
           )}
-        </motion.div>
+        </motion.p>
       </AnimatePresence>
     </div>
   );
@@ -141,7 +147,7 @@ export function GamesHub({
   if (game) {
     const meta = GAME_META[game];
     return (
-      <div className="mx-auto flex min-h-0 w-full max-w-2xl flex-1 flex-col px-3 pb-3 pt-2 lg:py-5">
+      <div className="mx-auto flex min-h-0 w-full max-w-2xl flex-1 flex-col px-3 pb-3 pt-2 tiny:pb-2 tiny:pt-1 lg:py-5 lg:short:py-3">
         <div className="mb-2 flex shrink-0 items-center gap-2">
           <button
             type="button"
@@ -149,7 +155,7 @@ export function GamesHub({
               setResult(null);
               onGameChange(null);
             }}
-            className="grid size-10 place-items-center rounded-full text-mute hover:bg-raised"
+            className="grid size-10 shrink-0 place-items-center rounded-full text-mute hover:bg-raised"
             aria-label="חזרה למשחקים"
           >
             <svg
@@ -165,21 +171,24 @@ export function GamesHub({
               <path d="M9 18l6-6-6-6" />
             </svg>
           </button>
-          <h2 className="text-lg font-semibold">{meta.title}</h2>
+          <div className="min-w-0 flex-1">
+            <h2 className="truncate text-lg font-semibold leading-tight">
+              {meta.title}
+            </h2>
+            <RecordLine game={game} top={top(game)} myUserId={myUserId} />
+          </div>
         </div>
-
-        <RecordBanner game={game} top={top(game)} myUserId={myUserId} />
 
         {result?.game === game ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="my-auto rounded-3xl bg-panel/90 p-6 text-center"
+            className="my-auto rounded-3xl bg-panel/90 p-6 text-center short:p-5 tiny:p-4"
           >
             <p className="text-mute">
               {result.best && result.rank === 1 ? "השיא החדש של החדר 👑" : result.best ? "שיא אישי חדש" : "התוצאה שלך"}
             </p>
-            <p className="my-2 font-display text-[5rem] font-bold leading-none">
+            <p className="my-2 font-display text-[5rem] font-bold leading-none short:text-[4rem] tiny:my-1 tiny:text-[3rem]">
               {meta.format(result.score)}
             </p>
             <p className="text-lg">
@@ -187,7 +196,7 @@ export function GamesHub({
                 ? "את/ה הראשון/ה בטבלה"
                 : `מקום ${result.rank} מתוך ${result.total}`}
             </p>
-            <div className="mt-6 grid grid-cols-2 gap-2">
+            <div className="mt-6 grid grid-cols-2 gap-2 short:mt-4 tiny:mt-3">
               <button
                 type="button"
                 onClick={() => {
@@ -224,8 +233,8 @@ export function GamesHub({
   }
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-4 pt-3 lg:px-6 lg:py-6">
-    <div className="mx-auto grid max-w-3xl gap-3 lg:grid-cols-2">
+    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-4 pt-3 short:pb-3 short:pt-2 lg:px-6 lg:py-6">
+    <div className="mx-auto grid max-w-3xl gap-3 short:gap-2 tiny:grid-cols-2 lg:grid-cols-2 lg:short:gap-3">
       {TILES.map((tile, i) => {
         const best = myBest(tile.id);
         const record = top(tile.id);
@@ -239,10 +248,10 @@ export function GamesHub({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.06 }}
-            className="flex items-center gap-4 rounded-3xl bg-panel/90 p-4 text-start transition-colors hover:bg-raised/80 lg:flex-col lg:items-start lg:p-5"
+            className="flex items-center gap-4 rounded-3xl bg-panel/90 p-4 text-start transition-colors hover:bg-raised/80 short:p-3 tiny:gap-3 lg:flex-col lg:items-start lg:p-5 lg:short:flex-row lg:short:items-center lg:short:p-4"
           >
             <span
-              className="grid size-16 shrink-0 place-items-center rounded-2xl text-3xl"
+              className="grid size-16 shrink-0 place-items-center rounded-2xl text-3xl short:size-14 tiny:size-12 tiny:text-2xl"
               style={{
                 background: `color-mix(in oklab, ${tile.accent} 22%, transparent)`,
               }}
@@ -253,7 +262,7 @@ export function GamesHub({
               <span className="block font-semibold">
                 {GAME_META[tile.id].title}
               </span>
-              <span className="mt-0.5 block text-sm leading-snug text-ink/70">
+              <span className="mt-0.5 block text-sm leading-snug text-ink/70 tiny:hidden">
                 {tile.blurb}
               </span>
               <span className="mt-2 flex items-center gap-1.5 text-xs">

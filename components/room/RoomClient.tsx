@@ -180,21 +180,20 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
     room.status === "exited" && !finaleDismissed && api.authState === "ready";
   const myUserId = me?.userId ?? null;
   const party = () => api.sendEmoji("🎉");
-  const hero = (
-    <Hero
-      room={room}
-      now={now}
-      leader={leader}
-      voterCount={voteList.length}
-      onReplayFinale={() => setFinaleDismissed(false)}
-    />
-  );
+  const heroProps = {
+    room,
+    now,
+    leader,
+    voterCount: voteList.length,
+    onReplayFinale: () => setFinaleDismissed(false),
+  };
 
   return (
     <MotionConfig reducedMotion="user">
-      {/* App shell: exactly one viewport tall; only the content area scrolls. */}
-      <div className="h-dvh overflow-hidden lg:p-5">
-        <div className="mx-auto flex h-full max-w-xl flex-col bg-night/40 lg:max-w-[1440px] lg:flex-row lg:overflow-hidden lg:rounded-2xl lg:border lg:border-line/60 lg:shadow-2xl">
+      {/* App shell: exactly one viewport tall; only the content area scrolls.
+          Short desktop windows drop the outer frame to keep every pixel. */}
+      <div className="h-dvh overflow-hidden lg:p-5 lg:short:p-0">
+        <div className="mx-auto flex h-full max-w-xl flex-col bg-night/40 lg:max-w-[1440px] lg:flex-row lg:overflow-hidden lg:rounded-2xl lg:border lg:border-line/60 lg:shadow-2xl lg:short:rounded-none lg:short:border-0">
           {/* Desktop sidebar */}
           <aside className="hidden w-[25rem] shrink-0 flex-col border-e border-line/60 bg-panel lg:flex">
             <RoomHeader
@@ -206,16 +205,20 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
               adminHref={adminHref}
               onParty={party}
             />
-            <Scroll>
+            <Scroll className="flex flex-col">
               <StatusStories />
-              {hero}
-              <SideNav
-                tab={tab}
-                onChange={changeTab}
-                unread={unread}
-                summaries={summaries}
-              />
+              <div className="my-auto">
+                <Hero {...heroProps} />
+              </div>
             </Scroll>
+            {/* The sections stay pinned, so they never scroll out of reach. */}
+            <SideNav
+              tab={tab}
+              onChange={changeTab}
+              unread={unread}
+              summaries={summaries}
+              className="shrink-0 border-t border-line/60"
+            />
           </aside>
 
           {/* Main column (the whole app on phones) */}
@@ -238,24 +241,23 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
             />
 
             <main className="flex min-h-0 flex-1 flex-col">
+              {/* Countdown on top and the grid filling the rest; side by side on landscape phones. */}
               {tab === "vote" && (
-                <Scroll key="vote" className="px-3 pb-4 lg:px-6 lg:py-6">
-                  <div className="lg:hidden">
-                    <StatusStories />
-                    {hero}
+                <div className="flex min-h-0 flex-1 flex-col gap-2 px-3 pb-3 tiny:flex-row tiny:items-center tiny:gap-4 tiny:pt-2 lg:px-6 lg:py-6 lg:short:py-4">
+                  <div className="shrink-0 tiny:max-h-full tiny:w-2/5 tiny:overflow-y-auto lg:hidden">
+                    <Hero {...heroProps} compact />
                   </div>
-                  <div className="mx-auto max-w-3xl">
-                    <VoteHeatmap
-                      room={room}
-                      now={now}
-                      tally={tally}
-                      players={api.players}
-                      myUserId={myUserId}
-                      mySlot={mySlot}
-                      onVote={api.vote}
-                    />
-                  </div>
-                </Scroll>
+                  <VoteHeatmap
+                    room={room}
+                    now={now}
+                    tally={tally}
+                    players={api.players}
+                    myUserId={myUserId}
+                    mySlot={mySlot}
+                    onVote={api.vote}
+                    className="mx-auto w-full max-w-3xl tiny:max-h-full tiny:flex-1"
+                  />
+                </div>
               )}
               {tab === "games" && (
                 <GamesHub

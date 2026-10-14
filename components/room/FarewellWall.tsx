@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { SystemPill } from "@/components/ui/SystemPill";
 import { Ticks } from "@/components/ui/Ticks";
 import { nameColor } from "@/lib/colors";
@@ -34,15 +34,48 @@ export function FarewellWall({
   const [draft, setDraft] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
-  const endRef = useRef<HTMLDivElement>(null);
   const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isTyping = useRef(false);
   const lastAnnounced = useRef(0);
 
+  // Scrolled to the newest message? If not, new ones wait behind the jump button.
+  const listRef = useRef<HTMLDivElement>(null);
+  const following = useRef(true);
+  const shownCount = useRef(0);
+  const [atBottom, setAtBottom] = useState(true);
+  const [readCount, setReadCount] = useState(0);
+  const lastIsMine = messages.at(-1)?.user_id === myUserId;
+  const unseen = atBottom
+    ? 0
+    : messages.slice(readCount).filter((m) => m.user_id !== myUserId).length;
 
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages.length, typers.length]);
+  // Follow new messages (and typing) while at the bottom, and always after your own. Jump on first show.
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const first = shownCount.current === 0;
+    shownCount.current = messages.length;
+    if (first || following.current || lastIsMine)
+      list.scrollTo({
+        top: list.scrollHeight,
+        behavior: first ? "instant" : "smooth",
+      });
+  }, [messages.length, typers.length, lastIsMine]);
+
+  function onScroll() {
+    const list = listRef.current;
+    if (!list) return;
+    const bottom =
+      list.scrollHeight - list.scrollTop - list.clientHeight < 80;
+    following.current = bottom;
+    setAtBottom(bottom);
+    if (bottom) setReadCount(messages.length);
+  }
+
+  function jumpToEnd() {
+    const list = listRef.current;
+    list?.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
+  }
 
   useEffect(
     () => () => {
@@ -88,7 +121,12 @@ export function FarewellWall({
 
   return (
     <section aria-label="קיר פרידה" className="flex min-h-0 flex-1 flex-col">
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+      <div className="relative min-h-0 flex-1">
+      <div
+        ref={listRef}
+        onScroll={onScroll}
+        className="h-full overflow-y-auto overscroll-contain"
+      >
       <div className="mx-auto flex min-h-full max-w-3xl flex-col justify-end gap-1.5 px-3 pb-3 pt-3 lg:px-8">
         <SystemPill className="mb-3">
           {`מה תרצו להגיד ל${iso(room.host_name)} לפני ש${g(room.host_gender, "הוא יוצא", "היא יוצאת")}? כל מי שבחדר רואה את ההודעות.`}
@@ -158,8 +196,45 @@ export function FarewellWall({
             </motion.p>
           )}
         </AnimatePresence>
-        <div ref={endRef} />
       </div>
+      </div>
+
+      {/* WhatsApp's round "jump to latest" button, with a count of new messages. */}
+      <AnimatePresence>
+        {!atBottom && (
+          <motion.button
+            type="button"
+            onClick={jumpToEnd}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            aria-label={
+              unseen
+                ? `${unseen === 1 ? "הודעה חדשה אחת" : `${unseen} הודעות חדשות`}, מעבר להודעה האחרונה`
+                : "מעבר להודעה האחרונה"
+            }
+            className="absolute bottom-3 end-3 grid size-10 place-items-center rounded-full bg-raised text-mute shadow-lg lg:end-6"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className="size-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+            {unseen > 0 && (
+              <span className="absolute -top-2 start-0 grid h-5 min-w-5 place-items-center rounded-full bg-signal px-1 text-[11px] font-bold text-night">
+                {unseen > 99 ? "99+" : unseen}
+              </span>
+            )}
+          </motion.button>
+        )}
+      </AnimatePresence>
       </div>
 
       {/* Composer */}

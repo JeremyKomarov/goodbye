@@ -52,7 +52,9 @@ export function useRoom(initialRoom: Room) {
   const [typers, setTypers] = useState<Record<string, Typer>>({});
   const [loaded, setLoaded] = useState(false);
   // Newest message id at first load; anything newer counts as unread.
-  const [baselineMessageId, setBaselineMessageId] = useState<number | null>(null);
+  const [baselineMessageId, setBaselineMessageId] = useState<number | null>(
+    null,
+  );
 
   const channelRef = useRef<RealtimeChannel | null>(null);
   const meRef = useRef<Me | null>(null);
@@ -96,6 +98,9 @@ export function useRoom(initialRoom: Room) {
         meRef.current = next;
         setMe(next);
         setAuthState("ready");
+        // If the channel subscribed before we knew who we are, it skipped tracking us.
+        if (channelRef.current?.state === "joined")
+          channelRef.current.track(next);
       } else {
         setAuthState("join");
       }
@@ -154,8 +159,7 @@ export function useRoom(initialRoom: Room) {
       const ch = supabase.channel(topic, { config: { presence: { key: "" } } });
       channel = ch;
       channelRef.current = ch;
-      ch
-      .on(
+      ch.on(
         "postgres_changes",
         {
           event: "UPDATE",
@@ -165,107 +169,120 @@ export function useRoom(initialRoom: Room) {
         },
         (payload) => setRoom(payload.new as Room),
       )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "players", filter: byRoom },
-        (payload) => {
-          const row = payload.new as {
-            user_id?: string;
-            display_name?: string;
-          };
-          if (row.user_id && row.display_name)
-            setPlayers((prev) => ({
-              ...prev,
-              [row.user_id!]: row.display_name!,
-            }));
-        },
-      )
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "votes", filter: byRoom },
-        (payload) => {
-          const vote = payload.new as Vote;
-          setVotes((prev) => ({ ...prev, [vote.user_id]: vote }));
-        },
-      )
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "votes", filter: byRoom },
-        (payload) => {
-          const vote = payload.new as Vote;
-          setVotes((prev) => ({ ...prev, [vote.user_id]: vote }));
-        },
-      )
-      // Delete events can't be filtered and only carry the primary key.
-      .on(
-        "postgres_changes",
-        { event: "DELETE", schema: "public", table: "votes" },
-        (payload) => {
-          const id = (payload.old as { id?: number }).id;
-          setVotes((prev) => {
-            const entry = Object.values(prev).find((x) => x.id === id);
-            if (!entry) return prev;
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "players", filter: byRoom },
+          (payload) => {
+            const row = payload.new as {
+              user_id?: string;
+              display_name?: string;
+            };
+            if (row.user_id && row.display_name)
+              setPlayers((prev) => ({
+                ...prev,
+                [row.user_id!]: row.display_name!,
+              }));
+          },
+        )
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "votes", filter: byRoom },
+          (payload) => {
+            const vote = payload.new as Vote;
+            setVotes((prev) => ({ ...prev, [vote.user_id]: vote }));
+          },
+        )
+        .on(
+          "postgres_changes",
+          { event: "UPDATE", schema: "public", table: "votes", filter: byRoom },
+          (payload) => {
+            const vote = payload.new as Vote;
+            setVotes((prev) => ({ ...prev, [vote.user_id]: vote }));
+          },
+        )
+        // Delete events can't be filtered and only carry the primary key.
+        .on(
+          "postgres_changes",
+          { event: "DELETE", schema: "public", table: "votes" },
+          (payload) => {
+            const id = (payload.old as { id?: number }).id;
+            setVotes((prev) => {
+              const entry = Object.values(prev).find((x) => x.id === id);
+              if (!entry) return prev;
+              const next = { ...prev };
+              delete next[entry.user_id];
+              return next;
+            });
+          },
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "wall_messages",
+            filter: byRoom,
+          },
+          (payload) =>
+            setMessages((prev) =>
+              upsertById(prev, payload.new as WallMessage).slice(
+                -MESSAGE_LIMIT,
+              ),
+            ),
+        )
+        .on(
+          "postgres_changes",
+          { event: "DELETE", schema: "public", table: "wall_messages" },
+          (payload) => {
+            const id = (payload.old as { id?: number }).id;
+            setMessages((prev) => prev.filter((x) => x.id !== id));
+          },
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "scores",
+            filter: byRoom,
+          },
+          () => refreshLeaderboard(),
+        )
+        .on("presence", { event: "sync" }, () => {
+          const state = ch.presenceState<PresencePayload>();
+          const seen = new Map<string, OnlineUser>();
+          for (const entries of Object.values(state)) {
+            for (const entry of entries)
+              seen.set(entry.userId, {
+                userId: entry.userId,
+                name: entry.name,
+              });
+          }
+          setOnline([...seen.values()]);
+        })
+        // Typing goes over broadcast: presence diffs arrive ~2s late, too slow for "typing…".
+        .on("broadcast", { event: "typing" }, ({ payload }) => {
+          const p = payload as TypingPayload;
+          if (!p?.userId) return;
+          const until = p.typing ? typingUntil() : 0;
+          setTypers((prev) => {
             const next = { ...prev };
-            delete next[entry.user_id];
+            if (p.typing)
+              next[p.userId] = { userId: p.userId, name: p.name, until };
+            else delete next[p.userId];
             return next;
           });
-        },
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "wall_messages",
-          filter: byRoom,
-        },
-        (payload) =>
-          setMessages((prev) =>
-            upsertById(prev, payload.new as WallMessage).slice(-MESSAGE_LIMIT),
-          ),
-      )
-      .on(
-        "postgres_changes",
-        { event: "DELETE", schema: "public", table: "wall_messages" },
-        (payload) => {
-          const id = (payload.old as { id?: number }).id;
-          setMessages((prev) => prev.filter((x) => x.id !== id));
-        },
-      )
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "scores", filter: byRoom },
-        () => refreshLeaderboard(),
-      )
-      .on("presence", { event: "sync" }, () => {
-        const state = ch.presenceState<PresencePayload>();
-        const seen = new Map<string, OnlineUser>();
-        for (const entries of Object.values(state)) {
-          for (const entry of entries) seen.set(entry.userId, { userId: entry.userId, name: entry.name });
-        }
-        setOnline([...seen.values()]);
-      })
-      // Typing goes over broadcast: presence diffs arrive ~2s late, too slow for "typing…".
-      .on("broadcast", { event: "typing" }, ({ payload }) => {
-        const p = payload as TypingPayload;
-        if (!p?.userId) return;
-        const until = p.typing ? typingUntil() : 0;
-        setTypers((prev) => {
-          const next = { ...prev };
-          if (p.typing) next[p.userId] = { userId: p.userId, name: p.name, until };
-          else delete next[p.userId];
-          return next;
+        })
+        .on("broadcast", { event: "emoji" }, ({ payload }) => {
+          const emoji = (payload as { emoji?: string }).emoji;
+          if (emoji)
+            rainListeners.current.forEach((listener) => listener(emoji));
+        })
+        .subscribe((status) => {
+          if (status !== "SUBSCRIBED") return;
+          load();
+          if (meRef.current) ch.track(meRef.current);
         });
-      })
-      .on("broadcast", { event: "emoji" }, ({ payload }) => {
-        const emoji = (payload as { emoji?: string }).emoji;
-        if (emoji) rainListeners.current.forEach((listener) => listener(emoji));
-      })
-      .subscribe((status) => {
-        if (status !== "SUBSCRIBED") return;
-        load();
-        if (meRef.current) ch.track(meRef.current);
-      });
     };
 
     // supabase.channel() reuses a channel with the same topic until its unsubscribe
@@ -276,10 +293,12 @@ export function useRoom(initialRoom: Room) {
     return () => {
       active = false;
       channelRef.current = null;
-      const done = previous.then(() => (channel ? supabase.removeChannel(channel) : undefined)).then(
-        () => undefined,
-        () => undefined,
-      );
+      const done = previous
+        .then(() => (channel ? supabase.removeChannel(channel) : undefined))
+        .then(
+          () => undefined,
+          () => undefined,
+        );
       teardowns.set(topic, done);
     };
   }, [supabase, roomId, refreshLeaderboard]);

@@ -90,8 +90,8 @@ export function TriviaGame({
 
   if (!round) {
     return (
-      <div className="my-auto rounded-3xl bg-panel/90 p-6 text-center">
-        <p className="mb-5 text-lg text-ink/85">
+      <div className="my-auto rounded-3xl bg-panel/90 p-6 text-center tiny:p-4">
+        <p className="mb-5 text-lg text-ink/85 tiny:mb-3">
           {ROUND} שאלות על וואטסאפ, חיי משרד ואנשים שפוטרו והצליחו. {SECONDS}{" "}
           שניות לכל שאלה, ותשובה מהירה שווה יותר.
         </p>
@@ -113,14 +113,14 @@ export function TriviaGame({
   const last = index === ROUND - 1;
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain rounded-3xl bg-panel/90 p-4">
-      <div className="mb-3 flex items-center justify-between text-sm text-mute">
+    <div className="flex min-h-0 flex-1 flex-col rounded-3xl bg-panel/90 p-4 short:p-3">
+      <div className="mb-3 flex shrink-0 items-center justify-between text-sm text-mute short:mb-2">
         <span>
           שאלה {index + 1} מתוך {ROUND}
         </span>
         <span className="tabular-nums">{score} נק׳</span>
       </div>
-      <div className="mb-4 h-1.5 overflow-hidden rounded-full bg-raised">
+      <div className="mb-4 h-1.5 shrink-0 overflow-hidden rounded-full bg-raised short:mb-3">
         <motion.div
           className={`h-full rounded-full ${left < 5000 ? "bg-exit" : "bg-kraft"}`}
           animate={{
@@ -130,6 +130,8 @@ export function TriviaGame({
         />
       </div>
 
+      {/* Question and options scroll if they must; the verdict and "next" stay pinned below. */}
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
       <AnimatePresence mode="wait">
         <motion.div
           key={index}
@@ -138,8 +140,10 @@ export function TriviaGame({
           exit={{ opacity: 0, x: 24 }}
           transition={{ duration: 0.2 }}
         >
-          <h3 className="mb-4 text-xl font-semibold leading-snug">{q.q}</h3>
-          <div className="flex flex-col gap-2">
+          <h3 className="mb-4 text-xl font-semibold leading-snug short:mb-3 short:text-lg">
+            {q.q}
+          </h3>
+          <div className="flex flex-col gap-2 short:gap-1.5 tiny:grid tiny:grid-cols-2">
             {q.options.map((option, i) => {
               const isAnswer = i === q.answer;
               const isPicked = i === picked;
@@ -162,7 +166,7 @@ export function TriviaGame({
                       ? { x: [0, -8, 8, -5, 5, 0] }
                       : undefined
                   }
-                  className={`flex items-center justify-between rounded-2xl px-4 py-3.5 text-start text-base transition-colors ${tone}`}
+                  className={`flex items-center justify-between rounded-2xl px-4 py-3.5 text-start text-base transition-colors short:py-2.5 ${tone}`}
                 >
                   <span>{option}</span>
                   {answered && isAnswer && <Ticks />}
@@ -170,32 +174,35 @@ export function TriviaGame({
               );
             })}
           </div>
-
-          {answered && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-4"
-            >
-              <p className="text-sm font-semibold">
-                {picked === null
-                  ? "נגמר הזמן"
-                  : gained > 0
-                    ? `נכון! +${gained}`
-                    : "לא הפעם"}
-              </p>
-              <p className="mt-1 text-sm text-ink/75">{q.fact}</p>
-              <button
-                type="button"
-                onClick={() => (last ? onFinish(score) : ask(index + 1))}
-                className="mt-4 w-full rounded-2xl bg-kraft px-6 py-3.5 font-semibold text-night"
-              >
-                {last ? "לתוצאה" : "לשאלה הבאה"}
-              </button>
-            </motion.div>
-          )}
         </motion.div>
       </AnimatePresence>
+      </div>
+
+      {answered && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="shrink-0 pt-3 tiny:flex tiny:items-center tiny:gap-3 tiny:pt-2"
+        >
+          <div className="min-w-0 tiny:flex-1">
+          <p className="text-sm font-semibold">
+            {picked === null
+              ? "נגמר הזמן"
+              : gained > 0
+                ? `נכון! +${gained}`
+                : "לא הפעם"}
+          </p>
+          <p className="mt-1 text-sm text-ink/75 tiny:line-clamp-2">{q.fact}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => (last ? onFinish(score) : ask(index + 1))}
+            className="mt-3 w-full rounded-2xl bg-kraft px-6 py-3.5 font-semibold text-night short:py-3 tiny:mt-0 tiny:w-auto tiny:shrink-0"
+          >
+            {last ? "לתוצאה" : "לשאלה הבאה"}
+          </button>
+        </motion.div>
+      )}
     </div>
   );
 }

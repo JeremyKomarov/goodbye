@@ -112,12 +112,12 @@ export function PictureGame({
 
   if (!round) {
     return (
-      <div className="my-auto rounded-3xl bg-panel/90 p-6 text-center">
+      <div className="my-auto rounded-3xl bg-panel/90 p-6 text-center tiny:p-4">
         <p className="mb-2 text-lg text-ink/85">
           רואים רק את החלק העליון של התמונה ויש ניחוש אחד. אחרי הניחוש כל התמונה
           נחשפת.
         </p>
-        <p className="mb-5 text-sm text-mute">
+        <p className="mb-5 text-sm text-mute tiny:mb-3">
           זהירות, התמונות מטעות 😉 ניחוש נכון שווה {POINTS} נק׳. {ROUND} תמונות.
         </p>
         <motion.button
@@ -153,9 +153,10 @@ export function PictureGame({
         <span className="tabular-nums">{score} נק׳</span>
       </div>
 
-      {/* The picture takes whatever room is left, staying square. */}
+      {/* The picture takes whatever room is left, staying square. Landscape phones put the guess beside it. */}
+      <div className="flex min-h-0 flex-1 flex-col tiny:flex-row tiny:items-center tiny:gap-4">
       <div
-        className="relative min-h-0 flex-1"
+        className="relative min-h-0 flex-1 tiny:self-stretch"
         style={{ containerType: "size" }}
       >
         <div className="absolute inset-0 grid place-items-center">
@@ -169,7 +170,7 @@ export function PictureGame({
         </div>
       </div>
 
-      <div className="shrink-0 pt-3">
+      <div className="shrink-0 pt-3 tiny:w-1/2 tiny:pt-0">
         {done ? (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
@@ -233,6 +234,7 @@ export function PictureGame({
             </div>
           </form>
         )}
+      </div>
       </div>
     </div>
   );

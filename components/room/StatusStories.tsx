@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import {
+  type ReactNode,
   useCallback,
   useEffect,
   useRef,
@@ -40,17 +41,58 @@ function subscribeSeen(listener: () => void) {
   return () => seenListeners.delete(listener);
 }
 
-export function StatusStories() {
+const ring = (seen: boolean, color = "var(--color-signal)") =>
+  seen
+    ? "var(--color-line)"
+    : `conic-gradient(var(--color-signal), ${color}, var(--color-signal))`;
+
+/** Seen story groups, and which one is open in the viewer. */
+function useStories() {
   const seen = useSyncExternalStore(subscribeSeen, readSeen, () => "");
   const [open, setOpen] = useState<{ group: number; fact: number } | null>(
     null,
   );
+  const viewer = (
+    <AnimatePresence>
+      {open && (
+        <StoryViewer key="viewer" start={open} onClose={() => setOpen(null)} />
+      )}
+    </AnimatePresence>
+  );
+  return { seen: seen.split(","), setOpen, viewer };
+}
+
+/** A status ring around an avatar, like a WhatsApp contact with a new status. Opens the first unseen story. */
+export function StoryRing({ children }: { children: ReactNode }) {
+  const { seen, setOpen, viewer } = useStories();
+  const next = STORY_GROUPS.findIndex((group) => !seen.includes(group.id));
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen({ group: Math.max(0, next), fact: 0 })}
+        aria-label="עובדות מצחיקות"
+        title="עובדות מצחיקות"
+        className="grid size-11 shrink-0 place-items-center rounded-full p-[2px] tiny:size-9"
+        style={{ background: ring(next === -1) }}
+      >
+        <span className="grid size-full place-items-center overflow-hidden rounded-full border-2 border-panel">
+          {children}
+        </span>
+      </button>
+      {viewer}
+    </>
+  );
+}
+
+export function StatusStories() {
+  const { seen, setOpen, viewer } = useStories();
 
   return (
     <section aria-label="עובדות מצחיקות" className="px-1">
-      <div className="no-scrollbar flex gap-4 overflow-x-auto px-2 py-2">
+      <div className="no-scrollbar flex gap-4 overflow-x-auto px-2 py-2 short:py-1">
         {STORY_GROUPS.map((group, i) => {
-          const isSeen = seen.split(",").includes(group.id);
+          const isSeen = seen.includes(group.id);
           return (
             <button
               key={group.id}
@@ -59,12 +101,8 @@ export function StatusStories() {
               className="flex w-[4.5rem] shrink-0 flex-col items-center gap-1.5"
             >
               <span
-                className="grid size-16 place-items-center rounded-full p-[3px]"
-                style={{
-                  background: isSeen
-                    ? "var(--color-line)"
-                    : `conic-gradient(var(--color-signal), ${group.color}, var(--color-signal))`,
-                }}
+                className="grid size-16 place-items-center rounded-full p-[3px] short:size-14"
+                style={{ background: ring(isSeen, group.color) }}
               >
                 <span
                   className="grid size-full place-items-center rounded-full border-[3px] border-night text-2xl"
@@ -83,15 +121,7 @@ export function StatusStories() {
         })}
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <StoryViewer
-            key="viewer"
-            start={open}
-            onClose={() => setOpen(null)}
-          />
-        )}
-      </AnimatePresence>
+      {viewer}
     </section>
   );
 }
@@ -235,7 +265,7 @@ function StoryViewer({
           <AnimatePresence mode="wait">
             <motion.p
               key={`${pos.group}-${pos.fact}`}
-              className="font-display text-[2.75rem] font-bold leading-[1.02]"
+              className="font-display text-[2.75rem] font-bold leading-[1.02] tiny:text-[2rem]"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}

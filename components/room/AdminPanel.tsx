@@ -149,21 +149,22 @@ function Panel({
         : `יצאת בשעה ${room.exited_at ? formatHour(Date.parse(room.exited_at), tz) : ""}`;
 
   return (
+    // Phones scroll the whole panel; desktop keeps the title still and scrolls each column on its own.
     <main className="flex h-dvh flex-col overflow-hidden">
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-      <div className="mx-auto grid max-w-5xl gap-5 px-4 pb-10 pt-[max(2rem,env(safe-area-inset-top))] lg:grid-cols-2 lg:items-start lg:gap-8 lg:px-8 lg:pt-12">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain lg:overflow-hidden">
+      <div className="mx-auto grid max-w-5xl gap-5 px-4 pb-10 pt-[max(2rem,env(safe-area-inset-top))] short:gap-4 short:pt-[max(1.25rem,env(safe-area-inset-top))] lg:h-full lg:grid-cols-2 lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-x-8 lg:px-8 lg:pb-8 lg:pt-12 lg:short:pb-5 lg:short:pt-6">
       <div className="lg:col-span-2">
         <Link href={`/r/${slug}`} className="text-sm text-tick">
           חזרה לחדר
         </Link>
-        <h1 className="mt-2 font-display text-6xl font-bold leading-none">
+        <h1 className="mt-2 font-display text-6xl font-bold leading-none short:text-5xl">
           ניהול החדר
         </h1>
         <p className="mt-2 text-ink/80">{room.group_name}</p>
         <p className="mt-1 text-sm text-mute">רק מי שיש לו את קישור הניהול רואה את הדף הזה. לא לשלוח אותו לקבוצה.</p>
       </div>
 
-      <div className="flex flex-col gap-5">
+      <div className="no-scrollbar flex flex-col gap-5 short:gap-4 lg:-m-1 lg:min-h-0 lg:overflow-y-auto lg:p-1">
 
       <div className="rounded-3xl bg-panel p-5">
         <p className="text-sm text-mute">מצב עכשיו</p>
@@ -277,9 +278,16 @@ function Panel({
       </div>
       </div>
 
-      <section className="rounded-3xl bg-panel p-5">
-        <div className="mb-3 flex items-baseline justify-between">
-          <h2 className="font-semibold">הודעות בקיר</h2>
+      <section className="rounded-3xl bg-panel p-5 lg:flex lg:min-h-0 lg:flex-col lg:self-start lg:max-h-full">
+        <div className="mb-3 flex shrink-0 items-baseline justify-between">
+          <h2 className="font-semibold">
+            הודעות בקיר
+            {messages.length > 0 && (
+              <span className="ms-2 text-sm font-normal text-mute">
+                {messages.length}
+              </span>
+            )}
+          </h2>
           <button
             type="button"
             onClick={loadMessages}
@@ -291,7 +299,7 @@ function Panel({
         {messages.length === 0 ? (
           <p className="text-mute">אין הודעות עדיין.</p>
         ) : (
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-2 lg:-me-2 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pe-2">
             {messages.map((m) => (
               <li
                 key={m.id}
