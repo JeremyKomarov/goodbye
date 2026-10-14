@@ -61,10 +61,3 @@ export function matches(input: string, answers: string[]) {
     return false;
   });
 }
-
-/** "ר _ _ _" style hint: first letter, then a blank per letter (spaces kept). */
-export function letterHint(label: string) {
-  return Array.from(label)
-    .map((c, i) => (i === 0 ? c : c === " " ? "  " : "_"))
-    .join(" ");
-}
