@@ -156,11 +156,10 @@ export function PictureGame({
             animate={{ opacity: 1, y: 0 }}
             className="rounded-2xl bg-panel/90 p-4"
           >
-            <p className={`text-sm font-semibold ${verdict[status].className}`}>
+            <p
+              className={`text-lg font-semibold ${verdict[status].className}`}
+            >
               {verdict[status].text}
-            </p>
-            <p className="mt-1 text-lg font-semibold leading-snug">
-              {puzzle.reveal}
             </p>
             <button
               ref={nextRef}
