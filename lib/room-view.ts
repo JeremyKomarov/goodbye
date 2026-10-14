@@ -1,4 +1,4 @@
-import { g } from "@/lib/hebrew";
+import { g, iso } from "@/lib/hebrew";
 import type { Room } from "@/lib/types";
 
 /** Within this many minutes of the voted hour counts as "on time". */
@@ -14,5 +14,5 @@ export function verdict(room: Room): Verdict | null {
 }
 
 export function leftLine(room: Room) {
-  return `${room.host_name} ${g(room.host_gender, "יצא", "יצאה")} מהקבוצה`;
+  return `${iso(room.host_name)} ${g(room.host_gender, "יצא", "יצאה")} מהקבוצה`;
 }

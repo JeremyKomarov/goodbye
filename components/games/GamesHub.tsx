@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { CatchGame } from "@/components/games/CatchGame";
+import { PictureGame } from "@/components/games/PictureGame";
 import { RunawayGame } from "@/components/games/RunawayGame";
 import { TriviaGame } from "@/components/games/TriviaGame";
 import { GAME_META, rankRows } from "@/components/room/Leaderboard";
@@ -27,6 +28,12 @@ const TILES: { id: GameId; art: string; blurb: string; accent: string }[] = [
     art: "🔔",
     blurb: "פוצצו התראות לפני שהן קוברות אתכם. רק לא את הבוס",
     accent: "var(--color-tick)",
+  },
+  {
+    id: "picture",
+    art: "🖼️",
+    blurb: "רואים רבע תמונה ובטוחים שזה ברור. ואז רואים את השאר",
+    accent: "var(--color-pill)",
   },
 ];
 
@@ -58,7 +65,7 @@ function RecordBanner({ game, top, myUserId }: { game: GameId; top: LeaderboardR
               </span>
               <span className="min-w-0 flex-1 truncate text-sm">
                 <span className="text-mute">{mine ? "השיא שלך" : "השיא: "}</span>
-                {!mine && <span className="font-semibold text-ink">{top.display_name}</span>}
+                {!mine && <bdi className="font-semibold text-ink">{top.display_name}</bdi>}
               </span>
               <span className="shrink-0 font-display text-2xl leading-none text-pill tabular-nums">{GAME_META[game].format(top.score)}</span>
             </>
@@ -207,8 +214,10 @@ export function GamesHub({
           <RunawayGame key={round} onFinish={(s) => finish("runaway", s)} />
         ) : game === "trivia" ? (
           <TriviaGame key={round} onFinish={(s) => finish("trivia", s)} />
-        ) : (
+        ) : game === "catch" ? (
           <CatchGame key={round} onFinish={(s) => finish("catch", s)} />
+        ) : (
+          <PictureGame key={round} onFinish={(s) => finish("picture", s)} />
         )}
       </div>
     );
@@ -216,7 +225,7 @@ export function GamesHub({
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-4 pt-3 lg:px-6 lg:py-6">
-    <div className="mx-auto grid max-w-3xl gap-3 lg:grid-cols-3">
+    <div className="mx-auto grid max-w-3xl gap-3 lg:grid-cols-2">
       {TILES.map((tile, i) => {
         const best = myBest(tile.id);
         const record = top(tile.id);
@@ -251,7 +260,7 @@ export function GamesHub({
                 <span aria-hidden>👑</span>
                 {record ? (
                   <span className="min-w-0 truncate">
-                    <span className="font-semibold text-pill">{mineRecord ? "השיא שלך" : record.display_name}</span>{" "}
+                    <bdi className="font-semibold text-pill">{mineRecord ? "השיא שלך" : record.display_name}</bdi>{" "}
                     <span className="text-mute">{GAME_META[tile.id].format(record.score)}</span>
                   </span>
                 ) : (

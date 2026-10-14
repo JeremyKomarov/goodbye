@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { useState } from "react";
-import { g, peopleLabel, REASONS } from "@/lib/hebrew";
+import { g, iso, peopleLabel, REASONS } from "@/lib/hebrew";
 import type { Room } from "@/lib/types";
 
 type Props = {
@@ -43,15 +43,15 @@ export function JoinGate({ room, voterCount, onJoin }: Props) {
         transition={{ type: "spring", damping: 22, stiffness: 220 }}
       >
         <div>
-          <p className="text-mute">{room.group_name}</p>
+          <p className="text-mute"><bdi>{room.group_name}</bdi></p>
           <h1 className="mt-1 font-display text-[min(4.25rem,17vw)] font-bold short:text-[3.25rem] leading-[0.85]">
             {room.status === "voting"
-              ? `מתי ${room.host_name} ${verb} מהקבוצה?`
-              : `${room.host_name} ${verb} מהקבוצה`}
+              ? `מתי ${iso(room.host_name)} ${verb} מהקבוצה?`
+              : `${iso(room.host_name)} ${verb} מהקבוצה`}
           </h1>
           <p className="mt-4 text-lg text-ink/80">
             {room.reason
-              ? `${room.host_name} ${REASONS[room.reason][he]}. `
+              ? `${iso(room.host_name)} ${REASONS[room.reason][he]}. `
               : ""}
             {room.status === "voting" ? "אתם מחליטים באיזו שעה. " : ""}
             {voterCount > 0

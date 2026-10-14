@@ -1,7 +1,7 @@
 export type RoomStatus = "voting" | "locked" | "exited";
 export type Gender = "m" | "f";
 export type Reason = "fired" | "quit" | "fed_up";
-export type GameId = "runaway" | "trivia" | "catch";
+export type GameId = "runaway" | "trivia" | "catch" | "picture";
 
 export type Room = {
   id: string;

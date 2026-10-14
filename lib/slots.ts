@@ -62,13 +62,29 @@ export function tallyVotes(votes: Vote[]) {
   return tally;
 }
 
-/** Same rule as `compute_winner` in SQL: most votes, ties go to the earliest slot. */
-export function leadingSlot(tally: Map<number, Vote[]>) {
-  let best: { ms: number; count: number } | null = null;
+export type Lead = { ms: number; count: number; tied: number[] };
+
+/**
+ * Most votes leads. `tied` lists every slot sharing the top count (earliest first).
+ * If voting closes on a tie, `compute_winner` in SQL draws one of them at random.
+ */
+export function leadingSlot(tally: Map<number, Vote[]>): Lead | null {
+  let count = 0;
+  let tied: number[] = [];
   for (const [ms, list] of tally) {
-    if (!best || list.length > best.count || (list.length === best.count && ms < best.ms)) {
-      best = { ms, count: list.length };
+    if (list.length > count) {
+      count = list.length;
+      tied = [ms];
+    } else if (list.length === count) {
+      tied.push(ms);
     }
   }
-  return best;
+  if (count === 0) return null;
+  tied.sort((a, b) => a - b);
+  return { ms: tied[0], count, tied };
+}
+
+/** True when the locked hour was drawn at random from a tie. */
+export function wonByDraw(lead: Lead | null, lockedSlot: string | null) {
+  return !!lead && !!lockedSlot && lead.tied.length > 1 && lead.tied.includes(Date.parse(lockedSlot));
 }

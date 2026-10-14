@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { SystemPill } from "@/components/ui/SystemPill";
 import { Ticks } from "@/components/ui/Ticks";
 import { nameColor } from "@/lib/colors";
-import { formatHour, g } from "@/lib/hebrew";
+import { formatHour, g, iso } from "@/lib/hebrew";
 import type { Typer } from "@/lib/hooks/useRoom";
 import type { Room, WallMessage } from "@/lib/types";
 
@@ -91,7 +91,7 @@ export function FarewellWall({
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
       <div className="mx-auto flex min-h-full max-w-3xl flex-col justify-end gap-1.5 px-3 pb-3 pt-3 lg:px-8">
         <SystemPill className="mb-3">
-          {`מה תרצו להגיד ל${room.host_name} לפני ש${g(room.host_gender, "הוא יוצא", "היא יוצאת")}? כל מי שבחדר רואה את ההודעות.`}
+          {`מה תרצו להגיד ל${iso(room.host_name)} לפני ש${g(room.host_gender, "הוא יוצא", "היא יוצאת")}? כל מי שבחדר רואה את ההודעות.`}
         </SystemPill>
 
         {messages.length === 0 && (
@@ -125,10 +125,10 @@ export function FarewellWall({
                       className="text-[13px] font-semibold"
                       style={{ color: nameColor(m.user_id) }}
                     >
-                      {m.display_name}
+                      <bdi>{m.display_name}</bdi>
                     </div>
                   )}
-                  <p className="whitespace-pre-wrap break-words text-[15px] leading-snug">
+                  <p dir="auto" className="whitespace-pre-wrap break-words text-[15px] leading-snug">
                     {m.body}
                   </p>
                   <div
@@ -153,7 +153,7 @@ export function FarewellWall({
               className="ms-3 mt-1 text-sm text-signal"
             >
               {typers.length === 1
-                ? `${typers[0].name} מקליד/ה…`
+                ? `${iso(typers[0].name)} מקליד/ה…`
                 : `${typers.length} אנשים מקלידים…`}
             </motion.p>
           )}

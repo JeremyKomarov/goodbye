@@ -6,7 +6,7 @@ import { useMemo, useState, useTransition } from "react";
 import { createRoom } from "@/app/actions";
 import { Sheet } from "@/components/ui/Sheet";
 import { saveAdminToken } from "@/lib/admin-storage";
-import { g } from "@/lib/hebrew";
+import { g, iso } from "@/lib/hebrew";
 import { addDaysToDate, allSlots } from "@/lib/slots";
 import type { Gender, Reason } from "@/lib/types";
 
@@ -157,7 +157,7 @@ function CreateForm({ onCreated }: { onCreated: (c: Created) => void }) {
               aria-pressed={gender === option}
               className={`rounded-xl px-3 py-3 text-sm transition-colors ${gender === option ? "bg-bubble text-ink ring-2 ring-signal/60" : "bg-raised text-mute"}`}
             >
-              {name} {g(option, "יצא", "יצאה")} מהקבוצה
+              {iso(name)} {g(option, "יצא", "יצאה")} מהקבוצה
             </button>
           ))}
         </div>
@@ -356,7 +356,7 @@ function Success({ created }: { created: Created }) {
   const roomUrl = `${origin}/r/${created.slug}`;
   const adminUrl = `${roomUrl}/admin#k=${created.adminToken}`;
   const name = created.hostName;
-  const shareText = `${name} ${g(created.gender, "יוצא", "יוצאת")} מהקבוצה, ואתם מחליטים מתי 🫡\nהצביעו כאן: ${roomUrl}`;
+  const shareText = `${iso(name)} ${g(created.gender, "יוצא", "יוצאת")} מהקבוצה, ואתם מחליטים מתי 🫡\nהצביעו כאן: ${roomUrl}`;
 
   return (
     <div className="flex flex-col gap-5 pb-2">

@@ -3,23 +3,15 @@
 import { motion } from "motion/react";
 import { FlipDigits } from "@/components/room/FlipDigits";
 import { SystemPill } from "@/components/ui/SystemPill";
-import {
-  formatDuration,
-  formatDurationRough,
-  formatSlot,
-  g,
-  pad,
-  REASONS,
-  splitCountdown,
-  votesLabel,
-} from "@/lib/hebrew";
+import { formatDuration, formatDurationRough, formatSlot, g, iso, pad, REASONS, splitCountdown, votesLabel } from "@/lib/hebrew";
 import { leftLine, verdict } from "@/lib/room-view";
+import { type Lead, wonByDraw } from "@/lib/slots";
 import type { Room } from "@/lib/types";
 
 type Props = {
   room: Room;
   now: number;
-  leader: { ms: number; count: number } | null;
+  leader: Lead | null;
   voterCount: number;
   onReplayFinale: () => void;
 };
@@ -41,7 +33,7 @@ function DaysLine({ days }: { days: number }) {
 export function Hero({ room, now, leader, voterCount, onReplayFinale }: Props) {
   const tz = room.timezone;
   const he = room.host_gender;
-  const name = room.host_name;
+  const name = iso(room.host_name);
   const reason = room.reason ? REASONS[room.reason][he] : null;
 
   if (room.status === "exited") {
@@ -98,7 +90,9 @@ export function Hero({ room, now, leader, voterCount, onReplayFinale }: Props) {
         <p className="mt-3 text-ink/75">
           {overtime
             ? `${name}, הכפתור מחכה לך 👀`
-            : `${formatSlot(target, tz)}. ככה החליטה הקבוצה${leader ? `, עם ${votesLabel(leader.count)}` : ""}.`}
+            : wonByDraw(leader, room.locked_slot)
+              ? `${formatSlot(target, tz)}. היה תיקו בין ${leader!.tied.length} שעות, וההגרלה בחרה בזו 🎲`
+              : `${formatSlot(target, tz)}. ככה החליטה הקבוצה${leader ? `, עם ${votesLabel(leader.count)}` : ""}.`}
         </p>
 
         {/* WhatsApp's red "Exit group" row from the group info screen, filling up as the hour nears. */}
@@ -141,7 +135,7 @@ export function Hero({ room, now, leader, voterCount, onReplayFinale }: Props) {
     <section className="px-4 pb-6 pt-6 text-center short:pb-4 short:pt-4">
       <SystemPill>
         {reason ? `${name} ${reason}. ` : ""}
-        {`עכשיו הקבוצה מחליטה מתי ${g(he, "הוא יוצא", "היא יוצאת")} מ${room.group_name}.`}
+        {`עכשיו הקבוצה מחליטה מתי ${g(he, "הוא יוצא", "היא יוצאת")} מ${iso(room.group_name)}.`}
       </SystemPill>
       <p className="mt-6 text-lg text-ink/85 short:mt-4">
         {counting ? "סופרים קולות…" : "ההצבעה נסגרת בעוד"}
@@ -154,11 +148,27 @@ export function Hero({ room, now, leader, voterCount, onReplayFinale }: Props) {
         />
         <span className="sr-only">{formatDuration(remaining)}</span>
       </div>
-      <p className="mt-3 text-ink/75">
-        {leader
-          ? `מובילה כרגע: ${formatSlot(leader.ms, tz)}, עם ${votesLabel(leader.count)} מתוך ${voterCount}.`
-          : "עוד אף אחד לא הצביע. בחרו שעה בטבלה למטה."}
-      </p>
+      {leader && leader.tied.length > 1 ? (
+        <div className="mt-3">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-pill/15 px-3 py-1 text-sm font-semibold text-pill">
+            <span aria-hidden>⚖️</span> תיקו בין {leader.tied.length} שעות
+          </span>
+          <p className="mt-2 text-ink/75">
+            {leader.tied
+              .slice(0, 3)
+              .map((ms) => formatSlot(ms, tz))
+              .join(", ")}
+            {leader.tied.length > 3 ? ` ועוד ${leader.tied.length - 3}` : ""}
+            {`, עם ${votesLabel(leader.count)} כל אחת. ${counting ? "ההגרלה מכריעה…" : "אם זה יישאר ככה, הגרלה תכריע."}`}
+          </p>
+        </div>
+      ) : (
+        <p className="mt-3 text-ink/75">
+          {leader
+            ? `מובילה כרגע: ${formatSlot(leader.ms, tz)}, עם ${votesLabel(leader.count)} מתוך ${voterCount}.`
+            : "עוד אף אחד לא הצביע. בחרו שעה בטבלה למטה."}
+        </p>
+      )}
     </section>
   );
 }

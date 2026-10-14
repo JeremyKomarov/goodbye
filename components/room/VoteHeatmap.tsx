@@ -3,12 +3,7 @@
 import { motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Ticks } from "@/components/ui/Ticks";
-import {
-  formatDayMonth,
-  formatSlot,
-  formatWeekday,
-  votesLabel,
-} from "@/lib/hebrew";
+import { formatDayMonth, formatSlot, formatWeekday, iso, votesLabel } from "@/lib/hebrew";
 import { buildSlotDays } from "@/lib/slots";
 import type { Room, Vote } from "@/lib/types";
 
@@ -217,7 +212,7 @@ export function VoteHeatmap({
             </div>
             {detailNames.length > 0 && (
               <div className="mt-0.5 truncate text-mute">
-                {detailNames.join(", ")}
+                {detailNames.map(iso).join(", ")}
               </div>
             )}
             {open && detailMs === mySlot && focused === null && (

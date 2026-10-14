@@ -23,6 +23,11 @@ export const GAME_META: Record<
     lowerWins: false,
     format: (s) => `${s.toLocaleString("he-IL")} נק׳`,
   },
+  picture: {
+    title: "מה בתמונה?",
+    lowerWins: false,
+    format: (s) => `${s.toLocaleString("he-IL")} נק׳`,
+  },
 };
 
 export function rankRows(rows: LeaderboardRow[], game: GameId) {
@@ -119,7 +124,7 @@ export function Leaderboard({
                         {initial(row.display_name)}
                       </span>
                       <span className="min-w-0 flex-1 truncate">
-                        {row.display_name}
+                        <bdi>{row.display_name}</bdi>
                         {mine && <span className="text-mute"> (את/ה)</span>}
                       </span>
                       <span className="tabular-nums text-ink/85">

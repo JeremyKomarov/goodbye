@@ -95,3 +95,12 @@ export function peopleLabel(count: number) {
 export function onlineLabel(count: number) {
   return count === 1 ? "אדם אחד מחובר עכשיו" : `${count} מחוברים עכשיו`;
 }
+
+/**
+ * Wrap user-typed text (names, group names) in Unicode direction isolates so an
+ * English name inside a Hebrew sentence can't drag nearby numbers or punctuation
+ * into its direction ("david, 490 נק׳").
+ */
+export function iso(text: string) {
+  return `⁨${text}⁩`;
+}

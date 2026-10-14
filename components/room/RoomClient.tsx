@@ -20,11 +20,11 @@ import { GAME_META, Leaderboard, rankRows } from "@/components/room/Leaderboard"
 import { StatusStories } from "@/components/room/StatusStories";
 import { VoteHeatmap } from "@/components/room/VoteHeatmap";
 import { loadAdminToken } from "@/lib/admin-storage";
-import { formatHour, formatSlot, onlineLabel } from "@/lib/hebrew";
+import { formatHour, formatSlot, iso, onlineLabel } from "@/lib/hebrew";
 import { useNow } from "@/lib/hooks/useNow";
 import { useRoom } from "@/lib/hooks/useRoom";
 import { leftLine } from "@/lib/room-view";
-import { leadingSlot, slotMs, tallyVotes } from "@/lib/slots";
+import { leadingSlot, slotMs, tallyVotes, wonByDraw } from "@/lib/slots";
 import type { GameId, Room } from "@/lib/types";
 
 const noop = () => () => {};
@@ -66,6 +66,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
   const voteList = useMemo(() => Object.values(votes), [votes]);
   const tally = useMemo(() => tallyVotes(voteList), [voteList]);
   const leader = useMemo(() => leadingSlot(tally), [tally]);
+  const drawn = wonByDraw(leader, room.locked_slot);
   const myVote = me ? votes[me.userId] : undefined;
   const mySlot = myVote ? slotMs(myVote.slot_start) : null;
 
@@ -99,7 +100,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
   );
   const typingText =
     typers.length === 1
-      ? `${typers[0].name} מקליד/ה…`
+      ? `${iso(typers[0].name)} מקליד/ה…`
       : typers.length > 1
         ? `${typers.length} אנשים מקלידים…`
         : null;
@@ -125,8 +126,10 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
     room.status === "exited"
       ? leftLine(room)
       : room.status === "locked" && room.locked_slot
-        ? `נבחרה: ${formatSlot(Date.parse(room.locked_slot), tz)}`
-        : leader
+        ? `${drawn ? "נבחרה בהגרלה" : "נבחרה"}: ${formatSlot(Date.parse(room.locked_slot), tz)}`
+        : leader && leader.tied.length > 1
+          ? `⚖️ תיקו בין ${leader.tied.length} שעות`
+          : leader
           ? `מובילה: ${formatSlot(leader.ms, tz)}`
           : "עוד אף אחד לא הצביע";
   const players = new Set(api.leaderboard.map((r) => r.user_id)).size;
@@ -134,7 +137,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
     ...new Set(
       (Object.keys(GAME_META) as GameId[]).flatMap((g) => {
         const top = rankRows(api.leaderboard, g)[0];
-        return top ? [top.user_id === me?.userId ? "את/ה" : top.display_name] : [];
+        return top ? [top.user_id === me?.userId ? "את/ה" : iso(top.display_name)] : [];
       }),
     ),
   ];
@@ -144,12 +147,12 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
       subtitle: voteStatus,
       meta: voteList.length ? `${voteList.length} הצביעו` : undefined,
     },
-    games: { subtitle: recordHolders.length ? `👑 בשיאים: ${recordHolders.join(", ")}` : "כפתור בורח, טריוויה ו-99+ הודעות" },
+    games: { subtitle: recordHolders.length ? `👑 בשיאים: ${recordHolders.join(", ")}` : "כפתור בורח, טריוויה, 99+ הודעות ומה בתמונה?" },
     wall: typingText
       ? { subtitle: typingText, highlight: true }
       : lastMessage
         ? {
-            subtitle: `${lastMessage.display_name}: ${lastMessage.body}`,
+            subtitle: `${iso(lastMessage.display_name)}: ${iso(lastMessage.body)}`,
             meta: formatHour(Date.parse(lastMessage.created_at), tz),
           }
         : { subtitle: "עוד אין הודעות פרידה" },
@@ -301,6 +304,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
         {showFinale && (
           <Finale
             room={room}
+            drawn={drawn}
             voterCount={voteList.length}
             messageCount={messages.length}
             leaderboard={api.leaderboard}

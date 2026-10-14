@@ -10,6 +10,7 @@ import type { GameId, LeaderboardRow, Room } from "@/lib/types";
 
 type Props = {
   room: Room;
+  drawn: boolean;
   voterCount: number;
   messageCount: number;
   leaderboard: LeaderboardRow[];
@@ -20,6 +21,7 @@ const COLORS = ["#f15c6d", "#ffd279", "#c9a46a", "#25d366", "#53bdeb"];
 
 export function Finale({
   room,
+  drawn,
   voterCount,
   messageCount,
   leaderboard,
@@ -89,7 +91,7 @@ export function Finale({
 
   const stats = [
     room.locked_slot && {
-      label: "השעה שנבחרה",
+      label: drawn ? "השעה שנבחרה (בהגרלה)" : "השעה שנבחרה",
       value: formatSlot(Date.parse(room.locked_slot), tz),
     },
     room.exited_at && {
@@ -161,7 +163,7 @@ export function Finale({
                 >
                   <span className="text-mute">{GAME_META[game].title}</span>
                   <span className="font-semibold">
-                    {top!.display_name}, {GAME_META[game].format(top!.score)}
+                    <bdi>{top!.display_name}</bdi>, {GAME_META[game].format(top!.score)}
                   </span>
                 </li>
               ))}

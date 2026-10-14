@@ -4,14 +4,14 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { initial } from "@/lib/colors";
-import { onlineLabel, pad, splitCountdown } from "@/lib/hebrew";
+import { iso, onlineLabel, pad, splitCountdown } from "@/lib/hebrew";
 import type { OnlineUser, Typer } from "@/lib/hooks/useRoom";
 import type { Room } from "@/lib/types";
 
 export type Tab = "vote" | "games" | "wall" | "board";
 
 function typingLine(typers: Typer[]) {
-  if (typers.length === 1) return `${typers[0].name} מקליד/ה…`;
+  if (typers.length === 1) return `${iso(typers[0].name)} מקליד/ה…`;
   if (typers.length > 1) return `${typers.length} אנשים מקלידים…`;
   return null;
 }
