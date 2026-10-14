@@ -53,33 +53,41 @@ function Scroll({
 }
 
 /**
- * Desktop sidebar: the countdown, with the stories row above it whenever both fit.
- * When they don't, the row steps aside (the header avatar still opens the stories),
- * so this only ever scrolls in a window too short for the countdown itself.
+ * The countdown, with the stories row above it whenever both fit: in the desktop
+ * sidebar and on the phone vote tab. When they don't, the row steps aside (the
+ * header avatar still opens the stories) and the countdown keeps its room.
  */
-function SidebarStatus({ children }: { children: React.ReactNode }) {
+function StatusStack({
+  className,
+  children,
+}: {
+  className: string;
+  children: React.ReactNode;
+}) {
   const boxRef = useRef<HTMLDivElement>(null);
   const storiesRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const [fits, setFits] = useState(true);
 
-  // The row stays laid out while hidden, so its height is always known.
+  // Measured with the row out of the flow, so the answer doesn't depend on whether
+  // it's showing. The row stays laid out while hidden, so its height is always known.
   useEffect(() => {
     const box = boxRef.current!;
     const stories = storiesRef.current!;
     const hero = heroRef.current!;
-    const observer = new ResizeObserver(() =>
-      setFits(stories.offsetHeight + hero.offsetHeight <= box.clientHeight),
-    );
+    const observer = new ResizeObserver(() => {
+      const position = stories.style.position;
+      stories.style.position = "absolute";
+      const room = box.clientHeight - hero.offsetHeight;
+      stories.style.position = position;
+      setFits(stories.offsetHeight <= room);
+    });
     for (const el of [box, stories, hero]) observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div
-      ref={boxRef}
-      className="relative flex min-h-0 flex-1 flex-col overflow-y-auto"
-    >
+    <div ref={boxRef} className={`relative flex flex-col ${className}`}>
       <div
         ref={storiesRef}
         className={fits ? "" : "invisible absolute inset-x-0 top-0"}
@@ -252,9 +260,9 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
               adminHref={adminHref}
               onParty={party}
             />
-            <SidebarStatus>
+            <StatusStack className="min-h-0 flex-1 overflow-y-auto">
               <Hero {...heroProps} />
-            </SidebarStatus>
+            </StatusStack>
             {/* The sections stay pinned, so they never scroll out of reach. */}
             <SideNav
               tab={tab}
@@ -288,10 +296,10 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
               {/* Countdown on top and the grid filling the rest; side by side on landscape phones. */}
               {tab === "vote" && (
                 <div className="flex min-h-0 flex-1 flex-col gap-2 px-3 pb-3 tiny:flex-row tiny:items-center tiny:gap-4 tiny:pt-2 lg:justify-center lg:px-6 lg:py-6 lg:short:py-4">
-                  {/* The countdown takes whatever room the picker leaves and centers in it. */}
-                  <div className="flex flex-1 flex-col justify-center tiny:max-h-full tiny:w-2/5 tiny:flex-none tiny:overflow-y-auto lg:hidden">
+                  {/* Stories and countdown take whatever room the picker leaves. */}
+                  <StatusStack className="flex-1 tiny:w-2/5 tiny:flex-none tiny:self-stretch tiny:overflow-y-auto lg:hidden">
                     <Hero {...heroProps} compact />
-                  </div>
+                  </StatusStack>
                   <VoteHeatmap
                     room={room}
                     now={now}

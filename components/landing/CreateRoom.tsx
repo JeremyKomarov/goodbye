@@ -17,8 +17,8 @@ const REASON_CHIPS: { id: Reason; label: string }[] = [
 ];
 
 const field =
-  "w-full rounded-xl bg-raised px-4 py-3 text-base text-ink placeholder:text-mute/70 outline-none focus:ring-2 focus:ring-pill/70";
-const label = "mb-1.5 block text-sm text-mute";
+  "h-11 w-full min-w-0 rounded-xl bg-raised px-3 text-base text-ink placeholder:text-mute/70 outline-none focus:ring-2 focus:ring-pill/70 tiny:h-10";
+const label = "mb-1 block truncate text-[13px] leading-5 text-mute";
 
 function toLocalInput(d: Date) {
   const p = (n: number) => n.toString().padStart(2, "0");
@@ -129,184 +129,196 @@ function CreateForm({ onCreated }: { onCreated: (c: Created) => void }) {
   }
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-5 pb-2">
-      <div>
-        <label htmlFor="host" className={label}>
-          איך קוראים לך?
-        </label>
-        <input
-          id="host"
-          className={field}
-          value={hostName}
-          onChange={(e) => setHostName(e.target.value)}
-          maxLength={30}
-          placeholder="ג׳רמי"
-          required
-          autoComplete="given-name"
-        />
-      </div>
-
-      <fieldset>
-        <legend className={label}>איך יופיע בקבוצה?</legend>
+    <form
+      onSubmit={submit}
+      className="grid grid-cols-1 gap-3 pb-1 tiny:grid-cols-2 tiny:gap-x-5"
+    >
+      <div className="flex flex-col gap-3 tiny:gap-2">
         <div className="grid grid-cols-2 gap-2">
-          {(["m", "f"] as const).map((option) => (
-            <button
-              key={option}
-              type="button"
-              onClick={() => setGender(option)}
-              aria-pressed={gender === option}
-              className={`rounded-xl px-3 py-3 text-sm transition-colors ${gender === option ? "bg-bubble text-ink ring-2 ring-signal/60" : "bg-raised text-mute"}`}
-            >
-              {iso(name)} {g(option, "יצא", "יצאה")} מהקבוצה
-            </button>
-          ))}
+          <div>
+            <label htmlFor="host" className={label}>
+              איך קוראים לך?
+            </label>
+            <input
+              id="host"
+              className={field}
+              value={hostName}
+              onChange={(e) => setHostName(e.target.value)}
+              maxLength={30}
+              placeholder="ג׳רמי"
+              required
+              autoComplete="given-name"
+            />
+          </div>
+          <div>
+            <label htmlFor="group" className={label}>
+              מאיזו קבוצה יוצאים?
+            </label>
+            <input
+              id="group"
+              className={field}
+              value={groupName}
+              onChange={(e) => setGroupName(e.target.value)}
+              maxLength={60}
+              placeholder="צוות מוצר 🚀"
+              required
+            />
+          </div>
         </div>
-      </fieldset>
 
-      <div>
-        <label htmlFor="group" className={label}>
-          מאיזו קבוצה יוצאים?
-        </label>
-        <input
-          id="group"
-          className={field}
-          value={groupName}
-          onChange={(e) => setGroupName(e.target.value)}
-          maxLength={60}
-          placeholder="צוות מוצר 🚀"
-          required
-        />
-      </div>
+        <fieldset>
+          <legend className="sr-only">איך יופיע בקבוצה?</legend>
+          <div className="grid grid-cols-2 gap-2">
+            {(["m", "f"] as const).map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setGender(option)}
+                aria-pressed={gender === option}
+                className={`h-10 truncate rounded-xl px-2 text-sm transition-colors tiny:h-9 ${gender === option ? "bg-bubble text-ink ring-2 ring-signal/60" : "bg-raised text-mute"}`}
+              >
+                {iso(name)} {g(option, "יצא", "יצאה")} מהקבוצה
+              </button>
+            ))}
+          </div>
+        </fieldset>
 
-      <fieldset>
-        <legend className={label}>למה? (לא חובה)</legend>
-        <div className="flex flex-wrap gap-2">
+        <div
+          role="group"
+          aria-label="למה? (לא חובה)"
+          className="flex flex-wrap items-center gap-2"
+        >
+          <span className="text-[13px] text-mute" aria-hidden>
+            למה?
+          </span>
           {REASON_CHIPS.map((chip) => (
             <button
               key={chip.id}
               type="button"
               aria-pressed={reason === chip.id}
               onClick={() => setReason(reason === chip.id ? null : chip.id)}
-              className={`rounded-full px-4 py-2 text-sm transition-colors ${reason === chip.id ? "bg-kraft text-night" : "bg-raised text-ink/80"}`}
+              className={`rounded-full px-3 py-1.5 text-sm transition-colors ${reason === chip.id ? "bg-kraft text-night" : "bg-raised text-ink/80"}`}
             >
               {chip.label}
             </button>
           ))}
         </div>
-      </fieldset>
 
-      <div className="grid grid-cols-[1fr_auto] gap-3">
-        <div>
-          <label htmlFor="start" className={label}>
-            מאיזה יום אפשר לצאת?
-          </label>
-          <input
-            id="start"
-            type="date"
-            className={field}
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <span className={label}>כמה ימים?</span>
-          <div className="flex items-center rounded-xl bg-raised">
-            <button
-              type="button"
-              className="px-3 py-3 text-lg text-mute disabled:opacity-30"
-              onClick={() => setDays(days - 1)}
-              disabled={days <= 1}
-              aria-label="פחות ימים"
-            >
-              −
-            </button>
-            <span className="w-6 text-center tabular-nums" aria-live="polite">
-              {days}
-            </span>
-            <button
-              type="button"
-              className="px-3 py-3 text-lg text-mute disabled:opacity-30"
-              onClick={() => setDays(days + 1)}
-              disabled={days >= 7}
-              aria-label="עוד ימים"
-            >
-              +
-            </button>
+        <div className="grid grid-cols-[1fr_auto] gap-2">
+          <div>
+            <label htmlFor="start" className={label}>
+              מאיזה יום אפשר לצאת?
+            </label>
+            <input
+              id="start"
+              type="date"
+              className={field}
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <span className={label}>כמה ימים?</span>
+            <div className="flex h-11 items-center rounded-xl bg-raised tiny:h-10">
+              <button
+                type="button"
+                className="h-full px-3 text-lg text-mute disabled:opacity-30"
+                onClick={() => setDays(days - 1)}
+                disabled={days <= 1}
+                aria-label="פחות ימים"
+              >
+                −
+              </button>
+              <span className="w-6 text-center tabular-nums" aria-live="polite">
+                {days}
+              </span>
+              <button
+                type="button"
+                className="h-full px-3 text-lg text-mute disabled:opacity-30"
+                onClick={() => setDays(days + 1)}
+                disabled={days >= 7}
+                aria-label="עוד ימים"
+              >
+                +
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div>
-        <span className={label}>באילו שעות ביום?</span>
-        <div className="flex items-center gap-2">
-          <select
-            aria-label="משעה"
-            className={field}
-            value={fromHour}
-            onChange={(e) => setFromHour(Number(e.target.value))}
-          >
-            {Array.from({ length: 24 }, (_, h) => (
-              <option key={h} value={h}>
-                {h.toString().padStart(2, "0")}:00
-              </option>
-            ))}
-          </select>
-          <span className="text-mute">עד</span>
-          <select
-            aria-label="עד שעה"
-            className={field}
-            value={toHour}
-            onChange={(e) => setToHour(Number(e.target.value))}
-          >
-            {Array.from({ length: 24 }, (_, i) => i + 1).map((h) => (
-              <option key={h} value={h}>
-                {h.toString().padStart(2, "0")}:00
-              </option>
-            ))}
-          </select>
+      <div className="flex flex-col gap-3 tiny:gap-2">
+        <div>
+          <span className={label}>באילו שעות ביום?</span>
+          <div className="flex items-center gap-2">
+            <select
+              aria-label="משעה"
+              className={field}
+              value={fromHour}
+              onChange={(e) => setFromHour(Number(e.target.value))}
+            >
+              {Array.from({ length: 24 }, (_, h) => (
+                <option key={h} value={h}>
+                  {h.toString().padStart(2, "0")}:00
+                </option>
+              ))}
+            </select>
+            <span className="text-mute">עד</span>
+            <select
+              aria-label="עד שעה"
+              className={field}
+              value={toHour}
+              onChange={(e) => setToHour(Number(e.target.value))}
+            >
+              {Array.from({ length: 24 }, (_, i) => i + 1).map((h) => (
+                <option key={h} value={h}>
+                  {h.toString().padStart(2, "0")}:00
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div>
-        <label htmlFor="close" className={label}>
-          מתי נסגרת ההצבעה?
-        </label>
-        <input
-          id="close"
-          type="datetime-local"
-          className={field}
-          value={closeLocal}
-          onChange={(e) => setCloseLocal(e.target.value)}
-          required
-        />
-        <p
-          className={`mt-2 text-sm ${openSlots > 0 ? "text-mute" : "text-exit"}`}
+        <div>
+          <label htmlFor="close" className={label}>
+            מתי נסגרת ההצבעה?
+          </label>
+          <input
+            id="close"
+            type="datetime-local"
+            className={field}
+            value={closeLocal}
+            onChange={(e) => setCloseLocal(e.target.value)}
+            required
+          />
+          <p
+            className={`mt-1 text-[13px] leading-5 ${openSlots > 0 ? "text-mute" : "text-exit"}`}
+          >
+            {toHour <= fromHour
+              ? "שעת הסיום צריכה להיות אחרי שעת ההתחלה"
+              : openSlots > 0
+                ? `יהיו ${openSlots} שעות לבחירה. שעות שלפני הסגירה לא יופיעו.`
+                : "אין שעות לבחירה אחרי סגירת ההצבעה. כדאי להוסיף ימים או לסגור מוקדם יותר."}
+          </p>
+        </div>
+
+        {error && (
+          <p
+            role="alert"
+            className="rounded-xl bg-exit/15 px-3 py-2 text-sm text-exit"
+          >
+            {error}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={pending || openSlots === 0}
+          className="h-12 shrink-0 rounded-2xl bg-exit px-6 text-lg font-semibold text-night transition-opacity disabled:opacity-50 tiny:mt-auto tiny:h-11"
         >
-          {toHour <= fromHour
-            ? "שעת הסיום צריכה להיות אחרי שעת ההתחלה"
-            : openSlots > 0
-              ? `יהיו ${openSlots} שעות לבחירה. שעות שלפני סגירת ההצבעה לא יופיעו.`
-              : "אין שעות לבחירה אחרי סגירת ההצבעה. כדאי להוסיף ימים או לסגור מוקדם יותר."}
-        </p>
+          {pending ? "פותחים את החדר…" : "פתיחת חדר הצבעה"}
+        </button>
       </div>
-
-      {error && (
-        <p
-          role="alert"
-          className="rounded-xl bg-exit/15 px-4 py-3 text-sm text-exit"
-        >
-          {error}
-        </p>
-      )}
-
-      <button
-        type="submit"
-        disabled={pending || openSlots === 0}
-        className="rounded-2xl bg-exit px-6 py-4 text-lg font-semibold text-night transition-opacity disabled:opacity-50"
-      >
-        {pending ? "פותחים את החדר…" : "פתיחת חדר הצבעה"}
-      </button>
     </form>
   );
 }
@@ -324,7 +336,7 @@ function CopyRow({
   return (
     <div>
       <div
-        className={`mb-1.5 text-sm ${tone === "pill" ? "text-pill" : "text-mute"}`}
+        className={`mb-1 text-[13px] leading-5 ${tone === "pill" ? "text-pill" : "text-mute"}`}
       >
         {text}
       </div>
@@ -359,43 +371,50 @@ function Success({ created }: { created: Created }) {
   const shareText = `${iso(name)} ${g(created.gender, "יוצא", "יוצאת")} מהקבוצה, ואתם מחליטים מתי 🫡\nהצביעו כאן: ${roomUrl}`;
 
   return (
-    <div className="flex flex-col gap-5 pb-2">
-      <motion.div
-        initial={{ scale: 0.6, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", damping: 14, stiffness: 260 }}
-        className="mx-auto grid size-20 place-items-center rounded-full bg-bubble text-4xl"
-        aria-hidden
-      >
-        🗳️
-      </motion.div>
-      <p className="text-center text-ink/80">
-        עכשיו שולחים את הקישור לקבוצה. כל מי שנכנס בוחר שעה, ואת השאר תעשה
-        הדמוקרטיה.
-      </p>
+    <div className="grid grid-cols-1 gap-3 pb-1 tiny:grid-cols-2 tiny:gap-x-5">
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col items-center gap-2 tiny:flex-row">
+          <motion.div
+            initial={{ scale: 0.6, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", damping: 14, stiffness: 260 }}
+            className="grid size-16 shrink-0 place-items-center rounded-full bg-bubble text-3xl tiny:size-12 tiny:text-2xl"
+            aria-hidden
+          >
+            🗳️
+          </motion.div>
+          <p className="text-center text-ink/80 tiny:text-start tiny:text-sm">
+            עכשיו שולחים את הקישור לקבוצה. כל מי שנכנס בוחר שעה, ואת השאר תעשה
+            הדמוקרטיה.
+          </p>
+        </div>
 
-      <a
-        href={`https://wa.me/?text=${encodeURIComponent(shareText)}`}
-        target="_blank"
-        rel="noreferrer"
-        className="flex items-center justify-center gap-2 rounded-2xl bg-signal px-6 py-4 text-lg font-semibold text-night"
-      >
-        שליחה לקבוצה בוואטסאפ
-      </a>
+        <a
+          href={`https://wa.me/?text=${encodeURIComponent(shareText)}`}
+          target="_blank"
+          rel="noreferrer"
+          className="flex h-12 shrink-0 items-center justify-center gap-2 rounded-2xl bg-signal px-6 text-lg font-semibold text-night tiny:h-11"
+        >
+          שליחה לקבוצה בוואטסאפ
+        </a>
 
-      <CopyRow value={roomUrl} label="קישור לחדר" />
-      <CopyRow
-        value={adminUrl}
-        label="קישור הניהול שלך. רק איתו אפשר לנעול את ההצבעה ולסמן שיצאת, אז כדאי לשמור אותו ולא לשלוח לקבוצה."
-        tone="pill"
-      />
+        <CopyRow value={roomUrl} label="קישור לחדר" />
+      </div>
 
-      <Link
-        href={`/r/${created.slug}`}
-        className="rounded-2xl bg-raised px-6 py-4 text-center font-semibold"
-      >
-        כניסה לחדר
-      </Link>
+      <div className="flex flex-col gap-3">
+        <CopyRow
+          value={adminUrl}
+          label="קישור הניהול שלך. רק איתו אפשר לנעול את ההצבעה ולסמן שיצאת, אז כדאי לשמור אותו ולא לשלוח לקבוצה."
+          tone="pill"
+        />
+
+        <Link
+          href={`/r/${created.slug}`}
+          className="grid h-12 shrink-0 place-items-center rounded-2xl bg-raised px-6 font-semibold tiny:mt-auto tiny:h-11"
+        >
+          כניסה לחדר
+        </Link>
+      </div>
     </div>
   );
 }

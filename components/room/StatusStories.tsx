@@ -90,7 +90,7 @@ export function StatusStories() {
 
   return (
     <section aria-label="עובדות מצחיקות" className="px-1">
-      <div className="no-scrollbar flex gap-4 overflow-x-auto px-2 py-2 short:py-1">
+      <div className="no-scrollbar flex gap-4 overflow-x-auto px-2 py-2 short:py-1 tiny:gap-1">
         {STORY_GROUPS.map((group, i) => {
           const isSeen = seen.includes(group.id);
           return (
@@ -134,6 +134,7 @@ function StoryViewer({
   onClose: () => void;
 }) {
   const [pos, setPos] = useState(start);
+  const seen = useSyncExternalStore(subscribeSeen, readSeen, () => "");
   const barRef = useRef<HTMLDivElement>(null);
   const paused = useRef(false);
   const elapsed = useRef(0);
@@ -148,6 +149,11 @@ function StoryViewer({
     if (pos.group + 1 < STORY_GROUPS.length) return setPos({ group: pos.group + 1, fact: 0 });
     onClose();
   }, [pos, onClose]);
+
+  const jump = (group: number) => {
+    elapsed.current = 0;
+    setPos({ group, fact: 0 });
+  };
 
   const prev = useCallback(() => {
     elapsed.current = 0;
@@ -227,10 +233,37 @@ function StoryViewer({
           >
             {group.emoji}
           </span>
-          <div className="flex-1">
-            <div className="font-semibold">{group.title}</div>
+          <div className="min-w-0 flex-1">
+            <div className="truncate font-semibold">{group.title}</div>
             <div className="text-xs text-ink/60">ידעת?</div>
           </div>
+          {/* Every story, so the header ring isn't a dead end into the first one. */}
+          <nav aria-label="כל העובדות" className="flex shrink-0 gap-1">
+            {STORY_GROUPS.map((g, i) => (
+              <button
+                key={g.id}
+                type="button"
+                onClick={() => jump(i)}
+                aria-label={g.title}
+                aria-current={i === pos.group || undefined}
+                title={g.title}
+                className={`grid size-8 place-items-center rounded-full p-[2px] transition-opacity ${i === pos.group ? "" : "opacity-60 hover:opacity-100"}`}
+                style={{
+                  background:
+                    i === pos.group
+                      ? "var(--color-ink)"
+                      : ring(seen.split(",").includes(g.id), g.color),
+                }}
+              >
+                <span
+                  className="grid size-full place-items-center rounded-full border-2 border-night text-sm"
+                  style={{ background: g.color }}
+                >
+                  {g.emoji}
+                </span>
+              </button>
+            ))}
+          </nav>
           <button
             type="button"
             onClick={onClose}
