@@ -13,7 +13,7 @@ import {
 const ROUND = 6;
 const POINTS = 150;
 
-type Status = "asking" | "correct" | "trap" | "wrong" | "skipped";
+type Status = "asking" | "correct" | "wrong" | "skipped";
 
 function shuffle<T>(list: T[]) {
   const a = list.slice();
@@ -27,7 +27,7 @@ function shuffle<T>(list: T[]) {
 /**
  * "מה בתמונה?": only the top of the picture shows, and it looks like one thing,
  * but the picture is really something else. One guess, then the whole picture
- * is revealed. Naming the top (the decoy) is the trap.
+ * is revealed. Only the real thing counts.
  */
 export function PictureGame({
   onFinish,
@@ -82,14 +82,8 @@ export function PictureGame({
     e.preventDefault();
     if (!round || done || !guess.trim()) return;
     const puzzle = round[index];
-    // Naming the top part is exactly the trap the picture sets.
-    reveal(
-      matches(guess, puzzle.truth.answers)
-        ? "correct"
-        : matches(guess, puzzle.decoy.answers)
-          ? "trap"
-          : "wrong",
-    );
+    // Naming the top part (the decoy) is just a wrong guess.
+    reveal(matches(guess, puzzle.truth.answers) ? "correct" : "wrong");
   }
 
   function next() {
@@ -127,10 +121,6 @@ export function PictureGame({
     { text: string; className: string }
   > = {
     correct: { text: `✓ נכון! +${POINTS}`, className: "text-signal" },
-    trap: {
-      text: `😂 נפלת בפח! זה ${puzzle.truth.label}, לא ${puzzle.decoy.label}`,
-      className: "text-pill",
-    },
     wrong: { text: `לא, זה ${puzzle.truth.label}`, className: "text-exit" },
     skipped: { text: `זה ${puzzle.truth.label}`, className: "text-mute" },
   };
