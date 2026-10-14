@@ -2,6 +2,8 @@
 // nothing to do with each other: the top quarter is the top of one thing (a
 // banana, Trump's hair), and the rest is the bottom of something else entirely
 // (a train, a computer). Everyone guesses the top; the curtain drops on the rest.
+// Some pictures in each round are honest instead: the same top strip, but the
+// picture really is the top thing (see `honest` in PictureStage).
 // Icons are Noto Emoji SVGs in /public/picture-game, named by codepoint.
 // Positions are % of the whole square stage, in physical (not RTL) coordinates.
 
@@ -39,6 +41,29 @@ export type PicturePuzzle = {
   top: Layer[];
   /** Clipped to everything below the strip: what the picture really is. */
   bottom: Layer[];
+};
+
+/** Where each top icon is drawn inside its box: [left, top, right, bottom] fractions. */
+export const ICON_BOUNDS: Record<string, [number, number, number, number]> = {
+  "1f34c": [0.105, 0.025, 0.935, 0.9625],
+  "1f471": [0.1, 0.0325, 0.9, 0.97],
+  "1f34d": [0.195, 0.03, 0.78, 0.97],
+  "1f992": [0.1475, 0.03, 0.86, 0.9675],
+  "1f430": [0.1425, 0.0325, 0.845, 0.965],
+  "1f385": [0.0925, 0.0325, 0.9075, 0.97],
+  "1f981": [0.0775, 0.03, 0.9125, 0.965],
+  "1f366": [0.255, 0.03, 0.77, 0.97],
+  "1f984": [0.0625, 0.0425, 0.93, 0.9625],
+  "1f37a": [0.1825, 0.03, 0.9125, 0.9725],
+  "1f353": [0.0775, 0.0275, 0.915, 0.9725],
+  "1f344": [0.05, 0.03, 0.9475, 0.965],
+  "1f9d9": [0.05, 0.0275, 0.95, 0.9725],
+  "1f3f0": [0.0375, 0.0475, 0.985, 0.9725],
+  "1f43c": [0.035, 0.06, 0.9725, 0.9425],
+  "1f9c1": [0.1325, 0.0275, 0.8625, 0.97],
+  "1f30b": [0.075, 0.0275, 0.93, 0.97],
+  "1f384": [0.115, 0.0275, 0.9025, 0.9725],
+  "1f382": [0.13, 0.06, 0.865, 0.9925],
 };
 
 export const PICTURES: PicturePuzzle[] = [

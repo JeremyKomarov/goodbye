@@ -12,6 +12,9 @@ import {
 
 const ROUND = 6;
 const POINTS = 150;
+/** How many pictures in a round are honest (the top thing is the answer): 2 to 4. */
+const HONEST_MIN = 2;
+const HONEST_MAX = 4;
 
 type Status = "asking" | "correct" | "wrong" | "skipped";
 
@@ -24,17 +27,35 @@ function shuffle<T>(list: T[]) {
   return a;
 }
 
+type Card = { puzzle: PicturePuzzle; honest: boolean };
+
+/** Pictures from recent rounds; new rounds show the others first, so they don't repeat. */
+let seen = new Set<string>();
+
+function dealRound(): Card[] {
+  const fresh = shuffle(PICTURES.filter((p) => !seen.has(p.id)));
+  const rest = shuffle(PICTURES.filter((p) => seen.has(p.id)));
+  const picked = shuffle([...fresh, ...rest].slice(0, ROUND));
+  // Once every picture has had a turn, start the cycle over from this round.
+  if (fresh.length <= ROUND) seen = new Set();
+  for (const p of picked) seen.add(p.id);
+  const honestCount =
+    HONEST_MIN + Math.floor(Math.random() * (HONEST_MAX - HONEST_MIN + 1));
+  const honest = new Set(shuffle(picked.map((_, i) => i)).slice(0, honestCount));
+  return picked.map((puzzle, i) => ({ puzzle, honest: honest.has(i) }));
+}
+
 /**
- * "מה בתמונה?": only the top of the picture shows, and it looks like one thing,
- * but the picture is really something else. One guess, then the whole picture
- * is revealed. Only the real thing counts.
+ * "מה בתמונה?": only the top of the picture shows, and it looks like one thing.
+ * Sometimes it is, and sometimes the picture is really something else. One
+ * guess, then the whole picture is revealed. Only the real thing counts.
  */
 export function PictureGame({
   onFinish,
 }: {
   onFinish: (score: number) => void;
 }) {
-  const [round, setRound] = useState<PicturePuzzle[] | null>(null);
+  const [round, setRound] = useState<Card[] | null>(null);
   const [index, setIndex] = useState(0);
   const [status, setStatus] = useState<Status>("asking");
   const [score, setScore] = useState(0);
@@ -64,16 +85,16 @@ export function PictureGame({
   }
 
   function start() {
-    const picked = shuffle(PICTURES).slice(0, ROUND);
+    const cards = dealRound();
     // Warm the cache so the reveal shows fully drawn pictures.
     for (const icon of new Set(
-      picked.flatMap((p) =>
+      cards.flatMap(({ puzzle: p }) =>
         [...p.top, ...p.bottom].flatMap((l) => ("icon" in l ? [l.icon] : [])),
       ),
     )) {
       new window.Image().src = `/picture-game/${icon}.svg`;
     }
-    setRound(picked);
+    setRound(cards);
     setScore(0);
     ask(0);
   }
@@ -81,9 +102,10 @@ export function PictureGame({
   function submit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!round || done || !guess.trim()) return;
-    const puzzle = round[index];
-    // Naming the top part (the decoy) is just a wrong guess.
-    reveal(matches(guess, puzzle.truth.answers) ? "correct" : "wrong");
+    const { puzzle, honest } = round[index];
+    // In a trick picture, naming the top part (the decoy) is just a wrong guess.
+    const answer = honest ? puzzle.decoy : puzzle.truth;
+    reveal(matches(guess, answer.answers) ? "correct" : "wrong");
   }
 
   function next() {
@@ -114,15 +136,16 @@ export function PictureGame({
     );
   }
 
-  const puzzle = round[index];
+  const { puzzle, honest } = round[index];
+  const answer = honest ? puzzle.decoy : puzzle.truth;
   const last = index === round.length - 1;
   const verdict: Record<
     Exclude<Status, "asking">,
     { text: string; className: string }
   > = {
     correct: { text: `✓ נכון! +${POINTS}`, className: "text-signal" },
-    wrong: { text: `לא, זה ${puzzle.truth.label}`, className: "text-exit" },
-    skipped: { text: `זה ${puzzle.truth.label}`, className: "text-mute" },
+    wrong: { text: `לא, זה ${answer.label}`, className: "text-exit" },
+    skipped: { text: `זה ${answer.label}`, className: "text-mute" },
   };
 
   return (
@@ -143,6 +166,7 @@ export function PictureGame({
           <PictureStage
             key={puzzle.id}
             puzzle={puzzle}
+            honest={honest}
             shown={done ? 100 : TOP_SHOWN}
             className="w-[min(100cqw,100cqh)]"
           />
