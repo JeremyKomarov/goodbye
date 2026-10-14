@@ -16,7 +16,7 @@ import { FarewellWall } from "@/components/room/FarewellWall";
 import { Finale } from "@/components/room/Finale";
 import { Hero } from "@/components/room/Hero";
 import { JoinGate } from "@/components/room/JoinGate";
-import { Leaderboard } from "@/components/room/Leaderboard";
+import { GAME_META, Leaderboard, rankRows } from "@/components/room/Leaderboard";
 import { StatusStories } from "@/components/room/StatusStories";
 import { VoteHeatmap } from "@/components/room/VoteHeatmap";
 import { loadAdminToken } from "@/lib/admin-storage";
@@ -130,13 +130,21 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
           ? `מובילה: ${formatSlot(leader.ms, tz)}`
           : "עוד אף אחד לא הצביע";
   const players = new Set(api.leaderboard.map((r) => r.user_id)).size;
+  const recordHolders = [
+    ...new Set(
+      (Object.keys(GAME_META) as GameId[]).flatMap((g) => {
+        const top = rankRows(api.leaderboard, g)[0];
+        return top ? [top.user_id === me?.userId ? "את/ה" : top.display_name] : [];
+      }),
+    ),
+  ];
 
   const summaries: Record<Tab, SectionSummary> = {
     vote: {
       subtitle: voteStatus,
       meta: voteList.length ? `${voteList.length} הצביעו` : undefined,
     },
-    games: { subtitle: "כפתור בורח, טריוויה ו-99+ הודעות" },
+    games: { subtitle: recordHolders.length ? `👑 בשיאים: ${recordHolders.join(", ")}` : "כפתור בורח, טריוויה ו-99+ הודעות" },
     wall: typingText
       ? { subtitle: typingText, highlight: true }
       : lastMessage

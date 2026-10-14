@@ -1,11 +1,12 @@
 "use client";
 
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { CatchGame } from "@/components/games/CatchGame";
 import { RunawayGame } from "@/components/games/RunawayGame";
 import { TriviaGame } from "@/components/games/TriviaGame";
 import { GAME_META, rankRows } from "@/components/room/Leaderboard";
+import { initial, nameColor } from "@/lib/colors";
 import type { GameId, LeaderboardRow } from "@/lib/types";
 
 const TILES: { id: GameId; art: string; blurb: string; accent: string }[] = [
@@ -28,6 +29,47 @@ const TILES: { id: GameId; art: string; blurb: string; accent: string }[] = [
     accent: "var(--color-tick)",
   },
 ];
+
+/** The room's record for a game, always on screen while playing it. Pops when the record changes. */
+function RecordBanner({ game, top, myUserId }: { game: GameId; top: LeaderboardRow | undefined; myUserId: string | null }) {
+  const mine = !!top && top.user_id === myUserId;
+  return (
+    <div aria-live="polite" className="mb-2 shrink-0">
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.div
+          key={top ? `${top.user_id}:${top.score}` : "none"}
+          initial={{ opacity: 0, y: -10, scale: 0.94 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10 }}
+          transition={{ type: "spring", damping: 18, stiffness: 320 }}
+          className="flex items-center gap-3 rounded-2xl bg-pill/10 px-3 py-2 ring-1 ring-pill/25"
+        >
+          <span className="text-xl" aria-hidden>
+            👑
+          </span>
+          {top ? (
+            <>
+              <span
+                className="grid size-7 shrink-0 place-items-center rounded-full text-xs font-semibold text-night"
+                style={{ background: nameColor(top.user_id) }}
+                aria-hidden
+              >
+                {initial(top.display_name)}
+              </span>
+              <span className="min-w-0 flex-1 truncate text-sm">
+                <span className="text-mute">{mine ? "השיא שלך" : "השיא: "}</span>
+                {!mine && <span className="font-semibold text-ink">{top.display_name}</span>}
+              </span>
+              <span className="shrink-0 font-display text-2xl leading-none text-pill tabular-nums">{GAME_META[game].format(top.score)}</span>
+            </>
+          ) : (
+            <span className="text-sm text-mute">עוד אין שיא בחדר. תהיו הראשונים לקבוע אותו.</span>
+          )}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}
 
 type Props = {
   game: GameId | null;
@@ -54,6 +96,8 @@ export function GamesHub({
 }: Props) {
   const [result, setResult] = useState<Result | null>(null);
   const [round, setRound] = useState(0);
+
+  const top = (id: GameId) => rankRows(leaderboard, id)[0];
 
   function myBest(id: GameId) {
     return leaderboard.find((r) => r.game === id && r.user_id === myUserId)
@@ -117,6 +161,8 @@ export function GamesHub({
           <h2 className="text-lg font-semibold">{meta.title}</h2>
         </div>
 
+        <RecordBanner game={game} top={top(game)} myUserId={myUserId} />
+
         {result?.game === game ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -124,7 +170,7 @@ export function GamesHub({
             className="my-auto rounded-3xl bg-panel/90 p-6 text-center"
           >
             <p className="text-mute">
-              {result.best ? "שיא אישי חדש" : "התוצאה שלך"}
+              {result.best && result.rank === 1 ? "השיא החדש של החדר 👑" : result.best ? "שיא אישי חדש" : "התוצאה שלך"}
             </p>
             <p className="my-2 font-display text-[5rem] font-bold leading-none">
               {meta.format(result.score)}
@@ -173,6 +219,8 @@ export function GamesHub({
     <div className="mx-auto grid max-w-3xl gap-3 lg:grid-cols-3">
       {TILES.map((tile, i) => {
         const best = myBest(tile.id);
+        const record = top(tile.id);
+        const mineRecord = !!record && record.user_id === myUserId;
         return (
           <motion.button
             key={tile.id}
@@ -199,7 +247,18 @@ export function GamesHub({
               <span className="mt-0.5 block text-sm leading-snug text-ink/70">
                 {tile.blurb}
               </span>
-              {best !== undefined && (
+              <span className="mt-2 flex items-center gap-1.5 text-xs">
+                <span aria-hidden>👑</span>
+                {record ? (
+                  <span className="min-w-0 truncate">
+                    <span className="font-semibold text-pill">{mineRecord ? "השיא שלך" : record.display_name}</span>{" "}
+                    <span className="text-mute">{GAME_META[tile.id].format(record.score)}</span>
+                  </span>
+                ) : (
+                  <span className="text-mute">עוד אין שיא</span>
+                )}
+              </span>
+              {best !== undefined && !mineRecord && (
                 <span className="mt-1 block text-xs text-mute">
                   השיא שלך: {GAME_META[tile.id].format(best)}
                 </span>
