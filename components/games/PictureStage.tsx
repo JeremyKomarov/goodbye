@@ -47,42 +47,28 @@ function LayerView({ layer }: { layer: Layer }) {
 
 /**
  * One picture stitched from two unrelated parts: `top` is clipped to the top strip
- * and `bottom` to everything below it. Until `revealed`, a curtain hides the bottom;
- * on reveal it drops. Always laid out LTR so icon positions aren't mirrored.
+ * and `bottom` to everything below it. A curtain covers the picture below `shown`
+ * (% of its height) and slides down as `shown` grows; at 100 everything is visible.
+ * Always laid out LTR so icon positions aren't mirrored.
  */
-export function PictureStage({
-  puzzle,
-  revealed,
-  className = "",
-}: {
-  puzzle: PicturePuzzle;
-  revealed: boolean;
-  className?: string;
-}) {
+export function PictureStage({ puzzle, shown, className = "" }: { puzzle: PicturePuzzle; shown: number; className?: string }) {
+  const full = shown >= 100;
+  // The curtain starts at the strip line; slide it down by the extra part now shown.
+  const drop = ((Math.min(shown, 100) - TOP_SHOWN) / (100 - TOP_SHOWN)) * 100;
   return (
     <div
       dir="ltr"
       role="img"
-      aria-label={
-        revealed
-          ? `התמונה המלאה: ${puzzle.truth.label}`
-          : "החלק העליון של תמונה"
-      }
+      aria-label={full ? `התמונה המלאה: ${puzzle.truth.label}` : `חלק מתמונה (${shown}% ממנה)`}
       className={`relative aspect-square overflow-hidden rounded-3xl shadow-2xl ${className}`}
       style={{ background: puzzle.bg }}
     >
-      <div
-        className="absolute inset-0"
-        style={{ clipPath: `inset(${TOP_SHOWN}% 0 0 0)` }}
-      >
+      <div className="absolute inset-0" style={{ clipPath: `inset(${TOP_SHOWN}% 0 0 0)` }}>
         {puzzle.bottom.map((layer, i) => (
           <LayerView key={i} layer={layer} />
         ))}
       </div>
-      <div
-        className="absolute inset-0"
-        style={{ clipPath: `inset(0 0 ${100 - TOP_SHOWN}% 0)` }}
-      >
+      <div className="absolute inset-0" style={{ clipPath: `inset(0 0 ${100 - TOP_SHOWN}% 0)` }}>
         {puzzle.top.map((layer, i) => (
           <LayerView key={i} layer={layer} />
         ))}
@@ -94,16 +80,10 @@ export function PictureStage({
         className="hatch absolute inset-x-0 bottom-0 grid place-items-center border-t-4 border-pill bg-raised"
         style={{ top: `${TOP_SHOWN}%` }}
         initial={false}
-        animate={revealed ? { y: "105%" } : { y: 0 }}
-        transition={
-          revealed
-            ? { duration: 0.7, delay: 0.2, ease: [0.6, 0, 0.4, 1] }
-            : { duration: 0 }
-        }
+        animate={{ y: full ? "105%" : `${drop}%` }}
+        transition={{ duration: 0.6, ease: [0.6, 0, 0.4, 1] }}
       >
-        <span className="font-display text-[clamp(3rem,16vw,6rem)] font-bold leading-none text-mute/25">
-          ?
-        </span>
+        {!full && <span className="font-display text-[clamp(3rem,16vw,6rem)] font-bold leading-none text-mute/25">?</span>}
       </motion.div>
     </div>
   );

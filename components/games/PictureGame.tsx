@@ -11,14 +11,20 @@ import { useNow } from "@/lib/hooks/useNow";
 const clockNow = () => Date.now();
 
 const ROUND = 6;
-const SECONDS = 20;
-const POINTS = {
-  decoy: { base: 50, bonus: 25 },
-  truth: { base: 100, bonus: 50 },
-} as const;
+/** How much of the picture shows at each step, and what a right answer is worth then. */
+const STEPS = [
+  { shown: 25, points: 150, label: "רבע" },
+  { shown: 50, points: 100, label: "חצי" },
+  { shown: 75, points: 60, label: "שלושה רבעים" },
+  { shown: 100, points: 30, label: "הכל" },
+] as const;
+const STEP_MS = 5000;
+/** Extra time after the whole picture is showing. */
+const LAST_MS = 8000;
+const TOTAL_MS = STEP_MS * (STEPS.length - 1) + LAST_MS;
 
-type Stage = "decoy" | "truth";
 type Status = "asking" | "correct" | "missed";
+type Feedback = { kind: "trap" | "wrong"; text: string } | null;
 
 function shuffle<T>(list: T[]) {
   const a = list.slice();
@@ -30,8 +36,9 @@ function shuffle<T>(list: T[]) {
 }
 
 /**
- * "מה בתמונה?": guess what the top quarter of a picture shows, then the rest opens and you guess
- * what the whole picture really is.
+ * "מה בתמונה?": the top quarter looks like one thing, but the picture is really
+ * something else. The curtain lowers a quarter every few seconds; name the real
+ * thing as early as you can. Naming the top (the decoy) is the trap.
  */
 export function PictureGame({
   onFinish,
@@ -40,100 +47,92 @@ export function PictureGame({
 }) {
   const [round, setRound] = useState<PicturePuzzle[] | null>(null);
   const [index, setIndex] = useState(0);
-  const [stage, setStage] = useState<Stage>("decoy");
+  const [step, setStep] = useState(0);
   const [status, setStatus] = useState<Status>("asking");
-  const [deadline, setDeadline] = useState(0);
+  const [feedback, setFeedback] = useState<Feedback>(null);
+  const [startedAt, setStartedAt] = useState(0);
   const [score, setScore] = useState(0);
   const [gained, setGained] = useState(0);
   const [guess, setGuess] = useState("");
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const advance = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const [inputScope, animateInput] = useAnimate();
   const now = useNow();
 
-  useEffect(
-    () => () => {
-      if (timer.current) clearTimeout(timer.current);
-      if (advance.current) clearTimeout(advance.current);
-    },
-    [],
-  );
+  const clearTimers = () => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+  };
+  useEffect(() => clearTimers, []);
 
-  function ask(i: number, s: Stage) {
+  function ask(i: number) {
+    clearTimers();
     setIndex(i);
-    setStage(s);
+    setStep(0);
     setStatus("asking");
+    setFeedback(null);
     setGuess("");
     setGained(0);
-    setDeadline(clockNow() + SECONDS * 1000);
-    if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(
-      () => endStage(i, s, "missed", 0),
-      SECONDS * 1000,
-    );
+    setStartedAt(clockNow());
+    for (let s = 1; s < STEPS.length; s++)
+      timers.current.push(setTimeout(() => setStep(s), STEP_MS * s));
+    timers.current.push(setTimeout(() => finish("missed", 0), TOTAL_MS));
     requestAnimationFrame(() =>
       inputRef.current?.focus({ preventScroll: true }),
     );
   }
 
-  function endStage(i: number, s: Stage, outcome: Status, points: number) {
-    if (timer.current) clearTimeout(timer.current);
+  function finish(outcome: Status, points: number) {
+    clearTimers();
     setStatus(outcome);
+    setStep(STEPS.length - 1);
     setGained(points);
     if (points) setScore((v) => v + points);
-    if (outcome === "missed") navigator.vibrate?.([30, 40, 30]);
-    // After the top quarter, open the full picture on its own; after the twist, wait for "next".
-    if (s === "decoy")
-      advance.current = setTimeout(
-        () => ask(i, "truth"),
-        outcome === "correct" ? 900 : 1700,
-      );
+    navigator.vibrate?.(outcome === "correct" ? 12 : [30, 40, 30]);
   }
 
   function start() {
     const picked = shuffle(PICTURES).slice(0, ROUND);
-    // Warm the cache so covers flip onto fully drawn scenes.
+    // Warm the cache so the curtain lowers onto fully drawn pictures.
     for (const icon of new Set(
-      picked.flatMap((p) => [...p.top, ...p.bottom].flatMap((l) => ("icon" in l ? [l.icon] : []))),
+      picked.flatMap((p) =>
+        [...p.top, ...p.bottom].flatMap((l) => ("icon" in l ? [l.icon] : [])),
+      ),
     )) {
       new window.Image().src = `/picture-game/${icon}.svg`;
     }
     setRound(picked);
     setScore(0);
-    ask(0, "decoy");
+    ask(0);
   }
 
   function submit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!round || status !== "asking" || !guess.trim()) return;
     const puzzle = round[index];
-    const answers =
-      stage === "decoy" ? puzzle.decoy.answers : puzzle.truth.answers;
-    if (matches(guess, answers)) {
-      const left = Math.max(0, deadline - clockNow());
-      const { base, bonus } = POINTS[stage];
-      navigator.vibrate?.(12);
-      endStage(
-        index,
-        stage,
-        "correct",
-        base + Math.round((bonus * left) / (SECONDS * 1000)),
-      );
-    } else {
-      navigator.vibrate?.([20, 30, 20]);
-      animateInput(
-        inputScope.current,
-        { x: [0, -10, 10, -6, 6, 0] },
-        { duration: 0.4 },
-      );
-      inputRef.current?.select();
+    if (matches(guess, puzzle.truth.answers)) {
+      finish("correct", STEPS[step].points);
+      return;
     }
+    // Naming the top part is exactly the trap the picture sets.
+    const fell = matches(guess, puzzle.decoy.answers);
+    setFeedback(
+      fell
+        ? { kind: "trap", text: `😂 נפלת בפח! זה לא ${puzzle.decoy.label}` }
+        : { kind: "wrong", text: "לא, תסתכלו שוב" },
+    );
+    navigator.vibrate?.([20, 30, 20]);
+    animateInput(
+      inputScope.current,
+      { x: [0, -10, 10, -6, 6, 0] },
+      { duration: 0.4 },
+    );
+    inputRef.current?.select();
   }
 
   function next() {
     if (!round) return;
-    if (index + 1 < round.length) ask(index + 1, "decoy");
+    if (index + 1 < round.length) ask(index + 1);
     else onFinish(score);
   }
 
@@ -141,11 +140,11 @@ export function PictureGame({
     return (
       <div className="my-auto rounded-3xl bg-panel/90 p-6 text-center">
         <p className="mb-2 text-lg text-ink/85">
-          רואים רבע תמונה ובטוחים שזה ברור. כותבים מה זה, ואז נפתחת התמונה המלאה
-          ומתברר שזה משהו אחר לגמרי.
+          רואים רק את החלק העליון של התמונה, וכל כמה שניות נחשף עוד רבע. נחשו מה
+          זה באמת.
         </p>
         <p className="mb-5 text-sm text-mute">
-          {ROUND} תמונות, {SECONDS} שניות לכל ניחוש. ניחוש מהיר שווה יותר.
+          זהירות, התמונות מטעות 😉 כמה שפחות רואים, יותר נקודות. {ROUND} תמונות.
         </p>
         <motion.button
           type="button"
@@ -160,11 +159,11 @@ export function PictureGame({
   }
 
   const puzzle = round[index];
-  const target = stage === "decoy" ? puzzle.decoy : puzzle.truth;
-  const left = status === "asking" && now ? Math.max(0, deadline - now) : 0;
+  const elapsed = now && startedAt ? now - startedAt : 0;
+  const left = status === "asking" ? Math.max(0, TOTAL_MS - elapsed) : 0;
   const showHint =
-    status === "asking" && now > 0 && left < (SECONDS * 1000) / 2;
-  const done = stage === "truth" && status !== "asking";
+    status === "asking" && step === STEPS.length - 1 && left < LAST_MS / 2;
+  const done = status !== "asking";
   const last = index === round.length - 1;
 
   return (
@@ -177,8 +176,8 @@ export function PictureGame({
       </div>
       <div className="mb-3 h-1.5 shrink-0 overflow-hidden rounded-full bg-raised">
         <motion.div
-          className={`h-full rounded-full ${left < 5000 ? "bg-exit" : "bg-pill"}`}
-          animate={{ width: `${(left / (SECONDS * 1000)) * 100}%` }}
+          className={`h-full rounded-full ${left < LAST_MS / 2 ? "bg-exit" : "bg-pill"}`}
+          animate={{ width: `${(left / TOTAL_MS) * 100}%` }}
           transition={{ ease: "linear", duration: 0.25 }}
         />
       </div>
@@ -192,7 +191,7 @@ export function PictureGame({
           <PictureStage
             key={puzzle.id}
             puzzle={puzzle}
-            revealed={stage === "truth"}
+            shown={STEPS[step].shown}
             className="w-[min(100cqw,100cqh)]"
           />
         </div>
@@ -225,19 +224,27 @@ export function PictureGame({
           </motion.div>
         ) : (
           <form onSubmit={submit}>
-            <label
-              htmlFor="picture-guess"
-              className="mb-1.5 block font-semibold"
-            >
-              {stage === "decoy" ? "מה רואים ברבע הזה?" : "ומה זה באמת?"}
-            </label>
+            <div className="mb-1.5 flex items-baseline justify-between">
+              <label htmlFor="picture-guess" className="font-semibold">
+                מה בתמונה?
+              </label>
+              <span className="text-xs text-mute">
+                רואים {STEPS[step].label}, שווה{" "}
+                <span className="font-semibold text-pill">
+                  {STEPS[step].points}
+                </span>{" "}
+                נק׳
+              </span>
+            </div>
             <div ref={inputScope} className="flex gap-2">
               <input
                 ref={inputRef}
                 id="picture-guess"
                 value={guess}
-                onChange={(e) => setGuess(e.target.value)}
-                disabled={status !== "asking"}
+                onChange={(e) => {
+                  setGuess(e.target.value);
+                  setFeedback(null);
+                }}
                 placeholder="כתבו כאן"
                 autoComplete="off"
                 autoCorrect="off"
@@ -245,11 +252,11 @@ export function PictureGame({
                 spellCheck={false}
                 enterKeyHint="done"
                 maxLength={40}
-                className="min-w-0 flex-1 rounded-2xl bg-raised px-4 py-3 text-lg outline-none placeholder:text-mute/70 focus:ring-2 focus:ring-pill/70 disabled:opacity-60"
+                className="min-w-0 flex-1 rounded-2xl bg-raised px-4 py-3 text-lg outline-none placeholder:text-mute/70 focus:ring-2 focus:ring-pill/70"
               />
               <button
                 type="submit"
-                disabled={status !== "asking" || !guess.trim()}
+                disabled={!guess.trim()}
                 className="shrink-0 rounded-2xl bg-pill px-5 font-semibold text-night disabled:opacity-40"
               >
                 בדיקה
@@ -259,31 +266,33 @@ export function PictureGame({
               className="mt-2 flex h-6 items-center justify-between text-sm"
               aria-live="polite"
             >
-              {status === "correct" ? (
-                <span className="font-semibold text-signal">
-                  ✓ נכון! +{gained}
+              {feedback ? (
+                <span
+                  className={
+                    feedback.kind === "trap"
+                      ? "font-semibold text-pill"
+                      : "text-exit"
+                  }
+                >
+                  {feedback.text}
                 </span>
-              ) : status === "missed" ? (
-                <span className="text-exit">זה היה {target.label}</span>
               ) : showHint ? (
                 <span className="text-mute">
                   רמז:{" "}
                   <span className="font-semibold tracking-wider text-ink">
-                    {letterHint(target.label)}
+                    {letterHint(puzzle.truth.label)}
                   </span>
                 </span>
               ) : (
                 <span />
               )}
-              {status === "asking" && (
-                <button
-                  type="button"
-                  onClick={() => endStage(index, stage, "missed", 0)}
-                  className="text-mute hover:text-ink"
-                >
-                  דלג
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => finish("missed", 0)}
+                className="text-mute hover:text-ink"
+              >
+                דלג
+              </button>
             </div>
           </form>
         )}

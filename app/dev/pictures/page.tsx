@@ -13,8 +13,8 @@ export default function PicturesPreview() {
             {p.id}: {p.decoy.label} → {p.truth.label}
           </h2>
           <div className="grid grid-cols-2 gap-2">
-            <PictureStage puzzle={p} revealed={false} />
-            <PictureStage puzzle={p} revealed />
+            <PictureStage puzzle={p} shown={25} />
+            <PictureStage puzzle={p} shown={100} />
           </div>
         </section>
       ))}
