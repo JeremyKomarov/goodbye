@@ -20,14 +20,14 @@ type Props = {
 
 const SIZES = {
   roomy: {
-    section: "pb-6 pt-6 short:pb-3 short:pt-2",
+    section: "py-4 short:pb-3 short:pt-2",
     pill: "",
     label: "text-lg",
-    afterPill: "mt-6 short:mt-3",
+    afterPill: "mt-5 short:mt-3",
     days: "text-lg",
     digits: "text-[5.5rem] short:text-[4rem]",
     note: "mt-3 text-balance short:mt-2",
-    exitRow: "mt-6 short:mt-3",
+    exitRow: "mt-5 short:mt-3",
     exited: "pt-8",
     verdict: "text-6xl",
   },

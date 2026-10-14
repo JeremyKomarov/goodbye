@@ -1,7 +1,13 @@
 "use client";
 
 import { AnimatePresence, MotionConfig } from "motion/react";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { GamesHub } from "@/components/games/GamesHub";
 import {
   PaneHeader,
@@ -42,6 +48,47 @@ function Scroll({
       className={`min-h-0 flex-1 overflow-y-auto overscroll-contain ${className}`}
     >
       {children}
+    </div>
+  );
+}
+
+/**
+ * Desktop sidebar: the countdown, with the stories row above it whenever both fit.
+ * When they don't, the row steps aside (the header avatar still opens the stories),
+ * so this only ever scrolls in a window too short for the countdown itself.
+ */
+function SidebarStatus({ children }: { children: React.ReactNode }) {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const storiesRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [fits, setFits] = useState(true);
+
+  // The row stays laid out while hidden, so its height is always known.
+  useEffect(() => {
+    const box = boxRef.current!;
+    const stories = storiesRef.current!;
+    const hero = heroRef.current!;
+    const observer = new ResizeObserver(() =>
+      setFits(stories.offsetHeight + hero.offsetHeight <= box.clientHeight),
+    );
+    for (const el of [box, stories, hero]) observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={boxRef}
+      className="relative flex min-h-0 flex-1 flex-col overflow-y-auto"
+    >
+      <div
+        ref={storiesRef}
+        className={fits ? "" : "invisible absolute inset-x-0 top-0"}
+      >
+        <StatusStories />
+      </div>
+      <div ref={heroRef} className="my-auto">
+        {children}
+      </div>
     </div>
   );
 }
@@ -193,7 +240,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
       {/* App shell: exactly one viewport tall; only the content area scrolls.
           Short desktop windows drop the outer frame to keep every pixel. */}
       <div className="h-dvh overflow-hidden lg:p-5 lg:short:p-0">
-        <div className="mx-auto flex h-full max-w-xl flex-col bg-night/40 lg:max-w-[1440px] lg:flex-row lg:overflow-hidden lg:rounded-2xl lg:border lg:border-line/60 lg:shadow-2xl lg:short:rounded-none lg:short:border-0">
+        <div className="mx-auto flex h-full max-w-xl flex-col bg-night/40 tiny:max-w-3xl lg:max-w-[1440px] lg:flex-row lg:overflow-hidden lg:rounded-2xl lg:border lg:border-line/60 lg:shadow-2xl lg:short:rounded-none lg:short:border-0">
           {/* Desktop sidebar */}
           <aside className="hidden w-[25rem] shrink-0 flex-col border-e border-line/60 bg-panel lg:flex">
             <RoomHeader
@@ -205,12 +252,9 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
               adminHref={adminHref}
               onParty={party}
             />
-            <Scroll className="flex flex-col">
-              <StatusStories />
-              <div className="my-auto">
-                <Hero {...heroProps} />
-              </div>
-            </Scroll>
+            <SidebarStatus>
+              <Hero {...heroProps} />
+            </SidebarStatus>
             {/* The sections stay pinned, so they never scroll out of reach. */}
             <SideNav
               tab={tab}
@@ -243,8 +287,9 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
             <main className="flex min-h-0 flex-1 flex-col">
               {/* Countdown on top and the grid filling the rest; side by side on landscape phones. */}
               {tab === "vote" && (
-                <div className="flex min-h-0 flex-1 flex-col gap-2 px-3 pb-3 tiny:flex-row tiny:items-center tiny:gap-4 tiny:pt-2 lg:px-6 lg:py-6 lg:short:py-4">
-                  <div className="shrink-0 tiny:max-h-full tiny:w-2/5 tiny:overflow-y-auto lg:hidden">
+                <div className="flex min-h-0 flex-1 flex-col gap-2 px-3 pb-3 tiny:flex-row tiny:items-center tiny:gap-4 tiny:pt-2 lg:justify-center lg:px-6 lg:py-6 lg:short:py-4">
+                  {/* The countdown takes whatever room the picker leaves and centers in it. */}
+                  <div className="flex flex-1 flex-col justify-center tiny:max-h-full tiny:w-2/5 tiny:flex-none tiny:overflow-y-auto lg:hidden">
                     <Hero {...heroProps} compact />
                   </div>
                   <VoteHeatmap
@@ -255,7 +300,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
                     myUserId={myUserId}
                     mySlot={mySlot}
                     onVote={api.vote}
-                    className="mx-auto w-full max-w-3xl tiny:max-h-full tiny:flex-1"
+                    className="mx-auto w-full max-w-2xl tiny:max-h-full tiny:flex-1"
                   />
                 </div>
               )}
