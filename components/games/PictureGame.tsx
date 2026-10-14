@@ -12,9 +12,6 @@ import {
 
 const ROUND = 6;
 const POINTS = 150;
-/** How many pictures in a round are honest (the top thing is the answer): 2 to 4. */
-const HONEST_MIN = 2;
-const HONEST_MAX = 4;
 
 type Status = "asking" | "correct" | "wrong" | "skipped";
 
@@ -39,10 +36,9 @@ function dealRound(): Card[] {
   // Once every picture has had a turn, start the cycle over from this round.
   if (fresh.length <= ROUND) seen = new Set();
   for (const p of picked) seen.add(p.id);
-  const honestCount =
-    HONEST_MIN + Math.floor(Math.random() * (HONEST_MAX - HONEST_MIN + 1));
-  const honest = new Set(shuffle(picked.map((_, i) => i)).slice(0, honestCount));
-  return picked.map((puzzle, i) => ({ puzzle, honest: honest.has(i) }));
+  // Exactly one picture per round is honest (the top thing is the answer), at a random spot.
+  const honest = Math.floor(Math.random() * picked.length);
+  return picked.map((puzzle, i) => ({ puzzle, honest: i === honest }));
 }
 
 /**
@@ -180,9 +176,7 @@ export function PictureGame({
             animate={{ opacity: 1, y: 0 }}
             className="rounded-2xl bg-panel/90 p-4"
           >
-            <p
-              className={`text-lg font-semibold ${verdict[status].className}`}
-            >
+            <p className={`text-lg font-semibold ${verdict[status].className}`}>
               {verdict[status].text}
             </p>
             <button
