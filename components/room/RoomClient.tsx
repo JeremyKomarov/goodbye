@@ -380,9 +380,18 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
         )}
       </AnimatePresence>
 
-      {api.authState === "join" && (
-        <JoinGate room={room} voterCount={voteList.length} onJoin={api.join} />
-      )}
+      {/* Covers the room until we know who you are, so newcomers see the name prompt first. */}
+      <AnimatePresence>
+        {api.authState !== "ready" && (
+          <JoinGate
+            key="gate"
+            room={room}
+            checking={api.authState === "loading"}
+            voterCount={voteList.length}
+            onJoin={api.join}
+          />
+        )}
+      </AnimatePresence>
     </MotionConfig>
   );
 }
