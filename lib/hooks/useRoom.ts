@@ -2,7 +2,7 @@
 
 import type { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { createLoginCode } from "@/app/actions";
+import { ensureLoginCode } from "@/app/actions";
 import { claimHost } from "@/app/r/[slug]/admin/actions";
 import { loadAdminToken } from "@/lib/admin-storage";
 import { captchaToken } from "@/lib/captcha";
@@ -591,8 +591,8 @@ export function useRoom(initialRoom: Room) {
   );
 
   /**
-   * Your code for coming in as yourself on another device, made the first time
-   * it's asked for (or again with `fresh`, which retires the old one).
+   * Your code for coming in as yourself on another device (made on first ask, or
+   * again with `fresh`, which retires the old one). The host can look it up too.
    */
   const loginCode = useCallback(
     async (fresh = false) => {
@@ -601,13 +601,15 @@ export function useRoom(initialRoom: Room) {
       const saved = fresh ? null : loadLoginCode(current.userId);
       if (saved) return saved;
       const { data } = await supabase.auth.getSession();
-      if (!data.session) return null;
-      const result = await createLoginCode(data.session.access_token).catch(
-        () => ({ ok: false }) as const,
-      );
+      if (!data.session || data.session.user.id !== current.userId) return null;
+      const result = await ensureLoginCode(
+        data.session.access_token,
+        fresh,
+      ).catch(() => ({ ok: false }) as const);
       if (!result.ok) return null;
       saveLoginCode(current.userId, result.code);
-      // Setting a code signs out every session of this user, this one included.
+      if (!result.created) return result.code;
+      // A new code signs out every session of this user, this one included.
       const { error } = await supabase.auth.signInWithPassword({
         email: loginEmail(current.userId),
         password: result.code,
@@ -616,6 +618,16 @@ export function useRoom(initialRoom: Room) {
     },
     [supabase],
   );
+
+  // Every player gets a code as they come in, so if they ever need it on another
+  // device and can't find it, the host can send it. Not the host: they have the
+  // admin link. Until a player has a code they're signed in on this device only,
+  // so making one (which signs out their sessions) only touches this one.
+  useEffect(() => {
+    if (authState !== "ready" || !me || loadAdminToken(initialRoom.slug))
+      return;
+    void loginCode();
+  }, [authState, me, loginCode, initialRoom.slug]);
 
   /** Come in as a player who joined on another device, with their code. */
   const signInAs = useCallback(
@@ -635,7 +647,6 @@ export function useRoom(initialRoom: Room) {
         return error.status === 429
           ? "יותר מדי ניסיונות. נסו שוב בעוד כמה דקות"
           : "הקוד לא מתאים. בודקים אותו שוב במכשיר הראשון";
-      saveLoginCode(player.user_id, code);
       const next = { userId: player.user_id, name: player.display_name };
       meRef.current = next;
       setMe(next);

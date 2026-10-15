@@ -19,8 +19,8 @@ export function sameName(a: string, b: string) {
   return norm(a) === norm(b);
 }
 
-// Each device that knows the code keeps it, so it can show it again.
-const key = (userId: string) => `exit-code:${userId}`;
+// Each device keeps its player's code (once the server has it), to show it again.
+const key = (userId: string) => `exit-login:${userId}`;
 
 export function saveLoginCode(userId: string, code: string) {
   try {

@@ -88,23 +88,33 @@ export async function createRoom(input: CreateRoomInput): Promise<CreateRoomResu
   return { ok: true, slug, adminToken };
 }
 
-export type LoginCodeResult = { ok: true; code: string } | { ok: false };
+export type LoginCodeResult = { ok: true; code: string; created: boolean } | { ok: false };
 
 /**
- * Give the caller's user a code for coming in as themselves on another device. A
- * new code replaces the old one and signs out all of the user's sessions, so the
- * caller signs straight back in with it.
+ * The caller's code for coming in as themselves on another device, made on first
+ * ask (`fresh` replaces it). It's kept so the host can send it to them. Making a
+ * code sets it as the user's password, which signs out all of their sessions, so
+ * when `created` the caller signs straight back in with it.
  */
-export async function createLoginCode(accessToken: string): Promise<LoginCodeResult> {
+export async function ensureLoginCode(accessToken: string, fresh = false): Promise<LoginCodeResult> {
   if (typeof accessToken !== "string" || !accessToken) return { ok: false };
   const db = getAdminClient();
   const { data, error } = await db.auth.getUser(accessToken);
   if (error || !data.user) return { ok: false };
+  const userId = data.user.id;
+
+  if (!fresh) {
+    const { data: saved } = await db.from("login_codes").select("code").eq("user_id", userId).maybeSingle();
+    if (saved) return { ok: true, code: saved.code as string, created: false };
+  }
+
   const code = newLoginCode();
-  const { error: updateError } = await db.auth.admin.updateUserById(data.user.id, {
-    email: loginEmail(data.user.id),
+  const { error: updateError } = await db.auth.admin.updateUserById(userId, {
+    email: loginEmail(userId),
     password: code,
     email_confirm: true,
   });
-  return updateError ? { ok: false } : { ok: true, code };
+  if (updateError) return { ok: false };
+  await db.from("login_codes").upsert({ user_id: userId, code, updated_at: new Date().toISOString() });
+  return { ok: true, code, created: true };
 }

@@ -55,12 +55,14 @@ npm run dev                  # http://localhost:3000
   database keeps the host out of the vote, reserves their name, and badges their
   wall messages.
 - **Same player, another device.** Each browser is its own anonymous user, so a
-  second phone or browser starts as a stranger. A player can tap "שלום {name}" to
-  get a 6-character code. Behind it, the server gives their user an email login
-  (`<user id>@players.invalid`, never mailed) with the code as its password. On
-  the other device, typing a name that's already in the room asks for that code
-  and signs in as the same user: same vote, scores and messages, on both devices.
-  A new code signs out the user's other devices.
+  second phone or browser starts as a stranger. So every player gets a 6-character
+  code as they join: the server gives their user an email login
+  (`<user id>@players.invalid`, never mailed) with the code as its password, and
+  keeps the code in `login_codes`, which only the server can read. On another
+  device, typing a name that's already in the room asks for the code and signs in
+  as the same user: same vote, scores and messages, on both devices. Players see
+  their code under "שלום {name}"; the host sees everyone's on the admin page and
+  can send it to whoever forgot it. A new code signs out the user's other devices.
 - **Rules live in the database.** Row-level security and triggers decide who may
   vote (players who aren't the host, on a valid hour, before voting closes), keep
   names unique per room, and stamp each wall message with its poster's real name.

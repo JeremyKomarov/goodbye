@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { makeRoom } from "@/lib/test/room";
-import { exitStats, goodbyeMessage, resultMessage, whatsappLink } from "@/lib/share";
+import { codeMessage, exitStats, goodbyeMessage, resultMessage, whatsappLink } from "@/lib/share";
 import type { LeaderboardRow, WallMessage } from "@/lib/types";
 
 const room = makeRoom({ status: "locked", locked_slot: "2026-11-10T16:00:00Z" });
@@ -55,5 +55,13 @@ describe("goodbyeMessage", () => {
 describe("whatsappLink", () => {
   it("encodes the text", () => {
     expect(whatsappLink("שלום & ביי")).toBe(`https://wa.me/?text=${encodeURIComponent("שלום & ביי")}`);
+  });
+});
+
+describe("codeMessage", () => {
+  it("gives the code and how to use it", () => {
+    const text = strip(codeMessage("דוד", "K7P2QX", url));
+    expect(text).toContain("הקוד שלך לחדר: K7P2QX");
+    expect(text).toContain(`כותבים דוד ואז את הקוד: ${url}`);
   });
 });

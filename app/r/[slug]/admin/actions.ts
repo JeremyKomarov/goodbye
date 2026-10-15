@@ -7,7 +7,8 @@ import type { Room } from "@/lib/types";
 
 export type AdminResult = { ok: true; room: Room } | { ok: false; error: string };
 
-const DENIED: AdminResult = { ok: false, error: "קישור הניהול לא תקין. בדקו שהעתקתם אותו במלואו" };
+const DENIED_TEXT = "קישור הניהול לא תקין. בדקו שהעתקתם אותו במלואו";
+const DENIED: AdminResult = { ok: false, error: DENIED_TEXT };
 const FAILED: AdminResult = { ok: false, error: "הפעולה לא הצליחה. נסו שוב" };
 
 async function authorize(slug: string, token: string) {
@@ -101,4 +102,32 @@ export async function claimHost(slug: string, token: string, accessToken: string
   if (hostError) return { ok: false };
   await auth.db.from("votes").delete().eq("room_id", auth.room.id).eq("user_id", userId);
   return { ok: true };
+}
+
+export type PlayerCode = { userId: string; name: string; code: string | null };
+export type PlayerCodesResult = { ok: true; players: PlayerCode[] } | { ok: false; error: string };
+
+/** Everyone in the room except the host, with the code for their other devices. */
+export async function listPlayerCodes(slug: string, token: string): Promise<PlayerCodesResult> {
+  const auth = await authorize(slug, token);
+  if (!auth) return { ok: false, error: DENIED_TEXT };
+  const [{ data: players, error }, { data: hosts }] = await Promise.all([
+    auth.db.from("players").select("user_id, display_name").eq("room_id", auth.room.id).order("created_at"),
+    auth.db.from("room_hosts").select("user_id").eq("room_id", auth.room.id),
+  ]);
+  if (error || !players) return { ok: false, error: "לא הצלחנו לטעון את השחקנים. נסו שוב" };
+  const hostIds = new Set((hosts ?? []).map((h) => h.user_id as string));
+  const guests = players.filter((p) => !hostIds.has(p.user_id as string));
+  const { data: codes } = guests.length
+    ? await auth.db.from("login_codes").select("user_id, code").in("user_id", guests.map((p) => p.user_id))
+    : { data: [] };
+  const byUser = new Map((codes ?? []).map((c) => [c.user_id as string, c.code as string]));
+  return {
+    ok: true,
+    players: guests.map((p) => ({
+      userId: p.user_id as string,
+      name: p.display_name as string,
+      code: byUser.get(p.user_id as string) ?? null,
+    })),
+  };
 }

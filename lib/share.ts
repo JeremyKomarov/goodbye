@@ -88,3 +88,11 @@ export function goodbyeMessage(room: Room, url: string, stats: ExitStats) {
   lines.push("", `תודה על הכל! הקיר נשאר פתוח: ${url}`);
   return lines.join("\n");
 }
+
+/** From the host to a player who needs their code on another device. */
+export function codeMessage(name: string, code: string, url: string) {
+  return [
+    `היי ${iso(name)} 👋 הקוד שלך לחדר: ${code}`,
+    `נכנסים כאן, כותבים ${iso(name)} ואז את הקוד: ${url}`,
+  ].join("\n");
+}

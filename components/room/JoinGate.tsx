@@ -118,7 +118,7 @@ export function JoinGate({
                 className="w-full rounded-xl bg-raised px-4 py-3.5 text-center font-mono text-2xl uppercase tracking-[0.3em] outline-none focus:ring-2 focus:ring-pill/70"
               />
               <p className="mt-2 text-sm text-mute">
-                {`את הקוד רואים במכשיר שבו נכנסת: לוחצים על "שלום ${iso(name.trim())}" בראש החדר.`}
+                {`את הקוד רואים במכשיר שבו נכנסת: לוחצים על "שלום ${iso(name.trim())}" בראש החדר. לא זוכר/ת ואין את המכשיר? ${iso(room.host_name)} ${g(he, "יכול", "יכולה")} לשלוח לך אותו.`}
               </p>
             </div>
           ) : (
