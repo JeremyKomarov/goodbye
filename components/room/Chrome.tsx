@@ -33,6 +33,8 @@ type HeaderProps = {
   room: Room;
   now: number;
   me: Me | null;
+  /** Opens "your name" (rename, or "not you?"). Not offered to the host. */
+  onMe?: () => void;
   online: OnlineUser[];
   typers: Typer[];
   showClock: boolean;
@@ -45,6 +47,7 @@ export function RoomHeader({
   room,
   now,
   me,
+  onMe,
   online,
   typers,
   showClock,
@@ -72,7 +75,26 @@ export function RoomHeader({
             className={`truncate text-xs ${typing ? "text-signal" : "text-mute"}`}
             aria-live="polite"
           >
-            {typing ?? (me ? `שלום ${iso(me.name)} · ${presence}` : presence)}
+            {typing ??
+              (me ? (
+                <>
+                  {onMe ? (
+                    <button
+                      type="button"
+                      onClick={onMe}
+                      title="שינוי שם"
+                      className="underline decoration-dotted underline-offset-2 hover:text-ink"
+                    >
+                      שלום {iso(me.name)}
+                    </button>
+                  ) : (
+                    `שלום ${iso(me.name)}`
+                  )}
+                  {` · ${presence}`}
+                </>
+              ) : (
+                presence
+              ))}
           </p>
         </div>
         {clock && (

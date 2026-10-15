@@ -7,6 +7,12 @@ import { Ticks } from "@/components/ui/Ticks";
 import { nameColor } from "@/lib/colors";
 import { formatHour, g, iso } from "@/lib/hebrew";
 import type { Typer } from "@/lib/hooks/useRoom";
+import {
+  type ReactionEmoji,
+  type ReactionMap,
+  REACTIONS,
+  reactionCounts,
+} from "@/lib/reactions";
 import type { Room, WallMessage } from "@/lib/types";
 
 export const QUICK_EMOJI = ["👋", "😢", "🎉", "🫡", "❤️", "😂"];
@@ -16,8 +22,12 @@ type Props = {
   room: Room;
   messages: WallMessage[];
   myUserId: string | null;
+  /** The host's user ids: their messages get a badge. */
+  hosts: string[];
+  reactions: ReactionMap;
   typers: Typer[];
   onSend: (body: string) => Promise<string | null>;
+  onReact: (messageId: number, emoji: ReactionEmoji | null) => void;
   onTyping: (typing: boolean) => void;
   onEmoji: (emoji: string) => void;
 };
@@ -26,11 +36,16 @@ export function FarewellWall({
   room,
   messages,
   myUserId,
+  hosts,
+  reactions,
   typers,
   onSend,
+  onReact,
   onTyping,
   onEmoji,
 }: Props) {
+  // The message whose reaction picker is open.
+  const [picking, setPicking] = useState<number | null>(null);
   const [draft, setDraft] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
@@ -65,8 +80,7 @@ export function FarewellWall({
   function onScroll() {
     const list = listRef.current;
     if (!list) return;
-    const bottom =
-      list.scrollHeight - list.scrollTop - list.clientHeight < 80;
+    const bottom = list.scrollHeight - list.scrollTop - list.clientHeight < 80;
     following.current = bottom;
     setAtBottom(bottom);
     if (bottom) setReadCount(messages.length);
@@ -83,6 +97,22 @@ export function FarewellWall({
     },
     [],
   );
+
+  // A tap anywhere outside the open picker (or Escape) closes it.
+  useEffect(() => {
+    if (picking === null) return;
+    const onDown = (e: PointerEvent) => {
+      const target = e.target as Element | null;
+      if (!target?.closest?.(`[data-reactions="${picking}"]`)) setPicking(null);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setPicking(null);
+    window.addEventListener("pointerdown", onDown);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [picking]);
 
   function stopTyping() {
     if (typingTimer.current) clearTimeout(typingTimer.current);
@@ -122,119 +152,212 @@ export function FarewellWall({
   return (
     <section aria-label="קיר פרידה" className="flex min-h-0 flex-1 flex-col">
       <div className="relative min-h-0 flex-1">
-      <div
-        ref={listRef}
-        onScroll={onScroll}
-        className="h-full overflow-y-auto overscroll-contain"
-      >
-      <div className="mx-auto flex min-h-full max-w-3xl flex-col justify-end gap-1.5 px-3 pb-3 pt-3 lg:px-8">
-        <SystemPill className="mb-3">
-          {`מה תרצו להגיד ל${iso(room.host_name)} לפני ש${g(room.host_gender, "הוא יוצא", "היא יוצאת")}? כל מי שבחדר רואה את ההודעות.`}
-        </SystemPill>
+        <div
+          ref={listRef}
+          onScroll={onScroll}
+          className="h-full overflow-y-auto overscroll-contain"
+        >
+          <div className="mx-auto flex min-h-full max-w-3xl flex-col justify-end gap-1.5 px-3 pb-3 pt-3 lg:px-8">
+            <SystemPill className="mb-3">
+              {`מה תרצו להגיד ל${iso(room.host_name)} לפני ש${g(room.host_gender, "הוא יוצא", "היא יוצאת")}? כל מי שבחדר רואה את ההודעות.`}
+            </SystemPill>
 
-        {messages.length === 0 && (
-          <p className="py-10 text-center text-mute">
-            עוד אין כאן הודעות. ההודעה הראשונה תהיה שלך.
-          </p>
-        )}
+            {messages.length === 0 && (
+              <p className="py-10 text-center text-mute">
+                עוד אין כאן הודעות. ההודעה הראשונה תהיה שלך.
+              </p>
+            )}
 
-        <AnimatePresence initial={false}>
-          {messages.map((m, i) => {
-            const mine = m.user_id === myUserId;
-            const prev = messages[i - 1];
-            const grouped = prev && prev.user_id === m.user_id;
-            return (
-              <motion.div
-                key={m.id}
-                layout="position"
-                initial={{ opacity: 0, y: 14, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ type: "spring", damping: 24, stiffness: 320 }}
-                className={`flex ${mine ? "justify-end" : "justify-start"} ${grouped ? "" : "mt-1.5"}`}
-              >
-                <div
-                  className={`${grouped ? "rounded-xl" : mine ? "bubble-out me-2" : "bubble-in ms-2"} ${
-                    grouped ? (mine ? "me-2 bg-bubble" : "ms-2 bg-raised") : ""
-                  } max-w-[80%] px-3 pb-1.5 pt-1`}
-                >
-                  {!mine && !grouped && (
-                    <div
-                      className="text-[13px] font-semibold"
-                      style={{ color: nameColor(m.user_id) }}
-                    >
-                      <bdi>{m.display_name}</bdi>
-                    </div>
-                  )}
-                  <p dir="auto" className="whitespace-pre-wrap break-words text-[15px] leading-snug">
-                    {m.body}
-                  </p>
-                  <div
-                    className={`mt-0.5 flex items-center justify-start gap-1 text-[11px] ${mine ? "text-ink/60" : "text-mute"}`}
-                    dir="ltr"
+            <AnimatePresence initial={false}>
+              {messages.map((m, i) => {
+                const mine = m.user_id === myUserId;
+                const prev = messages[i - 1];
+                const grouped = prev && prev.user_id === m.user_id;
+                const chips = reactionCounts(reactions[m.id]);
+                const myReaction = myUserId
+                  ? reactions[m.id]?.[myUserId]
+                  : undefined;
+                return (
+                  <motion.div
+                    key={m.id}
+                    layout="position"
+                    initial={{ opacity: 0, y: 14, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ type: "spring", damping: 24, stiffness: 320 }}
+                    className={`flex ${mine ? "justify-end" : "justify-start"} ${grouped ? "" : "mt-1.5"} ${chips.length ? "pb-3" : ""}`}
                   >
-                    {formatHour(Date.parse(m.created_at), tz)}
-                    {mine && <Ticks />}
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+                    <div
+                      data-reactions={m.id}
+                      className={`relative max-w-[80%] ${mine ? "me-2" : "ms-2"}`}
+                    >
+                      {/* Tap a bubble to react, like a long-press in WhatsApp. */}
+                      <AnimatePresence>
+                        {picking === m.id && (
+                          <motion.div
+                            role="menu"
+                            aria-label="תגובה להודעה"
+                            initial={{ opacity: 0, y: 6, scale: 0.9 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            className={`absolute bottom-full z-10 mb-1 flex gap-0.5 rounded-full bg-raised p-1 shadow-lg ${mine ? "end-0" : "start-0"}`}
+                          >
+                            {REACTIONS.map((emoji) => (
+                              <motion.button
+                                key={emoji}
+                                type="button"
+                                role="menuitemradio"
+                                aria-checked={myReaction === emoji}
+                                whileTap={{ scale: 1.35 }}
+                                onClick={() => {
+                                  onReact(
+                                    m.id,
+                                    myReaction === emoji ? null : emoji,
+                                  );
+                                  setPicking(null);
+                                }}
+                                className={`grid size-9 place-items-center rounded-full text-xl ${myReaction === emoji ? "bg-line" : "hover:bg-line/60"}`}
+                              >
+                                {emoji}
+                              </motion.button>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        aria-haspopup="menu"
+                        aria-expanded={picking === m.id}
+                        onClick={() =>
+                          setPicking(picking === m.id ? null : m.id)
+                        }
+                        onKeyDown={(e) => {
+                          if (e.key !== "Enter" && e.key !== " ") return;
+                          e.preventDefault();
+                          setPicking(picking === m.id ? null : m.id);
+                        }}
+                        className={`${grouped ? "rounded-xl" : mine ? "bubble-out" : "bubble-in"} ${
+                          grouped ? (mine ? "bg-bubble" : "bg-raised") : ""
+                        } cursor-pointer px-3 pb-1.5 pt-1 outline-none focus-visible:ring-2 focus-visible:ring-pill/70`}
+                      >
+                        {!mine && !grouped && (
+                          <div
+                            className="flex items-center gap-1.5 text-[13px] font-semibold"
+                            style={{ color: nameColor(m.user_id) }}
+                          >
+                            <bdi>{m.display_name}</bdi>
+                            {hosts.includes(m.user_id) && (
+                              <span className="rounded bg-exit/15 px-1.5 text-[11px] font-medium text-exit">
+                                {g(room.host_gender, "היוצא", "היוצאת")}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        <p
+                          dir="auto"
+                          className="whitespace-pre-wrap break-words text-[15px] leading-snug"
+                        >
+                          {m.body}
+                        </p>
+                        <div
+                          className={`mt-0.5 flex items-center justify-start gap-1 text-[11px] ${mine ? "text-ink/60" : "text-mute"}`}
+                          dir="ltr"
+                        >
+                          {formatHour(Date.parse(m.created_at), tz)}
+                          {mine && <Ticks />}
+                        </div>
+                      </div>
+                      {chips.length > 0 && (
+                        <div
+                          className={`absolute -bottom-4 flex gap-1 ${mine ? "end-2" : "start-2"}`}
+                        >
+                          {chips.map(({ emoji, count }) => (
+                            <button
+                              key={emoji}
+                              type="button"
+                              onClick={() =>
+                                onReact(
+                                  m.id,
+                                  myReaction === emoji ? null : emoji,
+                                )
+                              }
+                              aria-label={`${emoji} ${count}${myReaction === emoji ? ", כולל שלך" : ""}`}
+                              aria-pressed={myReaction === emoji}
+                              className={`flex h-6 items-center gap-0.5 rounded-full border-2 border-night px-1.5 text-xs shadow ${myReaction === emoji ? "bg-bubble" : "bg-raised"}`}
+                            >
+                              <span aria-hidden>{emoji}</span>
+                              {count > 1 && (
+                                <span
+                                  className="tabular-nums text-ink/80"
+                                  aria-hidden
+                                >
+                                  {count}
+                                </span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
 
+            <AnimatePresence>
+              {typers.length > 0 && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="ms-3 mt-1 text-sm text-signal"
+                >
+                  {typers.length === 1
+                    ? `${iso(typers[0].name)} מקליד/ה…`
+                    : `${typers.length} אנשים מקלידים…`}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* WhatsApp's round "jump to latest" button, with a count of new messages. */}
         <AnimatePresence>
-          {typers.length > 0 && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="ms-3 mt-1 text-sm text-signal"
+          {!atBottom && (
+            <motion.button
+              type="button"
+              onClick={jumpToEnd}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              aria-label={
+                unseen
+                  ? `${unseen === 1 ? "הודעה חדשה אחת" : `${unseen} הודעות חדשות`}, מעבר להודעה האחרונה`
+                  : "מעבר להודעה האחרונה"
+              }
+              className="absolute bottom-3 end-3 grid size-10 place-items-center rounded-full bg-raised text-mute shadow-lg lg:end-6"
             >
-              {typers.length === 1
-                ? `${iso(typers[0].name)} מקליד/ה…`
-                : `${typers.length} אנשים מקלידים…`}
-            </motion.p>
+              <svg
+                viewBox="0 0 24 24"
+                className="size-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+              {unseen > 0 && (
+                <span className="absolute -top-2 start-0 grid h-5 min-w-5 place-items-center rounded-full bg-signal px-1 text-[11px] font-bold text-night">
+                  {unseen > 99 ? "99+" : unseen}
+                </span>
+              )}
+            </motion.button>
           )}
         </AnimatePresence>
-      </div>
-      </div>
-
-      {/* WhatsApp's round "jump to latest" button, with a count of new messages. */}
-      <AnimatePresence>
-        {!atBottom && (
-          <motion.button
-            type="button"
-            onClick={jumpToEnd}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            aria-label={
-              unseen
-                ? `${unseen === 1 ? "הודעה חדשה אחת" : `${unseen} הודעות חדשות`}, מעבר להודעה האחרונה`
-                : "מעבר להודעה האחרונה"
-            }
-            className="absolute bottom-3 end-3 grid size-10 place-items-center rounded-full bg-raised text-mute shadow-lg lg:end-6"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              className="size-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-            {unseen > 0 && (
-              <span className="absolute -top-2 start-0 grid h-5 min-w-5 place-items-center rounded-full bg-signal px-1 text-[11px] font-bold text-night">
-                {unseen > 99 ? "99+" : unseen}
-              </span>
-            )}
-          </motion.button>
-        )}
-      </AnimatePresence>
       </div>
 
       {/* Composer */}

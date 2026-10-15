@@ -2,17 +2,19 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect } from "react";
-import { GAME_META, rankRows } from "@/components/room/Leaderboard";
 import { SystemPill } from "@/components/ui/SystemPill";
-import { formatDurationRough, formatHour, formatSlot, g } from "@/lib/hebrew";
-import { leftLine, verdict } from "@/lib/room-view";
-import type { GameId, LeaderboardRow, Room } from "@/lib/types";
+import { GAME_META, rankRows } from "@/lib/games";
+import { formatHour, formatSlot, g } from "@/lib/hebrew";
+import { leftLine, verdictText } from "@/lib/room-view";
+import { mostLoved, type ReactionMap } from "@/lib/reactions";
+import type { GameId, LeaderboardRow, Room, WallMessage } from "@/lib/types";
 
 type Props = {
   room: Room;
   drawn: boolean;
   voterCount: number;
-  messageCount: number;
+  messages: WallMessage[];
+  reactions: ReactionMap;
   leaderboard: LeaderboardRow[];
   onClose: () => void;
 };
@@ -23,12 +25,12 @@ export function Finale({
   room,
   drawn,
   voterCount,
-  messageCount,
+  messages,
+  reactions,
   leaderboard,
   onClose,
 }: Props) {
   const reduce = useReducedMotion();
-  const v = verdict(room);
   const he = room.host_gender;
   const tz = room.timezone;
 
@@ -77,14 +79,9 @@ export function Finale({
     };
   }, [reduce]);
 
-  const headline = !v
-    ? "זהו, נגמר"
-    : v.kind === "on_time"
-      ? "בדיוק בזמן"
-      : v.kind === "late"
-        ? `${g(he, "איחר", "איחרה")} ב-${formatDurationRough(v.diffMs)}`
-        : `${g(he, "ברח", "ברחה")} ${formatDurationRough(v.diffMs)} מוקדם`;
+  const headline = verdictText(room) ?? "זהו, נגמר";
 
+  const loved = mostLoved(messages, reactions);
   const champions = (Object.keys(GAME_META) as GameId[])
     .map((game) => ({ game, top: rankRows(leaderboard, game)[0] }))
     .filter((c) => c.top);
@@ -99,7 +96,7 @@ export function Finale({
       value: formatHour(Date.parse(room.exited_at), tz),
     },
     { label: "הצביעו", value: voterCount.toLocaleString("he-IL") },
-    { label: "הודעות פרידה", value: messageCount.toLocaleString("he-IL") },
+    { label: "הודעות פרידה", value: messages.length.toLocaleString("he-IL") },
   ].filter(Boolean) as { label: string; value: string }[];
 
   return (
@@ -146,6 +143,26 @@ export function Finale({
             </div>
           ))}
         </motion.dl>
+
+        {loved && (
+          <motion.figure
+            className="w-full rounded-2xl bg-panel px-4 py-3 text-start short:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.8 }}
+          >
+            <figcaption className="text-xs text-mute">
+              ❤️ ההודעה הכי אהובה ·{" "}
+              {loved.count === 1 ? "תגובה אחת" : `${loved.count} תגובות`}
+            </figcaption>
+            <blockquote dir="auto" className="mt-1 line-clamp-3 font-semibold">
+              {loved.message.body}
+            </blockquote>
+            <div className="mt-0.5 text-sm text-mute">
+              <bdi>{loved.message.display_name}</bdi>
+            </div>
+          </motion.figure>
+        )}
 
         {champions.length > 0 && (
           <motion.div

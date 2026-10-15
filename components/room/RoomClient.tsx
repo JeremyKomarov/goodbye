@@ -18,23 +18,23 @@ import {
   TabBar,
 } from "@/components/room/Chrome";
 import { EmojiRain } from "@/components/room/EmojiRain";
+import { ExitActions } from "@/components/room/ExitActions";
 import { FarewellWall } from "@/components/room/FarewellWall";
 import { Finale } from "@/components/room/Finale";
 import { Hero } from "@/components/room/Hero";
 import { JoinGate } from "@/components/room/JoinGate";
-import {
-  GAME_META,
-  Leaderboard,
-  rankRows,
-} from "@/components/room/Leaderboard";
+import { Leaderboard } from "@/components/room/Leaderboard";
+import { MeSheet } from "@/components/room/MeSheet";
 import { StatusStories } from "@/components/room/StatusStories";
 import { VoteHeatmap } from "@/components/room/VoteHeatmap";
 import { Welcome } from "@/components/room/Welcome";
 import { loadAdminToken } from "@/lib/admin-storage";
+import { GAME_META, rankRows } from "@/lib/games";
 import { formatHour, formatSlot, iso, onlineLabel } from "@/lib/hebrew";
 import { useNow } from "@/lib/hooks/useNow";
 import { useRoom } from "@/lib/hooks/useRoom";
 import { leftLine } from "@/lib/room-view";
+import { exitStats } from "@/lib/share";
 import { leadingSlot, slotMs, tallyVotes, wonByDraw } from "@/lib/slots";
 import type { GameId, Room } from "@/lib/types";
 
@@ -119,6 +119,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
   const [tab, setTab] = useState<Tab>("vote");
   const [game, setGame] = useState<GameId | null>(null);
   const [finaleDismissed, setFinaleDismissed] = useState(false);
+  const [meOpen, setMeOpen] = useState(false);
   const [lastSeenMessageId, setLastSeenMessageId] = useState<number | null>(
     null,
   );
@@ -130,9 +131,22 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
   const myVote = me ? votes[me.userId] : undefined;
   const mySlot = myVote ? slotMs(myVote.slot_start) : null;
 
-  // This browser holds the admin token, so it's the host: they play and post, but don't vote.
+  // The host plays and posts, but doesn't vote. This browser is the host's if it holds
+  // the admin token, or if the database already knows its user as the host.
   const adminToken = mounted ? loadAdminToken(room.slug) : null;
   const adminHref = adminToken ? `/r/${room.slug}/admin#k=${adminToken}` : null;
+  const isHost = !!adminToken || (!!me && api.hosts.includes(me.userId));
+  const roomUrl = mounted ? `${window.location.origin}/r/${room.slug}` : "";
+  const stats = useMemo(
+    () =>
+      exitStats({
+        voterCount: voteList.length,
+        messages,
+        reactions: api.reactions,
+        leaderboard: api.leaderboard,
+      }),
+    [voteList.length, messages, api.reactions, api.leaderboard],
+  );
 
   // Once voting time is up, ask the database to lock the winner (retry if our clock runs ahead).
   const votingOver =
@@ -253,7 +267,18 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
     leader,
     voterCount: voteList.length,
     onReplayFinale: () => setFinaleDismissed(false),
+    actions:
+      room.status === "locked" && roomUrl ? (
+        <ExitActions
+          room={room}
+          url={roomUrl}
+          isHost={isHost}
+          stats={stats}
+          drawn={drawn}
+        />
+      ) : null,
   };
+  const openMe = isHost ? undefined : () => setMeOpen(true);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -267,6 +292,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
               room={room}
               now={now}
               me={me}
+              onMe={openMe}
               online={api.online}
               typers={typers}
               showClock={false}
@@ -293,6 +319,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
                 room={room}
                 now={now}
                 me={me}
+                onMe={openMe}
                 online={api.online}
                 typers={typers}
                 showClock={tab !== "vote"}
@@ -322,7 +349,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
                     myUserId={myUserId}
                     mySlot={mySlot}
                     onVote={api.vote}
-                    canVote={!adminToken}
+                    canVote={!isHost}
                     className="mx-auto w-full max-w-2xl tiny:max-h-full tiny:flex-1"
                   />
                 </div>
@@ -341,8 +368,11 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
                   room={room}
                   messages={messages}
                   myUserId={myUserId}
+                  hosts={api.hosts}
+                  reactions={api.reactions}
                   typers={typers}
                   onSend={api.postMessage}
+                  onReact={api.react}
                   onTyping={api.setTyping}
                   onEmoji={api.sendEmoji}
                 />
@@ -369,7 +399,17 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
       </div>
 
       <EmojiRain subscribe={api.onRain} />
-      <Welcome me={me} returning={api.returning} />
+      {/* Keyed by user, so whoever comes in after "not you?" gets their own hello. */}
+      <Welcome key={me?.userId} me={me} returning={api.returning} />
+      {me && (
+        <MeSheet
+          me={me}
+          open={meOpen}
+          onClose={() => setMeOpen(false)}
+          onRename={api.rename}
+          onSwitch={api.switchUser}
+        />
+      )}
 
       <AnimatePresence>
         {showFinale && (
@@ -377,7 +417,8 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
             room={room}
             drawn={drawn}
             voterCount={voteList.length}
-            messageCount={messages.length}
+            messages={messages}
+            reactions={api.reactions}
             leaderboard={api.leaderboard}
             onClose={() => setFinaleDismissed(true)}
           />

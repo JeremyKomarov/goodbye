@@ -83,3 +83,22 @@ export async function deleteWallMessage(slug: string, token: string, id: number)
   const { error } = await auth.db.from("wall_messages").delete().eq("id", id).eq("room_id", auth.room.id);
   return error ? FAILED : { ok: true, room: auth.room };
 }
+
+/**
+ * Mark this browser's anonymous user as the room's host: the database then keeps
+ * them out of the vote, reserves their name and badges their wall messages. Any
+ * vote they cast before the room knew them is dropped.
+ */
+export async function claimHost(slug: string, token: string, accessToken: string): Promise<{ ok: boolean }> {
+  const auth = await authorize(slug, token);
+  if (!auth || typeof accessToken !== "string") return { ok: false };
+  const { data, error } = await auth.db.auth.getUser(accessToken);
+  if (error || !data.user) return { ok: false };
+  const userId = data.user.id;
+  const { error: hostError } = await auth.db
+    .from("room_hosts")
+    .upsert({ room_id: auth.room.id, user_id: userId }, { onConflict: "room_id,user_id", ignoreDuplicates: true });
+  if (hostError) return { ok: false };
+  await auth.db.from("votes").delete().eq("room_id", auth.room.id).eq("user_id", userId);
+  return { ok: true };
+}

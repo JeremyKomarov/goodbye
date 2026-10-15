@@ -6,7 +6,7 @@ import { CatchGame } from "@/components/games/CatchGame";
 import { PictureGame } from "@/components/games/PictureGame";
 import { RunawayGame } from "@/components/games/RunawayGame";
 import { TriviaGame } from "@/components/games/TriviaGame";
-import { GAME_META, rankRows } from "@/components/room/Leaderboard";
+import { GAME_META, rankRows } from "@/lib/games";
 import type { GameId, LeaderboardRow } from "@/lib/types";
 
 const TILES: { id: GameId; art: string; blurb: string; accent: string }[] = [

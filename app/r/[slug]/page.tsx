@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache, Suspense } from "react";
 import { RoomClient } from "@/components/room/RoomClient";
-import { g } from "@/lib/hebrew";
+import { formatSlot, g } from "@/lib/hebrew";
+import { verdictText } from "@/lib/room-view";
 import { getRoomBySlug } from "@/lib/supabase/server";
 
 const loadRoom = cache(getRoomBySlug);
@@ -11,11 +12,20 @@ export async function generateMetadata({ params }: PageProps<"/r/[slug]">): Prom
   const { slug } = await params;
   const room = await loadRoom(slug);
   if (!room) return { title: "החדר לא נמצא" };
+  const he = room.host_gender;
+  const verdict = verdictText(room);
   const title =
     room.status === "exited"
-      ? `${room.host_name} ${g(room.host_gender, "יצא", "יצאה")} מ${room.group_name}`
-      : `מתי ${room.host_name} ${g(room.host_gender, "יוצא", "יוצאת")} מ${room.group_name}?`;
-  const description = room.status === "voting" ? "אתם מחליטים. נכנסים, בוחרים שעה, ובינתיים משחקים." : "הקבוצה כבר החליטה. בואו לראות.";
+      ? `${room.host_name} ${g(he, "יצא", "יצאה")} מ${room.group_name}${verdict ? `: ${verdict}` : ""}`
+      : room.status === "locked" && room.locked_slot
+        ? `${room.host_name} ${g(he, "יוצא", "יוצאת")} מ${room.group_name} ${formatSlot(Date.parse(room.locked_slot), room.timezone)}`
+        : `מתי ${room.host_name} ${g(he, "יוצא", "יוצאת")} מ${room.group_name}?`;
+  const description =
+    room.status === "voting"
+      ? "אתם מחליטים. נכנסים, בוחרים שעה, ובינתיים משחקים."
+      : room.status === "locked"
+        ? "הקבוצה החליטה. בואו לספירה לאחור ולקיר הפרידה."
+        : "זהו, זה קרה. הקיר עדיין פתוח.";
   return { title, description, openGraph: { title, description }, twitter: { card: "summary_large_image", title, description } };
 }
 

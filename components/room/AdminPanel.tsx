@@ -19,11 +19,15 @@ import {
   reopenVoting,
   undoExit,
 } from "@/app/r/[slug]/admin/actions";
+import { ShareMessages } from "@/components/room/ShareMessages";
 import { SystemPill } from "@/components/ui/SystemPill";
 import { forgetAdminToken, loadAdminToken, saveAdminToken } from "@/lib/admin-storage";
 import { formatHour, formatSlot } from "@/lib/hebrew";
+import type { ReactionMap, WallReaction } from "@/lib/reactions";
+import { type ExitStats, exitStats } from "@/lib/share";
+import { leadingSlot, tallyVotes, wonByDraw } from "@/lib/slots";
 import { getBrowserClient } from "@/lib/supabase/browser";
-import type { Room, WallMessage } from "@/lib/types";
+import type { LeaderboardRow, Room, Vote, WallMessage } from "@/lib/types";
 
 const noop = () => () => {};
 
@@ -34,6 +38,30 @@ function readToken(slug: string) {
     return fromHash;
   }
   return loadAdminToken(slug) ?? "";
+}
+
+/** Everything the goodbye message mentions: votes, wall, reactions, records. */
+async function loadExitStats(room: Room) {
+  const db = getBrowserClient();
+  const [v, m, x, l] = await Promise.all([
+    db.from("votes").select("id, room_id, user_id, slot_start").eq("room_id", room.id),
+    db.from("wall_messages").select("*").eq("room_id", room.id),
+    db.from("wall_reactions").select("message_id, user_id, emoji").eq("room_id", room.id),
+    db.from("leaderboard").select("*").eq("room_id", room.id),
+  ]);
+  const votes = (v.data ?? []) as Vote[];
+  const reactions: ReactionMap = {};
+  for (const row of (x.data ?? []) as WallReaction[])
+    (reactions[row.message_id] ??= {})[row.user_id] = row.emoji;
+  return {
+    stats: exitStats({
+      voterCount: votes.length,
+      messages: (m.data ?? []) as WallMessage[],
+      reactions,
+      leaderboard: (l.data ?? []) as LeaderboardRow[],
+    }),
+    drawn: wonByDraw(leadingSlot(tallyVotes(votes)), room.locked_slot),
+  };
 }
 
 function toLocalInput(ms: number) {
@@ -103,7 +131,18 @@ function Panel({
     ),
   );
   const [messages, setMessages] = useState<WallMessage[]>([]);
+  const [share, setShare] = useState<{ stats: ExitStats; drawn: boolean } | null>(null);
+  const [origin] = useState(() => window.location.origin);
   const tz = room.timezone;
+
+  useEffect(() => {
+    if (room.status === "exited") return;
+    let cancelled = false;
+    loadExitStats(room).then((result) => !cancelled && setShare(result));
+    return () => {
+      cancelled = true;
+    };
+  }, [room]);
 
   const loadMessages = useCallback(async () => {
     const { data } = await getBrowserClient()
@@ -184,7 +223,7 @@ function Panel({
         <div className="rounded-3xl bg-panel p-5">
           <p className="mb-4 text-ink/80">
             {room.status === "locked"
-              ? "כשהשעה מגיעה, צאו מהקבוצה בוואטסאפ ואז לחצו כאן. כל מי שבחדר יראה את זה בזמן אמת."
+              ? "כשהשעה מגיעה: שולחים הודעת פרידה (למטה), יוצאים מהקבוצה בוואטסאפ, ואז לוחצים כאן. כל מי שבחדר יראה את זה בזמן אמת."
               : "אפשר ללחוץ כבר עכשיו. השעה המובילה תינעל ומיד תסומן יציאה."}
           </p>
           <motion.button
@@ -201,6 +240,18 @@ function Panel({
           >
             יצאתי מהקבוצה
           </motion.button>
+        </div>
+      )}
+
+      {room.status !== "exited" && share && (
+        <div className="rounded-3xl bg-panel p-5">
+          <h2 className="mb-3 font-semibold">שליחה לקבוצה</h2>
+          <ShareMessages
+            room={room}
+            url={`${origin}/r/${slug}`}
+            stats={share.stats}
+            drawn={share.drawn}
+          />
         </div>
       )}
 

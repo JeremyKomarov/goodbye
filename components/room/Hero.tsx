@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "motion/react";
+import type { ReactNode } from "react";
 import { FlipDigits } from "@/components/room/FlipDigits";
 import { SystemPill } from "@/components/ui/SystemPill";
-import { formatDuration, formatDurationRough, formatSlot, g, iso, pad, REASONS, splitCountdown, votesLabel } from "@/lib/hebrew";
-import { leftLine, verdict } from "@/lib/room-view";
+import { formatDuration, formatSlot, g, iso, pad, REASONS, splitCountdown, votesLabel } from "@/lib/hebrew";
+import { leftLine, verdictText } from "@/lib/room-view";
 import { type Lead, wonByDraw } from "@/lib/slots";
 import type { Room } from "@/lib/types";
 
@@ -14,6 +15,8 @@ type Props = {
   leader: Lead | null;
   voterCount: number;
   onReplayFinale: () => void;
+  /** Shown under the countdown once the hour is locked (calendar, sharing). */
+  actions?: ReactNode;
   /** Phones: the hero shares the screen with the vote grid, so it stays small. */
   compact?: boolean;
 };
@@ -66,6 +69,7 @@ export function Hero({
   leader,
   voterCount,
   onReplayFinale,
+  actions,
   compact = false,
 }: Props) {
   const size = compact ? SIZES.compact : SIZES.roomy;
@@ -75,17 +79,13 @@ export function Hero({
   const reason = room.reason ? REASONS[room.reason][he] : null;
 
   if (room.status === "exited") {
-    const v = verdict(room);
+    const verdictLine = verdictText(room);
     return (
       <section className={`px-4 pb-4 text-center ${size.exited}`}>
         <SystemPill className="text-base">{leftLine(room)}</SystemPill>
-        {v && (
+        {verdictLine && (
           <p className={`mt-4 font-display font-bold leading-none ${size.verdict}`}>
-            {v.kind === "on_time"
-              ? "בדיוק בזמן"
-              : v.kind === "late"
-                ? `${g(he, "איחר", "איחרה")} ב-${formatDurationRough(v.diffMs)}`
-                : `${g(he, "ברח", "ברחה")} ${formatDurationRough(v.diffMs)} מוקדם`}
+            {verdictLine}
           </p>
         )}
         <button
@@ -162,6 +162,7 @@ export function Hero({
             </span>
           </div>
         </div>
+        {actions}
       </section>
     );
   }
