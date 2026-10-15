@@ -1,0 +1,61 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  position: absolute;
+}
+.view2 {
+  pointer-events: none;
+  position: absolute;
+  height: auto;
+  max-width: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.view3 {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--radius-3xl, 1.5rem);
+  --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25));
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+}
+.view4 {
+  position: absolute;
+  inset: 0px;
+}
+.view5 {
+  transition-property: left,top,width,height;
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1)));
+  transition-duration: var(--tw-duration, var(--default-transition-duration, 150ms));
+  transition-delay: 500ms;
+  --tw-duration: 700ms;
+  transition-duration: 700ms;
+  --tw-ease: cubic-bezier(0.6,0,0.4,1);
+  transition-timing-function: cubic-bezier(0.6,0,0.4,1);
+  @media (prefers-reduced-motion: reduce) {
+    transition-property: none;
+  }
+}
+.view6 {
+  position: absolute;
+  inset-inline: 0px;
+  bottom: 0px;
+  display: grid;
+  place-items: center;
+  border-top-style: var(--tw-border-style);
+  border-top-width: 4px;
+  border-color: var(--color-pill, #ffd279);
+  background-color: var(--color-raised, #202c33);
+  background-image: repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255, 255, 255, 0.04) 5px 6px);
+}
+.view7 {
+  font-family: var(--font-karantina), var(--font-rubik), sans-serif;
+  font-size: clamp(3rem, 16vw, 6rem);
+  --tw-leading: 1;
+  line-height: 1;
+  --tw-font-weight: var(--font-weight-bold, 700);
+  font-weight: var(--font-weight-bold, 700);
+  color: color-mix(in srgb, #8696a0 25%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    color: color-mix(in oklab, var(--color-mute, #8696a0) 25%, transparent);
+  }
+}

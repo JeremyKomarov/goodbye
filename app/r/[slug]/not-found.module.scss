@@ -1,0 +1,32 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  margin-inline: auto;
+  display: flex;
+  min-height: 100dvh;
+  max-width: var(--container-md, 28rem);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--spacing, 0.25rem) * 6);
+  padding-inline: calc(var(--spacing, 0.25rem) * 6);
+  text-align: center;
+}
+.view2 {
+  font-size: var(--text-base, 1rem);
+  line-height: var(--tw-leading, var(--text-base--line-height, calc(1.5 / 1)));
+}
+.view3 {
+  color: color-mix(in srgb, #e9edef 80%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    color: color-mix(in oklab, var(--color-ink, #e9edef) 80%, transparent);
+  }
+}
+.view4 {
+  border-radius: var(--radius-2xl, 1rem);
+  background-color: var(--color-exit, #f15c6d);
+  padding-inline: calc(var(--spacing, 0.25rem) * 6);
+  padding-block: calc(var(--spacing, 0.25rem) * 3.5);
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-night, #0b141a);
+}

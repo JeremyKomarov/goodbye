@@ -1,0 +1,4 @@
+.scroll { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+.statusStack { position: relative; display: flex; flex-direction: column; }
+.hiddenStories { visibility: hidden; position: absolute; inset-inline: 0; top: 0; }
+.hero { margin-block: auto; }

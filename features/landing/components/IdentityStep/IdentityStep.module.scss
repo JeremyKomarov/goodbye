@@ -1,0 +1,72 @@
+.view14 {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: calc(var(--spacing, 0.25rem) * 3);
+  @media (width >= 40rem) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.view15 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 3);
+}
+.view16 {
+  display: flex;
+  border-radius: calc(infinity * 1px);
+  background-color: var(--color-raised, #202c33);
+  padding: var(--spacing, 0.25rem);
+}
+.view17 {
+  border-radius: calc(infinity * 1px);
+  padding-inline: calc(var(--spacing, 0.25rem) * 4);
+  padding-block: calc(var(--spacing, 0.25rem) * 1.5);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+  transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1)));
+  transition-duration: var(--tw-duration, var(--default-transition-duration, 150ms));
+}
+.view18 {
+  background-color: var(--color-bubble, #005c4b);
+  color: var(--color-ink, #e9edef);
+}
+.view19 {
+  color: var(--color-mute, #8696a0);
+  &:hover {
+    @media (hover: hover) {
+      color: var(--color-ink, #e9edef);
+    }
+  }
+}
+.view20 {
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+}
+
+.field {
+  height: 3rem;
+  width: 100%;
+  min-width: 0;
+  border-radius: 1rem;
+  background: var(--color-raised);
+  padding-inline: 1rem;
+  color: var(--color-ink);
+  font-size: 1rem;
+  outline: none;
+  transition: box-shadow .2s;
+  &::placeholder { color: color-mix(in srgb, var(--color-mute) 60%, transparent); }
+  &:focus { box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-pill) 70%, transparent); }
+  @media (max-height: 500px) { height: 2.5rem; }
+}
+.label {
+  display: block;
+  overflow: hidden;
+  margin-bottom: .375rem;
+  color: var(--color-mute);
+  font-size: 13px;
+  line-height: 1.25rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

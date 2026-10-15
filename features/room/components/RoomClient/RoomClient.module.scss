@@ -1,0 +1,187 @@
+// Component styles compiled from Tailwind utilities.
+.view5 {
+  height: 100dvh;
+  overflow: hidden;
+  @media (width >= 64rem) {
+    padding: calc(var(--spacing, 0.25rem) * 5);
+  }
+  @media (width >= 64rem) {
+    @media (max-height: 700px) {
+      padding: 0px;
+    }
+  }
+}
+.view6 {
+  margin-inline: auto;
+  display: flex;
+  height: 100%;
+  max-width: var(--container-xl, 36rem);
+  flex-direction: column;
+  background-color: color-mix(in srgb, #0b141a 40%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--color-night, #0b141a) 40%, transparent);
+  }
+  @media (width >= 64rem) {
+    max-width: 1440px;
+  }
+  @media (width >= 64rem) {
+    flex-direction: row;
+  }
+  @media (width >= 64rem) {
+    overflow: hidden;
+  }
+  @media (width >= 64rem) {
+    border-radius: var(--radius-2xl, 1rem);
+  }
+  @media (width >= 64rem) {
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+  }
+  @media (width >= 64rem) {
+    border-color: color-mix(in srgb, #2a3942 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-line, #2a3942) 60%, transparent);
+    }
+  }
+  @media (width >= 64rem) {
+    --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  @media (width >= 64rem) {
+    @media (max-height: 700px) {
+      border-radius: 0;
+    }
+  }
+  @media (width >= 64rem) {
+    @media (max-height: 700px) {
+      border-style: var(--tw-border-style);
+      border-width: 0px;
+    }
+  }
+  @media (max-height: 500px) {
+    max-width: var(--container-3xl, 48rem);
+  }
+}
+.view7 {
+  display: none;
+  width: 25rem;
+  flex-shrink: 0;
+  flex-direction: column;
+  border-inline-end-style: var(--tw-border-style);
+  border-inline-end-width: 1px;
+  border-color: color-mix(in srgb, #2a3942 60%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--color-line, #2a3942) 60%, transparent);
+  }
+  background-color: var(--color-panel, #111b21);
+  @media (width >= 64rem) {
+    display: flex;
+  }
+}
+.view8 {
+  min-height: 0px;
+  flex: 1;
+  overflow-y: auto;
+}
+.view9 {
+  flex-shrink: 0;
+  border-top-style: var(--tw-border-style);
+  border-top-width: 1px;
+  border-color: color-mix(in srgb, #2a3942 60%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--color-line, #2a3942) 60%, transparent);
+  }
+}
+.view10 {
+  display: flex;
+  min-height: 0px;
+  min-width: 0px;
+  flex: 1;
+  flex-direction: column;
+}
+.view12 {
+  display: flex;
+  min-height: 0px;
+  flex: 1;
+  flex-direction: column;
+}
+.view13 {
+  display: flex;
+  min-height: 0px;
+  flex: 1;
+  flex-direction: column;
+  gap: calc(var(--spacing, 0.25rem) * 2);
+  padding-inline: calc(var(--spacing, 0.25rem) * 3);
+  padding-bottom: calc(var(--spacing, 0.25rem) * 3);
+  @media (width >= 64rem) {
+    justify-content: center;
+  }
+  @media (width >= 64rem) {
+    padding-inline: calc(var(--spacing, 0.25rem) * 6);
+  }
+  @media (width >= 64rem) {
+    padding-block: calc(var(--spacing, 0.25rem) * 6);
+  }
+  @media (width >= 64rem) {
+    @media (max-height: 700px) {
+      padding-block: calc(var(--spacing, 0.25rem) * 4);
+    }
+  }
+  @media (max-height: 500px) {
+    flex-direction: row;
+  }
+  @media (max-height: 500px) {
+    align-items: center;
+  }
+  @media (max-height: 500px) {
+    gap: calc(var(--spacing, 0.25rem) * 4);
+  }
+  @media (max-height: 500px) {
+    padding-top: calc(var(--spacing, 0.25rem) * 2);
+  }
+}
+.view14 {
+  flex: 1;
+  @media (width >= 64rem) {
+    display: none;
+  }
+  @media (max-height: 500px) {
+    width: calc(2 / 5 * 100%);
+  }
+  @media (max-height: 500px) {
+    flex: none;
+  }
+  @media (max-height: 500px) {
+    align-self: stretch;
+  }
+  @media (max-height: 500px) {
+    overflow-y: auto;
+  }
+}
+.view15 {
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--container-2xl, 42rem);
+  @media (max-height: 500px) {
+    max-height: 100%;
+  }
+  @media (max-height: 500px) {
+    flex: 1;
+  }
+}
+.view16 {
+  padding-inline: calc(var(--spacing, 0.25rem) * 3);
+  padding-bottom: calc(var(--spacing, 0.25rem) * 4);
+  @media (width >= 64rem) {
+    padding-inline: calc(var(--spacing, 0.25rem) * 6);
+  }
+  @media (width >= 64rem) {
+    padding-block: calc(var(--spacing, 0.25rem) * 6);
+  }
+}
+
+@media (width >= 64rem) {
+  .view11 {
+    display: none;
+  }
+}

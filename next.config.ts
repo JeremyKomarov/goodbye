@@ -9,14 +9,6 @@ const nextConfig: NextConfig = {
     "/opengraph-image": ["./assets/**"],
     "/r/[slug]/opengraph-image": ["./assets/**"],
   },
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
-  },
 };
 
 export default nextConfig;

@@ -1,0 +1,92 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  margin-inline: auto;
+  display: flex;
+  min-height: 100dvh;
+  max-width: var(--container-md, 28rem);
+  flex-direction: column;
+  gap: calc(var(--spacing, 0.25rem) * 5);
+  padding-inline: calc(var(--spacing, 0.25rem) * 5);
+  padding-top: max(2rem, env(safe-area-inset-top));
+  padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+  @media (width >= 64rem) {
+    display: grid;
+  }
+  @media (width >= 64rem) {
+    max-width: var(--container-6xl, 72rem);
+  }
+  @media (width >= 64rem) {
+    grid-template-columns: minmax(0,1fr) 26rem;
+  }
+  @media (width >= 64rem) {
+    grid-template-rows: auto auto;
+  }
+  @media (width >= 64rem) {
+    align-content: center;
+  }
+  @media (width >= 64rem) {
+    column-gap: calc(var(--spacing, 0.25rem) * 20);
+  }
+  @media (width >= 64rem) {
+    row-gap: calc(var(--spacing, 0.25rem) * 8);
+  }
+  @media (width >= 64rem) {
+    padding-inline: calc(var(--spacing, 0.25rem) * 10);
+  }
+  @media (width >= 64rem) {
+    padding-block: calc(var(--spacing, 0.25rem) * 10);
+  }
+  @media (max-height: 700px) {
+    gap: calc(var(--spacing, 0.25rem) * 3);
+  }
+  @media (max-height: 700px) {
+    padding-top: calc(var(--spacing, 0.25rem) * 4);
+  }
+}
+.view3 {
+  display: flex;
+  height: min(26rem, 50dvh);
+  flex-direction: column;
+  gap: calc(var(--spacing, 0.25rem) * 3);
+  @media (width >= 64rem) {
+    position: sticky;
+  }
+  @media (width >= 64rem) {
+    top: calc(var(--spacing, 0.25rem) * 10);
+  }
+  @media (width >= 64rem) {
+    grid-column-start: 2;
+  }
+  @media (width >= 64rem) {
+    grid-row: span 2 / span 2;
+  }
+  @media (width >= 64rem) {
+    grid-row-start: 1;
+  }
+  @media (width >= 64rem) {
+    height: min(42rem, calc(100dvh - 5rem));
+  }
+  @media (width >= 64rem) {
+    align-self: center;
+  }
+}
+.view4 {
+  min-height: 0px;
+  flex: 1;
+}
+
+@media (width >= 64rem) {
+  .view2 {
+    grid-column-start: 1;
+    grid-row-start: 1;
+    align-self: flex-end;
+  }
+}
+
+@media (width >= 64rem) {
+  .view5 {
+    grid-column-start: 1;
+    grid-row-start: 2;
+    align-self: flex-start;
+  }
+}

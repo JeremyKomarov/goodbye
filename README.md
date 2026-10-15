@@ -7,7 +7,8 @@ winning hour locks and a countdown starts. The host presses "יצאתי מהקב
 they leave, and everyone in the room sees the finale.
 
 Next.js (App Router, Cache Components) on Vercel, Supabase for the database,
-anonymous auth and Realtime. Hebrew, right-to-left.
+anonymous auth and Realtime. Hebrew is the default language; the landing flow
+has an English switch, with the catalog ready for more locales.
 
 ## Run it
 
@@ -48,6 +49,23 @@ npm run dev                  # http://localhost:3000
 
 ## How it fits together
 
+### Frontend structure
+
+- `app/` holds route entry points, server actions, metadata, and the global theme.
+- `features/landing`, `features/room`, and `features/games` hold feature components.
+  Each component has its own folder and `.module.scss` file.
+- `components/ui/` holds shared controls such as `CopyButton` and `SystemPill`.
+- `core/` holds shared domain logic, Supabase clients, hooks, providers, and
+  `i18n/messages.ts`. Add each new language as a matching catalog in that folder.
+- Zustand holds landing form preview state and the selected locale. TanStack Query
+  owns the leaderboard request and refetches when scores change in Realtime.
+- The default build uses webpack because the Sass modules and Tailwind PostCSS
+  pipeline are verified together there.
+
+The language switch currently covers the landing headline and key room creation
+copy. Remaining room and game copy still needs translation before the English
+experience is complete.
+
 - **Rooms and the host.** Creating a room (`app/actions.ts`) returns an admin token.
   It's stored in the host's browser and in the admin link (`/r/<slug>/admin#k=...`),
   and only its hash is in the database. When the host opens the room, the browser
@@ -67,7 +85,7 @@ npm run dev                  # http://localhost:3000
   vote (players who aren't the host, on a valid hour, before voting closes), keep
   names unique per room, and stamp each wall message with its poster's real name.
   The client only shows what the database allows.
-- **Live updates.** One Realtime channel per room (`lib/hooks/useRoom.ts`) carries
+- **Live updates.** One Realtime channel per room (`core/hooks/useRoomRealtime.ts`) carries
   table changes, presence (who's online), typing and the emoji rain.
 - **Locking the hour.** When voting time is up, any open room calls `finalize_room`,
   which locks the most-voted hour (ties are drawn at random), once.

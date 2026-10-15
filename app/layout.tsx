@@ -1,17 +1,23 @@
+import styles from "./layout.module.scss";
 import type { Metadata, Viewport } from "next";
-import { Karantina, Rubik } from "next/font/google";
-import { SITE_NAME, siteUrl } from "@/lib/site";
-import "./globals.css";
+import localFont from "next/font/local";
+import { SITE_NAME, siteUrl } from "@/core/site";
+import { AppProviders } from "@/core/providers/AppProviders";
+import "./globals.scss";
 
-const karantina = Karantina({
+const karantina = localFont({
+  src: [
+    { path: "../assets/Karantina-Bold.ttf", weight: "700" },
+  ],
   variable: "--font-karantina",
-  subsets: ["hebrew", "latin"],
-  weight: ["400", "700"],
 });
 
-const rubik = Rubik({
+const rubik = localFont({
+  src: [
+    { path: "../node_modules/@fontsource-variable/rubik/files/rubik-hebrew-wght-normal.woff2", weight: "300 900" },
+    { path: "../node_modules/@fontsource-variable/rubik/files/rubik-latin-wght-normal.woff2", weight: "300 900" },
+  ],
   variable: "--font-rubik",
-  subsets: ["hebrew", "latin"],
 });
 
 export const metadata: Metadata = {
@@ -29,8 +35,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="he" dir="rtl" className={`${karantina.variable} ${rubik.variable} h-full antialiased`}>
-      <body className="min-h-full">{children}</body>
+    <html lang="he" dir="rtl" className={["", karantina.variable, "", rubik.variable, styles.view1].filter(Boolean).join(" ")}>
+      <body className={styles.view2}><AppProviders>{children}</AppProviders></body>
     </html>
   );
 }

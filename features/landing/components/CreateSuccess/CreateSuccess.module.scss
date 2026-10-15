@@ -1,0 +1,137 @@
+// Room link and sharing styles.
+.view38 { color: var(--color-mute); }
+.view44 {
+  margin-bottom: var(--spacing, 0.25rem);
+  font-size: 13px;
+  --tw-leading: calc(var(--spacing, 0.25rem) * 5);
+  line-height: calc(var(--spacing, 0.25rem) * 5);
+}
+.view45 {
+  color: var(--color-pill, #ffd279);
+}
+.view46 {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 2);
+  border-radius: var(--radius-xl, 0.75rem);
+  background-color: var(--color-raised, #202c33);
+  padding: calc(var(--spacing, 0.25rem) * 1.5);
+  padding-inline-start: calc(var(--spacing, 0.25rem) * 3);
+}
+.view47 {
+  min-width: 0px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+  color: color-mix(in srgb, #e9edef 80%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    color: color-mix(in oklab, var(--color-ink, #e9edef) 80%, transparent);
+  }
+}
+.view48 {
+  flex-shrink: 0;
+  border-radius: var(--radius-lg, 0.5rem);
+  background-color: var(--color-line, #2a3942);
+  padding-inline: calc(var(--spacing, 0.25rem) * 3);
+  padding-block: calc(var(--spacing, 0.25rem) * 2);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+}
+.view49 {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: calc(var(--spacing, 0.25rem) * 3);
+  @media (max-height: 500px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (max-height: 500px) {
+    column-gap: calc(var(--spacing, 0.25rem) * 5);
+  }
+}
+.view50 {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing, 0.25rem) * 3);
+}
+.view51 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 2);
+  @media (max-height: 500px) {
+    flex-direction: row;
+  }
+}
+.view52 {
+  display: grid;
+  width: calc(var(--spacing, 0.25rem) * 16);
+  height: calc(var(--spacing, 0.25rem) * 16);
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: calc(infinity * 1px);
+  background-color: var(--color-bubble, #005c4b);
+  font-size: var(--text-3xl, 1.875rem);
+  line-height: var(--tw-leading, var(--text-3xl--line-height, calc(2.25 / 1.875)));
+  @media (max-height: 500px) {
+    width: calc(var(--spacing, 0.25rem) * 12);
+    height: calc(var(--spacing, 0.25rem) * 12);
+  }
+  @media (max-height: 500px) {
+    font-size: var(--text-2xl, 1.5rem);
+    line-height: var(--tw-leading, var(--text-2xl--line-height, calc(2 / 1.5)));
+  }
+}
+.view53 {
+  text-align: center;
+  color: color-mix(in srgb, #e9edef 80%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    color: color-mix(in oklab, var(--color-ink, #e9edef) 80%, transparent);
+  }
+  @media (max-height: 500px) {
+    text-align: start;
+  }
+  @media (max-height: 500px) {
+    font-size: var(--text-sm, 0.875rem);
+    line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+  }
+}
+.view54 {
+  display: flex;
+  height: calc(var(--spacing, 0.25rem) * 12);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--spacing, 0.25rem) * 2);
+  border-radius: var(--radius-2xl, 1rem);
+  background-color: var(--color-signal, #25d366);
+  padding-inline: calc(var(--spacing, 0.25rem) * 6);
+  font-size: var(--text-lg, 1.125rem);
+  line-height: var(--tw-leading, var(--text-lg--line-height, calc(1.75 / 1.125)));
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-night, #0b141a);
+  @media (max-height: 500px) {
+    height: calc(var(--spacing, 0.25rem) * 11);
+  }
+}
+.view55 {
+  display: grid;
+  height: calc(var(--spacing, 0.25rem) * 12);
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: var(--radius-2xl, 1rem);
+  background-color: var(--color-raised, #202c33);
+  padding-inline: calc(var(--spacing, 0.25rem) * 6);
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+  @media (max-height: 500px) {
+    margin-top: auto;
+  }
+  @media (max-height: 500px) {
+    height: calc(var(--spacing, 0.25rem) * 11);
+  }
+}

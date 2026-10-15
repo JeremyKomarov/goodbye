@@ -1,4 +1,4 @@
-import { OG_SIZE, renderCard } from "@/lib/og";
+import { OG_SIZE, renderCard } from "@/core/og";
 
 export const alt = "מתי לצאת מהקבוצה?";
 export const size = OG_SIZE;

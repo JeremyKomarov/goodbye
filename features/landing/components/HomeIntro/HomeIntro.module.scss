@@ -1,0 +1,21 @@
+.title {
+  font-family: var(--font-karantina), var(--font-rubik), sans-serif;
+  font-size: min(5.5rem, 22vw);
+  font-weight: 700;
+  line-height: .82;
+  letter-spacing: -.025em;
+}
+.description {
+  margin-top: 1rem;
+  font-size: 17px;
+  line-height: 1.625;
+  color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+}
+@media (max-height: 700px) {
+  .title { font-size: 3.75rem; }
+  .description { margin-top: .5rem; font-size: 15px; line-height: 1.375; }
+}
+@media (min-width: 64rem) {
+  .title { font-size: 6.5rem; }
+  .description { margin-top: 1.25rem; max-width: 36rem; font-size: 1.25rem; }
+}

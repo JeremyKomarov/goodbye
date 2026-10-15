@@ -1,0 +1,104 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  display: flex;
+  min-height: 0px;
+  flex: 1;
+  flex-direction: column;
+}
+.view2 {
+  margin-bottom: calc(var(--spacing, 0.25rem) * 3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: var(--spacing, 0.25rem);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+  @media (max-height: 700px) {
+    margin-bottom: calc(var(--spacing, 0.25rem) * 2);
+  }
+}
+.view3 {
+  color: var(--color-mute, #8696a0);
+}
+.view4 {
+  font-family: var(--font-karantina), var(--font-rubik), sans-serif;
+  font-size: var(--text-3xl, 1.875rem);
+  line-height: var(--tw-leading, var(--text-3xl--line-height, calc(2.25 / 1.875)));
+  --tw-leading: 1;
+  line-height: 1;
+  --tw-numeric-spacing: tabular-nums;
+  font-variant-numeric: var(--tw-ordinal,) var(--tw-slashed-zero,) var(--tw-numeric-figure,) var(--tw-numeric-spacing,) var(--tw-numeric-fraction,);
+}
+.view5 {
+  position: relative;
+  min-height: calc(var(--spacing, 0.25rem) * 40);
+  flex: 1;
+  touch-action: none;
+  overflow: hidden;
+  border-radius: var(--radius-3xl, 1.5rem);
+  background-color: color-mix(in srgb, #111b21 90%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--color-panel, #111b21) 90%, transparent);
+  }
+  -webkit-user-select: none;
+  user-select: none;
+}
+.view6 {
+  position: absolute;
+  inset: 0px;
+  display: grid;
+  place-items: center;
+  padding: calc(var(--spacing, 0.25rem) * 6);
+  text-align: center;
+  @media (max-height: 500px) {
+    padding: calc(var(--spacing, 0.25rem) * 3);
+  }
+}
+.view7 {
+  margin-bottom: calc(var(--spacing, 0.25rem) * 5);
+  font-size: var(--text-lg, 1.125rem);
+  line-height: var(--tw-leading, var(--text-lg--line-height, calc(1.75 / 1.125)));
+  color: color-mix(in srgb, #e9edef 85%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    color: color-mix(in oklab, var(--color-ink, #e9edef) 85%, transparent);
+  }
+  @media (max-height: 500px) {
+    margin-bottom: calc(var(--spacing, 0.25rem) * 3);
+  }
+}
+.view8 {
+  border-radius: var(--radius-2xl, 1rem);
+  background-color: var(--color-exit, #f15c6d);
+  padding-inline: calc(var(--spacing, 0.25rem) * 8);
+  padding-block: calc(var(--spacing, 0.25rem) * 4);
+  font-size: var(--text-lg, 1.125rem);
+  line-height: var(--tw-leading, var(--text-lg--line-height, calc(1.75 / 1.125)));
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-night, #0b141a);
+  @media (max-height: 500px) {
+    padding-block: calc(var(--spacing, 0.25rem) * 3);
+  }
+}
+.view9 {
+  position: absolute;
+  top: calc(1 / 2 * 100%);
+  left: calc(1 / 2 * 100%);
+  --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);
+  --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);
+  translate: var(--tw-translate-x) var(--tw-translate-y);
+  border-radius: var(--radius-2xl, 1rem);
+  background-color: var(--color-exit, #f15c6d);
+  padding-inline: calc(var(--spacing, 0.25rem) * 5);
+  padding-block: calc(var(--spacing, 0.25rem) * 3.5);
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+  white-space: nowrap;
+  color: var(--color-night, #0b141a);
+  --tw-shadow: 0 8px 30px -6px var(--tw-shadow-color, currentcolor);
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  --tw-shadow-color: color-mix(in srgb, #f15c6d 70%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    --tw-shadow-color: color-mix(in oklab, color-mix(in oklab, var(--color-exit, #f15c6d) 70%, transparent) var(--tw-shadow-alpha), transparent);
+  }
+}

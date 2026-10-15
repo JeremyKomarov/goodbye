@@ -1,0 +1,189 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  height: 100dvh;
+  overflow: hidden;
+  @media (width >= 64rem) {
+    padding: calc(var(--spacing, 0.25rem) * 5);
+  }
+  @media (width >= 64rem) {
+    @media (max-height: 700px) {
+      padding: 0px;
+    }
+  }
+}
+.view2 {
+  margin-inline: auto;
+  display: flex;
+  height: 100%;
+  max-width: var(--container-xl, 36rem);
+  animation: var(--animate-pulse, pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite);
+  flex-direction: column;
+  @media (width >= 64rem) {
+    max-width: 1440px;
+  }
+  @media (width >= 64rem) {
+    flex-direction: row;
+  }
+  @media (width >= 64rem) {
+    overflow: hidden;
+  }
+  @media (width >= 64rem) {
+    border-radius: var(--radius-2xl, 1rem);
+  }
+  @media (width >= 64rem) {
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+  }
+  @media (width >= 64rem) {
+    border-color: color-mix(in srgb, #2a3942 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-line, #2a3942) 60%, transparent);
+    }
+  }
+  @media (width >= 64rem) {
+    @media (max-height: 700px) {
+      border-radius: 0;
+    }
+  }
+  @media (width >= 64rem) {
+    @media (max-height: 700px) {
+      border-style: var(--tw-border-style);
+      border-width: 0px;
+    }
+  }
+}
+.view3 {
+  display: none;
+  width: 25rem;
+  flex-shrink: 0;
+  flex-direction: column;
+  border-inline-end-style: var(--tw-border-style);
+  border-inline-end-width: 1px;
+  border-color: color-mix(in srgb, #2a3942 60%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--color-line, #2a3942) 60%, transparent);
+  }
+  background-color: var(--color-panel, #111b21);
+  @media (width >= 64rem) {
+    display: flex;
+  }
+}
+.view4 {
+  margin-inline: auto;
+  margin-block: auto;
+  height: calc(var(--spacing, 0.25rem) * 32);
+  width: calc(var(--spacing, 0.25rem) * 64);
+  border-radius: var(--radius-2xl, 1rem);
+  background-color: color-mix(in srgb, #202c33 60%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--color-raised, #202c33) 60%, transparent);
+  }
+}
+.view5 {
+  height: calc(var(--spacing, 0.25rem) * 72);
+  flex-shrink: 0;
+  border-top-style: var(--tw-border-style);
+  border-top-width: 1px;
+  border-color: color-mix(in srgb, #2a3942 60%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--color-line, #2a3942) 60%, transparent);
+  }
+}
+.view6 {
+  display: flex;
+  min-height: 0px;
+  flex: 1;
+  flex-direction: column;
+}
+.view8 {
+  display: none;
+  height: calc(var(--spacing, 0.25rem) * 16);
+  flex-shrink: 0;
+  border-bottom-style: var(--tw-border-style);
+  border-bottom-width: 1px;
+  border-color: color-mix(in srgb, #2a3942 60%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--color-line, #2a3942) 60%, transparent);
+  }
+  background-color: var(--color-panel, #111b21);
+  @media (width >= 64rem) {
+    display: block;
+  }
+}
+.view9 {
+  margin-inline: auto;
+  margin-top: calc(var(--spacing, 0.25rem) * 4);
+  height: calc(var(--spacing, 0.25rem) * 24);
+  width: calc(var(--spacing, 0.25rem) * 56);
+  flex-shrink: 0;
+  border-radius: var(--radius-2xl, 1rem);
+  background-color: var(--color-panel, #111b21);
+  @media (width >= 64rem) {
+    display: none;
+  }
+}
+.view10 {
+  margin: calc(var(--spacing, 0.25rem) * 3);
+  min-height: 0px;
+  flex: 1;
+  border-radius: var(--radius-3xl, 1.5rem);
+  background-color: var(--color-panel, #111b21);
+  @media (width >= 64rem) {
+    margin: calc(var(--spacing, 0.25rem) * 6);
+  }
+}
+.view11 {
+  height: calc(var(--spacing, 0.25rem) * 16);
+  flex-shrink: 0;
+  border-top-style: var(--tw-border-style);
+  border-top-width: 1px;
+  border-color: color-mix(in srgb, #2a3942 60%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--color-line, #2a3942) 60%, transparent);
+  }
+  background-color: var(--color-panel, #111b21);
+  padding-bottom: env(safe-area-inset-bottom);
+  @media (width >= 64rem) {
+    display: none;
+  }
+  @media (max-height: 500px) {
+    height: calc(var(--spacing, 0.25rem) * 12);
+  }
+}
+.view12 {
+  flex-shrink: 0;
+  background-color: var(--color-panel, #111b21);
+  padding-top: env(safe-area-inset-top);
+}
+.view13 {
+  display: flex;
+  height: calc(var(--spacing, 0.25rem) * 16);
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 3);
+  padding-inline: calc(var(--spacing, 0.25rem) * 3);
+  @media (max-height: 500px) {
+    height: calc(var(--spacing, 0.25rem) * 12);
+  }
+}
+.view14 {
+  width: calc(var(--spacing, 0.25rem) * 11);
+  height: calc(var(--spacing, 0.25rem) * 11);
+  border-radius: calc(infinity * 1px);
+  background-color: var(--color-raised, #202c33);
+  @media (max-height: 500px) {
+    width: calc(var(--spacing, 0.25rem) * 9);
+    height: calc(var(--spacing, 0.25rem) * 9);
+  }
+}
+.view15 {
+  height: calc(var(--spacing, 0.25rem) * 4);
+  width: calc(var(--spacing, 0.25rem) * 32);
+  border-radius: 0.25rem;
+  background-color: var(--color-raised, #202c33);
+}
+
+@media (width >= 64rem) {
+  .view7 {
+    display: none;
+  }
+}

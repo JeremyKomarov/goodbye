@@ -1,0 +1,43 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  height: calc(var(--spacing, 0.25rem) * 6);
+  overflow: hidden;
+}
+.view2 {
+  display: flex;
+  height: calc(var(--spacing, 0.25rem) * 6);
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 1.5);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+}
+.view3 {
+  flex-shrink: 0;
+  color: var(--color-mute, #8696a0);
+}
+.view4 {
+  min-width: 0px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-ink, #e9edef);
+}
+.view5 {
+  flex-shrink: 0;
+  font-family: var(--font-karantina), var(--font-rubik), sans-serif;
+  font-size: var(--text-xl, 1.25rem);
+  line-height: var(--tw-leading, var(--text-xl--line-height, calc(1.75 / 1.25)));
+  --tw-leading: 1;
+  line-height: 1;
+  color: var(--color-pill, #ffd279);
+  --tw-numeric-spacing: tabular-nums;
+  font-variant-numeric: var(--tw-ordinal,) var(--tw-slashed-zero,) var(--tw-numeric-figure,) var(--tw-numeric-spacing,) var(--tw-numeric-fraction,);
+}
+.view6 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-mute, #8696a0);
+}

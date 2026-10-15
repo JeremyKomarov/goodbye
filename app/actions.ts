@@ -2,10 +2,10 @@
 
 import { customAlphabet } from "nanoid";
 import { z } from "zod";
-import { hashToken, newAdminToken } from "@/lib/admin-token";
-import { loginEmail } from "@/lib/login";
-import { addDaysToDate, allSlots } from "@/lib/slots";
-import { getAdminClient } from "@/lib/supabase/admin";
+import { hashToken, newAdminToken } from "@/core/admin-token";
+import { loginEmail } from "@/core/login";
+import { addDaysToDate, allSlots } from "@/core/slots";
+import { getAdminClient } from "@/core/supabase/admin";
 
 const newSlug = customAlphabet("23456789abcdefghjkmnpqrstuvwxyz", 8);
 // No 0/O, 1/I/L: the code is read off one screen and typed on another.

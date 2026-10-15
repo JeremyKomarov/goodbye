@@ -1,0 +1,42 @@
+@mixin bubble_in() {
+  position: relative;
+  border-radius: .75rem;
+  border-start-start-radius: 0;
+  background: var(--color-raised);
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -8px;
+    width: 8px;
+    height: 13px;
+    background: var(--color-raised);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+}
+
+@mixin bubble_out() {
+  position: relative;
+  border-radius: .75rem;
+  border-start-end-radius: 0;
+  background: var(--color-bubble);
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -8px;
+    width: 8px;
+    height: 13px;
+    background: var(--color-bubble);
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+  }
+}
+
+@mixin no_scrollbar() {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+@mixin hatch() {
+  background-image: repeating-linear-gradient(-45deg, transparent 0 5px, rgb(255 255 255 / .04) 5px 6px);
+}

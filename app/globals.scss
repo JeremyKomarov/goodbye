@@ -1,0 +1,125 @@
+@use "tailwindcss";
+
+/* Component modules compile Tailwind utilities ahead of time; keep their shared
+   custom-property defaults here so shadows, rings and transforms render. */
+*, ::before, ::after, ::backdrop {
+  --tw-border-style: solid;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-shadow: 0 0 #0000;
+  --tw-inset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-inset-ring-shadow: 0 0 #0000;
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+}
+
+@theme {
+  /* WhatsApp dark mode, borrowed on purpose: this is a parody of the app. */
+  --color-night: #0b141a;
+  --color-panel: #111b21;
+  --color-raised: #202c33;
+  --color-line: #2a3942;
+  --color-bubble: #005c4b;
+  --color-signal: #25d366;
+  --color-tick: #53bdeb;
+  --color-exit: #f15c6d;
+  --color-pill: #ffd279;
+  --color-kraft: #c9a46a;
+  --color-ink: #e9edef;
+  --color-mute: #8696a0;
+
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Short screens (small phones, landscape): tighten type and spacing so screens fit 100dvh. */
+@custom-variant short (@media (max-height: 700px));
+/* Very short screens (phones in landscape): slimmer bars and side-by-side layouts. */
+@custom-variant tiny (@media (max-height: 500px));
+
+@theme inline {
+  --font-sans: var(--font-rubik), system-ui, sans-serif;
+  --font-display: var(--font-karantina), var(--font-rubik), sans-serif;
+}
+
+html {
+  height: 100%;
+  color-scheme: dark;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--color-night);
+  background-image: url("/doodle.svg");
+  background-size: 300px 300px;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-pill);
+  outline-offset: 2px;
+}
+
+/* Chat bubbles with WhatsApp-style tails. In RTL, other people's messages sit on
+   the right and yours on the left. */
+.bubble-in,
+.bubble-out {
+  position: relative;
+  border-radius: 0.75rem;
+}
+.bubble-in {
+  background: var(--color-raised);
+  border-start-start-radius: 0;
+}
+.bubble-out {
+  background: var(--color-bubble);
+  border-start-end-radius: 0;
+}
+.bubble-in::before,
+.bubble-out::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 13px;
+}
+.bubble-in::before {
+  right: -8px;
+  background: var(--color-raised);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.bubble-out::before {
+  left: -8px;
+  background: var(--color-bubble);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Disabled vote cells: diagonal hatching. */
+.hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0 5px,
+    rgb(255 255 255 / 0.04) 5px 6px
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

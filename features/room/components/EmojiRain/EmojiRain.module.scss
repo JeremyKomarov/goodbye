@@ -1,0 +1,12 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  pointer-events: none;
+  position: fixed;
+  inset: 0px;
+  z-index: 40;
+  overflow: hidden;
+}
+.view2 {
+  position: absolute;
+  top: 0px;
+}

@@ -1,0 +1,44 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  pointer-events: none;
+  position: fixed;
+  inset-inline: 0px;
+  top: calc(env(safe-area-inset-top) + 4.75rem);
+  z-index: 40;
+  margin-inline: auto;
+  display: flex;
+  width: fit-content;
+  max-width: 90%;
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 2.5);
+  border-radius: calc(infinity * 1px);
+  background-color: var(--color-bubble, #005c4b);
+  padding-block: calc(var(--spacing, 0.25rem) * 1.5);
+  padding-inline-start: calc(var(--spacing, 0.25rem) * 1.5);
+  padding-inline-end: calc(var(--spacing, 0.25rem) * 4);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+  color: var(--color-ink, #e9edef);
+  --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 4px 6px -4px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  @media (width >= 64rem) {
+    top: calc(var(--spacing, 0.25rem) * 28);
+  }
+}
+.view2 {
+  display: grid;
+  width: calc(var(--spacing, 0.25rem) * 7);
+  height: calc(var(--spacing, 0.25rem) * 7);
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: calc(infinity * 1px);
+  --tw-font-weight: var(--font-weight-bold, 700);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-night, #0b141a);
+}
+.view3 {
+  min-width: 0px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

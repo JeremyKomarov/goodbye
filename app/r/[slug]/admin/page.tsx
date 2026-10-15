@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { AdminPanel } from "@/components/room/AdminPanel";
+import { AdminPanel } from "@/features/room/components/AdminPanel/AdminPanel";
 
 export const metadata: Metadata = {
   title: "ניהול החדר",

@@ -1,0 +1,131 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  margin-inline: auto;
+  display: grid;
+  max-width: var(--container-5xl, 64rem);
+  gap: calc(var(--spacing, 0.25rem) * 4);
+  padding-top: calc(var(--spacing, 0.25rem) * 3);
+  @media (width >= 64rem) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (width >= 64rem) {
+    align-items: flex-start;
+  }
+  @media (width >= 64rem) {
+    padding-top: 0px;
+  }
+}
+.view2 {
+  border-radius: var(--radius-3xl, 1.5rem);
+  background-color: color-mix(in srgb, #111b21 90%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--color-panel, #111b21) 90%, transparent);
+  }
+  padding: calc(var(--spacing, 0.25rem) * 4);
+  --tw-backdrop-blur: blur(var(--blur-sm, 8px));
+  -webkit-backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+  backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+}
+.view3 {
+  margin-bottom: calc(var(--spacing, 0.25rem) * 3);
+  font-size: var(--text-lg, 1.125rem);
+  line-height: var(--tw-leading, var(--text-lg--line-height, calc(1.75 / 1.125)));
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+}
+.view4 {
+  color: var(--color-mute, #8696a0);
+}
+.view5 {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing, 0.25rem) * 3);
+}
+.view6 {
+  margin-bottom: var(--spacing, 0.25rem);
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+}
+.view7 {
+  height: calc(var(--spacing, 0.25rem) * 2);
+  border-radius: calc(infinity * 1px);
+  background-color: var(--color-raised, #202c33);
+}
+.view8 {
+  height: 100%;
+  border-radius: calc(infinity * 1px);
+  background-color: oklch(0.63 0.14 162);
+}
+.view9 {
+  margin-bottom: calc(var(--spacing, 0.25rem) * 2);
+  font-size: var(--text-lg, 1.125rem);
+  line-height: var(--tw-leading, var(--text-lg--line-height, calc(1.75 / 1.125)));
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+}
+.view10 {
+  text-align: start;
+  color: var(--color-mute, #8696a0);
+}
+.view11 {
+  color: var(--color-tick, #53bdeb);
+}
+.view12 {
+  display: flex;
+  flex-direction: column;
+}
+.view13 {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 3);
+  border-radius: var(--radius-xl, 0.75rem);
+  padding-inline: calc(var(--spacing, 0.25rem) * 2);
+  padding-block: calc(var(--spacing, 0.25rem) * 2);
+}
+.view14 {
+  background-color: color-mix(in srgb, #005c4b 40%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--color-bubble, #005c4b) 40%, transparent);
+  }
+}
+.view15 {
+  width: calc(var(--spacing, 0.25rem) * 5);
+  text-align: center;
+  font-family: var(--font-karantina), var(--font-rubik), sans-serif;
+  font-size: var(--text-2xl, 1.5rem);
+  line-height: var(--tw-leading, var(--text-2xl--line-height, calc(2 / 1.5)));
+  --tw-leading: 1;
+  line-height: 1;
+}
+.view16 {
+  color: var(--color-pill, #ffd279);
+}
+.view17 {
+  display: grid;
+  width: calc(var(--spacing, 0.25rem) * 8);
+  height: calc(var(--spacing, 0.25rem) * 8);
+  place-items: center;
+  border-radius: calc(infinity * 1px);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-night, #0b141a);
+}
+.view18 {
+  min-width: 0px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.view19 {
+  color: color-mix(in srgb, #e9edef 85%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    color: color-mix(in oklab, var(--color-ink, #e9edef) 85%, transparent);
+  }
+  --tw-numeric-spacing: tabular-nums;
+  font-variant-numeric: var(--tw-ordinal,) var(--tw-slashed-zero,) var(--tw-numeric-figure,) var(--tw-numeric-spacing,) var(--tw-numeric-fraction,);
+}

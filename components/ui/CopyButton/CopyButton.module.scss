@@ -1,0 +1,10 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  flex-shrink: 0;
+  border-radius: var(--radius-lg, 0.5rem);
+  background-color: var(--color-line, #2a3942);
+  padding-inline: calc(var(--spacing, 0.25rem) * 3);
+  padding-block: calc(var(--spacing, 0.25rem) * 2);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+}

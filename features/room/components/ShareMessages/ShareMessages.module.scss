@@ -1,0 +1,61 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing, 0.25rem) * 3);
+  padding-bottom: var(--spacing, 0.25rem);
+}
+.view2 {
+  border-radius: var(--radius-2xl, 1rem);
+  background-color: var(--color-raised, #202c33);
+  padding: calc(var(--spacing, 0.25rem) * 3);
+}
+.view3 {
+  margin-bottom: calc(var(--spacing, 0.25rem) * 2);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: calc(var(--spacing, 0.25rem) * 2);
+  padding-inline: var(--spacing, 0.25rem);
+}
+.view4 {
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+}
+.view5 {
+  font-size: var(--text-xs, 0.75rem);
+  line-height: var(--tw-leading, var(--text-xs--line-height, calc(1 / 0.75)));
+  color: var(--color-mute, #8696a0);
+}
+.view6 {
+  max-height: calc(var(--spacing, 0.25rem) * 36);
+  overflow-y: auto;
+  border-radius: var(--radius-xl, 0.75rem);
+  background-color: var(--color-bubble, #005c4b);
+  padding-inline: calc(var(--spacing, 0.25rem) * 3);
+  padding-block: calc(var(--spacing, 0.25rem) * 2);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+  --tw-leading: var(--leading-snug, 1.375);
+  line-height: var(--leading-snug, 1.375);
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+.view7 {
+  margin-top: calc(var(--spacing, 0.25rem) * 2);
+  display: flex;
+  height: calc(var(--spacing, 0.25rem) * 11);
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xl, 0.75rem);
+  background-color: var(--color-signal, #25d366);
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-night, #0b141a);
+}
+.view8 {
+  padding-inline: var(--spacing, 0.25rem);
+  font-size: var(--text-xs, 0.75rem);
+  line-height: var(--tw-leading, var(--text-xs--line-height, calc(1 / 0.75)));
+  color: var(--color-mute, #8696a0);
+}

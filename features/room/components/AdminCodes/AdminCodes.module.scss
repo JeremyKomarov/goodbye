@@ -1,0 +1,92 @@
+.view9 {
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+  color: var(--color-tick, #53bdeb);
+}
+.view12 {
+  margin-top: var(--spacing, 0.25rem);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+  color: var(--color-mute, #8696a0);
+}
+.view17 {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing, 0.25rem) * 5);
+  @media (width >= 64rem) {
+    margin: calc(var(--spacing, 0.25rem) * -1);
+  }
+  @media (width >= 64rem) {
+    min-height: 0px;
+  }
+  @media (width >= 64rem) {
+    overflow-y: auto;
+  }
+  @media (width >= 64rem) {
+    padding: var(--spacing, 0.25rem);
+  }
+  @media (max-height: 700px) {
+    gap: calc(var(--spacing, 0.25rem) * 4);
+  }
+  scrollbar-width: none;
+}
+.view18 {
+  border-radius: var(--radius-3xl, 1.5rem);
+  background-color: var(--color-panel, #111b21);
+  padding: calc(var(--spacing, 0.25rem) * 5);
+}
+.view19 {
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+}
+.view20 {
+  margin-top: calc(var(--spacing, 0.25rem) * 3);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 2);
+  border-radius: var(--radius-xl, 0.75rem);
+  background-color: var(--color-raised, #202c33);
+  padding: calc(var(--spacing, 0.25rem) * 1.5);
+  padding-inline-start: calc(var(--spacing, 0.25rem) * 3);
+}
+.view21 {
+  min-width: 0px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+  color: color-mix(in srgb, #e9edef 80%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    color: color-mix(in oklab, var(--color-ink, #e9edef) 80%, transparent);
+  }
+}
+.view22 {
+  margin-top: calc(var(--spacing, 0.25rem) * 2);
+  display: flex;
+  height: calc(var(--spacing, 0.25rem) * 11);
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xl, 0.75rem);
+  background-color: var(--color-signal, #25d366);
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-night, #0b141a);
+}
+.view23 {
+  @media (width >= 64rem) {
+    margin: calc(var(--spacing, 0.25rem) * -1);
+  }
+  @media (width >= 64rem) {
+    min-height: 0px;
+  }
+  @media (width >= 64rem) {
+    overflow-y: auto;
+  }
+  @media (width >= 64rem) {
+    padding: var(--spacing, 0.25rem);
+  }
+  scrollbar-width: none;
+}

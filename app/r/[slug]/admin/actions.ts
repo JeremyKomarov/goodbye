@@ -1,9 +1,9 @@
 "use server";
 
-import { tokenMatches } from "@/lib/admin-token";
-import { allSlots } from "@/lib/slots";
-import { getAdminClient } from "@/lib/supabase/admin";
-import type { Room } from "@/lib/types";
+import { tokenMatches } from "@/core/admin-token";
+import { allSlots } from "@/core/slots";
+import { getAdminClient } from "@/core/supabase/admin";
+import type { Room } from "@/core/types";
 
 export type AdminResult =
   { ok: true; room: Room } | { ok: false; error: string };

@@ -1,7 +1,7 @@
-import { formatHour, formatWeekday, g } from "@/lib/hebrew";
-import { OG_SIZE, renderCard } from "@/lib/og";
-import { verdictText } from "@/lib/room-view";
-import { getRoomBySlug } from "@/lib/supabase/server";
+import { formatHour, formatWeekday, g } from "@/core/hebrew";
+import { OG_SIZE, renderCard } from "@/core/og";
+import { verdictText } from "@/core/room-view";
+import { getRoomBySlug } from "@/core/supabase/server";
 
 export const alt = "חדר הצבעה: מתי לצאת מהקבוצה";
 export const size = OG_SIZE;

@@ -1,0 +1,22 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(30rem,1fr));
+  gap: calc(var(--spacing, 0.25rem) * 6);
+  padding: calc(var(--spacing, 0.25rem) * 6);
+}
+.view2 {
+  border-radius: var(--radius-2xl, 1rem);
+  background-color: var(--color-panel, #111b21);
+  padding: calc(var(--spacing, 0.25rem) * 3);
+}
+.view3 {
+  margin-bottom: calc(var(--spacing, 0.25rem) * 2);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+}
+.view4 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: calc(var(--spacing, 0.25rem) * 2);
+}

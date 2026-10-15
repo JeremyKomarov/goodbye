@@ -1,6 +1,6 @@
-import { exitEvent, icsFile } from "@/lib/calendar";
-import { siteUrl } from "@/lib/site";
-import { getRoomBySlug } from "@/lib/supabase/server";
+import { exitEvent, icsFile } from "@/core/calendar";
+import { siteUrl } from "@/core/site";
+import { getRoomBySlug } from "@/core/supabase/server";
 
 /** The locked exit hour as a calendar file (Apple Calendar, Outlook, most phones). */
 export async function GET(_request: Request, ctx: RouteContext<"/r/[slug]/exit.ics">) {

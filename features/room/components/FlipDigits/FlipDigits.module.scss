@@ -1,0 +1,27 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  display: flex;
+  justify-content: center;
+  font-family: var(--font-karantina), var(--font-rubik), sans-serif;
+  --tw-leading: 1;
+  line-height: 1;
+  --tw-font-weight: var(--font-weight-bold, 700);
+  font-weight: var(--font-weight-bold, 700);
+}
+.view2 {
+  width: 0.28em;
+  text-align: center;
+  opacity: 50%;
+}
+.view3 {
+  position: relative;
+  display: inline-block;
+  height: 1em;
+  width: 0.5em;
+  overflow: hidden;
+  text-align: center;
+}
+.view4 {
+  position: absolute;
+  inset: 0px;
+}

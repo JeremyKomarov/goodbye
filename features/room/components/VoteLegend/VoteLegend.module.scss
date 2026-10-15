@@ -1,0 +1,19 @@
+.view34 {
+  margin-top: calc(var(--spacing, 0.25rem) * 2);
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: calc(var(--spacing, 0.25rem) * 1.5);
+  padding-inline: var(--spacing, 0.25rem);
+  font-size: 11px;
+  color: var(--color-mute, #8696a0);
+  @media (max-height: 700px) {
+    display: none;
+  }
+}
+.view35 {
+  height: calc(var(--spacing, 0.25rem) * 2.5);
+  width: calc(var(--spacing, 0.25rem) * 4);
+  border-radius: var(--radius-sm, 0.25rem);
+}

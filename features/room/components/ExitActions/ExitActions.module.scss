@@ -1,0 +1,53 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  margin-top: calc(var(--spacing, 0.25rem) * 3);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: calc(var(--spacing, 0.25rem) * 2);
+  @media (max-height: 700px) {
+    margin-top: calc(var(--spacing, 0.25rem) * 2);
+  }
+}
+.view2 {
+  border-radius: calc(infinity * 1px);
+  background-color: var(--color-raised, #202c33);
+  padding-inline: calc(var(--spacing, 0.25rem) * 4);
+  padding-block: calc(var(--spacing, 0.25rem) * 2);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+}
+.view3 {
+  border-radius: calc(infinity * 1px);
+  background-color: var(--color-signal, #25d366);
+  padding-inline: calc(var(--spacing, 0.25rem) * 4);
+  padding-block: calc(var(--spacing, 0.25rem) * 2);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--tw-leading, var(--text-sm--line-height, calc(1.25 / 0.875)));
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-night, #0b141a);
+}
+.view4 {
+  margin-bottom: calc(var(--spacing, 0.25rem) * 3);
+  color: color-mix(in srgb, #e9edef 80%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    color: color-mix(in oklab, var(--color-ink, #e9edef) 80%, transparent);
+  }
+}
+.view5 {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing, 0.25rem) * 2);
+  padding-bottom: var(--spacing, 0.25rem);
+}
+.view6 {
+  display: flex;
+  height: calc(var(--spacing, 0.25rem) * 12);
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-2xl, 1rem);
+  background-color: var(--color-raised, #202c33);
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-semibold, 600);
+}

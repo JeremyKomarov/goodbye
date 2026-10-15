@@ -1,0 +1,20 @@
+// Component styles compiled from Tailwind utilities.
+.view1 {
+  margin-inline: auto;
+  width: fit-content;
+  max-width: 90%;
+  border-radius: var(--radius-lg, 0.5rem);
+  background-color: color-mix(in srgb, #202c33 95%, transparent);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--color-raised, #202c33) 95%, transparent);
+  }
+  padding-inline: calc(var(--spacing, 0.25rem) * 3);
+  padding-block: calc(var(--spacing, 0.25rem) * 1.5);
+  text-align: center;
+  font-size: 13px;
+  --tw-leading: var(--leading-snug, 1.375);
+  line-height: var(--leading-snug, 1.375);
+  color: var(--color-pill, #ffd279);
+  --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+}
