@@ -21,6 +21,7 @@ import {
 } from "@/app/r/[slug]/admin/actions";
 import { PlayerCodes } from "@/components/room/PlayerCodes";
 import { ShareMessages } from "@/components/room/ShareMessages";
+import { CopyButton } from "@/components/ui/CopyButton";
 import { SystemPill } from "@/components/ui/SystemPill";
 import {
   forgetAdminToken,
@@ -29,12 +30,23 @@ import {
 } from "@/lib/admin-storage";
 import { formatHour, formatSlot } from "@/lib/hebrew";
 import type { ReactionMap, WallReaction } from "@/lib/reactions";
-import { type ExitStats, exitStats } from "@/lib/share";
+import {
+  adminLinkMessage,
+  type ExitStats,
+  exitStats,
+  whatsappLink,
+} from "@/lib/share";
 import { leadingSlot, tallyVotes, wonByDraw } from "@/lib/slots";
 import { getBrowserClient } from "@/lib/supabase/browser";
 import type { LeaderboardRow, Room, Vote, WallMessage } from "@/lib/types";
 
 const noop = () => () => {};
+
+type AdminTab = "manage" | "codes";
+const ADMIN_TABS: { id: AdminTab; label: string }[] = [
+  { id: "manage", label: "ניהול" },
+  { id: "codes", label: "קודים לכניסה" },
+];
 
 function readToken(slug: string) {
   const fromHash = new URLSearchParams(window.location.hash.slice(1)).get("k");
@@ -147,7 +159,9 @@ function Panel({
     drawn: boolean;
   } | null>(null);
   const [origin] = useState(() => window.location.origin);
+  const [tab, setTab] = useState<AdminTab>("manage");
   const tz = room.timezone;
+  const adminUrl = `${origin}/r/${slug}/admin#k=${token}`;
 
   useEffect(() => {
     if (room.status === "exited") return;
@@ -218,205 +232,268 @@ function Panel({
               רק מי שיש לו את קישור הניהול רואה את הדף הזה. לא לשלוח אותו
               לקבוצה.
             </p>
-          </div>
-
-          <div className="no-scrollbar flex flex-col gap-5 short:gap-4 lg:-m-1 lg:min-h-0 lg:overflow-y-auto lg:p-1">
-            <div className="rounded-3xl bg-panel p-5">
-              <p className="text-sm text-mute">מצב עכשיו</p>
-              <p className="mt-1 text-lg font-semibold">{statusLine}</p>
-            </div>
-
-            {error && (
-              <p
-                role="alert"
-                className="rounded-xl bg-exit/15 px-4 py-3 text-sm text-exit"
-              >
-                {error}
-              </p>
-            )}
-
-            {room.status !== "exited" && (
-              <div className="rounded-3xl bg-panel p-5">
-                <p className="mb-4 text-ink/80">
-                  {room.status === "locked"
-                    ? "כשהשעה מגיעה: שולחים הודעת פרידה (למטה), יוצאים מהקבוצה בוואטסאפ, ואז לוחצים כאן. כל מי שבחדר יראה את זה בזמן אמת."
-                    : "אפשר ללחוץ כבר עכשיו. השעה המובילה תינעל ומיד תסומן יציאה."}
-                </p>
-                <motion.button
-                  type="button"
-                  whileTap={{ scale: 0.96 }}
-                  disabled={pending}
-                  onClick={() =>
-                    run(
-                      () => markExited(slug, token),
-                      "לסמן שיצאת מהקבוצה? כולם יראו את זה מיד.",
-                    )
-                  }
-                  className="w-full rounded-2xl bg-exit px-6 py-5 text-xl font-bold text-night shadow-[0_10px_40px_-10px] shadow-exit/60 disabled:opacity-50"
-                >
-                  יצאתי מהקבוצה
-                </motion.button>
-              </div>
-            )}
-
-            {room.status !== "exited" && share && (
-              <div className="rounded-3xl bg-panel p-5">
-                <h2 className="mb-3 font-semibold">שליחה לקבוצה</h2>
-                <ShareMessages
-                  room={room}
-                  url={`${origin}/r/${slug}`}
-                  stats={share.stats}
-                  drawn={share.drawn}
-                />
-              </div>
-            )}
-
-            {room.status === "voting" && (
-              <button
-                type="button"
-                disabled={pending}
-                onClick={() =>
-                  run(
-                    () => lockVoting(slug, token),
-                    "לנעול את ההצבעה עכשיו? השעה המובילה תיבחר.",
-                  )
-                }
-                className="rounded-2xl bg-raised px-6 py-4 font-semibold disabled:opacity-50"
-              >
-                נעילת ההצבעה עכשיו
-              </button>
-            )}
-
-            {room.status === "exited" ? (
-              <button
-                type="button"
-                disabled={pending}
-                onClick={() =>
-                  run(
-                    () => undoExit(slug, token),
-                    "לבטל את היציאה ולחזור לספירה לאחור?",
-                  )
-                }
-                className="rounded-2xl bg-raised px-6 py-4 font-semibold disabled:opacity-50"
-              >
-                ביטול היציאה
-              </button>
-            ) : (
-              <div className="rounded-3xl bg-panel p-5">
-                <label
-                  htmlFor="reopen"
-                  className="mb-2 block text-sm text-mute"
-                >
-                  {room.status === "voting"
-                    ? "לשנות מתי נסגרת ההצבעה"
-                    : "לפתוח את ההצבעה מחדש, עד"}
-                </label>
-                <input
-                  id="reopen"
-                  type="datetime-local"
-                  value={closeLocal}
-                  onChange={(e) => setCloseLocal(e.target.value)}
-                  className="w-full rounded-xl bg-raised px-4 py-3 outline-none focus:ring-2 focus:ring-pill/70"
-                />
+            <div
+              role="tablist"
+              aria-label="דף הניהול"
+              className="mt-5 flex gap-1 rounded-2xl bg-panel p-1 short:mt-3 lg:max-w-md"
+            >
+              {ADMIN_TABS.map((t) => (
                 <button
+                  key={t.id}
                   type="button"
-                  disabled={pending || !closeLocal}
-                  onClick={() =>
-                    run(() =>
-                      reopenVoting(
-                        slug,
-                        token,
-                        new Date(closeLocal).toISOString(),
-                      ),
-                    )
-                  }
-                  className="mt-3 w-full rounded-2xl bg-raised px-6 py-3.5 font-semibold disabled:opacity-50"
+                  role="tab"
+                  aria-selected={tab === t.id}
+                  onClick={() => setTab(t.id)}
+                  className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${
+                    tab === t.id
+                      ? "bg-raised text-ink"
+                      : "text-mute hover:text-ink"
+                  }`}
                 >
-                  {room.status === "voting" ? "עדכון זמן הסגירה" : "פתיחה מחדש"}
+                  {t.label}
                 </button>
-              </div>
-            )}
-
-            <PlayerCodes slug={slug} token={token} />
-
-            <div>
-              <button
-                type="button"
-                onClick={() => {
-                  forgetAdminToken(slug);
-                  router.push(`/r/${slug}`);
-                }}
-                className="text-sm text-mute underline-offset-2 hover:text-ink hover:underline"
-              >
-                לשכוח את הניהול במכשיר הזה
-              </button>
-              <p className="mt-1 text-xs text-mute">
-                למחשב משותף. אפשר לחזור לניהול בכל רגע עם קישור הניהול.
-              </p>
+              ))}
             </div>
           </div>
 
-          <section className="rounded-3xl bg-panel p-5 lg:flex lg:min-h-0 lg:flex-col lg:self-start lg:max-h-full">
-            <div className="mb-3 flex shrink-0 items-baseline justify-between">
-              <h2 className="font-semibold">
-                הודעות בקיר
-                {messages.length > 0 && (
-                  <span className="ms-2 text-sm font-normal text-mute">
-                    {messages.length}
-                  </span>
-                )}
-              </h2>
-              <button
-                type="button"
-                onClick={loadMessages}
-                className="text-sm text-tick"
-              >
-                רענון
-              </button>
-            </div>
-            {messages.length === 0 ? (
-              <p className="text-mute">אין הודעות עדיין.</p>
-            ) : (
-              <ul className="flex flex-col gap-2 lg:-me-2 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pe-2">
-                {messages.map((m) => (
-                  <li
-                    key={m.id}
-                    className="flex items-start gap-3 rounded-xl bg-raised px-3 py-2.5"
+          {tab === "codes" && (
+            <>
+              <div className="no-scrollbar flex flex-col gap-5 short:gap-4 lg:-m-1 lg:min-h-0 lg:overflow-y-auto lg:p-1">
+                <div className="rounded-3xl bg-panel p-5">
+                  <h2 className="font-semibold">קישור הניהול שלך</h2>
+                  <p className="mt-1 text-sm text-mute">
+                    כדי לנהל את החדר ממכשיר אחר, שולחים את הקישור לעצמך. מי שיש
+                    לו אותו יכול לנעול את ההצבעה ולסמן יציאה, אז לא לשלוח
+                    לקבוצה.
+                  </p>
+                  <div className="mt-3 flex items-center gap-2 rounded-xl bg-raised p-1.5 ps-3">
+                    <span
+                      dir="ltr"
+                      className="min-w-0 flex-1 truncate text-left text-sm text-ink/80"
+                    >
+                      {adminUrl}
+                    </span>
+                    <CopyButton text={adminUrl} />
+                  </div>
+                  <a
+                    href={whatsappLink(
+                      adminLinkMessage(room.group_name, adminUrl),
+                    )}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-2 flex h-11 items-center justify-center rounded-xl bg-signal font-semibold text-night"
                   >
-                    <div className="min-w-0 flex-1">
-                      <div className="text-xs text-mute">
-                        <bdi>{m.display_name}</bdi>
-                      </div>
-                      <p dir="auto" className="break-words text-sm">
-                        {m.body}
-                      </p>
-                    </div>
-                    <button
+                    שליחה לעצמי בוואטסאפ
+                  </a>
+                </div>
+              </div>
+              <div className="no-scrollbar lg:-m-1 lg:min-h-0 lg:overflow-y-auto lg:p-1">
+                <PlayerCodes slug={slug} token={token} />
+              </div>
+            </>
+          )}
+
+          {tab === "manage" && (
+            <>
+              <div className="no-scrollbar flex flex-col gap-5 short:gap-4 lg:-m-1 lg:min-h-0 lg:overflow-y-auto lg:p-1">
+                <div className="rounded-3xl bg-panel p-5">
+                  <p className="text-sm text-mute">מצב עכשיו</p>
+                  <p className="mt-1 text-lg font-semibold">{statusLine}</p>
+                </div>
+
+                {error && (
+                  <p
+                    role="alert"
+                    className="rounded-xl bg-exit/15 px-4 py-3 text-sm text-exit"
+                  >
+                    {error}
+                  </p>
+                )}
+
+                {room.status !== "exited" && (
+                  <div className="rounded-3xl bg-panel p-5">
+                    <p className="mb-4 text-ink/80">
+                      {room.status === "locked"
+                        ? "כשהשעה מגיעה: שולחים הודעת פרידה (למטה), יוצאים מהקבוצה בוואטסאפ, ואז לוחצים כאן. כל מי שבחדר יראה את זה בזמן אמת."
+                        : "אפשר ללחוץ כבר עכשיו. השעה המובילה תינעל ומיד תסומן יציאה."}
+                    </p>
+                    <motion.button
                       type="button"
+                      whileTap={{ scale: 0.96 }}
                       disabled={pending}
                       onClick={() =>
-                        run(async () => {
-                          const result = await deleteWallMessage(
+                        run(
+                          () => markExited(slug, token),
+                          "לסמן שיצאת מהקבוצה? כולם יראו את זה מיד.",
+                        )
+                      }
+                      className="w-full rounded-2xl bg-exit px-6 py-5 text-xl font-bold text-night shadow-[0_10px_40px_-10px] shadow-exit/60 disabled:opacity-50"
+                    >
+                      יצאתי מהקבוצה
+                    </motion.button>
+                  </div>
+                )}
+
+                {room.status !== "exited" && share && (
+                  <div className="rounded-3xl bg-panel p-5">
+                    <h2 className="mb-3 font-semibold">שליחה לקבוצה</h2>
+                    <ShareMessages
+                      room={room}
+                      url={`${origin}/r/${slug}`}
+                      stats={share.stats}
+                      drawn={share.drawn}
+                    />
+                  </div>
+                )}
+
+                {room.status === "voting" && (
+                  <button
+                    type="button"
+                    disabled={pending}
+                    onClick={() =>
+                      run(
+                        () => lockVoting(slug, token),
+                        "לנעול את ההצבעה עכשיו? השעה המובילה תיבחר.",
+                      )
+                    }
+                    className="rounded-2xl bg-raised px-6 py-4 font-semibold disabled:opacity-50"
+                  >
+                    נעילת ההצבעה עכשיו
+                  </button>
+                )}
+
+                {room.status === "exited" ? (
+                  <button
+                    type="button"
+                    disabled={pending}
+                    onClick={() =>
+                      run(
+                        () => undoExit(slug, token),
+                        "לבטל את היציאה ולחזור לספירה לאחור?",
+                      )
+                    }
+                    className="rounded-2xl bg-raised px-6 py-4 font-semibold disabled:opacity-50"
+                  >
+                    ביטול היציאה
+                  </button>
+                ) : (
+                  <div className="rounded-3xl bg-panel p-5">
+                    <label
+                      htmlFor="reopen"
+                      className="mb-2 block text-sm text-mute"
+                    >
+                      {room.status === "voting"
+                        ? "לשנות מתי נסגרת ההצבעה"
+                        : "לפתוח את ההצבעה מחדש, עד"}
+                    </label>
+                    <input
+                      id="reopen"
+                      type="datetime-local"
+                      value={closeLocal}
+                      onChange={(e) => setCloseLocal(e.target.value)}
+                      className="w-full rounded-xl bg-raised px-4 py-3 outline-none focus:ring-2 focus:ring-pill/70"
+                    />
+                    <button
+                      type="button"
+                      disabled={pending || !closeLocal}
+                      onClick={() =>
+                        run(() =>
+                          reopenVoting(
                             slug,
                             token,
-                            m.id,
-                          );
-                          if (result.ok)
-                            setMessages((prev) =>
-                              prev.filter((x) => x.id !== m.id),
-                            );
-                          return result;
-                        }, "למחוק את ההודעה?")
+                            new Date(closeLocal).toISOString(),
+                          ),
+                        )
                       }
-                      className="shrink-0 rounded-lg px-2 py-1 text-sm text-exit hover:bg-exit/10"
+                      className="mt-3 w-full rounded-2xl bg-raised px-6 py-3.5 font-semibold disabled:opacity-50"
                     >
-                      מחיקה
+                      {room.status === "voting"
+                        ? "עדכון זמן הסגירה"
+                        : "פתיחה מחדש"}
                     </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
+                  </div>
+                )}
+
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      forgetAdminToken(slug);
+                      router.push(`/r/${slug}`);
+                    }}
+                    className="text-sm text-mute underline-offset-2 hover:text-ink hover:underline"
+                  >
+                    לשכוח את הניהול במכשיר הזה
+                  </button>
+                  <p className="mt-1 text-xs text-mute">
+                    למחשב משותף. אפשר לחזור לניהול בכל רגע עם קישור הניהול.
+                  </p>
+                </div>
+              </div>
+
+              <section className="rounded-3xl bg-panel p-5 lg:flex lg:min-h-0 lg:flex-col lg:self-start lg:max-h-full">
+                <div className="mb-3 flex shrink-0 items-baseline justify-between">
+                  <h2 className="font-semibold">
+                    הודעות בקיר
+                    {messages.length > 0 && (
+                      <span className="ms-2 text-sm font-normal text-mute">
+                        {messages.length}
+                      </span>
+                    )}
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={loadMessages}
+                    className="text-sm text-tick"
+                  >
+                    רענון
+                  </button>
+                </div>
+                {messages.length === 0 ? (
+                  <p className="text-mute">אין הודעות עדיין.</p>
+                ) : (
+                  <ul className="flex flex-col gap-2 lg:-me-2 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pe-2">
+                    {messages.map((m) => (
+                      <li
+                        key={m.id}
+                        className="flex items-start gap-3 rounded-xl bg-raised px-3 py-2.5"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <div className="text-xs text-mute">
+                            <bdi>{m.display_name}</bdi>
+                          </div>
+                          <p dir="auto" className="break-words text-sm">
+                            {m.body}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          disabled={pending}
+                          onClick={() =>
+                            run(async () => {
+                              const result = await deleteWallMessage(
+                                slug,
+                                token,
+                                m.id,
+                              );
+                              if (result.ok)
+                                setMessages((prev) =>
+                                  prev.filter((x) => x.id !== m.id),
+                                );
+                              return result;
+                            }, "למחוק את ההודעה?")
+                          }
+                          className="shrink-0 rounded-lg px-2 py-1 text-sm text-exit hover:bg-exit/10"
+                        >
+                          מחיקה
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            </>
+          )}
         </div>
       </div>
     </main>

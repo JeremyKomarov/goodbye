@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { listPlayerCodes, type PlayerCode } from "@/app/r/[slug]/admin/actions";
+import { CopyButton } from "@/components/ui/CopyButton";
 import { codeMessage, whatsappLink } from "@/lib/share";
 
 type Props = { slug: string; token: string };
@@ -95,22 +96,5 @@ export function PlayerCodes({ slug, token }: Props) {
         </ul>
       )}
     </section>
-  );
-}
-
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <button
-      type="button"
-      onClick={async () => {
-        await navigator.clipboard.writeText(text);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 1600);
-      }}
-      className="shrink-0 rounded-lg bg-line px-3 py-2 text-sm"
-    >
-      {copied ? "הועתק" : "העתקה"}
-    </button>
   );
 }

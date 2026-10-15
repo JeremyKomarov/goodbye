@@ -96,3 +96,8 @@ export function codeMessage(name: string, code: string, url: string) {
     `נכנסים כאן, כותבים ${iso(name)} ואז את הקוד: ${url}`,
   ].join("\n");
 }
+
+/** The host's admin link, sent to themselves (to manage the room from another device). */
+export function adminLinkMessage(groupName: string, adminUrl: string) {
+  return `קישור הניהול שלי לחדר של ${iso(groupName)} (לא לשלוח לקבוצה): ${adminUrl}`;
+}

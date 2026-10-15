@@ -1,9 +1,19 @@
 import { describe, expect, it } from "vitest";
 import { makeRoom } from "@/lib/test/room";
-import { codeMessage, exitStats, goodbyeMessage, resultMessage, whatsappLink } from "@/lib/share";
+import {
+  adminLinkMessage,
+  codeMessage,
+  exitStats,
+  goodbyeMessage,
+  resultMessage,
+  whatsappLink,
+} from "@/lib/share";
 import type { LeaderboardRow, WallMessage } from "@/lib/types";
 
-const room = makeRoom({ status: "locked", locked_slot: "2026-11-10T16:00:00Z" });
+const room = makeRoom({
+  status: "locked",
+  locked_slot: "2026-11-10T16:00:00Z",
+});
 const url = "https://example.com/r/abc12345";
 const strip = (text: string) => text.replace(/[⁦-⁩]/g, "");
 
@@ -29,7 +39,13 @@ describe("resultMessage", () => {
 describe("goodbyeMessage", () => {
   it("sums up the room", () => {
     const leaderboard: LeaderboardRow[] = [
-      { room_id: room.id, game: "trivia", user_id: "u1", score: 900, display_name: "דנה" },
+      {
+        room_id: room.id,
+        game: "trivia",
+        user_id: "u1",
+        score: 900,
+        display_name: "דנה",
+      },
     ];
     const stats = exitStats({
       voterCount: 12,
@@ -45,7 +61,12 @@ describe("goodbyeMessage", () => {
   });
 
   it("leaves out what didn't happen", () => {
-    const stats = exitStats({ voterCount: 0, messages: [], reactions: {}, leaderboard: [] });
+    const stats = exitStats({
+      voterCount: 0,
+      messages: [],
+      reactions: {},
+      leaderboard: [],
+    });
     const text = goodbyeMessage(room, url, stats);
     expect(text).not.toContain("❤️");
     expect(text).not.toContain("👑");
@@ -54,7 +75,9 @@ describe("goodbyeMessage", () => {
 
 describe("whatsappLink", () => {
   it("encodes the text", () => {
-    expect(whatsappLink("שלום & ביי")).toBe(`https://wa.me/?text=${encodeURIComponent("שלום & ביי")}`);
+    expect(whatsappLink("שלום & ביי")).toBe(
+      `https://wa.me/?text=${encodeURIComponent("שלום & ביי")}`,
+    );
   });
 });
 
@@ -63,5 +86,13 @@ describe("codeMessage", () => {
     const text = strip(codeMessage("דוד", "K7P2QX", url));
     expect(text).toContain("הקוד שלך לחדר: K7P2QX");
     expect(text).toContain(`כותבים דוד ואז את הקוד: ${url}`);
+  });
+});
+
+describe("adminLinkMessage", () => {
+  it("carries the admin link and a warning", () => {
+    const text = strip(adminLinkMessage("צוות מוצר", `${url}/admin#k=abc`));
+    expect(text).toContain("לא לשלוח לקבוצה");
+    expect(text).toContain(`${url}/admin#k=abc`);
   });
 });
