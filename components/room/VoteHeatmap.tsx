@@ -7,6 +7,7 @@ import {
   formatDayMonth,
   formatSlot,
   formatWeekday,
+  g,
   iso,
   pad,
   votesLabel,
@@ -50,6 +51,8 @@ type Props = {
   myUserId: string | null;
   mySlot: number | null;
   onVote: (slotMs: number | null) => Promise<string | null>;
+  /** False for the host: the group picks when they leave, so they only watch. */
+  canVote?: boolean;
   className?: string;
 };
 
@@ -65,6 +68,7 @@ export function VoteHeatmap({
   myUserId,
   mySlot,
   onVote,
+  canVote = true,
   className = "",
 }: Props) {
   const days = useMemo(() => buildSlotDays(room), [room]);
@@ -146,7 +150,9 @@ export function VoteHeatmap({
           {days.length === 1
             ? dayName(day.ms)
             : open
-              ? "בוחרים יום ושעה"
+              ? canVote
+                ? "בוחרים יום ושעה"
+                : "הקבוצה מחליטה"
               : "ההצבעה סגורה"}
         </span>
       </div>
@@ -216,7 +222,7 @@ export function VoteHeatmap({
           const mine = mySlot === slot.ms;
           const isWinner = winner === slot.ms;
           const past = slot.ms < closes;
-          const disabled = !open || past;
+          const disabled = !open || !canVote || past;
           return (
             <motion.button
               key={slot.ms}
@@ -328,9 +334,11 @@ export function VoteHeatmap({
           </>
         ) : (
           <span className="line-clamp-2 text-mute">
-            {open
-              ? `לוחצים על שעה כדי להצביע. אפשר לשנות עד שההצבעה נסגרת, ${formatSlot(closes, tz)}.`
-              : "ההצבעה נסגרה, סופרים קולות…"}
+            {!open
+              ? "ההצבעה נסגרה, סופרים קולות…"
+              : canVote
+                ? `לוחצים על שעה כדי להצביע. אפשר לשנות עד שההצבעה נסגרת, ${formatSlot(closes, tz)}.`
+                : `${g(room.host_gender, "אתה יוצא, הם מחליטים מתי", "את יוצאת, הם מחליטים מתי")} 😉 ההצבעה נסגרת ${formatSlot(closes, tz)}.`}
           </span>
         )}
       </div>

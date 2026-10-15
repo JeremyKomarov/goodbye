@@ -22,7 +22,11 @@ import { FarewellWall } from "@/components/room/FarewellWall";
 import { Finale } from "@/components/room/Finale";
 import { Hero } from "@/components/room/Hero";
 import { JoinGate } from "@/components/room/JoinGate";
-import { GAME_META, Leaderboard, rankRows } from "@/components/room/Leaderboard";
+import {
+  GAME_META,
+  Leaderboard,
+  rankRows,
+} from "@/components/room/Leaderboard";
 import { StatusStories } from "@/components/room/StatusStories";
 import { VoteHeatmap } from "@/components/room/VoteHeatmap";
 import { loadAdminToken } from "@/lib/admin-storage";
@@ -125,6 +129,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
   const myVote = me ? votes[me.userId] : undefined;
   const mySlot = myVote ? slotMs(myVote.slot_start) : null;
 
+  // This browser holds the admin token, so it's the host: they play and post, but don't vote.
   const adminToken = mounted ? loadAdminToken(room.slug) : null;
   const adminHref = adminToken ? `/r/${room.slug}/admin#k=${adminToken}` : null;
 
@@ -185,14 +190,16 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
         : leader && leader.tied.length > 1
           ? `⚖️ תיקו בין ${leader.tied.length} שעות`
           : leader
-          ? `מובילה: ${formatSlot(leader.ms, tz)}`
-          : "עוד אף אחד לא הצביע";
+            ? `מובילה: ${formatSlot(leader.ms, tz)}`
+            : "עוד אף אחד לא הצביע";
   const players = new Set(api.leaderboard.map((r) => r.user_id)).size;
   const recordHolders = [
     ...new Set(
       (Object.keys(GAME_META) as GameId[]).flatMap((g) => {
         const top = rankRows(api.leaderboard, g)[0];
-        return top ? [top.user_id === me?.userId ? "את/ה" : iso(top.display_name)] : [];
+        return top
+          ? [top.user_id === me?.userId ? "את/ה" : iso(top.display_name)]
+          : [];
       }),
     ),
   ];
@@ -202,7 +209,11 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
       subtitle: voteStatus,
       meta: voteList.length ? `${voteList.length} הצביעו` : undefined,
     },
-    games: { subtitle: recordHolders.length ? `👑 בשיאים: ${recordHolders.join(", ")}` : "כפתור בורח, טריוויה, 99+ הודעות ומה בתמונה?" },
+    games: {
+      subtitle: recordHolders.length
+        ? `👑 בשיאים: ${recordHolders.join(", ")}`
+        : "כפתור בורח, טריוויה, 99+ הודעות ומה בתמונה?",
+    },
     wall: typingText
       ? { subtitle: typingText, highlight: true }
       : lastMessage
@@ -308,6 +319,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
                     myUserId={myUserId}
                     mySlot={mySlot}
                     onVote={api.vote}
+                    canVote={!adminToken}
                     className="mx-auto w-full max-w-2xl tiny:max-h-full tiny:flex-1"
                   />
                 </div>

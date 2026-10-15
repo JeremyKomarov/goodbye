@@ -2,6 +2,7 @@
 
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { loadAdminToken } from "@/lib/admin-storage";
 import { getBrowserClient } from "@/lib/supabase/browser";
 import type {
   GameId,
@@ -77,23 +78,54 @@ export function useRoom(initialRoom: Room) {
     }, 300);
   }, [supabase, roomId]);
 
+  const join = useCallback(
+    async (rawName: string) => {
+      const name = rawName.trim().slice(0, 24);
+      if (!name) return "צריך שם כדי להיכנס";
+      let { data } = await supabase.auth.getSession();
+      if (!data.session) {
+        const { error } = await supabase.auth.signInAnonymously();
+        if (error) return "לא הצלחנו להכניס אותך. נסו לרענן את הדף";
+        ({ data } = await supabase.auth.getSession());
+      }
+      const userId = data.session!.user.id;
+      const { error } = await supabase
+        .from("players")
+        .upsert(
+          { room_id: roomId, user_id: userId, display_name: name },
+          { onConflict: "room_id,user_id" },
+        );
+      if (error) return "לא הצלחנו לשמור את השם. נסו שוב";
+      const next = { userId, name };
+      meRef.current = next;
+      setMe(next);
+      setPlayers((prev) => ({ ...prev, [userId]: name }));
+      setAuthState("ready");
+      // If the channel isn't up yet, it tracks us once it subscribes.
+      if (channelRef.current?.state === "joined")
+        channelRef.current.track(next);
+      return null;
+    },
+    [supabase, roomId],
+  );
+
   // Who am I? Returning visitors keep their anonymous session and player row.
+  // The host (this browser holds the room's admin token) skips the name prompt
+  // and comes in under the name they gave when creating the room.
   useEffect(() => {
     let cancelled = false;
     supabase.auth.getSession().then(async ({ data }) => {
       const user = data.session?.user;
-      if (!user) {
-        if (!cancelled) setAuthState("join");
-        return;
-      }
-      const { data: player } = await supabase
-        .from("players")
-        .select("display_name")
-        .eq("room_id", roomId)
-        .eq("user_id", user.id)
-        .maybeSingle();
+      const { data: player } = user
+        ? await supabase
+            .from("players")
+            .select("display_name")
+            .eq("room_id", roomId)
+            .eq("user_id", user.id)
+            .maybeSingle()
+        : { data: null };
       if (cancelled) return;
-      if (player) {
+      if (user && player) {
         const next = { userId: user.id, name: player.display_name as string };
         meRef.current = next;
         setMe(next);
@@ -101,14 +133,20 @@ export function useRoom(initialRoom: Room) {
         // If the channel subscribed before we knew who we are, it skipped tracking us.
         if (channelRef.current?.state === "joined")
           channelRef.current.track(next);
-      } else {
-        setAuthState("join");
+        return;
       }
+      // join() marks us ready; if it fails, fall back to asking for a name.
+      if (
+        loadAdminToken(initialRoom.slug) &&
+        !(await join(initialRoom.host_name))
+      )
+        return;
+      if (!cancelled) setAuthState("join");
     });
     return () => {
       cancelled = true;
     };
-  }, [supabase, roomId]);
+  }, [supabase, roomId, join, initialRoom.slug, initialRoom.host_name]);
 
   // Live data. Subscribe first, then load, so nothing slips between the two.
   useEffect(() => {
@@ -302,35 +340,6 @@ export function useRoom(initialRoom: Room) {
       teardowns.set(topic, done);
     };
   }, [supabase, roomId, refreshLeaderboard]);
-
-  const join = useCallback(
-    async (rawName: string) => {
-      const name = rawName.trim().slice(0, 24);
-      if (!name) return "צריך שם כדי להיכנס";
-      let { data } = await supabase.auth.getSession();
-      if (!data.session) {
-        const { error } = await supabase.auth.signInAnonymously();
-        if (error) return "לא הצלחנו להכניס אותך. נסו לרענן את הדף";
-        ({ data } = await supabase.auth.getSession());
-      }
-      const userId = data.session!.user.id;
-      const { error } = await supabase
-        .from("players")
-        .upsert(
-          { room_id: roomId, user_id: userId, display_name: name },
-          { onConflict: "room_id,user_id" },
-        );
-      if (error) return "לא הצלחנו לשמור את השם. נסו שוב";
-      const next = { userId, name };
-      meRef.current = next;
-      setMe(next);
-      setPlayers((prev) => ({ ...prev, [userId]: name }));
-      setAuthState("ready");
-      channelRef.current?.track(next);
-      return null;
-    },
-    [supabase, roomId],
-  );
 
   /** Cast, move or withdraw (`null`) your vote. Returns an error message or null. */
   const vote = useCallback(
