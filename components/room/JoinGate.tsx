@@ -3,6 +3,8 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import { g, iso, peopleLabel, REASONS } from "@/lib/hebrew";
+import { NAME_TAKEN } from "@/lib/hooks/useRoom";
+import { sameName } from "@/lib/login";
 import type { Room } from "@/lib/types";
 
 type Props = {
@@ -11,10 +13,21 @@ type Props = {
   checking: boolean;
   voterCount: number;
   onJoin: (name: string) => Promise<string | null>;
+  /** Come in as someone who already joined on another device, with their code. */
+  onSignInAs: (name: string, code: string) => Promise<string | null>;
 };
 
-export function JoinGate({ room, checking, voterCount, onJoin }: Props) {
+export function JoinGate({
+  room,
+  checking,
+  voterCount,
+  onJoin,
+  onSignInAs,
+}: Props) {
   const [name, setName] = useState("");
+  // Set when the name is taken: maybe it's you, on another device.
+  const [askCode, setAskCode] = useState(false);
+  const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const he = room.host_gender;
@@ -23,9 +36,20 @@ export function JoinGate({ room, checking, voterCount, onJoin }: Props) {
     e.preventDefault();
     setPending(true);
     setError(null);
-    const err = await onJoin(name);
+    const err = askCode ? await onSignInAs(name, code) : await onJoin(name);
     setPending(false);
-    if (err) setError(err);
+    if (err === NAME_TAKEN && sameName(name, room.host_name))
+      setError(
+        `זה השם של ${iso(room.host_name)}. אם זה את/ה, פותחים כאן את קישור הניהול שלך.`,
+      );
+    else if (err === NAME_TAKEN) setAskCode(true);
+    else if (err) setError(err);
+  }
+
+  function pickAnotherName() {
+    setAskCode(false);
+    setCode("");
+    setError(null);
   }
 
   const verb =
@@ -69,24 +93,54 @@ export function JoinGate({ room, checking, voterCount, onJoin }: Props) {
             </p>
           </div>
 
-          <div>
-            <label
-              htmlFor="join-name"
-              className="mb-1.5 block text-sm text-mute"
-            >
-              איך קוראים לך? ככה יראו אותך בחדר
-            </label>
-            <input
-              id="join-name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              maxLength={24}
-              autoFocus
-              autoComplete="nickname"
-              enterKeyHint="go"
-              className="w-full rounded-xl bg-raised px-4 py-3.5 text-lg outline-none focus:ring-2 focus:ring-pill/70"
-            />
-          </div>
+          {askCode ? (
+            <div>
+              <p className="mb-3 text-ink/90">
+                {`כבר יש בחדר ${iso(name.trim())}. זה את/ה, ממכשיר אחר?`}
+              </p>
+              <label
+                htmlFor="join-code"
+                className="mb-1.5 block text-sm text-mute"
+              >
+                {`הקוד של ${iso(name.trim())}`}
+              </label>
+              <input
+                id="join-code"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                maxLength={10}
+                autoFocus
+                autoCapitalize="characters"
+                autoComplete="one-time-code"
+                spellCheck={false}
+                enterKeyHint="go"
+                dir="ltr"
+                className="w-full rounded-xl bg-raised px-4 py-3.5 text-center font-mono text-2xl uppercase tracking-[0.3em] outline-none focus:ring-2 focus:ring-pill/70"
+              />
+              <p className="mt-2 text-sm text-mute">
+                {`את הקוד רואים במכשיר שבו נכנסת: לוחצים על "שלום ${iso(name.trim())}" בראש החדר.`}
+              </p>
+            </div>
+          ) : (
+            <div>
+              <label
+                htmlFor="join-name"
+                className="mb-1.5 block text-sm text-mute"
+              >
+                איך קוראים לך? ככה יראו אותך בחדר
+              </label>
+              <input
+                id="join-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                maxLength={24}
+                autoFocus
+                autoComplete="nickname"
+                enterKeyHint="go"
+                className="w-full rounded-xl bg-raised px-4 py-3.5 text-lg outline-none focus:ring-2 focus:ring-pill/70"
+              />
+            </div>
+          )}
 
           {error && (
             <p role="alert" className="text-sm text-exit">
@@ -97,11 +151,24 @@ export function JoinGate({ room, checking, voterCount, onJoin }: Props) {
           <motion.button
             type="submit"
             whileTap={{ scale: 0.97 }}
-            disabled={pending || !name.trim()}
+            disabled={pending || !name.trim() || (askCode && !code.trim())}
             className="rounded-2xl bg-signal px-6 py-4 text-lg font-semibold text-night disabled:opacity-50"
           >
-            {pending ? "נכנסים…" : "כניסה לחדר"}
+            {pending
+              ? "נכנסים…"
+              : askCode
+                ? `כניסה בתור ${iso(name.trim())}`
+                : "כניסה לחדר"}
           </motion.button>
+          {askCode && (
+            <button
+              type="button"
+              onClick={pickAnotherName}
+              className="-mt-2 text-sm text-tick underline-offset-2 hover:underline"
+            >
+              זה לא אני, אבחר שם אחר
+            </button>
+          )}
         </motion.form>
       )}
     </motion.div>

@@ -54,6 +54,13 @@ npm run dev                  # http://localhost:3000
   proves the token and its user is recorded in `room_hosts`. From then on the
   database keeps the host out of the vote, reserves their name, and badges their
   wall messages.
+- **Same player, another device.** Each browser is its own anonymous user, so a
+  second phone or browser starts as a stranger. A player can tap "שלום {name}" to
+  get a 6-character code. Behind it, the server gives their user an email login
+  (`<user id>@players.invalid`, never mailed) with the code as its password. On
+  the other device, typing a name that's already in the room asks for that code
+  and signs in as the same user: same vote, scores and messages, on both devices.
+  A new code signs out the user's other devices.
 - **Rules live in the database.** Row-level security and triggers decide who may
   vote (players who aren't the host, on a valid hour, before voting closes), keep
   names unique per room, and stamp each wall message with its poster's real name.
@@ -68,5 +75,5 @@ npm run dev                  # http://localhost:3000
   WhatsApp can't post into a group by itself, so the host picks the group and
   presses send.
 - **Cleanup.** Every night, rooms are deleted 30 days after the exit (60 days after
-  creation if the host never pressed exit), along with anonymous users who are no
-  longer in any room.
+  creation if the host never pressed exit), along with anonymous users (and users
+  with a code) who are no longer in any room.

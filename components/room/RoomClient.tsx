@@ -408,6 +408,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
           onClose={() => setMeOpen(false)}
           onRename={api.rename}
           onSwitch={api.switchUser}
+          onLoginCode={api.loginCode}
         />
       )}
 
@@ -434,6 +435,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
             checking={api.authState === "loading"}
             voterCount={voteList.length}
             onJoin={api.join}
+            onSignInAs={api.signInAs}
           />
         )}
       </AnimatePresence>

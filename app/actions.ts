@@ -3,10 +3,13 @@
 import { customAlphabet } from "nanoid";
 import { z } from "zod";
 import { hashToken, newAdminToken } from "@/lib/admin-token";
+import { loginEmail } from "@/lib/login";
 import { addDaysToDate, allSlots } from "@/lib/slots";
 import { getAdminClient } from "@/lib/supabase/admin";
 
 const newSlug = customAlphabet("23456789abcdefghjkmnpqrstuvwxyz", 8);
+// No 0/O, 1/I/L: the code is read off one screen and typed on another.
+const newLoginCode = customAlphabet("23456789ABCDEFGHJKMNPQRSTUVWXYZ", 6);
 
 function isTimeZone(value: string) {
   try {
@@ -83,4 +86,25 @@ export async function createRoom(input: CreateRoomInput): Promise<CreateRoomResu
   }
 
   return { ok: true, slug, adminToken };
+}
+
+export type LoginCodeResult = { ok: true; code: string } | { ok: false };
+
+/**
+ * Give the caller's user a code for coming in as themselves on another device. A
+ * new code replaces the old one and signs out all of the user's sessions, so the
+ * caller signs straight back in with it.
+ */
+export async function createLoginCode(accessToken: string): Promise<LoginCodeResult> {
+  if (typeof accessToken !== "string" || !accessToken) return { ok: false };
+  const db = getAdminClient();
+  const { data, error } = await db.auth.getUser(accessToken);
+  if (error || !data.user) return { ok: false };
+  const code = newLoginCode();
+  const { error: updateError } = await db.auth.admin.updateUserById(data.user.id, {
+    email: loginEmail(data.user.id),
+    password: code,
+    email_confirm: true,
+  });
+  return updateError ? { ok: false } : { ok: true, code };
 }

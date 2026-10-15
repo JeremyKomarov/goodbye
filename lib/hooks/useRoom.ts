@@ -2,9 +2,17 @@
 
 import type { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createLoginCode } from "@/app/actions";
 import { claimHost } from "@/app/r/[slug]/admin/actions";
 import { loadAdminToken } from "@/lib/admin-storage";
 import { captchaToken } from "@/lib/captcha";
+import {
+  loadLoginCode,
+  loginEmail,
+  normalizeCode,
+  sameName,
+  saveLoginCode,
+} from "@/lib/login";
 import {
   isReaction,
   type ReactionEmoji,
@@ -33,7 +41,8 @@ const typingUntil = () => Date.now() + TYPING_TTL;
 type AuthState = "loading" | "join" | "ready";
 
 const MESSAGE_LIMIT = 200;
-const NAME_TAKEN = "השם הזה כבר תפוס בחדר. אולי עם אות משם המשפחה?";
+/** join() and rename() return this when someone in the room already has the name. */
+export const NAME_TAKEN = "השם הזה כבר תפוס בחדר. אולי עם אות משם המשפחה?";
 const teardowns = new Map<string, Promise<void>>();
 
 /** This browser's anonymous session, signing in first if there isn't one yet. */
@@ -582,6 +591,64 @@ export function useRoom(initialRoom: Room) {
   );
 
   /**
+   * Your code for coming in as yourself on another device, made the first time
+   * it's asked for (or again with `fresh`, which retires the old one).
+   */
+  const loginCode = useCallback(
+    async (fresh = false) => {
+      const current = meRef.current;
+      if (!current) return null;
+      const saved = fresh ? null : loadLoginCode(current.userId);
+      if (saved) return saved;
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) return null;
+      const result = await createLoginCode(data.session.access_token).catch(
+        () => ({ ok: false }) as const,
+      );
+      if (!result.ok) return null;
+      saveLoginCode(current.userId, result.code);
+      // Setting a code signs out every session of this user, this one included.
+      const { error } = await supabase.auth.signInWithPassword({
+        email: loginEmail(current.userId),
+        password: result.code,
+      });
+      return error ? null : result.code;
+    },
+    [supabase],
+  );
+
+  /** Come in as a player who joined on another device, with their code. */
+  const signInAs = useCallback(
+    async (rawName: string, rawCode: string) => {
+      const { data: rows } = await supabase
+        .from("players")
+        .select("user_id, display_name")
+        .eq("room_id", roomId);
+      const player = rows?.find((p) => sameName(p.display_name, rawName));
+      if (!player) return "אין בחדר מישהו בשם הזה";
+      const code = normalizeCode(rawCode);
+      const { error } = await supabase.auth.signInWithPassword({
+        email: loginEmail(player.user_id),
+        password: code,
+      });
+      if (error)
+        return error.status === 429
+          ? "יותר מדי ניסיונות. נסו שוב בעוד כמה דקות"
+          : "הקוד לא מתאים. בודקים אותו שוב במכשיר הראשון";
+      saveLoginCode(player.user_id, code);
+      const next = { userId: player.user_id, name: player.display_name };
+      meRef.current = next;
+      setMe(next);
+      setReturning(true);
+      setAuthState("ready");
+      if (channelRef.current?.state === "joined")
+        channelRef.current.track(next);
+      return null;
+    },
+    [supabase, roomId],
+  );
+
+  /**
    * "Not you?": forget who this browser is (in every room, since the anonymous
    * session is per browser) and ask for a name again.
    */
@@ -657,6 +724,8 @@ export function useRoom(initialRoom: Room) {
     react,
     rename,
     switchUser,
+    loginCode,
+    signInAs,
     submitScore,
     setTyping,
     sendEmoji,
