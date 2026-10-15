@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import { StoryRing } from "@/components/room/StatusStories";
 import { initial } from "@/lib/colors";
 import { iso, onlineLabel, pad, splitCountdown } from "@/lib/hebrew";
-import type { OnlineUser, Typer } from "@/lib/hooks/useRoom";
+import type { Me, OnlineUser, Typer } from "@/lib/hooks/useRoom";
 import type { Room } from "@/lib/types";
 
 export type Tab = "vote" | "games" | "wall" | "board";
@@ -32,6 +32,7 @@ function compactClock(room: Room, now: number) {
 type HeaderProps = {
   room: Room;
   now: number;
+  me: Me | null;
   online: OnlineUser[];
   typers: Typer[];
   showClock: boolean;
@@ -39,10 +40,11 @@ type HeaderProps = {
   onParty: () => void;
 };
 
-/** The chat header: group avatar, name, live subtitle. */
+/** The chat header: group avatar, name, live subtitle (who you are and who's here). */
 export function RoomHeader({
   room,
   now,
+  me,
   online,
   typers,
   showClock,
@@ -51,6 +53,7 @@ export function RoomHeader({
 }: HeaderProps) {
   const typing = typingLine(typers);
   const clock = showClock ? compactClock(room, now) : null;
+  const presence = online.length > 0 ? onlineLabel(online.length) : "מתחברים…";
 
   return (
     <header className="shrink-0 bg-panel pt-[env(safe-area-inset-top)]">
@@ -69,10 +72,7 @@ export function RoomHeader({
             className={`truncate text-xs ${typing ? "text-signal" : "text-mute"}`}
             aria-live="polite"
           >
-            {typing ??
-              (online.length > 0
-                ? onlineLabel(online.length)
-                : "מתחברים…")}
+            {typing ?? (me ? `שלום ${iso(me.name)} · ${presence}` : presence)}
           </p>
         </div>
         {clock && (

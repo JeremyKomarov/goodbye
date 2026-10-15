@@ -45,6 +45,8 @@ export function useRoom(initialRoom: Room) {
   const [room, setRoom] = useState(initialRoom);
   const [authState, setAuthState] = useState<AuthState>("loading");
   const [me, setMe] = useState<Me | null>(null);
+  // True when this browser had already joined the room on an earlier visit.
+  const [returning, setReturning] = useState(false);
   const [players, setPlayers] = useState<Record<string, string>>({});
   const [votes, setVotes] = useState<Record<string, Vote>>({});
   const [messages, setMessages] = useState<WallMessage[]>([]);
@@ -129,6 +131,7 @@ export function useRoom(initialRoom: Room) {
         const next = { userId: user.id, name: player.display_name as string };
         meRef.current = next;
         setMe(next);
+        setReturning(true);
         setAuthState("ready");
         // If the channel subscribed before we knew who we are, it skipped tracking us.
         if (channelRef.current?.state === "joined")
@@ -466,6 +469,7 @@ export function useRoom(initialRoom: Room) {
     room,
     authState,
     me,
+    returning,
     players,
     votes,
     messages,

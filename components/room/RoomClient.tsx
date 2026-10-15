@@ -29,6 +29,7 @@ import {
 } from "@/components/room/Leaderboard";
 import { StatusStories } from "@/components/room/StatusStories";
 import { VoteHeatmap } from "@/components/room/VoteHeatmap";
+import { Welcome } from "@/components/room/Welcome";
 import { loadAdminToken } from "@/lib/admin-storage";
 import { formatHour, formatSlot, iso, onlineLabel } from "@/lib/hebrew";
 import { useNow } from "@/lib/hooks/useNow";
@@ -265,6 +266,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
             <RoomHeader
               room={room}
               now={now}
+              me={me}
               online={api.online}
               typers={typers}
               showClock={false}
@@ -290,6 +292,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
               <RoomHeader
                 room={room}
                 now={now}
+                me={me}
                 online={api.online}
                 typers={typers}
                 showClock={tab !== "vote"}
@@ -366,6 +369,7 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
       </div>
 
       <EmojiRain subscribe={api.onRain} />
+      <Welcome me={me} returning={api.returning} />
 
       <AnimatePresence>
         {showFinale && (
