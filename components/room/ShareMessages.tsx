@@ -18,7 +18,9 @@ type Props = {
 /** The host's two WhatsApp messages, ready to send: the decision, then the goodbye. */
 export function ShareMessages({ room, url, stats, drawn }: Props) {
   const messages = [
-    room.locked_slot && {
+    // The decision is news only until the host leaves.
+    room.status === "locked" &&
+      room.locked_slot && {
       id: "result",
       title: "הקבוצה החליטה",
       when: "לשלוח כשההצבעה ננעלת",

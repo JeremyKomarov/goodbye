@@ -90,6 +90,9 @@ type Props = {
   leaderboard: LeaderboardRow[];
   myUserId: string | null;
   onScore: (game: GameId, score: number) => void;
+  /** Once the host has left: why the games are closed. The records stay as they are. */
+  closed?: string | null;
+  onBoard?: () => void;
 };
 
 type Result = {
@@ -106,6 +109,8 @@ export function GamesHub({
   leaderboard,
   myUserId,
   onScore,
+  closed = null,
+  onBoard,
 }: Props) {
   const [result, setResult] = useState<Result | null>(null);
   const [round, setRound] = useState(0);
@@ -144,7 +149,7 @@ export function GamesHub({
     }
   }
 
-  if (game) {
+  if (game && !closed) {
     const meta = GAME_META[game];
     return (
       <div className="mx-auto flex min-h-0 w-full max-w-2xl flex-1 flex-col px-3 pb-3 pt-2 tiny:pb-2 tiny:pt-1 lg:py-5 lg:short:py-3">
@@ -186,7 +191,11 @@ export function GamesHub({
             className="my-auto rounded-3xl bg-panel/90 p-6 text-center short:p-5 tiny:p-4"
           >
             <p className="text-mute">
-              {result.best && result.rank === 1 ? "השיא החדש של החדר 👑" : result.best ? "שיא אישי חדש" : "התוצאה שלך"}
+              {result.best && result.rank === 1
+                ? "השיא החדש של החדר 👑"
+                : result.best
+                  ? "שיא אישי חדש"
+                  : "התוצאה שלך"}
             </p>
             <p className="my-2 font-display text-[5rem] font-bold leading-none short:text-[4rem] tiny:my-1 tiny:text-[3rem]">
               {meta.format(result.score)}
@@ -234,58 +243,78 @@ export function GamesHub({
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-4 pt-3 short:pb-3 short:pt-2 lg:px-6 lg:py-6">
-    <div className="mx-auto grid max-w-3xl gap-3 short:gap-2 tiny:grid-cols-2 lg:grid-cols-2 lg:short:gap-3">
-      {TILES.map((tile, i) => {
-        const best = myBest(tile.id);
-        const record = top(tile.id);
-        const mineRecord = !!record && record.user_id === myUserId;
-        return (
-          <motion.button
-            key={tile.id}
-            type="button"
-            onClick={() => onGameChange(tile.id)}
-            whileTap={{ scale: 0.98 }}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.06 }}
-            className="flex items-center gap-4 rounded-3xl bg-panel/90 p-4 text-start transition-colors hover:bg-raised/80 short:p-3 tiny:gap-3 lg:flex-col lg:items-start lg:p-5 lg:short:flex-row lg:short:items-center lg:short:p-4"
-          >
-            <span
-              className="grid size-16 shrink-0 place-items-center rounded-2xl text-3xl short:size-14 tiny:size-12 tiny:text-2xl"
-              style={{
-                background: `color-mix(in oklab, ${tile.accent} 22%, transparent)`,
-              }}
+      {closed && (
+        <div className="mx-auto mb-3 max-w-3xl rounded-3xl bg-panel/90 px-4 py-3 text-center short:mb-2 short:py-2">
+          <p className="font-semibold">🏁 המשחקים נסגרו</p>
+          <p className="mt-0.5 text-sm text-ink/75">{closed}</p>
+          {onBoard && (
+            <button
+              type="button"
+              onClick={onBoard}
+              className="mt-1 text-sm text-tick underline-offset-2 hover:underline"
             >
-              {tile.art}
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block font-semibold">
-                {GAME_META[tile.id].title}
+              לטבלת השיאים
+            </button>
+          )}
+        </div>
+      )}
+      <div className="mx-auto grid max-w-3xl gap-3 short:gap-2 tiny:grid-cols-2 lg:grid-cols-2 lg:short:gap-3">
+        {TILES.map((tile, i) => {
+          const best = myBest(tile.id);
+          const record = top(tile.id);
+          const mineRecord = !!record && record.user_id === myUserId;
+          return (
+            <motion.button
+              key={tile.id}
+              type="button"
+              disabled={!!closed}
+              onClick={() => onGameChange(tile.id)}
+              whileTap={closed ? undefined : { scale: 0.98 }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: closed ? 0.6 : 1, y: 0 }}
+              transition={{ delay: i * 0.06 }}
+              className={`flex items-center gap-4 rounded-3xl bg-panel/90 p-4 text-start transition-colors ${closed ? "cursor-default" : "hover:bg-raised/80"} short:p-3 tiny:gap-3 lg:flex-col lg:items-start lg:p-5 lg:short:flex-row lg:short:items-center lg:short:p-4`}
+            >
+              <span
+                className="grid size-16 shrink-0 place-items-center rounded-2xl text-3xl short:size-14 tiny:size-12 tiny:text-2xl"
+                style={{
+                  background: `color-mix(in oklab, ${tile.accent} 22%, transparent)`,
+                }}
+              >
+                {tile.art}
               </span>
-              <span className="mt-0.5 block text-sm leading-snug text-ink/70 tiny:hidden">
-                {tile.blurb}
-              </span>
-              <span className="mt-2 flex items-center gap-1.5 text-xs">
-                <span aria-hidden>👑</span>
-                {record ? (
-                  <span className="min-w-0 truncate">
-                    <bdi className="font-semibold text-pill">{mineRecord ? "השיא שלך" : record.display_name}</bdi>{" "}
-                    <span className="text-mute">{GAME_META[tile.id].format(record.score)}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-semibold">
+                  {GAME_META[tile.id].title}
+                </span>
+                <span className="mt-0.5 block text-sm leading-snug text-ink/70 tiny:hidden">
+                  {tile.blurb}
+                </span>
+                <span className="mt-2 flex items-center gap-1.5 text-xs">
+                  <span aria-hidden>👑</span>
+                  {record ? (
+                    <span className="min-w-0 truncate">
+                      <bdi className="font-semibold text-pill">
+                        {mineRecord ? "השיא שלך" : record.display_name}
+                      </bdi>{" "}
+                      <span className="text-mute">
+                        {GAME_META[tile.id].format(record.score)}
+                      </span>
+                    </span>
+                  ) : (
+                    <span className="text-mute">עוד אין שיא</span>
+                  )}
+                </span>
+                {best !== undefined && !mineRecord && (
+                  <span className="mt-1 block text-xs text-mute">
+                    השיא שלך: {GAME_META[tile.id].format(best)}
                   </span>
-                ) : (
-                  <span className="text-mute">עוד אין שיא</span>
                 )}
               </span>
-              {best !== undefined && !mineRecord && (
-                <span className="mt-1 block text-xs text-mute">
-                  השיא שלך: {GAME_META[tile.id].format(best)}
-                </span>
-              )}
-            </span>
-          </motion.button>
-        );
-      })}
-    </div>
+            </motion.button>
+          );
+        })}
+      </div>
     </div>
   );
 }

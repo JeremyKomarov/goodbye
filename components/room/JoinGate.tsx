@@ -87,9 +87,11 @@ export function JoinGate({
                 ? `${iso(room.host_name)} ${REASONS[room.reason][he]}. `
                 : ""}
               {room.status === "voting" ? "אתם מחליטים באיזו שעה. " : ""}
-              {voterCount > 0
-                ? `${peopleLabel(voterCount)} כבר ${voterCount === 1 ? "הצביע" : "הצביעו"}.`
-                : ""}
+              {room.status === "exited"
+                ? `הקיר עוד פתוח, ואפשר להשאיר ל${iso(room.host_name)} הודעת פרידה.`
+                : voterCount > 0
+                  ? `${peopleLabel(voterCount)} כבר ${voterCount === 1 ? "הצביע" : "הצביעו"}.`
+                  : ""}
             </p>
           </div>
 

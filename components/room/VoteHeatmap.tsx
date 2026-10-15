@@ -334,8 +334,10 @@ export function VoteHeatmap({
           </>
         ) : (
           <span className="line-clamp-2 text-mute">
-            {!open
-              ? "ההצבעה נסגרה, סופרים קולות…"
+            {room.status === "exited"
+              ? `${iso(room.host_name)} ${g(room.host_gender, "יצא", "יצאה")} לפני שההצבעה נגמרה`
+              : !open
+                ? "ההצבעה נסגרה, סופרים קולות…"
               : canVote
                 ? `לוחצים על שעה כדי להצביע. אפשר לשנות עד שההצבעה נסגרת, ${formatSlot(closes, tz)}.`
                 : `${g(room.host_gender, "אתה יוצא, הם מחליטים מתי", "את יוצאת, הם מחליטים מתי")} 😉 ההצבעה נסגרת ${formatSlot(closes, tz)}.`}

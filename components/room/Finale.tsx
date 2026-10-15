@@ -12,6 +12,8 @@ import type { GameId, LeaderboardRow, Room, WallMessage } from "@/lib/types";
 type Props = {
   room: Room;
   drawn: boolean;
+  /** The hour that was ahead when the host left mid-vote (no hour was locked). */
+  leadingMs: number | null;
   voterCount: number;
   messages: WallMessage[];
   reactions: ReactionMap;
@@ -24,6 +26,7 @@ const COLORS = ["#f15c6d", "#ffd279", "#c9a46a", "#25d366", "#53bdeb"];
 export function Finale({
   room,
   drawn,
+  leadingMs,
   voterCount,
   messages,
   reactions,
@@ -91,6 +94,11 @@ export function Finale({
       label: drawn ? "השעה שנבחרה (בהגרלה)" : "השעה שנבחרה",
       value: formatSlot(Date.parse(room.locked_slot), tz),
     },
+    !room.locked_slot &&
+      leadingMs !== null && {
+        label: "הובילה בהצבעה",
+        value: formatSlot(leadingMs, tz),
+      },
     room.exited_at && {
       label: g(he, "יצא בפועל", "יצאה בפועל"),
       value: formatHour(Date.parse(room.exited_at), tz),

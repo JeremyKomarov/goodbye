@@ -15,8 +15,11 @@ type Props = {
   leader: Lead | null;
   voterCount: number;
   onReplayFinale: () => void;
-  /** Shown under the countdown once the hour is locked (calendar, sharing). */
+  /** Shown under the countdown once the hour is locked (calendar, sharing), and to the host after the exit. */
   actions?: ReactNode;
+  /** The host only: the red "exit group" row becomes their button for marking the exit. */
+  onExit?: () => void;
+  exiting?: boolean;
   /** Phones: the hero shares the screen with the vote grid, so it stays small. */
   compact?: boolean;
 };
@@ -70,6 +73,8 @@ export function Hero({
   voterCount,
   onReplayFinale,
   actions,
+  onExit,
+  exiting = false,
   compact = false,
 }: Props) {
   const size = compact ? SIZES.compact : SIZES.roomy;
@@ -95,6 +100,7 @@ export function Hero({
         >
           לצפייה בסיום שוב
         </button>
+        {actions}
       </section>
     );
   }
@@ -114,7 +120,7 @@ export function Hero({
       <section className={`px-4 text-center ${size.section}`}>
         <p className={`text-ink/85 ${size.label}`}>
           {overtime
-            ? "הזמן עבר לפני"
+            ? "הגיע הזמן! עברו כבר"
             : `${name} ${g(he, "יוצא", "יוצאת")} מהקבוצה בעוד`}
         </p>
         <div className="mt-2 short:mt-1">
@@ -127,15 +133,37 @@ export function Hero({
         </div>
         <p className={`text-ink/75 ${size.note}`}>
           {overtime
-            ? `${name}, הכפתור מחכה לך 👀`
+            ? onExit
+              ? "יוצאים מהקבוצה בוואטסאפ, ואז לוחצים כאן 👇"
+              : `עכשיו רק מחכים ש${name} ${g(he, "יצא", "תצא")} 👀`
             : wonByDraw(leader, room.locked_slot)
               ? `${formatSlot(target, tz)}. היה תיקו בין ${leader!.tied.length} שעות, וההגרלה בחרה בזו 🎲`
               : `${formatSlot(target, tz)}. ככה החליטה הקבוצה${leader ? `, עם ${votesLabel(leader.count)}` : ""}.`}
         </p>
 
-        {/* WhatsApp's red "Exit group" row from the group info screen, filling up as the hour nears. */}
-        <div
-          className={`relative mx-auto max-w-sm overflow-hidden rounded-2xl bg-raised/60 text-start ${size.exitRow}`}
+        {/* WhatsApp's red "Exit group" row from the group info screen, filling up as the hour nears.
+            For the host it's the real thing: tapping it marks the exit. */}
+        <motion.div
+          role={onExit ? "button" : undefined}
+          tabIndex={onExit ? 0 : undefined}
+          aria-disabled={onExit ? exiting : undefined}
+          aria-label={onExit ? "יציאה מהקבוצה: לסמן שיצאת" : undefined}
+          onClick={onExit && !exiting ? onExit : undefined}
+          onKeyDown={
+            onExit
+              ? (e) => {
+                  if (exiting || (e.key !== "Enter" && e.key !== " ")) return;
+                  e.preventDefault();
+                  onExit();
+                }
+              : undefined
+          }
+          whileTap={onExit && !exiting ? { scale: 0.97 } : undefined}
+          className={`relative mx-auto max-w-sm overflow-hidden rounded-2xl bg-raised/60 text-start ${size.exitRow} ${
+            onExit
+              ? `cursor-pointer outline-none transition-colors hover:bg-raised focus-visible:ring-2 focus-visible:ring-pill/70 ${overtime ? "ring-2 ring-exit" : ""} ${exiting ? "opacity-60" : ""}`
+              : ""
+          }`}
         >
           <motion.div
             className="absolute inset-y-0 start-0 bg-exit/20"
@@ -158,10 +186,14 @@ export function Hero({
             </svg>
             <span className="font-medium">יציאה מהקבוצה</span>
             <span className="ms-auto text-sm tabular-nums text-exit/80">
-              {Math.floor(progress * 100)}%
+              {exiting
+                ? "רגע…"
+                : onExit && overtime
+                  ? "לחיצה כאן"
+                  : `${Math.floor(progress * 100)}%`}
             </span>
           </div>
-        </div>
+        </motion.div>
         {actions}
       </section>
     );

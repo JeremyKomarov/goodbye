@@ -28,8 +28,9 @@ import {
   loadAdminToken,
   saveAdminToken,
 } from "@/lib/admin-storage";
-import { formatHour, formatSlot } from "@/lib/hebrew";
+import { formatDurationRough, formatHour, formatSlot } from "@/lib/hebrew";
 import type { ReactionMap, WallReaction } from "@/lib/reactions";
+import { ON_TIME_MINUTES } from "@/lib/room-view";
 import {
   adminLinkMessage,
   type ExitStats,
@@ -85,6 +86,19 @@ async function loadExitStats(room: Room) {
     }),
     drawn: wonByDraw(leadingSlot(tallyVotes(votes)), room.locked_slot),
   };
+}
+
+/** Before marking the exit: early and mid-vote exits are allowed, but the host hears how they'll look. */
+function exitQuestion(room: Room) {
+  if (
+    room.status === "voting" &&
+    Date.now() < Date.parse(room.voting_closes_at)
+  )
+    return "ההצבעה עוד פתוחה. לצאת כבר עכשיו? כולם יראו שברחת באמצע ההצבעה 😅";
+  const left = room.locked_slot ? Date.parse(room.locked_slot) - Date.now() : 0;
+  if (left > ON_TIME_MINUTES * 60_000)
+    return `עוד ${formatDurationRough(left)} לשעה שהקבוצה בחרה. לסמן שיצאת כבר עכשיו? כולם יראו שברחת מוקדם 😅`;
+  return "לסמן שיצאת מהקבוצה? כולם יראו את זה מיד.";
 }
 
 function toLocalInput(ms: number) {
@@ -164,7 +178,6 @@ function Panel({
   const adminUrl = `${origin}/r/${slug}/admin#k=${token}`;
 
   useEffect(() => {
-    if (room.status === "exited") return;
     let cancelled = false;
     loadExitStats(room).then((result) => !cancelled && setShare(result));
     return () => {
@@ -314,18 +327,15 @@ function Panel({
                   <div className="rounded-3xl bg-panel p-5">
                     <p className="mb-4 text-ink/80">
                       {room.status === "locked"
-                        ? "כשהשעה מגיעה: שולחים הודעת פרידה (למטה), יוצאים מהקבוצה בוואטסאפ, ואז לוחצים כאן. כל מי שבחדר יראה את זה בזמן אמת."
-                        : "אפשר ללחוץ כבר עכשיו. השעה המובילה תינעל ומיד תסומן יציאה."}
+                        ? "כשהשעה מגיעה: שולחים הודעת פרידה (למטה), יוצאים מהקבוצה בוואטסאפ, ואז לוחצים כאן (או על השורה האדומה בחדר). כל מי שבחדר יראה את זה בזמן אמת."
+                        : "אפשר לצאת כבר עכשיו, באמצע ההצבעה. ההצבעה תיסגר בלי שעה, וכולם יראו שלא חיכית לתוצאה."}
                     </p>
                     <motion.button
                       type="button"
                       whileTap={{ scale: 0.96 }}
                       disabled={pending}
                       onClick={() =>
-                        run(
-                          () => markExited(slug, token),
-                          "לסמן שיצאת מהקבוצה? כולם יראו את זה מיד.",
-                        )
+                        run(() => markExited(slug, token), exitQuestion(room))
                       }
                       className="w-full rounded-2xl bg-exit px-6 py-5 text-xl font-bold text-night shadow-[0_10px_40px_-10px] shadow-exit/60 disabled:opacity-50"
                     >
@@ -334,9 +344,13 @@ function Panel({
                   </div>
                 )}
 
-                {room.status !== "exited" && share && (
+                {share && (
                   <div className="rounded-3xl bg-panel p-5">
-                    <h2 className="mb-3 font-semibold">שליחה לקבוצה</h2>
+                    <h2 className="mb-3 font-semibold">
+                      {room.status === "exited"
+                        ? "הודעת הפרידה"
+                        : "שליחה לקבוצה"}
+                    </h2>
                     <ShareMessages
                       room={room}
                       url={`${origin}/r/${slug}`}
@@ -369,7 +383,9 @@ function Panel({
                     onClick={() =>
                       run(
                         () => undoExit(slug, token),
-                        "לבטל את היציאה ולחזור לספירה לאחור?",
+                        room.locked_slot
+                          ? "לבטל את היציאה ולחזור לספירה לאחור?"
+                          : "לבטל את היציאה? ההצבעה תיפתח שוב.",
                       )
                     }
                     className="rounded-2xl bg-raised px-6 py-4 font-semibold disabled:opacity-50"

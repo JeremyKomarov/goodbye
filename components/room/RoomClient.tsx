@@ -29,11 +29,18 @@ import { StatusStories } from "@/components/room/StatusStories";
 import { VoteHeatmap } from "@/components/room/VoteHeatmap";
 import { Welcome } from "@/components/room/Welcome";
 import { loadAdminToken } from "@/lib/admin-storage";
+import { loadFinaleSeen, saveFinaleSeen } from "@/lib/finale-storage";
 import { GAME_META, rankRows } from "@/lib/games";
-import { formatHour, formatSlot, iso, onlineLabel } from "@/lib/hebrew";
+import {
+  formatDurationRough,
+  formatHour,
+  formatSlot,
+  iso,
+  onlineLabel,
+} from "@/lib/hebrew";
 import { useNow } from "@/lib/hooks/useNow";
 import { useRoom } from "@/lib/hooks/useRoom";
-import { leftLine } from "@/lib/room-view";
+import { leftLine, ON_TIME_MINUTES } from "@/lib/room-view";
 import { exitStats } from "@/lib/share";
 import { leadingSlot, slotMs, tallyVotes, wonByDraw } from "@/lib/slots";
 import type { GameId, Room } from "@/lib/types";
@@ -118,7 +125,10 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
 
   const [tab, setTab] = useState<Tab>("vote");
   const [game, setGame] = useState<GameId | null>(null);
-  const [finaleDismissed, setFinaleDismissed] = useState(false);
+  // The exit (its time) whose finale was closed here, and whether it's being replayed.
+  const [finaleClosedFor, setFinaleClosedFor] = useState<string | null>(null);
+  const [replayFinale, setReplayFinale] = useState(false);
+  const [exiting, setExiting] = useState(false);
   const [meOpen, setMeOpen] = useState(false);
   const [lastSeenMessageId, setLastSeenMessageId] = useState<number | null>(
     null,
@@ -154,6 +164,28 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
     now > 0 &&
     now >= Date.parse(room.voting_closes_at);
   const { finalize } = api;
+  // The voted hour arrives: a moment on every screen that's open (each has the clock).
+  const lockedAt =
+    room.status === "locked" && room.locked_slot
+      ? Date.parse(room.locked_slot)
+      : null;
+  const timeUp = lockedAt !== null && now > 0 && now >= lockedAt;
+  const ticking = now > 0;
+  const wasTimeUp = useRef<boolean | null>(null);
+  const { rain } = api;
+  useEffect(() => {
+    if (!ticking) return;
+    const before = wasTimeUp.current;
+    wasTimeUp.current = timeUp;
+    if (before === false && timeUp) {
+      rain("🚪");
+      navigator.vibrate?.([60, 80, 60]);
+    }
+  }, [ticking, timeUp, rain]);
+
+  // After the exit the games close (the database turns new scores away too); the wall stays open.
+  const gamesClosed = room.status === "exited";
+
   useEffect(() => {
     if (!votingOver) return;
     let cancelled = false;
@@ -225,9 +257,11 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
       meta: voteList.length ? `${voteList.length} הצביעו` : undefined,
     },
     games: {
-      subtitle: recordHolders.length
-        ? `👑 בשיאים: ${recordHolders.join(", ")}`
-        : "כפתור בורח, טריוויה, 99+ הודעות ומה בתמונה?",
+      subtitle: gamesClosed
+        ? `🏁 המשחקים נסגרו${recordHolders.length ? ` · 👑 ${recordHolders.join(", ")}` : ""}`
+        : recordHolders.length
+          ? `👑 בשיאים: ${recordHolders.join(", ")}`
+          : "כפתור בורח, טריוויה, 99+ הודעות ומה בתמונה?",
     },
     wall: typingText
       ? { subtitle: typingText, highlight: true }
@@ -250,15 +284,49 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
           ? `ההצבעה נסגרת ${formatSlot(Date.parse(room.voting_closes_at), tz)}`
           : voteStatus,
     },
-    games: { text: "השיאים נכנסים לטבלה של החדר" },
+    games: {
+      text: gamesClosed
+        ? "המשחקים נסגרו, והשיאים סופיים"
+        : "השיאים נכנסים לטבלה של החדר",
+    },
     wall: typingText
       ? { text: typingText, highlight: true }
       : { text: onlineLabel(api.online.length) },
-    board: { text: "השיאים של כולם בחדר" },
+    board: {
+      text: gamesClosed ? "השיאים הסופיים של החדר" : "השיאים של כולם בחדר",
+    },
   };
 
+  // The finale plays by itself once per exit on each browser; after that, the hero replays it.
+  const exitedAt = room.status === "exited" ? room.exited_at : null;
+  const finaleSeen =
+    !!exitedAt &&
+    (finaleClosedFor === exitedAt ||
+      (mounted && loadFinaleSeen(room.slug) === exitedAt));
   const showFinale =
-    room.status === "exited" && !finaleDismissed && api.authState === "ready";
+    !!exitedAt &&
+    api.authState === "ready" &&
+    (replayFinale || !finaleSeen);
+  function closeFinale() {
+    setReplayFinale(false);
+    setFinaleClosedFor(exitedAt);
+    if (exitedAt) saveFinaleSeen(room.slug, exitedAt);
+  }
+
+  /** The host's own "I left": early is allowed, but they're told how it'll look. */
+  async function exitGroup() {
+    const left = lockedAt === null ? 0 : lockedAt - Date.now();
+    const ask =
+      left > ON_TIME_MINUTES * 60_000
+        ? `עוד ${formatDurationRough(left)} לשעה שהקבוצה בחרה. לסמן שיצאת כבר עכשיו? כולם בחדר יראו שברחת מוקדם 😅`
+        : "שלחת הודעת פרידה ויצאת מהקבוצה בוואטסאפ? אחרי הלחיצה כולם בחדר יראו שיצאת.";
+    if (!window.confirm(ask)) return;
+    setExiting(true);
+    const err = await api.markExit();
+    setExiting(false);
+    if (err) window.alert(err);
+  }
+
   const myUserId = me?.userId ?? null;
   const party = () => api.sendEmoji("🎉");
   const heroProps = {
@@ -266,15 +334,19 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
     now,
     leader,
     voterCount: voteList.length,
-    onReplayFinale: () => setFinaleDismissed(false),
+    onReplayFinale: () => setReplayFinale(true),
+    onExit: isHost && room.status === "locked" ? exitGroup : undefined,
+    exiting,
     actions:
-      room.status === "locked" && roomUrl ? (
+      roomUrl &&
+      (room.status === "locked" || (room.status === "exited" && isHost)) ? (
         <ExitActions
           room={room}
           url={roomUrl}
           isHost={isHost}
           stats={stats}
           drawn={drawn}
+          calendar={room.status === "locked" && !timeUp}
         />
       ) : null,
   };
@@ -361,6 +433,12 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
                   leaderboard={api.leaderboard}
                   myUserId={myUserId}
                   onScore={api.submitScore}
+                  closed={
+                    gamesClosed
+                      ? `${leftLine(room)}, אז השיאים נשארים כמו שהם. מי שבראש, נשאר שם 👑`
+                      : null
+                  }
+                  onBoard={() => changeTab("board")}
                 />
               )}
               {tab === "wall" && (
@@ -384,10 +462,14 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
                     tally={tally}
                     leaderboard={api.leaderboard}
                     myUserId={myUserId}
-                    onPlay={(g) => {
-                      changeTab("games");
-                      setGame(g);
-                    }}
+                    onPlay={
+                      gamesClosed
+                        ? undefined
+                        : (id) => {
+                            changeTab("games");
+                            setGame(id);
+                          }
+                    }
                   />
                 </Scroll>
               )}
@@ -417,11 +499,12 @@ export function RoomClient({ initialRoom }: { initialRoom: Room }) {
           <Finale
             room={room}
             drawn={drawn}
+            leadingMs={leader && leader.tied.length === 1 ? leader.ms : null}
             voterCount={voteList.length}
             messages={messages}
             reactions={api.reactions}
             leaderboard={api.leaderboard}
-            onClose={() => setFinaleDismissed(true)}
+            onClose={closeFinale}
           />
         )}
       </AnimatePresence>

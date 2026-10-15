@@ -159,7 +159,9 @@ export function FarewellWall({
         >
           <div className="mx-auto flex min-h-full max-w-3xl flex-col justify-end gap-1.5 px-3 pb-3 pt-3 lg:px-8">
             <SystemPill className="mb-3">
-              {`מה תרצו להגיד ל${iso(room.host_name)} לפני ש${g(room.host_gender, "הוא יוצא", "היא יוצאת")}? כל מי שבחדר רואה את ההודעות.`}
+              {room.status === "exited"
+                ? `${iso(room.host_name)} ${g(room.host_gender, "כבר יצא", "כבר יצאה")} מהקבוצה, אבל הקיר נשאר פתוח. מה עוד תרצו להגיד?`
+                : `מה תרצו להגיד ל${iso(room.host_name)} לפני ש${g(room.host_gender, "הוא יוצא", "היא יוצאת")}? כל מי שבחדר רואה את ההודעות.`}
             </SystemPill>
 
             {messages.length === 0 && (

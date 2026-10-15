@@ -10,7 +10,8 @@ type Props = {
   tally: Map<number, Vote[]>;
   leaderboard: LeaderboardRow[];
   myUserId: string | null;
-  onPlay: (game: GameId) => void;
+  /** Left out once the games are closed. */
+  onPlay?: (game: GameId) => void;
 };
 
 export function Leaderboard({
@@ -62,7 +63,9 @@ export function Leaderboard({
             <h2 className="mb-2 text-lg font-semibold">
               {GAME_META[game].title}
             </h2>
-            {rows.length === 0 ? (
+            {rows.length === 0 && !onPlay ? (
+              <p className="text-mute">אף אחד לא שיחק.</p>
+            ) : rows.length === 0 && onPlay ? (
               <button
                 type="button"
                 onClick={() => onPlay(game)}

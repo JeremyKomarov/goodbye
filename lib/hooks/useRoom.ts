@@ -3,7 +3,7 @@
 import type { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ensureLoginCode } from "@/app/actions";
-import { claimHost } from "@/app/r/[slug]/admin/actions";
+import { claimHost, markExited } from "@/app/r/[slug]/admin/actions";
 import { loadAdminToken } from "@/lib/admin-storage";
 import { captchaToken } from "@/lib/captcha";
 import {
@@ -689,14 +689,19 @@ export function useRoom(initialRoom: Room) {
     channelRef.current?.send({ type: "broadcast", event: "typing", payload });
   }, []);
 
-  const sendEmoji = useCallback((emoji: string) => {
+  /** Emoji rain on this screen only (every screen has the same clock, so no broadcast). */
+  const rain = useCallback((emoji: string) => {
     rainListeners.current.forEach((listener) => listener(emoji));
+  }, []);
+
+  const sendEmoji = useCallback((emoji: string) => {
+    rain(emoji);
     channelRef.current?.send({
       type: "broadcast",
       event: "emoji",
       payload: { emoji },
     });
-  }, []);
+  }, [rain]);
 
   const onRain = useCallback((listener: (emoji: string) => void) => {
     rainListeners.current.add(listener);
@@ -713,6 +718,16 @@ export function useRoom(initialRoom: Room) {
     if (data) setRoom(data as Room);
     return data as Room | null;
   }, [supabase, initialRoom.slug]);
+
+  /** The host: "I left the group", from inside the room (the admin page has it too). */
+  const markExit = useCallback(async () => {
+    const token = loadAdminToken(initialRoom.slug);
+    if (!token) return "רק מי שפתח את החדר יכול לסמן יציאה";
+    const result = await markExited(initialRoom.slug, token).catch(() => null);
+    if (!result?.ok) return result?.error ?? "הפעולה לא הצליחה. נסו שוב";
+    setRoom(result.room);
+    return null;
+  }, [initialRoom.slug]);
 
   return {
     room,
@@ -739,9 +754,11 @@ export function useRoom(initialRoom: Room) {
     signInAs,
     submitScore,
     setTyping,
+    rain,
     sendEmoji,
     onRain,
     finalize,
+    markExit,
   };
 }
 

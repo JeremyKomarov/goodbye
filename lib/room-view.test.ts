@@ -22,4 +22,10 @@ describe("verdict", () => {
       verdictText(makeRoom({ host_gender: "f", locked_slot: locked, exited_at: exitedAt(-180) })),
     ).toBe("ברחה 3 שעות מוקדם");
   });
+
+  it("says so when the host left before the vote was over", () => {
+    const room = makeRoom({ status: "exited", exited_at: "2026-11-09T15:00:00Z" });
+    expect(verdict(room)).toEqual({ kind: "mid_vote" });
+    expect(verdictText(room)).toBe("ברח באמצע ההצבעה");
+  });
 });
