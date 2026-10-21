@@ -1,0 +1,142 @@
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  max-width: 100%;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // The label keeps its width while loading, so the button does not jump.
+  &--loading &__label {
+    visibility: hidden;
+  }
+
+  &__spinner {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 1.1em;
+    height: 1.1em;
+    border: 2px solid currentColor;
+    border-inline-end-color: transparent;
+    border-radius: var(--radius-pill);
+    animation: button-spin 700ms linear infinite;
+  }
+
+  &__loading-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  &--loading:disabled {
+    cursor: progress;
+    opacity: 1;
+  }
+
+  &--full-width {
+    width: 100%;
+  }
+
+  &--sm {
+    min-height: var(--control-height-sm);
+    padding-inline: var(--space-3);
+    font-size: var(--text-sm);
+  }
+
+  &--md {
+    min-height: var(--control-height-md);
+    padding-inline: var(--space-5);
+    font-size: var(--text-md);
+  }
+
+  &--lg {
+    min-height: var(--control-height-lg);
+    padding-inline: var(--space-6);
+    font-size: var(--text-lg);
+  }
+
+  &--icon-only {
+    aspect-ratio: 1;
+    padding-inline: 0;
+  }
+
+  &--primary {
+    background: var(--surface-brand);
+    color: var(--text-on-brand);
+
+    &:hover:not(:disabled) {
+      background: var(--brand-400);
+    }
+  }
+
+  &--secondary {
+    border-color: var(--border-subtle);
+    background: var(--surface-soft);
+    color: var(--text-primary);
+
+    &:hover:not(:disabled) {
+      border-color: var(--border-strong);
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: var(--text-secondary);
+
+    &:hover:not(:disabled) {
+      background: var(--surface-soft);
+      color: var(--text-primary);
+    }
+  }
+
+  &--danger {
+    border-color: var(--critical-border);
+    background: var(--critical-surface);
+    color: var(--accent-exit);
+
+    &:hover:not(:disabled) {
+      border-color: var(--critical-strong);
+    }
+  }
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (pointer: coarse) {
+  .button--sm,
+  .button--md {
+    min-height: var(--space-11);
+  }
+}
