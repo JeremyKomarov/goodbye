@@ -1,0 +1,242 @@
+// core/styles/tokens.scss — every design token. Started from .agents/templates/tokens.scss and
+// re-hued to WhatsApp's dark mode, which this app parodies on purpose (docs/DECISIONS.md #4):
+// the brand ramp is WhatsApp green, and the neutral ramp and surfaces are inverted to dark.
+//
+// Imported ONCE, in the root layout. Nowhere else may contain a hex colour — `npm run guard`
+// fails the build on one (02-COMPONENTS.md §7).
+//
+// The framework prescribes the GROUPS (02-COMPONENTS.md §7); these are real starting values, not
+// a shape to fill in from nothing. Re-hue the brand ramp — rotate its hue, keep its lightness
+// steps — and the rest of the app stays in contrast, because every semantic colour and every
+// surface is built from the ramps, never a one-off hex.
+//
+// Imported ONCE, in the root layout. Nowhere else may contain a hex colour — `npm run guard`
+// fails the build on one (02-COMPONENTS.md §7).
+:root {
+  // ---------------------------------------------------------------- brand ramp
+  // WhatsApp green, hue ~ 142°. 500 is WhatsApp's own signal green.
+  --brand-50: #e7fcef;
+  --brand-100: #c4f7d7;
+  --brand-200: #8eefb2;
+  --brand-300: #5ee48e;
+  --brand-400: #3bdb76;
+  --brand-500: #25d366;
+  --brand-600: #1daa52;
+  --brand-700: #00a884;
+  --brand-800: #005c4b;
+  --brand-900: #024034;
+  --brand-950: #022a22;
+
+  // ------------------------------------------------------------- neutral ramp
+  // WhatsApp's dark greys. 950 is the chat background, 900 the panels, 800 a raised bubble,
+  // 700 the hairlines, 500 the muted text, 100 the body text.
+  --neutral-50: #f7f8fa;
+  --neutral-100: #e9edef;
+  --neutral-200: #d1d7db;
+  --neutral-300: #aebac1;
+  --neutral-400: #a0aeb6;
+  --neutral-500: #8696a0;
+  --neutral-600: #667781;
+  --neutral-700: #2a3942;
+  --neutral-800: #202c33;
+  --neutral-900: #111b21;
+  --neutral-950: #0b141a;
+
+  // ------------------------------------------------------------------ surfaces
+  // Dark: the page is the chat background, a card is a panel, soft is a raised bubble.
+  --surface-page: var(--neutral-950);
+  --surface-card: var(--neutral-900);
+  --surface-soft: var(--neutral-800);
+  --surface-brand: var(--brand-500);
+
+  // ---------------------------------------------------------------------- text
+  --text-primary: var(--neutral-100);
+  --text-secondary: var(--neutral-300);
+  --text-muted: var(--neutral-500);
+  --text-on-brand: var(--neutral-950);
+
+  // ------------------------------------------------------------------- borders
+  --border-subtle: var(--neutral-700);
+  --border-strong: var(--neutral-600);
+  --focus-ring: var(--accent-pill);
+
+  // ------------------------------------------------------------ semantic status
+  // A quad each, all sharing one shape: -text (on --surface-page, AA at body size), -strong (icon
+  // or border needing more emphasis), -surface (the tinted background), -border (the subtle edge
+  // when the surface alone isn't enough). Never used decoratively — a status colour appearing
+  // where it does not mean something is what makes the real ones stop registering.
+  --positive-text: var(--brand-400);
+  --positive-strong: var(--brand-500);
+  --positive-surface: #0d2b22;
+  --positive-border: var(--brand-800);
+
+  --warning-text: #ffd279;
+  --warning-strong: #f0b43c;
+  --warning-surface: #2e2716;
+  --warning-border: #5c4a1e;
+
+  --critical-text: #f15c6d;
+  --critical-strong: #e8364b;
+  --critical-surface: #2e161a;
+  --critical-border: #6b2530;
+
+  --info-text: #53bdeb;
+  --info-strong: #2fa4d8;
+  --info-surface: #10242e;
+  --info-border: #1f4a5e;
+
+  // ------------------------------------------------------------- app accents
+  // The pieces of WhatsApp the parody needs that no semantic quad covers. Decorative by design.
+  --bubble-in: var(--neutral-800); // someone else's message
+  --bubble-out: var(--brand-800); // your message
+  --tick-read: var(--info-text); // the blue ticks
+  --accent-exit: var(--critical-text); // "exit group" red
+  --accent-pill: #ffd279; // the system pill and the focus ring
+  --accent-kraft: #c9a46a; // the finale's paper
+  --hatch-line: rgb(255 255 255 / 0.04); // disabled vote cells
+
+  // ------------------------------------------------------------------ typography
+  // Rubik carries Hebrew and Latin; Karantina is the display face. Both are loaded with
+  // next/font in the root layout, which sets the two variables.
+  --font-sans: var(--font-rubik), system-ui, sans-serif;
+  --font-display: var(--font-karantina), var(--font-rubik), sans-serif;
+
+  --text-xs: 0.75rem; // 12px — metadata, timestamps, badge text
+  --text-sm: 0.875rem; // 14px — secondary body text, form helper text
+  --text-md: 1rem; // 16px — the default body size; never smaller on a control (02 §8)
+  --text-lg: 1.125rem; // 18px — emphasised body, card titles
+  --text-xl: 1.375rem; // 22px — section headings
+  --text-2xl: 1.75rem; // 28px — page titles
+  --text-3xl: 2.25rem; // 36px — hero-scale numbers, empty-state headlines
+
+  // -------------------------------------------------------------------- spacing
+  // Linear, 4px per step — one multiplication table, not a curve to memorise.
+  --space-1: 0.25rem; // 4px
+  --space-2: 0.5rem; // 8px
+  --space-3: 0.75rem; // 12px
+  --space-4: 1rem; // 16px
+  --space-5: 1.25rem; // 20px
+  --space-6: 1.5rem; // 24px
+  --space-7: 1.75rem; // 28px
+  --space-8: 2rem; // 32px
+  --space-9: 2.25rem; // 36px
+  --space-10: 2.5rem; // 40px
+  --space-11: 2.75rem; // 44px — the touch-target minimum (02 §7)
+  --space-12: 3rem; // 48px
+  --space-13: 3.25rem; // 52px
+  --space-14: 3.5rem; // 56px
+  --space-15: 3.75rem; // 60px
+  --space-16: 4rem; // 64px
+
+  // ------------------------------------------------------------- radius & shadow
+  --radius-xs: 0.25rem; // 4px — checkboxes, small chips
+  --radius-sm: 0.375rem; // 6px — inputs, buttons
+  --radius-md: 0.5rem; // 8px — cards, popovers
+  --radius-lg: 0.75rem; // 12px — modals, large panels
+  --radius-xl: 1rem; // 16px — hero cards, full-bleed panels
+  --radius-pill: 999px; // badges, pill buttons, avatars
+
+  // Black at higher opacity — on a dark page a soft shadow is invisible.
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+
+  // ------------------------------------------------------------------------ layout
+  --sidebar-width: 17rem; // 272px — wide enough for a label plus a count badge, not a guess
+  --topbar-height: 4rem; // 64px
+  --control-height-sm: 2rem; // 32px
+  --control-height-md: 2.5rem; // 40px — the default; meets the 44px coarse-pointer target with padding
+  --control-height-lg: 3rem; // 48px
+  --content-max-width: 40rem; // 640px — a chat column; the room never needs more
+
+  // -------------------------------------------------------------------- z-layers
+  // Named and ordered in one place so two components never have to guess who is on top.
+  --layer-dropdown: 20;
+  --layer-sticky: 30;
+  --layer-overlay: 40;
+  --layer-modal: 50;
+  --layer-toast: 60;
+
+  // ---------------------------------------------------------------------- motion
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-slow: 320ms;
+}
+
+// -------------------------------------------------------------------------- reset
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  height: 100%;
+  color-scheme: dark;
+  -webkit-tap-highlight-color: transparent;
+}
+
+// -------------------------------------------------------------------------- base
+body {
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--surface-page);
+  background-image: url("/doodle.svg");
+  background-size: 300px 300px;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+// Every interactive element gets the same focus treatment by default; a component overrides it
+// with a shape-appropriate variant (e.g. an inset ring on a filled button) rather than removing
+// it (02-COMPONENTS.md §7).
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+// -------------------------------------------------------------- reduced motion
+// Motion drops to near-zero rather than vanishing outright — a 1ms transition still fires its
+// `transitionend` handler; `none` can silently strand a component that relies on one to update
+// state (02-COMPONENTS.md §7).
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}

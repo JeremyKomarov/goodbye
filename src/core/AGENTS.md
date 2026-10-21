@@ -6,6 +6,7 @@ while it runs. The rule: `node .agents/cli.mjs rule 01 3`.
 
 | Path | What | Rule |
 |---|---|---|
+| `styles/tokens.scss` | Every design token — WhatsApp dark, plus the app accents (`--bubble-out`, `--tick-read`, `--accent-pill` …). | The only file that may contain a hex colour. Imported once, in the root layout. |
 
 <!-- Filled by phase 01: features.const.ts, env.ts, routes/query-keys/storage-keys, api-error,
      i18n/messages.ts, styles/tokens.scss. Shape: .agents/templates/index.md. -->
