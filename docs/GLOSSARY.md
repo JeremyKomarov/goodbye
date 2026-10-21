@@ -20,3 +20,22 @@ returning 200, a mock nobody can see, a screen in nav that renders nothing real.
 codebase's conventions mostly exist to prevent.
 
 *(Add project terms below.)*
+
+**Room** — one farewell: a slug, a host, the reason they are leaving, a voting window and the
+hours on offer. Everything else belongs to a room.
+
+**Host** — whoever opened the room. Proven by the **admin token**, not by being signed in: the
+token is shown once at creation, kept in the host's browser and the admin link's `#k=`, and only
+its hash is stored. The host cannot vote.
+
+**Slot** — one hour on offer for the exit. Votes are per slot; the most-voted slot **locks** when
+voting closes (ties drawn at random, once, by `finalize_room`).
+
+**Exit** — the host pressing "I left the group". It is what triggers the **finale** for everyone in
+the room, and it can be undone.
+
+**Login code** — the six characters a player uses to be the same player on a second device. Not a
+password anyone chose; issued by the server, readable only by the server and the host.
+
+**Wall** — the farewell wall: the room's messages. **Rain** is the emoji rain a reaction sends
+over Realtime; it is never stored.

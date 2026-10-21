@@ -95,9 +95,10 @@ a playbook already does it.
 
 ## What is next, in order
 
-1. Phase 01 — tokens, env, the error taxonomy, the shared utils, the feature registry.
-2. Choose this project's UI kit with the `plan-kit` playbook, then build it before the first feature screen (`02 §6`).
-3. The first feature screen.
+1. Phase 02 — the UI kit chosen in `src/shared/AGENTS.md`, with a dev-only catalog.
+2. Phase 03 — data and identity: the migrations on a local Supabase, `server/db/` repos,
+   `server/auth/`, the browser session in `core/supabase/` (docs/DECISIONS.md #2).
+3. Phase 04 — the landing screen and room creation; the first flag turned on.
 
 *(Keep this to three. A list of fourteen is a wish list, not an order.)*
 
@@ -105,10 +106,15 @@ a playbook already does it.
 
 | | State |
 |---|---|
-| App shell | Does not exist. |
-| Design tokens | Does not exist — phase 01.2. |
-| Shared UI kit | Not chosen yet — `plan-kit`, step 01.9. |
-| Database | Planned, confined to `server/db/` (`01 §8`). |
+| App shell | None by design — a single chat column. Every route renders through `featurePage()`. |
+| Design tokens | WhatsApp dark, `core/styles/tokens.scss` (docs/DECISIONS.md #4). |
+| i18n | Hebrew (RTL) default, English by cookie; hidden `[locale]` segment (docs/DECISIONS.md #6). |
+| Features | `landing`, `room`, `games`, `admin` — declared, all off. |
+| Shared UI kit | Chosen; built in phase 02. |
+| Database | Supabase. Migrations in `supabase/migrations/`, carried over verbatim; repos not written yet (phase 03). |
+
+**The reference app** is `github.com/JeremyKomarov/goodbye`. It is the specification for behaviour,
+not structure (docs/DECISIONS.md #1) — port what a screen does, then build it the way this guide says.
 
 ## Decisions already made — do not re-open without a reason
 
@@ -143,7 +149,10 @@ The framework's load-bearing ones:
 
 ## What you must not touch
 
-- <production infrastructure, real credentials, anything with users on it — name yours here>
+- **`supabase/migrations/`, once applied anywhere.** A schema change is a new migration file,
+  never an edit to an old one.
+- **The Supabase secret key.** Read in `core/config/env.server.ts`, used in `server/db/` alone; it
+  bypasses row-level security.
 - **The rulebook's section numbers.** Add a section; do not renumber one.
 - **Any agent-specific file, as a place to put a rule.** They are pointers. A rule lives in
   `.agents/docs/` or in an `AGENTS.md`, once.

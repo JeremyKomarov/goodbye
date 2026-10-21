@@ -4,6 +4,40 @@ Check this file before building any component, hook, or util.
 The rules: `node .agents/cli.mjs rule 02 5` (does one already exist?), `rule 02 6` (does it
 go here?). Fetch the section — do not open the file.
 
+## The kit for this project
+
+Chosen with the `plan-kit` playbook on 2026-10-21, from the screens of the original app
+(docs/DECISIONS.md #1):
+
+- **Landing** — hero chat, the create wizard, the success card: Bubble, Ticks, SystemPill, Field,
+  Button, CopyButton, LanguageSwitch.
+- **Room · vote** — header, heatmap, countdown, the "me" sheet: TabBar, SystemPill, Ticks, Sheet,
+  Button, Icon, Skeleton.
+- **Room · wall** — messages and the composer: Bubble, Ticks, Field, Button, SystemPill.
+- **Games** — hub and each game, under the same tab bar: TabBar, Button, Icon, Ticks.
+- **Admin** — controls, wall moderation, player codes: Button, Field, CopyButton, Bubble, SystemPill.
+- **Finale** — exit actions: Sheet, Button, SystemPill.
+
+| Primitive | Needed by | Variants it starts with |
+|---|---|---|
+| Icon | room, games, admin, landing | the `ICONS` it is first used with |
+| Button | every screen | primary, secondary, ghost, danger · sm, md, lg · loading, full-width |
+| Field | landing, wall, admin, join gate | text input, select · error, helper text |
+| Sheet | room, finale | bottom sheet; full-height under `sm`; focus-trapped |
+| Bubble | landing, wall, admin | in, out · with tail, without |
+| SystemPill | landing, room, wall, admin, finale | default, highlight |
+| Ticks | landing, wall, vote, games | sent, delivered, read |
+| CopyButton | landing, admin | icon + label; copied state |
+| LanguageSwitch | landing, room | he ↔ en; writes `LOCALE_COOKIE` |
+| TabBar | room, games | bottom bar of links with icon, label and a badge |
+| Skeleton | room, games | line, block, circle |
+
+**Considered and left out:** Modal — every dialog in the original is a bottom sheet, so Sheet
+covers it. Toast — the original has none; feedback is inline. AppShell, PageHeader — a single
+chat-column app with no sidebar; the room's header is the room's. Table — the leaderboard is a
+list. Avatar — two uses, both decorative initials inside a feature. EmptyState — built on first
+use if the wall or leaderboard needs one.
+
 ## Components
 
 | Component | What it is | When to use | Replaces |

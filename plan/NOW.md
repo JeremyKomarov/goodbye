@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 01.9
-**Since:** 2026-10-21
-**State:** running plan-kit: choosing the shared primitives from the screens the original app has.
+**Step:** —
+**Since:** —
+**State:** nothing in flight.
 **Blocked by:** —
 
 ---
