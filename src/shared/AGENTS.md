@@ -22,6 +22,9 @@ go here?). Fetch the section — do not open the file.
 
 | Util | What it does | When to use |
 |---|---|---|
+| `utils/cn.ts` | Joins class references, dropping falsy ones. | Every conditional `className`. |
+| `utils/classMap.ts` | `classMap(component, map)` throws in development on a class with no rule; `NO_CLASS` for a modifier that deliberately has none. | Every `*.classes.ts`. |
+| `utils/keysOf.ts` | Derives typed message keys from a strings object. | Every `*.keys.const.ts`. |
 
 ## Promotion rule
 

@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 01.5
+**Step:** 01.6
 **Since:** 2026-10-21
-**State:** writing shared/utils cn, classMap and keysOf, each with its test.
+**State:** writing core/config/features.const.ts, featurePage() and the disabled shell; the four features declared, all off.
 **Blocked by:** —
 
 ---

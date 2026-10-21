@@ -11,8 +11,8 @@ mean something.
 - [x] ~~01.2 — `core/styles/tokens.scss`: copy `.agents/templates/tokens.scss` in, re-hue the brand ramp, replacing `app/globals.scss` (`.agents/docs/02-COMPONENTS.md` §7) (S)~~
 - [x] ~~01.3 — `core/config/env.ts`, the validated chokepoint, including the mock-flag boot check (S)~~
 - [x] ~~01.4 — `core/api/` error taxonomy: codes, statuses, body schema, `toApiError` (M)~~
-- [~] 01.5 — `shared/utils/`: `cn`, `classMap`, `keysOf`, each with its test (S)
-- [ ] 01.6 — `core/config/features.const.ts` + `featurePage()` + the disabled shell, and copy `.agents/kit/registry.test.ts` beside the registry (M)
+- [x] ~~01.5 — `shared/utils/`: `cn`, `classMap`, `keysOf`, each with its test (S)~~
+- [~] 01.6 — `core/config/features.const.ts` + `featurePage()` + the disabled shell, and copy `.agents/kit/registry.test.ts` beside the registry (M)
 - [ ] 01.7 — the i18n three-file setup from `.agents/docs/02-COMPONENTS.md` §9 (S)
 - [ ] 01.8 — one real route through `featurePage()`, replacing the placeholder `app/page.tsx` (S)
 - [ ] 01.9 — choose this project's shared UI kit with the `plan-kit` playbook, and plan it as phase 02 (S)
