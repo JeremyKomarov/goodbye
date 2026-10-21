@@ -3,11 +3,11 @@
 **Goal:** every primitive the screens share exists in `shared/components/`, in both locales and
 both directions, before the first feature screen is built.
 **Depends on:** 01
-**Status:** not started
+**Status:** in progress
 
 ## Steps
-- [ ] 02.1 — `Icon`, wrapping `lucide-react`, with the icons the room tabs and actions need (S)
-- [ ] 02.2 — `Button` — primary, secondary, ghost, danger · sm, md, lg · loading (M)
+- [x] ~~02.1 — `Icon`, wrapping `lucide-react`, with the icons the room tabs and actions need (S)~~
+- [~] 02.2 — `Button` — primary, secondary, ghost, danger · sm, md, lg · loading (M)
 - [ ] 02.3 — `Field` — labelled text input and select, error and helper text (M)
 - [ ] 02.4 — `Sheet` — portal bottom sheet, focus trap, Escape and backdrop close (M)
 - [ ] 02.5 — `Bubble` — in/out chat bubble with the WhatsApp tail, mirrored in RTL (S)

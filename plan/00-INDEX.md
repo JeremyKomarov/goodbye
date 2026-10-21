@@ -7,7 +7,7 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | # | Phase | Status | File |
 |---|---|---|---|
 | 01 | Foundation | done | [01-foundation.md](01-foundation.md) |
-| 02 | UI kit | not started | [02-ui-kit.md](02-ui-kit.md) |
+| 02 | UI kit | in progress | [02-ui-kit.md](02-ui-kit.md) |
 
 **Now:** 02 · **Next:** 03
 
