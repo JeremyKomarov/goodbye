@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 01.3
+**Step:** 01.4
 **Since:** 2026-10-21
-**State:** writing core/config/env.ts and its server sibling for the Supabase keys and the site URL.
+**State:** writing core/api/api-error.ts — codes, statuses, the body schema, toApiError — and handlingApiErrors.
 **Blocked by:** —
 
 ---

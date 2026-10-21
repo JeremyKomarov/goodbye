@@ -6,6 +6,8 @@ while it runs. The rule: `node .agents/cli.mjs rule 01 3`.
 
 | Path | What | Rule |
 |---|---|---|
+| `config/env.ts` | Validated public environment: Supabase URL and publishable key, site URL, Turnstile key, `useMocks`. Throws at boot on a missing value or mocks in production. | The only file that may read a `NEXT_PUBLIC_*` variable — ESLint enforces it. |
+| `config/env.server.ts` | `serverEnv.supabaseSecretKey`. `server-only`. | Read by `server/db/` alone. |
 | `styles/tokens.scss` | Every design token — WhatsApp dark, plus the app accents (`--bubble-out`, `--tick-read`, `--accent-pill` …). | The only file that may contain a hex colour. Imported once, in the root layout. |
 
 <!-- Filled by phase 01: features.const.ts, env.ts, routes/query-keys/storage-keys, api-error,

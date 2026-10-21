@@ -9,8 +9,8 @@ mean something.
 ## Steps
 - [x] ~~01.1 — the folder skeleton from `.agents/docs/01-STRUCTURE.md` §1, each owning directory with its `AGENTS.md` (S)~~
 - [x] ~~01.2 — `core/styles/tokens.scss`: copy `.agents/templates/tokens.scss` in, re-hue the brand ramp, replacing `app/globals.scss` (`.agents/docs/02-COMPONENTS.md` §7) (S)~~
-- [~] 01.3 — `core/config/env.ts`, the validated chokepoint, including the mock-flag boot check (S)
-- [ ] 01.4 — `core/api/` error taxonomy: codes, statuses, body schema, `toApiError` (M)
+- [x] ~~01.3 — `core/config/env.ts`, the validated chokepoint, including the mock-flag boot check (S)~~
+- [~] 01.4 — `core/api/` error taxonomy: codes, statuses, body schema, `toApiError` (M)
 - [ ] 01.5 — `shared/utils/`: `cn`, `classMap`, `keysOf`, each with its test (S)
 - [ ] 01.6 — `core/config/features.const.ts` + `featurePage()` + the disabled shell, and copy `.agents/kit/registry.test.ts` beside the registry (M)
 - [ ] 01.7 — the i18n three-file setup from `.agents/docs/02-COMPONENTS.md` §9 (S)
