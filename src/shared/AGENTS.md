@@ -8,6 +8,7 @@ go here?). Fetch the section — do not open the file.
 
 | Component | What it is | When to use | Replaces |
 |---|---|---|---|
+| `components/ComingSoon` | The disabled shell: a feature's label, blurb and a Coming soon marker. | Rendered by `featurePage()` alone. | A 404 or a half-working screen for an unbuilt feature. |
 
 <!-- Rows are added as components are built. The kit for this project — which primitives are built
      ahead of the first feature screen — is chosen by the plan-kit playbook (step 01.9) and recorded
@@ -24,6 +25,7 @@ go here?). Fetch the section — do not open the file.
 |---|---|---|
 | `utils/cn.ts` | Joins class references, dropping falsy ones. | Every conditional `className`. |
 | `utils/classMap.ts` | `classMap(component, map)` throws in development on a class with no rule; `NO_CLASS` for a modifier that deliberately has none. | Every `*.classes.ts`. |
+| `utils/featurePage.tsx` | `featurePage(FEATURE_KEYS.x, Screen?)` — the page, or the disabled shell while the flag is off. | Every `page.tsx` under `app/`. |
 | `utils/keysOf.ts` | Derives typed message keys from a strings object. | Every `*.keys.const.ts`. |
 
 ## Promotion rule

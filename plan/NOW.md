@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 01.6
+**Step:** 01.7
 **Since:** 2026-10-21
-**State:** writing core/config/features.const.ts, featurePage() and the disabled shell; the four features declared, all off.
+**State:** next-intl: messages.ts per locale, request.ts resolving he/en from a cookie, global.d.ts, and lang/dir in the root layout.
 **Blocked by:** —
 
 ---

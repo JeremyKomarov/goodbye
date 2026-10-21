@@ -59,3 +59,13 @@ The app is a parody of a WhatsApp group, so it borrows WhatsApp's dark palette o
 token template's light surfaces and neutral ramp are replaced, not just the brand ramp
 (`.agents/docs/DECISIONS.md #25` allows it with a reason; this is the reason). There is no light
 theme to keep in contrast with.
+
+## 5. A strings file is Hebrew; its English is a parallel `*.strings.en.ts` typed from it
+
+**Locked 2026-10-21.**
+
+`02 §9` makes a second locale "a parallel set of files". Here the source locale is Hebrew, so
+`<Name>.strings.ts` holds the Hebrew and is what `keysOf` derives keys from; `<Name>.strings.en.ts`
+beside it is typed `StringsOf<typeof <name>Strings>` (`core/i18n/strings.types.ts`), so a missing
+or extra key in the English is a `tsc` error. `core/i18n/messages.ts` assembles one dictionary per
+locale from the pairs.

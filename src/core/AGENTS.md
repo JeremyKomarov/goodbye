@@ -6,6 +6,9 @@ while it runs. The rule: `node .agents/cli.mjs rule 01 3`.
 
 | Path | What | Rule |
 |---|---|---|
+| `config/features.const.ts` | The feature registry: `landing`, `room`, `games`, `admin` — route + `enabled`. | Reference a key as `FEATURE_KEYS.room`, never `"room"`. Flip with `enable-feature`. |
+| `config/features.strings.ts` | Each feature's label and blurb (`.en.ts` beside it). | The `features` namespace. |
+| `constants/routes.const.ts` | `ROUTES`, derived from `FEATURES`; `roomPath(key, slug)` fills a room route. | Never restate a route; never build `/r/${slug}` by hand. |
 | `config/env.ts` | Validated public environment: Supabase URL and publishable key, site URL, Turnstile key, `useMocks`. Throws at boot on a missing value or mocks in production. | The only file that may read a `NEXT_PUBLIC_*` variable — ESLint enforces it. |
 | `config/env.server.ts` | `serverEnv.supabaseSecretKey`. `server-only`. | Read by `server/db/` alone. |
 | `api/api-error.ts` | `API_ERROR_CODES`, `API_ERROR_STATUS`, `ApiErrorBodySchema`, `ApiError`, `toApiError`. | The code picks the status. A new failure is a new code here, never a sentence. |
