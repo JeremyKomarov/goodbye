@@ -14,4 +14,48 @@ including the argument that was wrong · a blockquote for any rule that must sur
 
 ---
 
-*(No entries yet. The first is `## 1.`)*
+## 1. This is a rebuild of `JeremyKomarov/goodbye`, porting behaviour, not structure
+
+**Locked 2026-10-21.**
+
+The original app works and is the specification: every screen, rule and SQL migration it has is
+what this one must do. Its structure — server actions, a browser-side Supabase client used for
+reads and writes, Tailwind compiled into the SCSS modules, copy split between a catalog and
+components — is what this rebuild replaces. The migrations in `supabase/migrations/` are carried
+over verbatim, so the database it runs against is the same database.
+
+## 2. Supabase is split: data through Route Handlers, the browser keeps only auth and Realtime
+
+**Locked 2026-10-21.**
+
+Every read and write goes Route Handler → `server/db/*.repo.ts` → a TanStack hook
+(`.agents/docs/03-DATA.md` §1). The browser still needs Supabase for two things nothing else can
+do: the anonymous session that identifies a visitor, and the Realtime channel that carries table
+changes, presence, typing and the emoji rain. Those live in one confined module,
+`core/supabase/`, and an ESLint zone keeps `@supabase/supabase-js` out of everywhere except it and
+`server/db/` (`.agents/docs/04-FEATURES.md` §4).
+
+The browser sends its session's access token as a bearer token; a handler verifies it before it
+reads the body. Row-level security and the triggers stay in the database as the second line.
+
+The argument that was wrong: polling instead of Realtime, to keep Supabase server-only. Presence
+and typing are the room's whole feel, and polling them is both slower and costlier.
+
+> A Realtime event invalidates query keys. It never writes into a store or the query cache.
+
+## 3. Hebrew is the default locale and the layout follows it; English is complete
+
+**Locked 2026-10-21.**
+
+The audience writes in Hebrew. `<html lang dir>` comes from the active locale, so every module
+uses logical properties (`inline-start`, not `left`). English ships with every string, not just
+the landing copy the original translated.
+
+## 4. Dark only, after WhatsApp's dark mode
+
+**Locked 2026-10-21.**
+
+The app is a parody of a WhatsApp group, so it borrows WhatsApp's dark palette on purpose. The
+token template's light surfaces and neutral ramp are replaced, not just the brand ramp
+(`.agents/docs/DECISIONS.md #25` allows it with a reason; this is the reason). There is no light
+theme to keep in contrast with.

@@ -6,7 +6,7 @@ The table of contents. **Status only — never content.** Every detail lives in 
 
 | # | Phase | Status | File |
 |---|---|---|---|
-| 01 | Foundation | not started | [01-foundation.md](01-foundation.md) |
+| 01 | Foundation | in progress | [01-foundation.md](01-foundation.md) |
 
 **Now:** 01 · **Next:** —
 

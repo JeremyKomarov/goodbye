@@ -4,11 +4,11 @@
 check. `node bin/create.mjs` already left `npm run verify` green — this phase is what makes it
 mean something.
 **Depends on:** nothing
-**Status:** not started
+**Status:** in progress
 
 ## Steps
-- [ ] 01.1 — the folder skeleton from `.agents/docs/01-STRUCTURE.md` §1, each owning directory with its `AGENTS.md` (S)
-- [ ] 01.2 — `core/styles/tokens.scss`: copy `.agents/templates/tokens.scss` in, re-hue the brand ramp, replacing `app/globals.scss` (`.agents/docs/02-COMPONENTS.md` §7) (S)
+- [x] ~~01.1 — the folder skeleton from `.agents/docs/01-STRUCTURE.md` §1, each owning directory with its `AGENTS.md` (S)~~
+- [~] 01.2 — `core/styles/tokens.scss`: copy `.agents/templates/tokens.scss` in, re-hue the brand ramp, replacing `app/globals.scss` (`.agents/docs/02-COMPONENTS.md` §7) (S)
 - [ ] 01.3 — `core/config/env.ts`, the validated chokepoint, including the mock-flag boot check (S)
 - [ ] 01.4 — `core/api/` error taxonomy: codes, statuses, body schema, `toApiError` (M)
 - [ ] 01.5 — `shared/utils/`: `cn`, `classMap`, `keysOf`, each with its test (S)
