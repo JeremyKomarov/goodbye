@@ -45,6 +45,7 @@ use if the wall or leaderboard needs one.
 | `components/ComingSoon` | The disabled shell: a feature's label, blurb and a Coming soon marker. | Rendered by `featurePage()` alone. | A 404 or a half-working screen for an unbuilt feature. |
 | `components/Icon` | `<Icon name={ICON_NAMES.close} size="sm" />` — a lucide glyph from the `ICONS` map; `back`, `send`, `undo` flip under RTL. | Every icon, anywhere. A missing glyph is one line added to `ICONS`. | Never import `lucide-react` or write `<svg>` outside `Icon/`. |
 | `components/Button` | `BUTTON_VARIANTS` primary, secondary, ghost, danger · `BUTTON_SIZES` sm, md, lg · `icon`, `isLoading`, `fullWidth`; icon with no children is icon-only. | Every clickable action that is not navigation. | Never style a raw `<button>` in a feature, and never build an IconButton — pass `icon` with no children. |
+| `components/Field` | Label + `<input>` (default) or `as="select"` with `<option>` children · `helper`, `error` (translated) wired by `aria-describedby`; takes `ref` for react-hook-form. | Every form control with a label. | Never put a bare `<input>`/`<select>` in a feature, and never build a second labelled-input wrapper. |
 
 <!-- Rows are added as components are built. The kit for this project — which primitives are built
      ahead of the first feature screen — is chosen by the plan-kit playbook (step 01.9) and recorded

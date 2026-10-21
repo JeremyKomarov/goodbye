@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 02.3
+**Step:** 02.4
 **Since:** 2026-10-21
-**State:** writing Field — labelled input and select, helper and error text.
+**State:** not started — Sheet next: portal bottom sheet, focus trap, Escape and backdrop close.
 **Blocked by:** —
 
 ---
