@@ -1,21 +1,52 @@
 {
-  "name": "next-app-tmp",
+  "name": "goodbye",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "rule": "node .agents/cli.mjs rule",
+    "guard": "node .agents/cli.mjs check",
+    "sync:agents": "node .agents/cli.mjs sync",
+    "update:framework": "node .agents/cli.mjs update",
+    "hooks": "node .agents/cli.mjs hooks",
+    "postinstall": "node .agents/cli.mjs hooks",
+    "verify": "npm run typecheck && npm run lint && npm run guard && npm run test"
   },
   "dependencies": {
+    "@date-fns/tz": "1.5.0",
+    "@fontsource-variable/rubik": "5.3.0",
+    "@hookform/resolvers": "5.9.2",
+    "@supabase/supabase-js": "2.118.0",
+    "@tanstack/react-query": "5.104.5",
+    "canvas-confetti": "1.9.4",
+    "date-fns": "4.4.0",
+    "lucide-react": "0.545.0",
+    "motion": "14.5.0",
+    "nanoid": "6.0.2",
     "next": "16.4.2",
-    "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "next-intl": "4.14.9",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-hook-form": "7.90.0",
+    "sass": "1.106.0",
+    "server-only": "0.0.1",
+    "zod": "4.6.7",
+    "zustand": "5.0.15"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "typescript": "^5"
+    "@types/canvas-confetti": "1.9.0",
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.2",
+    "typescript": "6.0.3",
+    "vitest": "5.0.5"
   }
 }

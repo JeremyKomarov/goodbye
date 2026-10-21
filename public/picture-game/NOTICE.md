@@ -1,0 +1,7 @@
+# Picture game icons
+
+The SVG icons in this folder are from Noto Emoji by Google
+(https://github.com/googlefonts/noto-emoji, `2D/svg`), used under the
+Apache License, Version 2.0: https://www.apache.org/licenses/LICENSE-2.0
+
+Files are renamed to their Unicode codepoint (e.g. `1f34c.svg` for 🍌) and are unmodified.

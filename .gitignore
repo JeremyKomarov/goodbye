@@ -1,6 +1,29 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Dependencies and build output
+node_modules/
+.next/
+out/
+build/
+next-env.d.ts
 
-# dependencies
+# Environment
+.env*
+!.env.example
+
+# Editor and OS
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Test and cache
+coverage/
+*.tsbuildinfo
+
+# The Claude Code skill mirror (.claude/skills) is NOT ignored. A symlinked mirror is 17 bytes and
+# makes a fresh clone work immediately; a copy-fallback mirror is caught by
+# `npm run guard -- --only=agents` if it ever diverges. That guard is the reason committing it is safe.
+
+# From create-next-app
 /node_modules
 /.pnp
 .pnp.*
@@ -9,33 +32,13 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-
-# testing
 /coverage
-
-# next.js
 /.next/
 /out/
-
-# production
 /build
-
-# misc
-.DS_Store
 *.pem
-
-# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
 .vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts

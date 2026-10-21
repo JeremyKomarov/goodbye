@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(node .agents/cli.mjs rule:*)",
+      "Bash(node .agents/cli.mjs check:*)",
+      "Bash(npm run rule:*)",
+      "Bash(npm run guard:*)",
+      "Bash(npm run sync:agents)",
+      "Bash(npm run verify)",
+      "Bash(npm run typecheck)",
+      "Bash(npm run lint)",
+      "Bash(npm run test)",
+      "Bash(npm test)"
+    ],
+    "deny": [
+      "Edit(/.agents/**)",
+      "Edit(/.claude/skills/**)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PROJECT_DIR}/.agents/cli.mjs",
+              "check",
+              "--only=agents",
+              "--hook"
+            ],
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PROJECT_DIR}/.agents/cli.mjs",
+              "check",
+              "--only=plan",
+              "--hook"
+            ],
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

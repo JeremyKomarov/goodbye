@@ -1,0 +1,14 @@
+// Phase 01.2 replaces this with core/styles/tokens.scss — copy .agents/templates/tokens.scss in
+// whole, then re-hue its brand ramp. It owns every token and is the only file allowed to contain
+// a hex colour (.agents/docs/02-COMPONENTS.md §7).
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
