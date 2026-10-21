@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 01.7
+**Step:** 01.8
 **Since:** 2026-10-21
-**State:** next-intl: messages.ts per locale, request.ts resolving he/en from a cookie, global.d.ts, and lang/dir in the root layout.
+**State:** replacing the placeholder home page with featurePage(FEATURE_KEYS.landing).
 **Blocked by:** —
 
 ---

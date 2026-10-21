@@ -1,0 +1,25 @@
+// Namespace → the strings file that owns it, once per locale (02-COMPONENTS.md §9,
+// docs/DECISIONS.md #5). Nothing is authored here; this is the one file in core/ allowed to reach
+// into features/. A namespace added to one locale and not the other is a type error below.
+import { featuresStrings } from "@/core/config/features.strings";
+import { featuresStringsEn } from "@/core/config/features.strings.en";
+import { FEATURES_NAMESPACE } from "@/core/config/features.keys.const";
+import { COMING_SOON_NAMESPACE } from "@/shared/components/ComingSoon/ComingSoon.keys.const";
+import { comingSoonStrings } from "@/shared/components/ComingSoon/ComingSoon.strings";
+import { comingSoonStringsEn } from "@/shared/components/ComingSoon/ComingSoon.strings.en";
+import type { Locale } from "./routing";
+import type { StringsOf } from "./strings.types";
+
+const he = {
+  [FEATURES_NAMESPACE]: featuresStrings,
+  [COMING_SOON_NAMESPACE]: comingSoonStrings,
+};
+
+const en: StringsOf<typeof he> = {
+  [FEATURES_NAMESPACE]: featuresStringsEn,
+  [COMING_SOON_NAMESPACE]: comingSoonStringsEn,
+};
+
+export type Messages = typeof he;
+
+export const messages: Record<Locale, Messages> = { he, en };

@@ -69,3 +69,16 @@ theme to keep in contrast with.
 beside it is typed `StringsOf<typeof <name>Strings>` (`core/i18n/strings.types.ts`), so a missing
 or extra key in the English is a `tsc` error. `core/i18n/messages.ts` assembles one dictionary per
 locale from the pairs.
+
+## 6. The locale is a hidden `[locale]` route segment, chosen by cookie, never in the URL
+
+**Locked 2026-10-21.**
+
+Every page lives under `app/[locale]/`; `src/proxy.ts` (next-intl's middleware,
+`localePrefix: "never"`, no browser detection) rewrites to it from the locale cookie. A room link
+shared into a Hebrew group is the same link for someone who switched to English, and the root
+layout stays static under Cache Components because the locale is a param, not a `cookies()` read.
+Route Handlers under `app/api/` sit outside it.
+
+The argument that was wrong: reading the cookie in the root layout. Under `cacheComponents` that
+is uncached data outside `<Suspense>`, and `<html lang dir>` cannot sit inside one.
