@@ -6,6 +6,7 @@ rule 01 8`.
 
 | Path | What | Rule |
 |---|---|---|
+| `api/error-response.server.ts` | `apiError(code, { route })`, `handlingApiErrors(route, fn)`. | Every Route Handler is wrapped; a failure is a code from `core/api`. |
 | `db/` | Supabase access: the client and one `*.repo.ts` per table group. | The only place `@supabase/supabase-js` is imported on the server. |
 
 <!-- Phase 03 adds auth/: the bearer check on the anonymous user's token, the admin-token hash,

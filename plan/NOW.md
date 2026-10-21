@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 01.4
+**Step:** 01.5
 **Since:** 2026-10-21
-**State:** writing core/api/api-error.ts — codes, statuses, the body schema, toApiError — and handlingApiErrors.
+**State:** writing shared/utils cn, classMap and keysOf, each with its test.
 **Blocked by:** —
 
 ---
