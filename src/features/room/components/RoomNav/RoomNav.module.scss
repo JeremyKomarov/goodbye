@@ -1,0 +1,17 @@
+// The same sections twice: a bottom bar on phones, a chat list in the side column from 64rem.
+// Only one is ever displayed, so only one is in the accessibility tree.
+.room-nav {
+  &__bar {
+    flex-shrink: 0;
+  }
+
+  &__list {
+    padding-inline: var(--space-2);
+  }
+}
+
+@media (min-width: 64rem) {
+  .room-nav__bar {
+    display: none;
+  }
+}

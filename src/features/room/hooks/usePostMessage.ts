@@ -10,6 +10,8 @@ export function usePostMessage(slug: string) {
   return useMutation({
     mutationFn: async (input: PostMessageInput) =>
       mapWallMessageDto(await postMessage(slug, input)),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: QUERY_KEYS.room.wall(slug) }),
+    // Not awaited: the composer frees up as soon as the message is in, and the room's channel may
+    // cancel this read with its own.
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.room.wall(slug) }),
   });
 }

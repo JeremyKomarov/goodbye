@@ -1,13 +1,16 @@
 "use client";
 
 import { AnimatePresence, MotionConfig } from "motion/react";
+import { usePathname } from "next/navigation";
 import { useMemo, useState, type ReactNode } from "react";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
+import { ROOM_SECTIONS, roomSectionPath } from "@/core/constants/routes.const";
 import type { RoomSnapshotDto } from "@/features/room/api/room.dto";
 import { Hero } from "@/features/room/components/Hero";
 import { JoinGate } from "@/features/room/components/JoinGate";
 import { MeSheet } from "@/features/room/components/MeSheet";
 import { RoomHeader } from "@/features/room/components/RoomHeader";
+import { ROOM_NAV_VARIANTS, RoomNav } from "@/features/room/components/RoomNav";
 import { RoomSkeleton } from "@/features/room/components/RoomSkeleton";
 import { Welcome } from "@/features/room/components/Welcome";
 import { useAutoFinalize } from "@/features/room/hooks/useAutoFinalize";
@@ -19,6 +22,8 @@ import { RoomContext } from "@/features/room/hooks/useRoomContext";
 import { useRoomRealtime } from "@/features/room/hooks/useRoomRealtime";
 import { useSignInAs } from "@/features/room/hooks/useSignInAs";
 import { useSwitchUser } from "@/features/room/hooks/useSwitchUser";
+import { useWall } from "@/features/room/hooks/useWall";
+import { useWallUnread } from "@/features/room/hooks/useWallUnread";
 import { sameName } from "@/features/room/utils/names";
 import { leadingSlot, tallyVotes } from "@/features/room/utils/tally";
 import { useNow } from "@/shared/hooks/useNow";
@@ -50,9 +55,13 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
   const room = snapshot?.room;
   const votes = snapshot?.votes;
   const leader = useMemo(() => (votes ? leadingSlot(tallyVotes(votes)) : null), [votes]);
+  const { data: wall } = useWall(slug);
+  const isOnWall = usePathname() === roomSectionPath(slug, ROOM_SECTIONS.wall);
+  const unread = useWallUnread(wall?.messages, me?.userId, isOnWall);
   useAutoFinalize(room, now);
   useRoomRealtime(slug, room?.id);
   if (!snapshot || !room) return <RoomSkeleton />;
+  const nav = { snapshot, leader, lastMessage: wall?.messages.at(-1), unread };
 
   async function signInAsPlayer(name: string, code: string) {
     const player = snapshot?.players.find((candidate) => sameName(candidate.name, name));
@@ -73,9 +82,11 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
           <div className={roomShellClasses.body}>
             <aside className={roomShellClasses.side}>
               <Hero room={room} now={now} leader={leader} voterCount={snapshot.votes.length} />
+              <RoomNav {...nav} variant={ROOM_NAV_VARIANTS.list} />
             </aside>
             <main className={roomShellClasses.main}>{children}</main>
           </div>
+          <RoomNav {...nav} variant={ROOM_NAV_VARIANTS.bar} />
         </div>
       </RoomContext>
 

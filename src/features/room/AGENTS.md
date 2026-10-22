@@ -25,6 +25,9 @@ at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomNotFound`.
 | File | What |
 |---|---|
 | `components/RoomShell` | The frame every section sits in, rendered by `app/[locale]/r/[slug]/(room)/layout.tsx`: `RoomHeader`, the side column (the `Hero`) from 64rem, `Welcome`, `MeSheet`, `JoinGate` until `useIdentity` is ready, and the live channel. Provides `RoomContext` to the sections. Takes the snapshot the layout read on the server as `initial`. |
+| `components/FarewellWall` | The wall page: the system notice, `MessageList` (follows new messages at the bottom, a "jump to latest" button with the unseen count when scrolled up, one reaction picker open at a time) and `Composer` (140 characters, `too_fast` / `forbidden` read out). |
+| `components/MessageBubble` | One goodbye on the kit's `Bubble`: the sender's name in their colour with a host badge, the time and ticks, a react button, the picker, and the reaction chips. |
+| `components/RoomNav` | The sections, through the kit's `TabBar`: `bar` on phones, `list` in the side column from 64rem with each section's live line (who leads; the last goodbye and its time) and the wall's unread count. |
 | `components/VoteSection` | The vote page: `Hero` (phones only — wide screens show it in the side column) and `VoteHeatmap`. |
 | `components/RoomHeader` | The chat header: group avatar and name, "Hi {name}" (a link to `onMe`) and how many are in the room; `children` fill its end. |
 | `components/JoinGate` | Covers the room until this browser has a name in it: whose room, why, how many voted, and the `LanguageSwitch`. Partials: `NameForm` (on `SaveNameInputSchema`; the host's name says whose it is), `CodeForm` (a taken name asks for that player's code; "that's not me" goes back). |
@@ -63,6 +66,7 @@ at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomNotFound`.
 | `utils/duration.ts` | `exactParts`, `roughPart` — a duration split into units for words. |
 | `utils/verdict.ts` | `verdict(room)` — on time (±`ON_TIME_MINUTES`), late, early, or left mid-vote. |
 | `utils/tally.ts` | `tallyVotes`, `leadingSlot` (`Lead` with every tied slot), `wonByDraw`. |
+| `hooks/useWallUnread.ts` | Goodbyes since you last looked at the wall, not your own; what was there when the room opened counts as read. |
 | `hooks/useRoomContext.ts` | `RoomContext` and `useRoomContext()` — `slug`, `snapshot`, `me`, `isHost`, `leader`, from the shell to its sections. |
 | `hooks/useRoom.ts` | `useQuery` on `QUERY_KEYS.room.snapshot(slug)` → `RoomSnapshot`, seeded from the page's read. |
 | `hooks/useIdentity.ts` | Who this browser is here: `state` (`IDENTITY_STATES` checking → join → ready), `me`, `isHost`, `returning`, `join`. Joins the host's browser under the host's name by itself, and claims the room for a host who joined unrecorded. |

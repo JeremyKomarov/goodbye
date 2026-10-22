@@ -12,8 +12,8 @@ under one room layout, with the tab bar on phones and a chat list on desktop.
 - [x] ~~06.1 — read the wall: `GET /api/rooms/[slug]/wall`, repos, `useWall`; Realtime by table (M)~~
 - [x] ~~06.2 — post and react: `POST …/wall`, `PUT`/`DELETE …/wall/[id]/reaction`, optimistic (M)~~
 - [x] ~~06.3 — sections as routes: the `(room)` layout and `RoomShell`, the vote page, `TabBar` list (M)~~
-- [~] 06.4 — FarewellWall, MessageBubble, the composer and the reaction picker on `/wall` (L)
-- [ ] 06.5 — presence, typing and the emoji broadcast; the header's live line, the unread badge (M)
+- [x] ~~06.4 — FarewellWall, MessageBubble, the composer and the reaction picker on `/wall` (L)~~
+- [~] 06.5 — presence, typing and the emoji broadcast; the header's live line, the unread badge (M)
 - [ ] 06.6 — EmojiRain: the 🎉 button, the wall's quick emoji, the door at the chosen hour (S)
 - [ ] 06.7 — status stories: the ring on the header's avatar, the strip, the viewer (M)
 - [ ] 06.8 — checked in two browsers, both locales, phone and desktop (S)
@@ -30,3 +30,8 @@ English at 360 and 1280; rooms made while checking are deleted afterwards.
   the layout keeps the header, the join gate and the channel up across them. The layout is gated
   by `featureLayout`, so `featurePage` and it remain the only flag reads. `admin` stays outside
   the group; `games` moved into it and renders its disabled shell inside the room until 08.
+- A reaction is added from a small react button beside the bubble, not by tapping the bubble as
+  in the original: a bubble is not a button, and the kit has one. The chips, the picker's emoji
+  and the button are all `Button`s.
+- Sending does not wait for the wall to be read again: the room's channel may cancel that read
+  with its own, and the composer stayed busy until it gave up.

@@ -5,6 +5,8 @@ interface FieldBase {
   helper?: ReactNode;
   /** Already translated; shown instead of `helper` and marks the control invalid. */
   error?: ReactNode;
+  /** The label is read out but not drawn — when the control's placeholder already says it. */
+  isLabelHidden?: boolean;
 }
 
 export interface InputFieldProps extends FieldBase, InputHTMLAttributes<HTMLInputElement> {

@@ -128,6 +128,25 @@ import { heroStringsEn } from "@/features/room/components/Hero/Hero.strings.en";
 import { ME_SHEET_NAMESPACE } from "@/features/room/components/MeSheet/MeSheet.keys.const";
 import { meSheetStrings } from "@/features/room/components/MeSheet/MeSheet.strings";
 import { meSheetStringsEn } from "@/features/room/components/MeSheet/MeSheet.strings.en";
+import {
+  MESSAGE_BUBBLE_NAMESPACE,
+} from "@/features/room/components/MessageBubble/MessageBubble.keys.const";
+import {
+  messageBubbleStrings,
+} from "@/features/room/components/MessageBubble/MessageBubble.strings";
+import {
+  messageBubbleStringsEn,
+} from "@/features/room/components/MessageBubble/MessageBubble.strings.en";
+import {
+  FAREWELL_WALL_NAMESPACE,
+} from "@/features/room/components/FarewellWall/FarewellWall.keys.const";
+import { farewellWallStrings } from "@/features/room/components/FarewellWall/FarewellWall.strings";
+import {
+  farewellWallStringsEn,
+} from "@/features/room/components/FarewellWall/FarewellWall.strings.en";
+import { ROOM_NAV_NAMESPACE } from "@/features/room/components/RoomNav/RoomNav.keys.const";
+import { roomNavStrings } from "@/features/room/components/RoomNav/RoomNav.strings";
+import { roomNavStringsEn } from "@/features/room/components/RoomNav/RoomNav.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -157,6 +176,9 @@ const he = {
   [VOTE_HEATMAP_NAMESPACE]: voteHeatmapStrings,
   [HERO_NAMESPACE]: heroStrings,
   [ME_SHEET_NAMESPACE]: meSheetStrings,
+  [MESSAGE_BUBBLE_NAMESPACE]: messageBubbleStrings,
+  [FAREWELL_WALL_NAMESPACE]: farewellWallStrings,
+  [ROOM_NAV_NAMESPACE]: roomNavStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -185,6 +207,9 @@ const en: StringsOf<typeof he> = {
   [VOTE_HEATMAP_NAMESPACE]: voteHeatmapStringsEn,
   [HERO_NAMESPACE]: heroStringsEn,
   [ME_SHEET_NAMESPACE]: meSheetStringsEn,
+  [MESSAGE_BUBBLE_NAMESPACE]: messageBubbleStringsEn,
+  [FAREWELL_WALL_NAMESPACE]: farewellWallStringsEn,
+  [ROOM_NAV_NAMESPACE]: roomNavStringsEn,
 };
 
 export type Messages = typeof he;

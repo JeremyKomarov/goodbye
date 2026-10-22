@@ -1,6 +1,8 @@
 // `bar`: a bottom bar that sticks to the bottom of whatever column it closes.
 // `list`: a column of rows, like the chat list beside an open chat in WhatsApp Web.
 .tab-bar {
+  display: block;
+
   &--bar {
     position: sticky;
     bottom: 0;

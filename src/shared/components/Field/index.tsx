@@ -8,7 +8,7 @@ export function Field(props: FieldProps) {
   const autoId = useId();
   const id = props.id ?? autoId;
   const noteId = `${id}-note`;
-  const { label, helper, error } = props;
+  const { label, helper, error, isLabelHidden } = props;
   const note = error ?? helper;
   const controlProps = {
     id,
@@ -18,7 +18,10 @@ export function Field(props: FieldProps) {
 
   return (
     <div className={fieldClasses.root}>
-      <label className={fieldClasses.label} htmlFor={id}>
+      <label
+        className={cn(fieldClasses.label, isLabelHidden && fieldClasses.labelHidden)}
+        htmlFor={id}
+      >
         {label}
       </label>
       {props.as === "select" ? (
@@ -44,6 +47,13 @@ export function Field(props: FieldProps) {
 }
 
 function omitFieldProps<P extends FieldProps>(props: P) {
-  const { label: _label, helper: _helper, error: _error, as: _as, ...rest } = props;
+  const {
+    label: _label,
+    helper: _helper,
+    error: _error,
+    as: _as,
+    isLabelHidden: _isLabelHidden,
+    ...rest
+  } = props;
   return rest;
 }

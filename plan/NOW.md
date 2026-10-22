@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 06.4
+**Step:** 06.5
 **Since:** 2026-10-22
-**State:** the wall page: FarewellWall, MessageBubble, the composer, reactions; the tab bar.
+**State:** presence, typing and the emoji broadcast on the channel; the header's live line.
 **Blocked by:** —
 
 ---

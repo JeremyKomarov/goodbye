@@ -17,6 +17,7 @@ import {
   PartyPopper,
   Plus,
   SendHorizontal,
+  SmilePlus,
   Settings,
   Share2,
   Trash2,
@@ -53,6 +54,7 @@ export const ICONS = {
   less: Minus,
   more: Plus,
   share: Share2,
+  react: SmilePlus,
 } as const;
 
 export type IconName = keyof typeof ICONS;
