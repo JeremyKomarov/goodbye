@@ -63,6 +63,7 @@ use if the wall or leaderboard needs one.
 
 | Hook | What it does | When to use |
 |---|---|---|
+| `hooks/useNow.ts` | The current time in ms from one shared 250ms ticker; 0 on the server and while hydrating. | Every countdown or "time left" display. Never start a `setInterval` for a clock in a component. |
 
 ## Utils
 
@@ -72,6 +73,9 @@ use if the wall or leaderboard needs one.
 | `utils/classMap.ts` | `classMap(component, map)` throws in development on a class with no rule; `NO_CLASS` for a modifier that deliberately has none. | Every `*.classes.ts`. |
 | `utils/featurePage.tsx` | `featurePage(FEATURE_KEYS.x, Screen?)` — the page, or the disabled shell while the flag is off. | Every `page.tsx` under `app/`. |
 | `utils/keysOf.ts` | Derives typed message keys from a strings object. | Every `*.keys.const.ts`. |
+| `utils/adminTokens.ts` | `saveAdminToken` / `loadAdminToken` / `forgetAdminToken` — the host's token in `localStorage` under `STORAGE_KEYS.adminToken`; silent where storage refuses. | Landing keeps it after creating a room; the room and admin screens read it. |
+| `utils/isolate.ts` | Wraps typed text in Unicode direction isolates. | Every name or group name placed inside a sentence. |
+| `utils/countdown.ts` | `splitCountdown(ms)` → days, hours, minutes, seconds; `pad(n)` → two digits. | Every countdown display, with `useNow`. |
 | `utils/slots.ts` | `RoomWindow` → hour slots in the room's timezone (`buildSlotDays`, `allSlots`, `hasSlotAfter`), DST holes as `null`. | The landing schedule step, the create handler, the room's heatmap. Never compute an hour with `Date` arithmetic. |
 
 ## Promotion rule

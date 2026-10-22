@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 04.2
+**Step:** 04.3
 **Since:** 2026-10-22
-**State:** writing admin-token storage, isolate(), useNow and the countdown split.
+**State:** building HeroChat: script const, strings, partials for the countdown and typing dots.
 **Blocked by:** —
 
 ---
