@@ -10,8 +10,8 @@ project the original app already uses.
 `[ ]` not started · `[~]` in flight now (one, and `plan/NOW.md` names it) · `[x]` done, struck through.
 
 - [x] ~~03.1 — ESLint zone: `@supabase/supabase-js` only in `server/db/` and `core/supabase/` (S)~~
-- [~] 03.2 — port the slot logic and its tests to `shared/utils/slots.ts` (S)
-- [ ] 03.3 — `server/db/client.ts` and `rooms.repo.ts`: create a room with its secret, find by slug (M)
+- [x] ~~03.2 — port the slot logic and its tests to `shared/utils/slots.ts` (S)~~
+- [~] 03.3 — `server/db/client.ts` and `rooms.repo.ts`: create a room with its secret, find by slug (M)
 - [ ] 03.4 — `server/auth/admin-token.ts`: new token, hash, constant-time match, with tests (S)
 - [ ] 03.5 — `POST /api/rooms`: shared input schema, response DTO, endpoint const, handler (M)
 - [ ] 03.6 — `npm run test:db`: create a room through the handler, read it back, delete it (S)

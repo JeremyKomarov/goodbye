@@ -72,6 +72,7 @@ use if the wall or leaderboard needs one.
 | `utils/classMap.ts` | `classMap(component, map)` throws in development on a class with no rule; `NO_CLASS` for a modifier that deliberately has none. | Every `*.classes.ts`. |
 | `utils/featurePage.tsx` | `featurePage(FEATURE_KEYS.x, Screen?)` — the page, or the disabled shell while the flag is off. | Every `page.tsx` under `app/`. |
 | `utils/keysOf.ts` | Derives typed message keys from a strings object. | Every `*.keys.const.ts`. |
+| `utils/slots.ts` | `RoomWindow` → hour slots in the room's timezone (`buildSlotDays`, `allSlots`, `hasSlotAfter`), DST holes as `null`. | The landing schedule step, the create handler, the room's heatmap. Never compute an hour with `Date` arithmetic. |
 
 ## Promotion rule
 

@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 03.2
+**Step:** 03.3
 **Since:** 2026-10-22
-**State:** porting core/slots.ts and its tests from the original into shared/utils/.
+**State:** server/db/client.ts and rooms.repo.ts; insert room + secret, find by slug.
 **Blocked by:** —
 
 ---
