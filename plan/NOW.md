@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 03.4
+**Step:** 03.5
 **Since:** 2026-10-22
-**State:** server/auth/admin-token.ts ported from the original, with tests.
+**State:** POST /api/rooms: input schema and DTO in features/landing/api, endpoint const, handler.
 **Blocked by:** —
 
 ---

@@ -7,10 +7,11 @@ rule 01 8`.
 | Path | What | Rule |
 |---|---|---|
 | `api/error-response.server.ts` | `apiError(code, { route })`, `handlingApiErrors(route, fn)`. | Every Route Handler is wrapped; a failure is a code from `core/api`. |
+| `auth/admin-token.ts` | `newAdminToken`, `hashToken`, `tokenMatches` (constant-time). | Only the hash is stored; the token itself is shown once, to the host. |
 | `db/` | Supabase access: the client and one `*.repo.ts` per table group. | The only place `@supabase/supabase-js` is imported on the server. |
 
-<!-- Phase 03 adds auth/: the bearer check on the anonymous user's token, the admin-token hash,
-     login codes (docs/DECISIONS.md #2). -->
+<!-- Phase 05 adds to auth/: the bearer check on the anonymous user's token and login codes
+     (docs/DECISIONS.md #2). -->
 
 ## Keep this file current
 
