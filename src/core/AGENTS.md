@@ -12,6 +12,7 @@ while it runs. The rule: `node .agents/cli.mjs rule 01 3`.
 | `config/env.ts` | Validated public environment: Supabase URL and publishable key, site URL, Turnstile key, `useMocks`. Throws at boot on a missing value or mocks in production. | The only file that may read a `NEXT_PUBLIC_*` variable — ESLint enforces it. |
 | `config/env.server.ts` | `serverEnv.supabaseSecretKey`. `server-only`. | Read by `server/db/` alone. |
 | `constants/api-endpoints.const.ts` | `API_ENDPOINTS` — every Route Handler URL. | Never a URL literal at a call site. |
+| `constants/room.const.ts` | `HOST_GENDERS`, `LEAVE_REASONS`, `ROOM_STATUSES` and their unions — the database's values. | Any schema, type or branch on a room's gender, reason or status, in a feature or on the server. |
 | `constants/query-keys.const.ts` | `QUERY_KEYS` — every TanStack key; a room's all start with `room.all(slug)`. | Never an inline key array. Realtime invalidates `room.all(slug)` and nothing finer. |
 | `constants/storage-keys.const.ts` | `STORAGE_KEYS` — every browser-storage key; `adminToken(slug)` keeps the original app's `exit-admin:<slug>`. | Never a storage key literal at a call site. |
 | `api/api-error.ts` | `API_ERROR_CODES`, `API_ERROR_STATUS`, `ApiErrorBodySchema`, `ApiError`, `toApiError`. | The code picks the status. A new failure is a new code here, never a sentence. |
@@ -20,6 +21,9 @@ while it runs. The rule: `node .agents/cli.mjs rule 01 3`.
 | `i18n/request.ts` | next-intl's request config: the `[locale]` root param → its dictionary. | Read through `next/root-params`, so pages stay prerenderable. |
 | `i18n/global.d.ts` | Types every `t()` key and locale from `messages`. | — |
 | `i18n/strings.types.ts` | `StringsOf<T>` — the shape a `*.strings.en.ts` must have. | Every English strings file is typed with it (docs/DECISIONS.md #5). |
+| `supabase/client.ts` | `browserSupabase()` — the browser's one client, session in `STORAGE_KEYS.supabaseAuth`. | For the anonymous session and Realtime only — never `.from()` or `.rpc()` (docs/DECISIONS.md #2). |
+| `supabase/session.ts` | `ensureSession(language)` (anonymous sign-in on first join), `currentUserId`, `sessionHeaders` (the bearer for a fetcher), `signOutHere`. | Every fetcher that acts as the visitor spreads `await sessionHeaders()` into its headers. |
+| `supabase/captcha.ts` | `captchaToken(language)` — Turnstile before anonymous sign-in, when its key is set. | Called by `ensureSession` only. |
 | `styles/tokens.scss` | Every design token — WhatsApp dark, plus the app accents (`--bubble-out`, `--tick-read`, `--accent-pill` …). | The only file that may contain a hex colour. Imported once, in the root layout. |
 
 <!-- Filled by phase 01: features.const.ts, env.ts, routes/query-keys/storage-keys, api-error,

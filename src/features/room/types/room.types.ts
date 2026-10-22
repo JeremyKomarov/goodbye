@@ -1,4 +1,4 @@
-import type { HostGender, LeaveReason, RoomStatus } from "@/shared/types/room.const";
+import type { HostGender, LeaveReason, RoomStatus } from "@/core/constants/room.const";
 import type { RoomWindow } from "@/shared/utils/slots";
 
 /** A room, with its times as epoch milliseconds. It is a `RoomWindow`, so it builds its slots. */

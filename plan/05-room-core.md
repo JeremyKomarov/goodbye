@@ -10,8 +10,8 @@ countdown change live — and the `room` flag is on.
 `[ ]` not started · `[~]` in flight now (one, and `plan/NOW.md` names it) · `[x]` done, struck through.
 
 - [x] ~~05.1 — read a room: `GET /api/rooms/[slug]` (room, players, hosts, votes), repos, `useRoom` (M)~~
-- [~] 05.2 — the browser session in `core/supabase/`, the bearer check, a user-scoped db client (M)
-- [ ] 05.3 — join: `POST /api/rooms/[slug]/players` (join, rename, `name_taken`), the host claim (M)
+- [x] ~~05.2 — the browser session in `core/supabase/`, the bearer check, a user-scoped db client (M)~~
+- [~] 05.3 — join: `POST /api/rooms/[slug]/players` (join, rename, `name_taken`), the host claim (M)
 - [ ] 05.4 — JoinGate and Welcome, over the room's header (L)
 - [ ] 05.5 — vote: `PUT`/`DELETE /api/rooms/[slug]/vote`, optimistic `useVote`, tally and lead (M)
 - [ ] 05.6 — VoteHeatmap and VoteLegend (L)

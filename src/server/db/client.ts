@@ -15,3 +15,15 @@ export function db(): SupabaseClient {
   });
   return client;
 }
+
+/**
+ * A client that acts as the caller: the publishable key plus their access token, so row-level
+ * security and `auth.uid()` judge the write as the database's second line (docs/DECISIONS.md #2).
+ * Made per request — it holds one person's token.
+ */
+export function asUser(accessToken: string): SupabaseClient {
+  return createClient(env.supabaseUrl, env.supabasePublishableKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { authorization: `Bearer ${accessToken}` } },
+  });
+}

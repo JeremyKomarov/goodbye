@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { HOST_GENDERS, LEAVE_REASONS, ROOM_STATUSES } from "@/shared/types/room.const";
+import { HOST_GENDERS, LEAVE_REASONS, ROOM_STATUSES } from "@/core/constants/room.const";
 
 // The room as GET /api/rooms/[slug] sends it: the room row and everything the vote screen draws
 // from — who joined, which of them is the host, and the votes. The admin token's hash never leaves

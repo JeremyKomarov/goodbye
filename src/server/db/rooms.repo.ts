@@ -1,7 +1,7 @@
 import "server-only";
 import { customAlphabet } from "nanoid";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
-import type { HostGender, LeaveReason, RoomStatus } from "@/shared/types/room.const";
+import type { HostGender, LeaveReason, RoomStatus } from "@/core/constants/room.const";
 import { db } from "./client";
 
 // Rooms and their secrets. The table is `public.rooms`; the admin token's hash sits apart in
