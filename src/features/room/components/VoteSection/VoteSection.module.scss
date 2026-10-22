@@ -1,0 +1,45 @@
+// On a phone the status card sits above the hour grid, and beside it when the phone is held
+// sideways. From 64rem the card lives in the room's side column, so it is not drawn here.
+.vote-section {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+
+  &__hero {
+    flex-shrink: 0;
+  }
+
+  &__grid {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    padding: var(--space-2) var(--space-3) var(--space-3);
+  }
+}
+
+@media (max-height: 500px) and (min-width: 600px) {
+  .vote-section {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  }
+
+  .vote-section__hero {
+    overflow-y: auto;
+  }
+
+  .vote-section__grid {
+    padding-block-start: var(--space-3);
+  }
+}
+
+@media (min-width: 64rem) {
+  .vote-section__hero {
+    display: none;
+  }
+
+  .vote-section__grid {
+    padding: 0;
+  }
+}

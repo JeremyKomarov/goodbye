@@ -17,7 +17,7 @@ import { LanguageSwitch } from "@/shared/components/LanguageSwitch";
 import { Sheet } from "@/shared/components/Sheet";
 import { Skeleton, SKELETON_SHAPES } from "@/shared/components/Skeleton";
 import { SystemPill, SYSTEM_PILL_TONES } from "@/shared/components/SystemPill";
-import { TabBar } from "@/shared/components/TabBar";
+import { TAB_BAR_VARIANTS, TabBar } from "@/shared/components/TabBar";
 import { Ticks, TICK_STATES } from "@/shared/components/Ticks";
 import { kitClasses } from "./kit.classes";
 
@@ -154,6 +154,24 @@ export default function KitCatalogPage() {
           { href: demo(FEATURE_KEYS.admin), icon: ICON_NAMES.board, label: "99+", badge: 120 },
         ]}
       />
+      <Section title="TabBar · list">
+        <TabBar
+          label="TabBar list"
+          variant={TAB_BAR_VARIANTS.list}
+          items={[
+            { href: "/dev/kit", icon: ICON_NAMES.vote, label: "current", subtitle: "a live line" },
+            {
+              href: demo(FEATURE_KEYS.room),
+              icon: ICON_NAMES.wall,
+              label: "badge",
+              subtitle: "someone is typing…",
+              meta: "21:04",
+              isLive: true,
+              badge: 3,
+            },
+          ]}
+        />
+      </Section>
     </>
   );
 }

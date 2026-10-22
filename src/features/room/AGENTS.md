@@ -4,7 +4,8 @@ The party room everyone joins from the link. A visitor comes in under a name (or
 from another device, with their login code), votes on the exit hour in a heatmap, and watches the
 countdown — to the close, then to the chosen hour — change live with everyone else's. The host's
 browser comes in under the host's name and watches rather than votes. Feature flag: `room`,
-enabled. Route: `/r/[slug]`; an unknown slug renders `RoomNotFound`.
+enabled. Routes: the sections of `/r/[slug]` share the `(room)` layout — the vote at `/r/[slug]`, the wall
+at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomNotFound`.
 
 ## Status
 
@@ -23,7 +24,8 @@ enabled. Route: `/r/[slug]`; an unknown slug renders `RoomNotFound`.
 
 | File | What |
 |---|---|
-| `components/RoomScreen` | The screen: `RoomHeader`, the room's main column, `Welcome`, and `JoinGate` until `useIdentity` is ready. Takes the snapshot the page read on the server as `initial`. |
+| `components/RoomShell` | The frame every section sits in, rendered by `app/[locale]/r/[slug]/(room)/layout.tsx`: `RoomHeader`, the side column (the `Hero`) from 64rem, `Welcome`, `MeSheet`, `JoinGate` until `useIdentity` is ready, and the live channel. Provides `RoomContext` to the sections. Takes the snapshot the layout read on the server as `initial`. |
+| `components/VoteSection` | The vote page: `Hero` (phones only — wide screens show it in the side column) and `VoteHeatmap`. |
 | `components/RoomHeader` | The chat header: group avatar and name, "Hi {name}" (a link to `onMe`) and how many are in the room; `children` fill its end. |
 | `components/JoinGate` | Covers the room until this browser has a name in it: whose room, why, how many voted, and the `LanguageSwitch`. Partials: `NameForm` (on `SaveNameInputSchema`; the host's name says whose it is), `CodeForm` (a taken name asks for that player's code; "that's not me" goes back). |
 | `components/MeSheet` | "Hi {name}" opens it, for players, not the host. Partials: `RenameForm`, `DeviceCode` (show, copy, replace the code), `NotYou` (forget this browser's player); and the `LanguageSwitch`. |
@@ -61,6 +63,7 @@ enabled. Route: `/r/[slug]`; an unknown slug renders `RoomNotFound`.
 | `utils/duration.ts` | `exactParts`, `roughPart` — a duration split into units for words. |
 | `utils/verdict.ts` | `verdict(room)` — on time (±`ON_TIME_MINUTES`), late, early, or left mid-vote. |
 | `utils/tally.ts` | `tallyVotes`, `leadingSlot` (`Lead` with every tied slot), `wonByDraw`. |
+| `hooks/useRoomContext.ts` | `RoomContext` and `useRoomContext()` — `slug`, `snapshot`, `me`, `isHost`, `leader`, from the shell to its sections. |
 | `hooks/useRoom.ts` | `useQuery` on `QUERY_KEYS.room.snapshot(slug)` → `RoomSnapshot`, seeded from the page's read. |
 | `hooks/useIdentity.ts` | Who this browser is here: `state` (`IDENTITY_STATES` checking → join → ready), `me`, `isHost`, `returning`, `join`. Joins the host's browser under the host's name by itself, and claims the room for a host who joined unrecorded. |
 | `hooks/useSessionUser.ts` | `useQuery` on `QUERY_KEYS.session.user` — this browser's user id or null. |

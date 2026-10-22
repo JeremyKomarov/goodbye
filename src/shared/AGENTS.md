@@ -52,7 +52,7 @@ use if the wall or leaderboard needs one.
 | `components/Ticks` | One grey, two grey or two blue check marks · `TICK_STATES` sent, delivered, read. Decorative. | Next to a message's time, or as the app's "done" mark. | Never draw check marks in a feature. |
 | `components/CopyButton` | Secondary `Button` that copies `text` and shows "Copied" for 1.6s; optional translated `label`. | Room links, admin links, player codes, share text. | Never call `navigator.clipboard` from a feature. |
 | `components/LanguageSwitch` | עברית / English toggle; writes `LOCALE_COOKIE` and reloads so `<html lang dir>` follows. | Landing and the room header. | Never set the locale cookie or keep the locale in a store anywhere else. |
-| `components/TabBar` | Sticky bottom `<nav>` of `Link`s: `items` of `{ href, icon, label, badge? }`; the one matching the URL is `aria-current`; badge caps at 99+ and is read out. | The room's sections (room, games). | Never build a second bottom or tab navigation. |
+| `components/TabBar` | `<nav>` of `Link`s: `items` of `{ href, icon, label, badge?, subtitle?, meta?, isLive? }`; the one matching the URL is `aria-current`; badge caps at 99+ and is read out. `TAB_BAR_VARIANTS` bar (sticky bottom, icon over label) · list (a chat list with each section's live line — added in phase 06). | The room's sections (room, games). | Never build a second bottom or tab navigation. |
 | `components/ChoiceGroup` | Pick one: real radios drawn as `CHOICE_GROUP_VARIANTS` card (emoji disc, label, description, check) or segment (pills in a track) · `isClearable` lets the chosen one be unpicked to `null`. Added in phase 04 for the wizard's story and pronoun choices. | Any one-of-few choice. | Never a row of `aria-pressed` buttons or bare radios in a feature. |
 | `components/Skeleton` | Pulsing placeholder · `SKELETON_SHAPES` line, block, circle · optional `width`/`height` as CSS lengths. Decorative. | While a query is pending, shaped like what will replace it. | Never build a spinner screen or a feature-local loading shimmer. |
 
@@ -72,7 +72,7 @@ use if the wall or leaderboard needs one.
 |---|---|---|
 | `utils/cn.ts` | Joins class references, dropping falsy ones. | Every conditional `className`. |
 | `utils/classMap.ts` | `classMap(component, map)` throws in development on a class with no rule; `NO_CLASS` for a modifier that deliberately has none. | Every `*.classes.ts`. |
-| `utils/featurePage.tsx` | `featurePage(FEATURE_KEYS.x, Screen?)` — the page, or the disabled shell while the flag is off. | Every `page.tsx` under `app/`. |
+| `utils/featurePage.tsx` | `featurePage(FEATURE_KEYS.x, Screen?)` — the page, or the disabled shell while the flag is off; `featureLayout(key, Frame)` — the layout's frame, or the pages bare while it is off. | Every `page.tsx` and `layout.tsx` under `app/` that belongs to a feature. The only places a flag is read. |
 | `utils/keysOf.ts` | Derives typed message keys from a strings object. | Every `*.keys.const.ts`. |
 | `utils/adminTokens.ts` | `saveAdminToken` / `loadAdminToken` / `forgetAdminToken` — the host's token in `localStorage` under `STORAGE_KEYS.adminToken`; silent where storage refuses. | Landing keeps it after creating a room; the room and admin screens read it. |
 | `utils/avatar.ts` | `senderColor(id)` — one of the `--sender-*` tokens, the same for the same id; `initialOf(name)`. | Every avatar or sender name: the room header, the hello, the wall. |

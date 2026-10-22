@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, MotionConfig } from "motion/react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
 import type { RoomSnapshotDto } from "@/features/room/api/room.dto";
 import { Hero } from "@/features/room/components/Hero";
@@ -9,34 +9,38 @@ import { JoinGate } from "@/features/room/components/JoinGate";
 import { MeSheet } from "@/features/room/components/MeSheet";
 import { RoomHeader } from "@/features/room/components/RoomHeader";
 import { RoomSkeleton } from "@/features/room/components/RoomSkeleton";
-import { VoteHeatmap } from "@/features/room/components/VoteHeatmap";
 import { Welcome } from "@/features/room/components/Welcome";
 import { useAutoFinalize } from "@/features/room/hooks/useAutoFinalize";
 import { useEnsureLoginCode } from "@/features/room/hooks/useEnsureLoginCode";
 import { IDENTITY_STATES, useIdentity } from "@/features/room/hooks/useIdentity";
 import { useRename } from "@/features/room/hooks/useRename";
 import { useRoom } from "@/features/room/hooks/useRoom";
+import { RoomContext } from "@/features/room/hooks/useRoomContext";
 import { useRoomRealtime } from "@/features/room/hooks/useRoomRealtime";
 import { useSignInAs } from "@/features/room/hooks/useSignInAs";
 import { useSwitchUser } from "@/features/room/hooks/useSwitchUser";
-import { useVote } from "@/features/room/hooks/useVote";
 import { sameName } from "@/features/room/utils/names";
 import { leadingSlot, tallyVotes } from "@/features/room/utils/tally";
 import { useNow } from "@/shared/hooks/useNow";
-import { roomScreenClasses } from "./RoomScreen.classes";
+import { roomShellClasses } from "./RoomShell.classes";
 
-interface RoomScreenProps {
+interface RoomShellProps {
   slug: string;
-  /** The room as the page read it on the server, so the first paint is the real room. */
+  /** The room as the layout read it on the server, so the first paint is the real room. */
   initial: RoomSnapshotDto;
+  /** The section's page: the vote, the wall. */
+  children: ReactNode;
 }
 
-/** The room: its header, the status card and the vote, under the join gate until you're in. */
-export function RoomScreen({ slug, initial }: RoomScreenProps) {
+/**
+ * The room around its sections: the header, the side column on wide screens, the join gate until
+ * you're in, the hello and the "you in the room" sheet — and the room's live channel, which stays
+ * up as you move between sections.
+ */
+export function RoomShell({ slug, initial, children }: RoomShellProps) {
   const { data: snapshot } = useRoom(slug, initial);
   const identity = useIdentity(slug, snapshot);
   const { me, isHost } = identity;
-  const vote = useVote(slug);
   const rename = useRename(slug);
   const signInAs = useSignInAs();
   const switchUser = useSwitchUser();
@@ -58,28 +62,22 @@ export function RoomScreen({ slug, initial }: RoomScreenProps) {
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className={roomScreenClasses.root}>
-        <RoomHeader
-          room={room}
-          me={me}
-          playerCount={snapshot.players.length}
-          onMe={isHost ? undefined : () => setIsMeOpen(true)}
-        />
-        <div className={roomScreenClasses.body}>
-          <div className={roomScreenClasses.side}>
-            <Hero room={room} now={now} leader={leader} voterCount={snapshot.votes.length} />
+      <RoomContext value={{ slug, snapshot, me, isHost, leader }}>
+        <div className={roomShellClasses.root}>
+          <RoomHeader
+            room={room}
+            me={me}
+            playerCount={snapshot.players.length}
+            onMe={isHost ? undefined : () => setIsMeOpen(true)}
+          />
+          <div className={roomShellClasses.body}>
+            <aside className={roomShellClasses.side}>
+              <Hero room={room} now={now} leader={leader} voterCount={snapshot.votes.length} />
+            </aside>
+            <main className={roomShellClasses.main}>{children}</main>
           </div>
-          <main className={roomScreenClasses.main}>
-            <VoteHeatmap
-              snapshot={snapshot}
-              now={now}
-              me={me}
-              canVote={!isHost}
-              onVote={(slotMs) => vote.mutateAsync({ userId: me?.userId ?? "", slotMs })}
-            />
-          </main>
         </div>
-      </div>
+      </RoomContext>
 
       <Welcome key={me?.userId} me={me} isReturning={identity.returning} />
       {me && (

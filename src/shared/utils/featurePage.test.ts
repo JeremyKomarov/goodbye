@@ -1,10 +1,11 @@
+import type { ReactElement, ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 const flags = vi.hoisted(() => ({ enabled: false }));
 vi.mock("@/core/config/features.const", () => ({ isFeatureEnabled: () => flags.enabled }));
 vi.mock("@/shared/components/ComingSoon", () => ({ ComingSoon: () => null }));
 
-const { featurePage } = await import("./featurePage");
+const { featureLayout, featurePage } = await import("./featurePage");
 const { ComingSoon } = await import("@/shared/components/ComingSoon");
 
 function Screen(_: { slug: string }) {
@@ -27,5 +28,21 @@ describe("featurePage", () => {
     const page = featurePage("room", Screen)({ slug: "a" });
     expect(page.type).toBe(Screen);
     expect(page.props).toEqual({ slug: "a" });
+  });
+});
+
+describe("featureLayout", () => {
+  function Frame(_: { children: ReactNode }) {
+    return null;
+  }
+
+  it("leaves the pages bare while the flag is off", () => {
+    flags.enabled = false;
+    expect(featureLayout("room", Frame)({ children: "page" })).toBe("page");
+  });
+
+  it("draws the frame around them once the flag is on", () => {
+    flags.enabled = true;
+    expect((featureLayout("room", Frame)({ children: "page" }) as ReactElement).type).toBe(Frame);
   });
 });
