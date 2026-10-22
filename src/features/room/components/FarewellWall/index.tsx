@@ -2,12 +2,14 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
+import { QUICK_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
 import { MessageList } from "@/features/room/components/FarewellWall/partials/MessageList";
 import { usePostMessage } from "@/features/room/hooks/usePostMessage";
 import { useReact } from "@/features/room/hooks/useReact";
 import { useRoomContext } from "@/features/room/hooks/useRoomContext";
 import { useSlotFormat } from "@/features/room/hooks/useSlotFormat";
 import { useWall } from "@/features/room/hooks/useWall";
+import { Button, BUTTON_VARIANTS } from "@/shared/components/Button";
 import { Skeleton, SKELETON_SHAPES } from "@/shared/components/Skeleton";
 import { SystemPill } from "@/shared/components/SystemPill";
 import { isolate } from "@/shared/utils/isolate";
@@ -69,7 +71,20 @@ export function FarewellWall() {
           <Skeleton shape={SKELETON_SHAPES.block} height="100%" />
         </div>
       )}
-      <Composer onSend={post.mutateAsync} onTyping={live.sendTyping} />
+      <Composer onSend={post.mutateAsync} onTyping={live.sendTyping}>
+        <div className={farewellWallClasses.quick}>
+          {QUICK_EMOJI.map((emoji) => (
+            <Button
+              key={emoji}
+              variant={BUTTON_VARIANTS.secondary}
+              aria-label={t(farewellWallKeys.quickEmoji, { emoji })}
+              onClick={() => live.sendEmoji(emoji)}
+            >
+              {emoji}
+            </Button>
+          ))}
+        </div>
+      </Composer>
     </section>
   );
 }

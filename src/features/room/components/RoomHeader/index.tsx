@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { ReactNode } from "react";
 import { ROOM_STATUSES } from "@/core/constants/room.const";
+import { PARTY_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
 import type { Player, Room } from "@/features/room/types/room.types";
 import { Button, BUTTON_VARIANTS } from "@/shared/components/Button";
 import { initialOf } from "@/shared/utils/avatar";
@@ -23,12 +23,13 @@ interface RoomHeaderProps {
   now?: number;
   /** Opens "you in the room" (rename, your code, "not you?"). Not offered to the host. */
   onMe?: () => void;
-  /** The header's end: the room's actions. */
-  children?: ReactNode;
+  /** Rains 🎉 on everyone in the room. */
+  onParty: () => void;
 }
 
 /** The chat header: the group's avatar and name, and a line saying who you are and who's here. */
-export function RoomHeader({ room, me, online, typing, now, onMe, children }: RoomHeaderProps) {
+export function RoomHeader(props: RoomHeaderProps) {
+  const { room, me, online, typing, now, onMe, onParty } = props;
   const t = useTranslations(ROOM_HEADER_NAMESPACE);
   const hello = me && t(roomHeaderKeys.hello, { name: isolate(me.name) });
   const target = room.status === ROOM_STATUSES.locked ? room.lockedSlot : room.votingClosesAt;
@@ -86,7 +87,14 @@ export function RoomHeader({ room, me, online, typing, now, onMe, children }: Ro
             {clock}
           </span>
         )}
-        {children && <div className={roomHeaderClasses.end}>{children}</div>}
+        <Button
+          variant={BUTTON_VARIANTS.ghost}
+          aria-label={t(roomHeaderKeys.party)}
+          title={t(roomHeaderKeys.party)}
+          onClick={onParty}
+        >
+          {PARTY_EMOJI}
+        </Button>
       </div>
     </header>
   );

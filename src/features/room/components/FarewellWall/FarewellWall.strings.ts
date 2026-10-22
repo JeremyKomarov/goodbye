@@ -12,6 +12,7 @@ export const farewellWallStrings = {
     "=0 {מעבר להודעה האחרונה} " +
     "one {הודעה חדשה אחת, מעבר להודעה האחרונה} " +
     "other {# הודעות חדשות, מעבר להודעה האחרונה}}",
+  quickEmoji: "גשם של {emoji} לכל מי שבחדר",
   composer: {
     label: "הודעת פרידה",
     send: "שליחה",

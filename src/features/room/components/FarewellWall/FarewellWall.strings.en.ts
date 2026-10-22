@@ -14,6 +14,7 @@ export const farewellWallStringsEn: StringsOf<typeof farewellWallStrings> = {
     "=0 {Jump to the latest message} " +
     "one {One new message, jump to the latest} " +
     "other {# new messages, jump to the latest}}",
+  quickEmoji: "Rain {emoji} on everyone in the room",
   composer: {
     label: "Goodbye message",
     send: "Send",

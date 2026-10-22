@@ -1,0 +1,15 @@
+// Over everything but the dialogs, and never in the way of a tap.
+.emoji-rain {
+  position: fixed;
+  inset: 0;
+  z-index: var(--layer-overlay);
+  overflow: hidden;
+  pointer-events: none;
+
+  &__drop {
+    position: absolute;
+    top: 0;
+    inset-inline-start: var(--drop-x);
+    font-size: var(--drop-size);
+  }
+}

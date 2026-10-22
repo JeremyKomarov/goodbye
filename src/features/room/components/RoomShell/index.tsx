@@ -6,6 +6,8 @@ import { useMemo, useState, type ReactNode } from "react";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
 import { ROOM_SECTIONS, roomSectionPath } from "@/core/constants/routes.const";
 import type { RoomSnapshotDto } from "@/features/room/api/room.dto";
+import { EmojiRain } from "@/features/room/components/EmojiRain";
+import { PARTY_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
 import { Hero } from "@/features/room/components/Hero";
 import { JoinGate } from "@/features/room/components/JoinGate";
 import { MeSheet } from "@/features/room/components/MeSheet";
@@ -14,6 +16,7 @@ import { ROOM_NAV_VARIANTS, RoomNav } from "@/features/room/components/RoomNav";
 import { RoomSkeleton } from "@/features/room/components/RoomSkeleton";
 import { Welcome } from "@/features/room/components/Welcome";
 import { useAutoFinalize } from "@/features/room/hooks/useAutoFinalize";
+import { useDoorAtTheHour } from "@/features/room/hooks/useDoorAtTheHour";
 import { useEnsureLoginCode } from "@/features/room/hooks/useEnsureLoginCode";
 import { IDENTITY_STATES, useIdentity } from "@/features/room/hooks/useIdentity";
 import { useRename } from "@/features/room/hooks/useRename";
@@ -64,6 +67,7 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
   useAutoFinalize(room, now);
   const live = useRoomChannel(slug, room?.id, me);
   const typing = useTypingLine(live.typers);
+  useDoorAtTheHour(room, now, live.rain);
   if (!snapshot || !room) return <RoomSkeleton />;
   const nav = { snapshot, leader, lastMessage: wall?.messages.at(-1), unread, typing };
 
@@ -85,6 +89,7 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
             typing={typing}
             now={isOnVote ? undefined : now}
             onMe={isHost ? undefined : () => setIsMeOpen(true)}
+            onParty={() => live.sendEmoji(PARTY_EMOJI)}
           />
           <div className={roomShellClasses.body}>
             <aside className={roomShellClasses.side}>
@@ -97,6 +102,7 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
         </div>
       </RoomContext>
 
+      <EmojiRain subscribe={live.onRain} />
       <Welcome key={me?.userId} me={me} isReturning={identity.returning} />
       {me && (
         <MeSheet

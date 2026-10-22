@@ -29,11 +29,12 @@ the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomN
 | `components/MessageBubble` | One goodbye on the kit's `Bubble`: the sender's name in their colour with a host badge, the time and ticks, a react button, the picker, and the reaction chips. |
 | `components/RoomNav` | The sections, through the kit's `TabBar`: `bar` on phones, `list` in the side column from 64rem with each section's live line (who leads; the last goodbye and its time) and the wall's unread count. |
 | `components/VoteSection` | The vote page: `Hero` (phones only — wide screens show it in the side column) and `VoteHeatmap`. |
-| `components/RoomHeader` | The chat header: group avatar and name, "Hi {name}" (a link to `onMe`) and how many are online — or who is typing; the time left in a pill off the vote; `children` fill its end. |
+| `components/RoomHeader` | The chat header: group avatar and name, "Hi {name}" (a link to `onMe`) and how many are online — or who is typing; the time left in a pill off the vote; the 🎉 button (`onParty`). |
 | `components/JoinGate` | Covers the room until this browser has a name in it: whose room, why, how many voted, and the `LanguageSwitch`. Partials: `NameForm` (on `SaveNameInputSchema`; the host's name says whose it is), `CodeForm` (a taken name asks for that player's code; "that's not me" goes back). |
 | `components/MeSheet` | "Hi {name}" opens it, for players, not the host. Partials: `RenameForm`, `DeviceCode` (show, copy, replace the code), `NotYou` (forget this browser's player); and the `LanguageSwitch`. |
 | `components/Welcome` | The hello pill, "the room will remember you" or "welcome back". Keyed by user. |
 | `components/Hero` | The status card, by `room.status`: `VotingHero` (why, time left to vote, who leads or the tie), `LockedHero` (time to the chosen hour, how it was chosen, `ExitRow` filling up), `ExitedHero` (the notice and the `verdict`). `Countdown` is days in words over `FlipDigits`, spoken in full. Compact on phones, roomy from 64rem. |
+| `components/EmojiRain` | The full-screen shower, fed by `onRain`; four fading drops instead of sixteen for reduced motion. `EmojiRain.const.ts`: `QUICK_EMOJI` (the wall's row), `PARTY_EMOJI` (the header's), `DOOR_EMOJI` (the hour). |
 | `components/FlipDigits` | Display-face digits that roll as they change. Decorative, always LTR. |
 | `components/VoteHeatmap` | Pick a day, then an hour: partials `DayStrip` (tabs with totals), `HourGrid` (chips shaded by `voteStep`, rings for yours and the winner, `columns()` per width), `VoteDetail` (who voted for the hour pointed at, "take back my vote", or how voting works). The chips are native buttons (docs/DECISIONS.md #7). |
 | `components/VoteLegend` | The five `--vote-*` shades, fewer → more. Hidden on short screens. |
@@ -52,6 +53,7 @@ the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomN
 | `api/login-code.dto.ts` | `LoginCodeInputSchema`, `LoginCodeDtoSchema`, `SignInAsInputSchema` (the gate's code field). |
 | `api/login-code.api.ts` | `fetchLoginCode`. |
 | `hooks/useRoomChannel.ts` | The room's live channel: a wall change invalidates `room.wall`, any other `room.snapshot` (settled over 150ms); presence (`online`), `typers` (4s unless renewed), `sendTyping`, `sendEmoji` (here and everywhere), `rain` (here only), `onRain`. Presence and broadcasts are held here, the moment only (docs/DECISIONS.md #8). |
+| `hooks/useDoorAtTheHour.ts` | As the chosen hour arrives on an open screen: 🚪 rains there and the phone buzzes. Each screen has the clock, so nothing is sent. |
 | `hooks/useTypingLine.ts` | "Dana is typing…" / "3 people are typing…" or null. |
 | `hooks/useTypingSignal.ts` | A draft's keystrokes as typing on and off — renewed every 2s, off after 2.5s idle. |
 | `hooks/usePostMessage.ts` | Posts; invalidates the wall. |
