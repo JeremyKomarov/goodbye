@@ -122,6 +122,9 @@ import { voteHeatmapStrings } from "@/features/room/components/VoteHeatmap/VoteH
 import {
   voteHeatmapStringsEn,
 } from "@/features/room/components/VoteHeatmap/VoteHeatmap.strings.en";
+import { HERO_NAMESPACE } from "@/features/room/components/Hero/Hero.keys.const";
+import { heroStrings } from "@/features/room/components/Hero/Hero.strings";
+import { heroStringsEn } from "@/features/room/components/Hero/Hero.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -149,6 +152,7 @@ const he = {
   [ROOM_NOT_FOUND_NAMESPACE]: roomNotFoundStrings,
   [VOTE_LEGEND_NAMESPACE]: voteLegendStrings,
   [VOTE_HEATMAP_NAMESPACE]: voteHeatmapStrings,
+  [HERO_NAMESPACE]: heroStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -175,6 +179,7 @@ const en: StringsOf<typeof he> = {
   [ROOM_NOT_FOUND_NAMESPACE]: roomNotFoundStringsEn,
   [VOTE_LEGEND_NAMESPACE]: voteLegendStringsEn,
   [VOTE_HEATMAP_NAMESPACE]: voteHeatmapStringsEn,
+  [HERO_NAMESPACE]: heroStringsEn,
 };
 
 export type Messages = typeof he;

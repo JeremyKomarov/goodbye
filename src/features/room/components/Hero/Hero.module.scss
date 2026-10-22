@@ -1,0 +1,97 @@
+// Compact by default — on a phone it shares the screen with the hour grid — and roomy from 64rem,
+// where it has the side column to itself.
+.hero {
+  padding: var(--space-3) var(--space-4) var(--space-1);
+  text-align: center;
+
+  &--exited {
+    padding-block-start: var(--space-3);
+  }
+
+  &__label {
+    margin-block-start: var(--space-3);
+    color: var(--text-secondary);
+  }
+
+  &__note {
+    margin-block-start: var(--space-2);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    text-wrap: balance;
+  }
+
+  &__tie {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-pill);
+    background: color-mix(in oklab, var(--accent-pill) 15%, transparent);
+    color: var(--accent-pill);
+    font-weight: 600;
+  }
+
+  &__tied {
+    margin-block-start: var(--space-2);
+  }
+
+  &__verdict {
+    margin-block-start: var(--space-4);
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+}
+
+@media (max-height: 700px) {
+  .hero {
+    padding-block-start: var(--space-1);
+  }
+
+  .hero__pill {
+    display: none;
+  }
+
+  .hero__label {
+    margin-block-start: 0;
+  }
+
+  .hero__verdict {
+    font-size: 2.25rem;
+  }
+}
+
+@media (max-height: 500px) {
+  .hero {
+    padding-block: 0;
+  }
+}
+
+@media (min-width: 64rem) {
+  .hero {
+    padding-block: var(--space-4);
+  }
+
+  .hero--exited {
+    padding-block-start: var(--space-8);
+  }
+
+  .hero__pill {
+    display: inline-block;
+  }
+
+  .hero__label {
+    margin-block-start: var(--space-5);
+    font-size: var(--text-lg);
+  }
+
+  .hero__note {
+    margin-block-start: var(--space-3);
+    font-size: var(--text-md);
+  }
+
+  .hero__verdict {
+    font-size: 3.75rem;
+  }
+}

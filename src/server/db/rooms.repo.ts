@@ -139,3 +139,16 @@ export async function deleteRoom(roomId: string): Promise<void> {
   const { error } = await db().from("rooms").delete().eq("id", roomId);
   if (error) throw failed();
 }
+
+/**
+ * Locks the room to its winning hour once voting time is over — finalize_room() in the database,
+ * which draws among tied hours and is idempotent. Before the close it changes nothing. Null for an
+ * unknown slug.
+ */
+export async function finalizeRoom(slug: string): Promise<RoomRecord | null> {
+  const { data, error } = await db()
+    .rpc("finalize_room", { p_slug: slug })
+    .maybeSingle<RoomRow>();
+  if (error) throw failed();
+  return data?.id ? toRecord(data) : null;
+}

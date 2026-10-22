@@ -1,0 +1,55 @@
+// WhatsApp's red "Exit group" row from the group's info screen, filling up as the hour nears.
+.exit-row {
+  position: relative;
+  max-width: 24rem;
+  margin: var(--space-3) auto 0;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background: color-mix(in oklab, var(--surface-soft) 60%, transparent);
+  text-align: start;
+
+  &__fill {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    background: color-mix(in oklab, var(--accent-exit) 20%, transparent);
+  }
+
+  &__body {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    color: var(--accent-exit);
+  }
+
+  &__label {
+    font-weight: 500;
+  }
+
+  &__end {
+    margin-inline-start: auto;
+    color: color-mix(in oklab, var(--accent-exit) 80%, transparent);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (max-height: 700px) {
+  .exit-row__body {
+    padding-block: var(--space-3);
+  }
+}
+
+@media (max-height: 500px) {
+  .exit-row {
+    margin-block-start: var(--space-2);
+  }
+}
+
+@media (min-width: 64rem) {
+  .exit-row {
+    margin-block-start: var(--space-5);
+  }
+}

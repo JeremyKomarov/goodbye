@@ -1,0 +1,28 @@
+// Display-face digits, each in a fixed-width slot so the clock never shifts as numbers change.
+.flip-digits {
+  display: flex;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1;
+
+  &__colon {
+    width: 0.28em;
+    text-align: center;
+    opacity: 0.5;
+  }
+
+  &__slot {
+    position: relative;
+    display: inline-block;
+    width: 0.5em;
+    height: 1em;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  &__digit {
+    position: absolute;
+    inset: 0;
+  }
+}

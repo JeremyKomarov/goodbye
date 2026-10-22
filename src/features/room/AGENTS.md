@@ -12,6 +12,7 @@ disabled shell until then. Route: `/r/[slug]`.
 | `API_ENDPOINTS.rooms.one` (GET) | Live, no session needed. The room, its players, host ids and votes in one `RoomSnapshotDto`; `not_found` for an unknown or malformed slug. | `app/api/rooms/[slug]/route.ts` |
 | `API_ENDPOINTS.rooms.me` (PUT) | Live, bearer. Join under `{ name }` or rename; written as the caller, so `name_taken` (on `name`) comes from the database's trigger. 204. | `app/api/rooms/[slug]/me/route.ts` |
 | `API_ENDPOINTS.rooms.vote` (PUT, DELETE) | Live, bearer. `{ slotStart }` casts or moves the caller's vote; DELETE takes it back. `voting_closed` after the close, `invalid_input` on `slotStart` for an hour outside the window, `forbidden` for the host. 204. | `app/api/rooms/[slug]/vote/route.ts` |
+| `API_ENDPOINTS.rooms.finalize` (POST) | Live, no session needed. Locks the room to its winning hour once voting is over (ties drawn by the database), and answers the `RoomDto` — unchanged before the close. | `app/api/rooms/[slug]/finalize/route.ts` |
 | `API_ENDPOINTS.rooms.hosts` (POST) | Live, bearer. `{ adminToken }` makes the caller a host device; `forbidden` for a wrong token. Idempotent, 204. | `app/api/rooms/[slug]/hosts/route.ts` |
 
 ## Inventory
@@ -22,17 +23,24 @@ disabled shell until then. Route: `/r/[slug]`.
 | `components/RoomHeader` | The chat header: group avatar and name, "Hi {name}" (a link to `onMe`) and how many are in the room; `children` fill its end. |
 | `components/JoinGate` | Covers the room until this browser has a name in it: whose room, why, how many voted; the name form on `SaveNameInputSchema`. `name_taken` reads as the host's name when it is, otherwise as taken. Carries the `LanguageSwitch`. |
 | `components/Welcome` | The hello pill, "the room will remember you" or "welcome back". Keyed by user. |
+| `components/Hero` | The status card, by `room.status`: `VotingHero` (why, time left to vote, who leads or the tie), `LockedHero` (time to the chosen hour, how it was chosen, `ExitRow` filling up), `ExitedHero` (the notice and the `verdict`). `Countdown` is days in words over `FlipDigits`, spoken in full. Compact on phones, roomy from 64rem. |
+| `components/FlipDigits` | Display-face digits that roll as they change. Decorative, always LTR. |
 | `components/VoteHeatmap` | Pick a day, then an hour: partials `DayStrip` (tabs with totals), `HourGrid` (chips shaded by `voteStep`, rings for yours and the winner, `columns()` per width), `VoteDetail` (who voted for the hour pointed at, "take back my vote", or how voting works). The chips are native buttons (docs/DECISIONS.md #7). |
 | `components/VoteLegend` | The five `--vote-*` shades, fewer → more. Hidden on short screens. |
 | `components/RoomSkeleton` | The page's Suspense fallback, shaped like the room. |
 | `components/RoomNotFound` | `app/[locale]/r/[slug]/not-found.tsx` renders it. |
-| `strings/room.strings.ts` | The `room` namespace: `reason` (gendered), `votes`, `people`, `slot` — said by more than one component. |
+| `strings/room.strings.ts` | The `room` namespace: `reason` (gendered), `votes`, `people`, `slot`, `duration` — said by more than one component. |
 | `utils/names.ts` | `sameName` — the database's `norm_name()` comparison. |
 | `hooks/useVote.ts` | `{ userId, slotMs }` (null takes it back), written into the snapshot before the request and rolled back on failure. Invalidates the room. |
 | `api/votes.dto.ts` | `CastVoteInputSchema`. |
 | `api/votes.api.ts` | `castVote`, `withdrawVote`. |
+| `hooks/useFinalizeRoom.ts` | The finalize call. Invalidates the room once it has locked. |
+| `hooks/useAutoFinalize.ts` | When this screen's clock passes the close, asks for the result every 4s until the room is no longer voting. |
+| `hooks/useDuration.ts` | `exact(ms)` ("an hour and 5 minutes"), `rough(ms)` ("33 hours"), from the `room` namespace's `duration`. |
 | `hooks/useSlotFormat.ts` | `day`, `weekday`, `dayMonth`, `time`, `slot` — the room's timezone, the reader's language. Every hour on the room's screens. |
 | `utils/voteScale.ts` | `voteStep(count, max)` → shade, `columns(n, min, max)`, `VOTE_STEPS`, `DARK_TEXT_FROM`. |
+| `utils/duration.ts` | `exactParts`, `roughPart` — a duration split into units for words. |
+| `utils/verdict.ts` | `verdict(room)` — on time (±`ON_TIME_MINUTES`), late, early, or left mid-vote. |
 | `utils/tally.ts` | `tallyVotes`, `leadingSlot` (`Lead` with every tied slot), `wonByDraw`. |
 | `hooks/useRoom.ts` | `useQuery` on `QUERY_KEYS.room.snapshot(slug)` → `RoomSnapshot`, seeded from the page's read. |
 | `hooks/useIdentity.ts` | Who this browser is here: `state` (`IDENTITY_STATES` checking → join → ready), `me`, `isHost`, `returning`, `join`. Joins the host's browser under the host's name by itself, and claims the room for a host who joined unrecorded. |

@@ -1,0 +1,62 @@
+.countdown {
+  margin-block-start: var(--space-2);
+
+  &__days {
+    margin-block-end: var(--space-1);
+    color: var(--text-secondary);
+  }
+
+  &__digits {
+    font-size: min(5rem, 19vw);
+
+    &--plain {
+      color: var(--text-primary);
+    }
+
+    &--overtime {
+      color: var(--accent-pill);
+    }
+  }
+
+  // Read out instead of the digits, which are decorative.
+  &__spoken {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@media (max-height: 700px) {
+  .countdown {
+    margin-block-start: var(--space-1);
+  }
+
+  .countdown__digits {
+    font-size: min(4rem, 16vw);
+  }
+}
+
+@media (max-height: 500px) {
+  .countdown__digits {
+    font-size: 3.25rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .countdown__days {
+    font-size: var(--text-lg);
+  }
+
+  .countdown__digits {
+    font-size: 5.5rem;
+  }
+}
+
+@media (min-width: 64rem) and (max-height: 700px) {
+  .countdown__digits {
+    font-size: 4rem;
+  }
+}

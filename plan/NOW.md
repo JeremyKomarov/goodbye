@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 05.7
+**Step:** 05.8
 **Since:** 2026-10-22
-**State:** the countdown: the finalize handler, `Hero` voting and locked, `FlipDigits`.
+**State:** Realtime: one channel per room in `core/supabase`, events invalidate `room.all`.
 **Blocked by:** —
 
 ---

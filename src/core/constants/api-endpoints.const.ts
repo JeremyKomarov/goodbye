@@ -6,5 +6,6 @@ export const API_ENDPOINTS = {
     me: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/me`,
     hosts: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/hosts`,
     vote: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/vote`,
+    finalize: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/finalize`,
   },
 } as const;
