@@ -11,6 +11,7 @@ disabled shell until then. Route: `/r/[slug]`.
 |---|---|---|
 | `API_ENDPOINTS.rooms.one` (GET) | Live, no session needed. The room, its players, host ids and votes in one `RoomSnapshotDto`; `not_found` for an unknown or malformed slug. | `app/api/rooms/[slug]/route.ts` |
 | `API_ENDPOINTS.rooms.me` (PUT) | Live, bearer. Join under `{ name }` or rename; written as the caller, so `name_taken` (on `name`) comes from the database's trigger. 204. | `app/api/rooms/[slug]/me/route.ts` |
+| `API_ENDPOINTS.rooms.vote` (PUT, DELETE) | Live, bearer. `{ slotStart }` casts or moves the caller's vote; DELETE takes it back. `voting_closed` after the close, `invalid_input` on `slotStart` for an hour outside the window, `forbidden` for the host. 204. | `app/api/rooms/[slug]/vote/route.ts` |
 | `API_ENDPOINTS.rooms.hosts` (POST) | Live, bearer. `{ adminToken }` makes the caller a host device; `forbidden` for a wrong token. Idempotent, 204. | `app/api/rooms/[slug]/hosts/route.ts` |
 
 ## Inventory
@@ -25,6 +26,10 @@ disabled shell until then. Route: `/r/[slug]`.
 | `components/RoomNotFound` | `app/[locale]/r/[slug]/not-found.tsx` renders it. |
 | `strings/room.strings.ts` | The `room` namespace: `reason` (gendered), `votes`, `people` — said by more than one component. |
 | `utils/names.ts` | `sameName` — the database's `norm_name()` comparison. |
+| `hooks/useVote.ts` | `{ userId, slotMs }` (null takes it back), written into the snapshot before the request and rolled back on failure. Invalidates the room. |
+| `api/votes.dto.ts` | `CastVoteInputSchema`. |
+| `api/votes.api.ts` | `castVote`, `withdrawVote`. |
+| `utils/tally.ts` | `tallyVotes`, `leadingSlot` (`Lead` with every tied slot), `wonByDraw`. |
 | `hooks/useRoom.ts` | `useQuery` on `QUERY_KEYS.room.snapshot(slug)` → `RoomSnapshot`, seeded from the page's read. |
 | `hooks/useIdentity.ts` | Who this browser is here: `state` (`IDENTITY_STATES` checking → join → ready), `me`, `isHost`, `returning`, `join`. Joins the host's browser under the host's name by itself, and claims the room for a host who joined unrecorded. |
 | `hooks/useSessionUser.ts` | `useQuery` on `QUERY_KEYS.session.user` — this browser's user id or null. |

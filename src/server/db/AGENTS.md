@@ -16,7 +16,7 @@ Such a test is named `*.db.test.ts` and skips unless a secret key is in the envi
 | `rooms.repo.ts` | `insertRoom` (room + admin-token hash, or neither), `findRoomBySlug`, `findAdminTokenHash`, `deleteRoom`; `RoomRecord`. | Rows are mapped to camelCase here; snake_case never leaves this file. A Supabase failure throws `upstream_failed`. |
 | `players.repo.ts` | `listPlayers(roomId)` — `PlayerRecord`s, oldest first. `savePlayerName(token, …)` — join or rename, as the caller; `name_taken` from the trigger. | Same. |
 | `hosts.repo.ts` | `listHostIds(roomId)` — the host's user ids. `addHost` — idempotent. | Same. Only the server writes this table, after `tokenMatches`. |
-| `votes.repo.ts` | `listVotes(roomId)` — `VoteRecord`s. | Same. |
+| `votes.repo.ts` | `listVotes(roomId)` — `VoteRecord`s. `saveVote(token, …)` / `withdrawVote(token, …)` as the caller; a policy refusal (the host, a non-player) is `forbidden`. | Same. |
 
 <!-- Repos for the wall, reactions, codes and scores arrive with the phase whose handler first calls
      them (06–08). -->
