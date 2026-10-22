@@ -13,8 +13,8 @@ project the original app already uses.
 - [x] ~~03.2 — port the slot logic and its tests to `shared/utils/slots.ts` (S)~~
 - [x] ~~03.3 — `server/db/client.ts` and `rooms.repo.ts`: create a room with its secret, find by slug (M)~~
 - [x] ~~03.4 — `server/auth/admin-token.ts`: new token, hash, constant-time match, with tests (S)~~
-- [~] 03.5 — `POST /api/rooms`: shared input schema, response DTO, endpoint const, handler (M)
-- [ ] 03.6 — `npm run test:db`: create a room through the handler, read it back, delete it (S)
+- [x] ~~03.5 — `POST /api/rooms`: shared input schema, response DTO, endpoint const, handler (M)~~
+- [~] 03.6 — `npm run test:db`: create a room through the handler, read it back, delete it (S)
 
 ## Done when
 `npm run test:db` posts to the handler, finds the new row and its admin-token hash in Supabase,
