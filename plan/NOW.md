@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 05.9
+**Step:** 05.10
 **Since:** 2026-10-22
-**State:** login codes (handler, sign in as yourself from the gate) and `MeSheet`.
+**State:** the room flag on, checked in two browsers and both locales, probe rooms removed.
 **Blocked by:** —
 
 ---

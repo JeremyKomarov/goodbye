@@ -13,6 +13,7 @@ disabled shell until then. Route: `/r/[slug]`.
 | `API_ENDPOINTS.rooms.me` (PUT) | Live, bearer. Join under `{ name }` or rename; written as the caller, so `name_taken` (on `name`) comes from the database's trigger. 204. | `app/api/rooms/[slug]/me/route.ts` |
 | `API_ENDPOINTS.rooms.vote` (PUT, DELETE) | Live, bearer. `{ slotStart }` casts or moves the caller's vote; DELETE takes it back. `voting_closed` after the close, `invalid_input` on `slotStart` for an hour outside the window, `forbidden` for the host. 204. | `app/api/rooms/[slug]/vote/route.ts` |
 | `API_ENDPOINTS.rooms.finalize` (POST) | Live, no session needed. Locks the room to its winning hour once voting is over (ties drawn by the database), and answers the `RoomDto` — unchanged before the close. | `app/api/rooms/[slug]/finalize/route.ts` |
+| `API_ENDPOINTS.me.loginCode` (POST) | Live, bearer. The caller's code for another device, per user, not per room: `{ code, created }`; `{ fresh: true }` replaces it. A new code becomes the user's password, so the browser signs back in with it. | `app/api/me/login-code/route.ts` |
 | `API_ENDPOINTS.rooms.hosts` (POST) | Live, bearer. `{ adminToken }` makes the caller a host device; `forbidden` for a wrong token. Idempotent, 204. | `app/api/rooms/[slug]/hosts/route.ts` |
 
 ## Inventory
@@ -21,7 +22,8 @@ disabled shell until then. Route: `/r/[slug]`.
 |---|---|
 | `components/RoomScreen` | The screen: `RoomHeader`, the room's main column, `Welcome`, and `JoinGate` until `useIdentity` is ready. Takes the snapshot the page read on the server as `initial`. |
 | `components/RoomHeader` | The chat header: group avatar and name, "Hi {name}" (a link to `onMe`) and how many are in the room; `children` fill its end. |
-| `components/JoinGate` | Covers the room until this browser has a name in it: whose room, why, how many voted; the name form on `SaveNameInputSchema`. `name_taken` reads as the host's name when it is, otherwise as taken. Carries the `LanguageSwitch`. |
+| `components/JoinGate` | Covers the room until this browser has a name in it: whose room, why, how many voted, and the `LanguageSwitch`. Partials: `NameForm` (on `SaveNameInputSchema`; the host's name says whose it is), `CodeForm` (a taken name asks for that player's code; "that's not me" goes back). |
+| `components/MeSheet` | "Hi {name}" opens it, for players, not the host. Partials: `RenameForm`, `DeviceCode` (show, copy, replace the code), `NotYou` (forget this browser's player); and the `LanguageSwitch`. |
 | `components/Welcome` | The hello pill, "the room will remember you" or "welcome back". Keyed by user. |
 | `components/Hero` | The status card, by `room.status`: `VotingHero` (why, time left to vote, who leads or the tie), `LockedHero` (time to the chosen hour, how it was chosen, `ExitRow` filling up), `ExitedHero` (the notice and the `verdict`). `Countdown` is days in words over `FlipDigits`, spoken in full. Compact on phones, roomy from 64rem. |
 | `components/FlipDigits` | Display-face digits that roll as they change. Decorative, always LTR. |
@@ -34,6 +36,13 @@ disabled shell until then. Route: `/r/[slug]`.
 | `hooks/useVote.ts` | `{ userId, slotMs }` (null takes it back), written into the snapshot before the request and rolled back on failure. Invalidates the room. |
 | `api/votes.dto.ts` | `CastVoteInputSchema`. |
 | `api/votes.api.ts` | `castVote`, `withdrawVote`. |
+| `hooks/useLoginCode.ts` | Fetches the code (`fresh` for a new one), signs back in when it is new, keeps it on the device. |
+| `hooks/useEnsureLoginCode.ts` | Every player but the host gets a code as they come in, so the host can send it later. Returns `useLoginCode`'s mutation. |
+| `hooks/useSignInAs.ts` | Signs in as another device's player with their code. Invalidates the session user. |
+| `hooks/useSwitchUser.ts` | "Not you?": signs this browser out locally. Invalidates the session user. |
+| `hooks/useRename.ts` | `saveName` for a player already in. Invalidates the room. |
+| `api/login-code.dto.ts` | `LoginCodeInputSchema`, `LoginCodeDtoSchema`, `SignInAsInputSchema` (the gate's code field). |
+| `api/login-code.api.ts` | `fetchLoginCode`. |
 | `hooks/useRoomRealtime.ts` | Subscribes to the room; any change invalidates `QUERY_KEYS.room.all(slug)`, settled over 150ms. |
 | `hooks/useFinalizeRoom.ts` | The finalize call. Invalidates the room once it has locked. |
 | `hooks/useAutoFinalize.ts` | When this screen's clock passes the close, asks for the result every 4s until the room is no longer voting. |

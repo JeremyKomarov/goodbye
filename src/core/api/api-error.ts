@@ -9,6 +9,7 @@ export const API_ERROR_CODES = {
   not_found: "not_found",
   name_taken: "name_taken",
   wrong_login_code: "wrong_login_code",
+  too_many_attempts: "too_many_attempts",
   voting_closed: "voting_closed",
   close_time_in_past: "close_time_in_past",
   no_slots_after_close: "no_slots_after_close",
@@ -26,6 +27,7 @@ export const API_ERROR_STATUS: Record<ApiErrorCode, number> = {
   not_found: 404,
   name_taken: 409,
   wrong_login_code: 401,
+  too_many_attempts: 429,
   voting_closed: 409,
   close_time_in_past: 422,
   no_slots_after_close: 422,
@@ -65,6 +67,7 @@ function codeFromStatus(status: number): ApiErrorCode {
   if (status === 401) return API_ERROR_CODES.unauthorized;
   if (status === 403) return API_ERROR_CODES.forbidden;
   if (status === 404) return API_ERROR_CODES.not_found;
+  if (status === 429) return API_ERROR_CODES.too_many_attempts;
   if (status === 501) return API_ERROR_CODES.not_implemented;
   if (status === 502 || status === 503 || status === 504) return API_ERROR_CODES.upstream_failed;
   return API_ERROR_CODES.internal;

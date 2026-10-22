@@ -1,4 +1,5 @@
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
+import { loginEmail, normalizeLoginCode } from "@/core/constants/login.const";
 import { captchaToken } from "./captcha";
 import { browserSupabase } from "./client";
 
@@ -33,4 +34,22 @@ export async function sessionHeaders(): Promise<Record<string, string>> {
 /** Forgets this browser's user here, in every room — "not you?". Other devices stay signed in. */
 export async function signOutHere(): Promise<void> {
   await browserSupabase().auth.signOut({ scope: "local" });
+}
+
+const TOO_MANY_REQUESTS = 429;
+
+/**
+ * Signs this browser in as `userId` with their login code — the other device's player, or this
+ * one again after a new code signed every session out. Throws `wrong_login_code` or
+ * `too_many_attempts`.
+ */
+export async function signInWithCode(userId: string, code: string): Promise<void> {
+  const { error } = await browserSupabase().auth.signInWithPassword({
+    email: loginEmail(userId),
+    password: normalizeLoginCode(code),
+  });
+  if (!error) return;
+  throw error.status === TOO_MANY_REQUESTS
+    ? new ApiError(API_ERROR_CODES.too_many_attempts, TOO_MANY_REQUESTS)
+    : new ApiError(API_ERROR_CODES.wrong_login_code, 401);
 }

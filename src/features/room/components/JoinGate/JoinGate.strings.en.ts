@@ -14,10 +14,22 @@ export const joinGateStringsEn: StringsOf<typeof joinGateStrings> = {
   wallOpen: "The wall is still open — leave {name} a goodbye.",
   nameLabel: "What's your name? It's how the room will see you",
   enter: "Enter the room",
+  code: {
+    question: "{name} is already in the room. Is that you, on another device?",
+    label: "{name}'s code",
+    helper:
+      "You'll find the code on the device you joined from: tap \"Hi {name}\" at the top of the " +
+      "room. Lost it, and the device too? {host} can send it to you.",
+    enter: "Come in as {name}",
+    notMe: "That's not me, I'll pick another name",
+  },
   errors: {
     name: "A name is needed, up to 24 characters",
-    nameTaken: "Someone in the room already has that name. Pick another",
     hostName: "That's {host}'s name. If it's you, open your admin link here.",
-    failed: "We couldn't let you in. Try again",
+    failed: "We couldn't let you in. Refresh the page and try again",
+    code: "The code is needed",
+    not_found: "No one with that name is in this room",
+    wrong_login_code: "That code doesn't match. Check it on your first device",
+    too_many_attempts: "Too many attempts. Try again in a few minutes",
   },
 };

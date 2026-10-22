@@ -17,8 +17,8 @@ countdown change live — and the `room` flag is on.
 - [x] ~~05.6 — VoteHeatmap and VoteLegend (L)~~
 - [x] ~~05.7 — the countdown: `POST /api/rooms/[slug]/finalize`, `Hero` with `FlipDigits` (M)~~
 - [x] ~~05.8 — Realtime: one channel per room; a change invalidates `QUERY_KEYS.room` (S)~~
-- [~] 05.9 — login codes and `MeSheet`: rename, your code, sign in as yourself, "not you?" (L)
-- [ ] 05.10 — RoomScreen on `/r/[slug]`, `enable-feature room`, checked in two browsers (M)
+- [x] ~~05.9 — login codes and `MeSheet`: rename, your code, sign in as yourself, "not you?" (L)~~
+- [~] 05.10 — RoomScreen on `/r/[slug]`, `enable-feature room`, checked in two browsers (M)
 
 ## Done when
 Two browsers, one of them private, open the same room link and join under different names; a vote

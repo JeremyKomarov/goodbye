@@ -8,4 +8,7 @@ export const API_ENDPOINTS = {
     vote: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/vote`,
     finalize: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/finalize`,
   },
+  me: {
+    loginCode: "/api/me/login-code",
+  },
 } as const;

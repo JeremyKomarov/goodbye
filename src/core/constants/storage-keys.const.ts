@@ -4,4 +4,6 @@ export const STORAGE_KEYS = {
   adminToken: (slug: string) => `exit-admin:${slug}`,
   // The anonymous session. The original's key too, so a returning visitor is still themselves.
   supabaseAuth: "exit-party-auth",
+  // A player's login code, kept on each device once the server has it, to show it again.
+  loginCode: (userId: string) => `exit-login:${userId}`,
 } as const;

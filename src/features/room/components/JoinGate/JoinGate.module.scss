@@ -7,7 +7,7 @@
   background: color-mix(in oklab, var(--surface-page) 95%, transparent);
   backdrop-filter: blur(8px);
 
-  &__form {
+  &__card {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -16,6 +16,25 @@
     min-height: 100dvh;
     margin-inline: auto;
     padding: var(--space-10) var(--space-6);
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  &__question {
+    color: var(--text-primary);
+  }
+
+  // A code is read off one screen and typed on another: big, spaced, centred.
+  &__code {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xl);
+    letter-spacing: 0.3em;
+    text-align: center;
+    text-transform: uppercase;
   }
 
   // The group's name, and the language switch for whoever got a Hebrew link and reads English.
@@ -56,7 +75,7 @@
 
 // A phone held sideways: the headline would push the field off the screen.
 @media (max-height: 500px) {
-  .join-gate__form {
+  .join-gate__card {
     gap: var(--space-3);
     padding-block: var(--space-4);
   }
