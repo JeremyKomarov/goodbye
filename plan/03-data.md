@@ -4,7 +4,7 @@
 form will share, written by `server/db/`, guarded by the Supabase lint zone — against the hosted
 project the original app already uses.
 **Depends on:** 01
-**Status:** in progress
+**Status:** done
 
 ## Steps
 `[ ]` not started · `[~]` in flight now (one, and `plan/NOW.md` names it) · `[x]` done, struck through.
@@ -14,7 +14,7 @@ project the original app already uses.
 - [x] ~~03.3 — `server/db/client.ts` and `rooms.repo.ts`: create a room with its secret, find by slug (M)~~
 - [x] ~~03.4 — `server/auth/admin-token.ts`: new token, hash, constant-time match, with tests (S)~~
 - [x] ~~03.5 — `POST /api/rooms`: shared input schema, response DTO, endpoint const, handler (M)~~
-- [~] 03.6 — `npm run test:db`: create a room through the handler, read it back, delete it (S)
+- [x] ~~03.6 — `npm run test:db`: create a room through the handler, read it back, delete it (S)~~
 
 ## Done when
 `npm run test:db` posts to the handler, finds the new row and its admin-token hash in Supabase,

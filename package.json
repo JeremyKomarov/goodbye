@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:db": "node --env-file=.env.local ./node_modules/vitest/vitest.mjs run db.test",
     "rule": "node .agents/cli.mjs rule",
     "guard": "node .agents/cli.mjs check",
     "sync:agents": "node .agents/cli.mjs sync",

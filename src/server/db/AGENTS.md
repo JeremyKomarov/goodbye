@@ -6,6 +6,8 @@ handlers import named async functions from `*.repo.ts`, never the client (`01 §
 
 The database is the hosted project the original app runs on (`docs/DECISIONS.md #1`): the
 migrations are already applied there, and live rooms are in it. A test that writes cleans up.
+Such a test is named `*.db.test.ts` and skips unless a secret key is in the environment;
+`npm run test:db` runs them with `.env.local` loaded.
 
 | File | What | Rule |
 |---|---|---|
