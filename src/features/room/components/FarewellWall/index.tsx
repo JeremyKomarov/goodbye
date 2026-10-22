@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { MessageList } from "@/features/room/components/FarewellWall/partials/MessageList";
 import { usePostMessage } from "@/features/room/hooks/usePostMessage";
@@ -20,7 +21,7 @@ import { Composer } from "./partials/Composer";
  */
 export function FarewellWall() {
   const t = useTranslations(FAREWELL_WALL_NAMESPACE);
-  const { slug, snapshot, me } = useRoomContext();
+  const { slug, snapshot, me, live, typing } = useRoomContext();
   const { room, hostIds } = snapshot;
   const { data: wall } = useWall(slug);
   const post = usePostMessage(slug);
@@ -48,13 +49,27 @@ export function FarewellWall() {
             me && react.mutate({ messageId, userId: me.userId, emoji })
           }
           intro={intro}
+          footer={
+            <AnimatePresence>
+              {typing && (
+                <motion.p
+                  className={farewellWallClasses.typing}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  {typing}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          }
         />
       ) : (
         <div className={farewellWallClasses.region} aria-busy>
           <Skeleton shape={SKELETON_SHAPES.block} height="100%" />
         </div>
       )}
-      <Composer onSend={post.mutateAsync} />
+      <Composer onSend={post.mutateAsync} onTyping={live.sendTyping} />
     </section>
   );
 }

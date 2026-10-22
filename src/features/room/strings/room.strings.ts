@@ -9,6 +9,7 @@ export const roomStrings = {
   votes: "{count, plural, =0 {אין קולות} one {קול אחד} other {# קולות}}",
   people: "{count, plural, one {אדם אחד} other {# אנשים}}",
   slot: "{day} ב-{time}",
+  typing: "{count, plural, one {{name} מקליד/ה…} other {# אנשים מקלידים…}}",
   // Durations: `exact` pairs two units ("שעה ו-5 דקות"); `rough` is one, for display type, where
   // "ו-9" reads as "1-9".
   duration: {

@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import type { Player, RoomSnapshot } from "@/features/room/types/room.types";
 import type { Lead } from "@/features/room/utils/tally";
+import type { RoomLive } from "./useRoomChannel";
 
 /**
  * What every section of the room shares, provided by `RoomShell` around the section's page: the
@@ -13,6 +14,10 @@ export interface RoomContextValue {
   me: Player | null;
   isHost: boolean;
   leader: Lead | null;
+  /** Who is here and typing, and the emoji rain — the moment only (docs/DECISIONS.md #8). */
+  live: RoomLive;
+  /** "Dana is typing…" for this room, or null. */
+  typing: string | null;
 }
 
 export const RoomContext = createContext<RoomContextValue | null>(null);

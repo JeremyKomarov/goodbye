@@ -9,6 +9,7 @@ export const farewellWallClasses = classMap("FarewellWall", {
   list: styles["farewell-wall__list"],
   intro: styles["farewell-wall__intro"],
   empty: styles["farewell-wall__empty"],
+  typing: styles["farewell-wall__typing"],
   jump: styles["farewell-wall__jump"],
   composer: styles["farewell-wall__composer"],
   form: styles["farewell-wall__form"],

@@ -99,3 +99,19 @@ strip is a set of tabs over it.
 
 > Native buttons are allowed for the cells of a data visualisation inside its feature (today:
 > `room/components/VoteHeatmap`). Everything else still uses `Button`, `ChoiceGroup` or a `Link`.
+
+## 8. Presence, typing and the emoji rain are the moment only, held by the room's screen
+
+**Locked 2026-10-22.**
+
+`#2` says a Realtime event invalidates query keys and never writes into a store or the query
+cache. That is about the tables: a change there is read again through its handler. Presence,
+"… is typing" and the emoji rain are not tables. Nothing stores them, there is nothing to read
+again, and they mean nothing a minute later. The room's shell keeps them in its own React state —
+who is here, who is typing until when — and hands them to its sections through `RoomContext`.
+
+The argument that was wrong: a zustand store in `store/`, so any screen could read who is online.
+Only the room shows it, and a global store would outlive the room it describes.
+
+> Table changes invalidate queries (`#2`). Presence and broadcasts live in the room shell's state
+> and die with it; they never reach a store, the query cache or the database.

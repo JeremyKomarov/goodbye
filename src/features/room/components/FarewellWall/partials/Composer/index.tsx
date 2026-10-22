@@ -6,6 +6,7 @@ import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
 import {
   MAX_WALL_MESSAGE, PostMessageInputSchema, type PostMessageInput,
 } from "@/features/room/api/wall.dto";
+import { useTypingSignal } from "@/features/room/hooks/useTypingSignal";
 import { farewellWallClasses } from "@/features/room/components/FarewellWall/FarewellWall.classes";
 import {
   FAREWELL_WALL_NAMESPACE, farewellWallKeys,
@@ -22,12 +23,14 @@ type SendError = (typeof SEND_ERRORS)[number] | "failed";
 interface ComposerProps {
   /** Rejects with an `ApiError` — `too_fast`, `forbidden`. */
   onSend: (input: PostMessageInput) => Promise<unknown>;
-  /** Above the field: the quick emoji, from 06.6. */
+  /** "Is typing" on (true) and off, for everyone else's screen. */
+  onTyping: (isTyping: boolean) => void;
+  /** Above the field: the quick emoji. */
   children?: ReactNode;
 }
 
 /** The wall's composer: a goodbye of up to 140 characters, sent with the round button. */
-export function Composer({ onSend, children }: ComposerProps) {
+export function Composer({ onSend, onTyping, children }: ComposerProps) {
   const t = useTranslations(FAREWELL_WALL_NAMESPACE);
   const form = useForm<PostMessageInput>({
     resolver: zodResolver(PostMessageInputSchema),
@@ -35,6 +38,11 @@ export function Composer({ onSend, children }: ComposerProps) {
   });
   const body = useWatch({ control: form.control, name: "body" });
   const { errors, isSubmitting } = form.formState;
+  const typing = useTypingSignal(onTyping);
+  const field = form.register("body", {
+    onChange: (event) => typing.onDraft(event.target.value),
+    onBlur: typing.stop,
+  });
   const left = MAX_WALL_MESSAGE - body.length;
   const serverType = errors.root?.server?.type as SendError | undefined;
 
@@ -42,6 +50,7 @@ export function Composer({ onSend, children }: ComposerProps) {
     try {
       await onSend(input);
       form.reset();
+      typing.stop();
     } catch (error) {
       const code = error instanceof ApiError ? error.code : null;
       const known = SEND_ERRORS.find((candidate) => candidate === code);
@@ -67,7 +76,7 @@ export function Composer({ onSend, children }: ComposerProps) {
             autoComplete="off"
             enterKeyHint="send"
             className={farewellWallClasses.input}
-            {...form.register("body")}
+            {...field}
           />
           {left <= COUNT_FROM && <span className={farewellWallClasses.count}>{left}</span>}
         </div>

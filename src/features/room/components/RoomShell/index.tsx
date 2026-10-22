@@ -19,7 +19,8 @@ import { IDENTITY_STATES, useIdentity } from "@/features/room/hooks/useIdentity"
 import { useRename } from "@/features/room/hooks/useRename";
 import { useRoom } from "@/features/room/hooks/useRoom";
 import { RoomContext } from "@/features/room/hooks/useRoomContext";
-import { useRoomRealtime } from "@/features/room/hooks/useRoomRealtime";
+import { useRoomChannel } from "@/features/room/hooks/useRoomChannel";
+import { useTypingLine } from "@/features/room/hooks/useTypingLine";
 import { useSignInAs } from "@/features/room/hooks/useSignInAs";
 import { useSwitchUser } from "@/features/room/hooks/useSwitchUser";
 import { useWall } from "@/features/room/hooks/useWall";
@@ -56,12 +57,15 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
   const votes = snapshot?.votes;
   const leader = useMemo(() => (votes ? leadingSlot(tallyVotes(votes)) : null), [votes]);
   const { data: wall } = useWall(slug);
-  const isOnWall = usePathname() === roomSectionPath(slug, ROOM_SECTIONS.wall);
+  const pathname = usePathname();
+  const isOnWall = pathname === roomSectionPath(slug, ROOM_SECTIONS.wall);
+  const isOnVote = pathname === roomSectionPath(slug, ROOM_SECTIONS.vote);
   const unread = useWallUnread(wall?.messages, me?.userId, isOnWall);
   useAutoFinalize(room, now);
-  useRoomRealtime(slug, room?.id);
+  const live = useRoomChannel(slug, room?.id, me);
+  const typing = useTypingLine(live.typers);
   if (!snapshot || !room) return <RoomSkeleton />;
-  const nav = { snapshot, leader, lastMessage: wall?.messages.at(-1), unread };
+  const nav = { snapshot, leader, lastMessage: wall?.messages.at(-1), unread, typing };
 
   async function signInAsPlayer(name: string, code: string) {
     const player = snapshot?.players.find((candidate) => sameName(candidate.name, name));
@@ -71,12 +75,15 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
 
   return (
     <MotionConfig reducedMotion="user">
-      <RoomContext value={{ slug, snapshot, me, isHost, leader }}>
-        <div className={roomShellClasses.root}>
+      <RoomContext value={{ slug, snapshot, me, isHost, leader, live, typing }}>
+        {/* Under the join gate the room is shown but out of reach: no focus, no screen reader. */}
+        <div className={roomShellClasses.root} inert={identity.state !== IDENTITY_STATES.ready}>
           <RoomHeader
             room={room}
             me={me}
-            playerCount={snapshot.players.length}
+            online={live.online.length}
+            typing={typing}
+            now={isOnVote ? undefined : now}
             onMe={isHost ? undefined : () => setIsMeOpen(true)}
           />
           <div className={roomShellClasses.body}>

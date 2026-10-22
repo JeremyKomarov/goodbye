@@ -42,6 +42,13 @@
     text-align: center;
   }
 
+  &__typing {
+    margin-block-start: var(--space-1);
+    margin-inline-start: var(--space-3);
+    color: var(--positive-text);
+    font-size: var(--text-sm);
+  }
+
   &__jump {
     position: absolute;
     inset-inline-end: var(--space-3);

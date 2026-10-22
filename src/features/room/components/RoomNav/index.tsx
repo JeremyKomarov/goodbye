@@ -22,11 +22,14 @@ interface RoomNavProps {
   lastMessage: WallMessage | undefined;
   /** Unread goodbyes, counted while you are on another section. */
   unread: number;
+  /** Someone is typing: the wall's line says so, in the brand colour. */
+  typing: string | null;
   variant: (typeof ROOM_NAV_VARIANTS)[keyof typeof ROOM_NAV_VARIANTS];
 }
 
 /** The room's sections — the vote and the wall — each with what is happening in it. */
-export function RoomNav({ snapshot, leader, lastMessage, unread, variant }: RoomNavProps) {
+export function RoomNav(props: RoomNavProps) {
+  const { snapshot, leader, lastMessage, unread, typing, variant } = props;
   const t = useTranslations(ROOM_NAV_NAMESPACE);
   const { room } = snapshot;
   const format = useSlotFormat(room.timezone);
@@ -45,6 +48,10 @@ export function RoomNav({ snapshot, leader, lastMessage, unread, variant }: Room
             ? t(roomNavKeys.vote.leading, { slot: format.slot(leader.ms) })
             : t(roomNavKeys.vote.none);
 
+  const wallLine = lastMessage
+    ? t(roomNavKeys.wall.last, { name: isolate(lastMessage.name), body: isolate(lastMessage.body) })
+    : t(roomNavKeys.wall.none);
+
   const items: TabBarItem[] = [
     {
       href: roomSectionPath(room.slug, ROOM_SECTIONS.vote) as Route,
@@ -60,12 +67,8 @@ export function RoomNav({ snapshot, leader, lastMessage, unread, variant }: Room
       icon: ICON_NAMES.wall,
       label: t(roomNavKeys.wall.title),
       badge: unread,
-      subtitle: lastMessage
-        ? t(roomNavKeys.wall.last, {
-            name: isolate(lastMessage.name),
-            body: isolate(lastMessage.body),
-          })
-        : t(roomNavKeys.wall.none),
+      isLive: !!typing,
+      subtitle: typing ?? wallLine,
       meta: lastMessage && format.time(lastMessage.createdAt),
     },
   ];

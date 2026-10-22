@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 06.5
+**Step:** 06.6
 **Since:** 2026-10-22
-**State:** presence, typing and the emoji broadcast on the channel; the header's live line.
+**State:** the emoji rain: the header's 🎉, the wall's quick emoji, the door at the hour.
 **Blocked by:** —
 
 ---
