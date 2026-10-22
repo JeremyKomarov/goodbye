@@ -112,6 +112,16 @@ import { roomNotFoundStrings } from "@/features/room/components/RoomNotFound/Roo
 import {
   roomNotFoundStringsEn,
 } from "@/features/room/components/RoomNotFound/RoomNotFound.strings.en";
+import { VOTE_LEGEND_NAMESPACE } from "@/features/room/components/VoteLegend/VoteLegend.keys.const";
+import { voteLegendStrings } from "@/features/room/components/VoteLegend/VoteLegend.strings";
+import { voteLegendStringsEn } from "@/features/room/components/VoteLegend/VoteLegend.strings.en";
+import {
+  VOTE_HEATMAP_NAMESPACE,
+} from "@/features/room/components/VoteHeatmap/VoteHeatmap.keys.const";
+import { voteHeatmapStrings } from "@/features/room/components/VoteHeatmap/VoteHeatmap.strings";
+import {
+  voteHeatmapStringsEn,
+} from "@/features/room/components/VoteHeatmap/VoteHeatmap.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -137,6 +147,8 @@ const he = {
   [ROOM_HEADER_NAMESPACE]: roomHeaderStrings,
   [ROOM_SKELETON_NAMESPACE]: roomSkeletonStrings,
   [ROOM_NOT_FOUND_NAMESPACE]: roomNotFoundStrings,
+  [VOTE_LEGEND_NAMESPACE]: voteLegendStrings,
+  [VOTE_HEATMAP_NAMESPACE]: voteHeatmapStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -161,6 +173,8 @@ const en: StringsOf<typeof he> = {
   [ROOM_HEADER_NAMESPACE]: roomHeaderStringsEn,
   [ROOM_SKELETON_NAMESPACE]: roomSkeletonStringsEn,
   [ROOM_NOT_FOUND_NAMESPACE]: roomNotFoundStringsEn,
+  [VOTE_LEGEND_NAMESPACE]: voteLegendStringsEn,
+  [VOTE_HEATMAP_NAMESPACE]: voteHeatmapStringsEn,
 };
 
 export type Messages = typeof he;

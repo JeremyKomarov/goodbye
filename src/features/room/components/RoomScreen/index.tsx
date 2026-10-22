@@ -6,8 +6,11 @@ import { JoinGate } from "@/features/room/components/JoinGate";
 import { RoomHeader } from "@/features/room/components/RoomHeader";
 import { RoomSkeleton } from "@/features/room/components/RoomSkeleton";
 import { Welcome } from "@/features/room/components/Welcome";
+import { VoteHeatmap } from "@/features/room/components/VoteHeatmap";
 import { IDENTITY_STATES, useIdentity } from "@/features/room/hooks/useIdentity";
 import { useRoom } from "@/features/room/hooks/useRoom";
+import { useVote } from "@/features/room/hooks/useVote";
+import { useNow } from "@/shared/hooks/useNow";
 import { roomScreenClasses } from "./RoomScreen.classes";
 
 interface RoomScreenProps {
@@ -20,14 +23,25 @@ interface RoomScreenProps {
 export function RoomScreen({ slug, initial }: RoomScreenProps) {
   const { data: snapshot } = useRoom(slug, initial);
   const identity = useIdentity(slug, snapshot);
+  const vote = useVote(slug);
+  const now = useNow();
   if (!snapshot) return <RoomSkeleton />;
   const { room } = snapshot;
+  const { me } = identity;
 
   return (
     <MotionConfig reducedMotion="user">
       <div className={roomScreenClasses.root}>
         <RoomHeader room={room} me={identity.me} playerCount={snapshot.players.length} />
-        <main className={roomScreenClasses.main} />
+        <main className={roomScreenClasses.main}>
+          <VoteHeatmap
+            snapshot={snapshot}
+            now={now}
+            me={me}
+            canVote={!identity.isHost}
+            onVote={(slotMs) => vote.mutateAsync({ userId: me?.userId ?? "", slotMs })}
+          />
+        </main>
       </div>
 
       <Welcome key={identity.me?.userId} me={identity.me} isReturning={identity.returning} />

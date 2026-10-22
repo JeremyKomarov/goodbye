@@ -8,4 +8,5 @@ export const roomStrings = {
     "other {{gender, select, f {פשוט נמאס לה} other {פשוט נמאס לו}}}}",
   votes: "{count, plural, =0 {אין קולות} one {קול אחד} other {# קולות}}",
   people: "{count, plural, one {אדם אחד} other {# אנשים}}",
+  slot: "{day} ב-{time}",
 };

@@ -14,8 +14,8 @@ countdown change live — and the `room` flag is on.
 - [x] ~~05.3 — join: `PUT /api/rooms/[slug]/me` (join, rename, `name_taken`), the host claim (M)~~
 - [x] ~~05.4 — JoinGate and Welcome, over the room's header (L)~~
 - [x] ~~05.5 — vote: `PUT`/`DELETE /api/rooms/[slug]/vote`, optimistic `useVote`, tally and lead (M)~~
-- [~] 05.6 — VoteHeatmap and VoteLegend (L)
-- [ ] 05.7 — the countdown: `POST /api/rooms/[slug]/finalize`, `Hero` with `FlipDigits` (M)
+- [x] ~~05.6 — VoteHeatmap and VoteLegend (L)~~
+- [~] 05.7 — the countdown: `POST /api/rooms/[slug]/finalize`, `Hero` with `FlipDigits` (M)
 - [ ] 05.8 — Realtime: one channel per room; a change invalidates `QUERY_KEYS.room` (S)
 - [ ] 05.9 — login codes and `MeSheet`: rename, your code, sign in as yourself, "not you?" (L)
 - [ ] 05.10 — RoomScreen on `/r/[slug]`, `enable-feature room`, checked in two browsers (M)
@@ -30,6 +30,7 @@ Hebrew and English with no `MISSING_MESSAGE`; rooms made while checking are dele
 ## Notes
 - `BUTTON_VARIANTS.link` joined the kit: "Hi {name}" in the header, and later "not me" and "take
   back my vote", are phrases inside a sentence, and the kit forbids a styled raw button.
+- The heatmap's chips and day tabs are native buttons, recorded as `docs/DECISIONS.md #7`.
 - An unknown room renders `RoomNotFound` with status 200, not 404: the page streams its shell
   before the room is read inside `<Suspense>`, as the original did. Next marks it `noindex`.
 - The wall, presence, typing and the emoji rain are 06; the host's controls and the admin page

@@ -22,13 +22,17 @@ disabled shell until then. Route: `/r/[slug]`.
 | `components/RoomHeader` | The chat header: group avatar and name, "Hi {name}" (a link to `onMe`) and how many are in the room; `children` fill its end. |
 | `components/JoinGate` | Covers the room until this browser has a name in it: whose room, why, how many voted; the name form on `SaveNameInputSchema`. `name_taken` reads as the host's name when it is, otherwise as taken. Carries the `LanguageSwitch`. |
 | `components/Welcome` | The hello pill, "the room will remember you" or "welcome back". Keyed by user. |
+| `components/VoteHeatmap` | Pick a day, then an hour: partials `DayStrip` (tabs with totals), `HourGrid` (chips shaded by `voteStep`, rings for yours and the winner, `columns()` per width), `VoteDetail` (who voted for the hour pointed at, "take back my vote", or how voting works). The chips are native buttons (docs/DECISIONS.md #7). |
+| `components/VoteLegend` | The five `--vote-*` shades, fewer → more. Hidden on short screens. |
 | `components/RoomSkeleton` | The page's Suspense fallback, shaped like the room. |
 | `components/RoomNotFound` | `app/[locale]/r/[slug]/not-found.tsx` renders it. |
-| `strings/room.strings.ts` | The `room` namespace: `reason` (gendered), `votes`, `people` — said by more than one component. |
+| `strings/room.strings.ts` | The `room` namespace: `reason` (gendered), `votes`, `people`, `slot` — said by more than one component. |
 | `utils/names.ts` | `sameName` — the database's `norm_name()` comparison. |
 | `hooks/useVote.ts` | `{ userId, slotMs }` (null takes it back), written into the snapshot before the request and rolled back on failure. Invalidates the room. |
 | `api/votes.dto.ts` | `CastVoteInputSchema`. |
 | `api/votes.api.ts` | `castVote`, `withdrawVote`. |
+| `hooks/useSlotFormat.ts` | `day`, `weekday`, `dayMonth`, `time`, `slot` — the room's timezone, the reader's language. Every hour on the room's screens. |
+| `utils/voteScale.ts` | `voteStep(count, max)` → shade, `columns(n, min, max)`, `VOTE_STEPS`, `DARK_TEXT_FROM`. |
 | `utils/tally.ts` | `tallyVotes`, `leadingSlot` (`Lead` with every tied slot), `wonByDraw`. |
 | `hooks/useRoom.ts` | `useQuery` on `QUERY_KEYS.room.snapshot(slug)` → `RoomSnapshot`, seeded from the page's read. |
 | `hooks/useIdentity.ts` | Who this browser is here: `state` (`IDENTITY_STATES` checking → join → ready), `me`, `isHost`, `returning`, `join`. Joins the host's browser under the host's name by itself, and claims the room for a host who joined unrecorded. |

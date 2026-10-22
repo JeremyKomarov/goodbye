@@ -82,3 +82,20 @@ Route Handlers under `app/api/` sit outside it.
 
 The argument that was wrong: reading the cookie in the root layout. Under `cacheComponents` that
 is uncached data outside `<Suspense>`, and `<html lang dir>` cannot sit inside one.
+
+## 7. A heatmap cell is a native button inside its feature, not a kit Button or ChoiceGroup
+
+**Locked 2026-10-22.**
+
+The kit forbids a styled raw `<button>` in a feature and a row of `aria-pressed` buttons, because
+both are how a second Button and a second radio group get built. The vote heatmap's hour chips and
+day tabs are neither: each is a cell of a chart whose colour, count, ticks and flag *are* the
+data, and pressing one casts a vote at once rather than filling in a form. Bending `Button` or
+`ChoiceGroup` to draw them would put a heatmap's shading into `shared/`.
+
+The argument that was wrong: `ChoiceGroup` with `isClearable`, since a vote is "one hour or none".
+Its options are a label and a description; a chip is a tinted tile with a live count, and the day
+strip is a set of tabs over it.
+
+> Native buttons are allowed for the cells of a data visualisation inside its feature (today:
+> `room/components/VoteHeatmap`). Everything else still uses `Button`, `ChoiceGroup` or a `Link`.

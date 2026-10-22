@@ -9,4 +9,5 @@ export const roomStringsEn: StringsOf<typeof roomStrings> = {
     "other {is just fed up}}",
   votes: "{count, plural, =0 {no votes} one {one vote} other {# votes}}",
   people: "{count, plural, one {one person} other {# people}}",
+  slot: "{day} at {time}",
 };

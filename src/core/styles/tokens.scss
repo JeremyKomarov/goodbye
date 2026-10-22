@@ -105,6 +105,12 @@
   --sender-violet: #7f66ff;
   --sender-green: #25d366;
   --sender-coral: #ff8a8c;
+  // The heatmap: one hue, brighter with more votes. From step 4 on the chip needs dark text.
+  --vote-1: oklch(0.36 0.06 168);
+  --vote-2: oklch(0.45 0.09 166);
+  --vote-3: oklch(0.54 0.12 164);
+  --vote-4: oklch(0.63 0.14 162);
+  --vote-5: oklch(0.72 0.16 160);
 
   // ------------------------------------------------------------------ typography
   // Rubik carries Hebrew and Latin; Karantina is the display face. Both are loaded with

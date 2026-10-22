@@ -1,0 +1,44 @@
+// The heatmap's key. Decorative: every chip already says its count. Hidden on short screens.
+.vote-legend {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+  padding-inline: var(--space-1);
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+
+  &__swatch {
+    width: var(--space-4);
+    height: 0.625rem;
+    border-radius: var(--radius-xs);
+
+    &--1 {
+      background: var(--vote-1);
+    }
+
+    &--2 {
+      background: var(--vote-2);
+    }
+
+    &--3 {
+      background: var(--vote-3);
+    }
+
+    &--4 {
+      background: var(--vote-4);
+    }
+
+    &--5 {
+      background: var(--vote-5);
+    }
+  }
+}
+
+@media (max-height: 700px) {
+  .vote-legend {
+    display: none;
+  }
+}
