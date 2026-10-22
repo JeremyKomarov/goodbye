@@ -7,6 +7,7 @@ rule 01 8`.
 | Path | What | Rule |
 |---|---|---|
 | `api/error-response.server.ts` | `apiError(code, { route })`, `handlingApiErrors(route, fn)`. | Every Route Handler is wrapped; a failure is a code from `core/api`. |
+| `api/room-snapshot.server.ts` | `roomSnapshot(room)` — the room and its players, hosts and votes as `RoomSnapshotDto`; `toRoomDto`. | Every handler that answers with the room builds it here. |
 | `auth/admin-token.ts` | `newAdminToken`, `hashToken`, `tokenMatches` (constant-time). | Only the hash is stored; the token itself is shown once, to the host. |
 | `db/` | Supabase access: the client and one `*.repo.ts` per table group. | The only place `@supabase/supabase-js` is imported on the server. |
 

@@ -1,0 +1,8 @@
+// Every TanStack query key, once (03-DATA.md §1). A room's keys share the prefix `room.all(slug)`,
+// which is what its Realtime channel invalidates (docs/DECISIONS.md #2).
+export const QUERY_KEYS = {
+  room: {
+    all: (slug: string) => ["room", slug] as const,
+    snapshot: (slug: string) => ["room", slug, "snapshot"] as const,
+  },
+} as const;

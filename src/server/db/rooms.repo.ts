@@ -1,21 +1,19 @@
 import "server-only";
 import { customAlphabet } from "nanoid";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
+import type { HostGender, LeaveReason, RoomStatus } from "@/shared/types/room.const";
 import { db } from "./client";
 
 // Rooms and their secrets. The table is `public.rooms`; the admin token's hash sits apart in
 // `public.room_secrets`, which no client role can read (supabase/migrations/…_init.sql).
 
-export const ROOM_STATUSES = { voting: "voting", locked: "locked", exited: "exited" } as const;
-export type RoomStatus = (typeof ROOM_STATUSES)[keyof typeof ROOM_STATUSES];
-
 export interface RoomRecord {
   id: string;
   slug: string;
   hostName: string;
-  hostGender: "m" | "f";
+  hostGender: HostGender;
   groupName: string;
-  reason: "fired" | "quit" | "fed_up" | null;
+  reason: LeaveReason | null;
   timezone: string;
   windowStart: string;
   windowEnd: string;
@@ -35,9 +33,9 @@ interface RoomRow {
   id: string;
   slug: string;
   host_name: string;
-  host_gender: "m" | "f";
+  host_gender: HostGender;
   group_name: string;
-  reason: "fired" | "quit" | "fed_up" | null;
+  reason: LeaveReason | null;
   timezone: string;
   window_start: string;
   window_end: string;

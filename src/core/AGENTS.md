@@ -12,6 +12,7 @@ while it runs. The rule: `node .agents/cli.mjs rule 01 3`.
 | `config/env.ts` | Validated public environment: Supabase URL and publishable key, site URL, Turnstile key, `useMocks`. Throws at boot on a missing value or mocks in production. | The only file that may read a `NEXT_PUBLIC_*` variable — ESLint enforces it. |
 | `config/env.server.ts` | `serverEnv.supabaseSecretKey`. `server-only`. | Read by `server/db/` alone. |
 | `constants/api-endpoints.const.ts` | `API_ENDPOINTS` — every Route Handler URL. | Never a URL literal at a call site. |
+| `constants/query-keys.const.ts` | `QUERY_KEYS` — every TanStack key; a room's all start with `room.all(slug)`. | Never an inline key array. Realtime invalidates `room.all(slug)` and nothing finer. |
 | `constants/storage-keys.const.ts` | `STORAGE_KEYS` — every browser-storage key; `adminToken(slug)` keeps the original app's `exit-admin:<slug>`. | Never a storage key literal at a call site. |
 | `api/api-error.ts` | `API_ERROR_CODES`, `API_ERROR_STATUS`, `ApiErrorBodySchema`, `ApiError`, `toApiError`. | The code picks the status. A new failure is a new code here, never a sentence. |
 | `i18n/routing.ts` | `LOCALES` (`he` default, `en`), `LOCALE_COOKIE`, `resolveLocale`, `localeDirection`, `isLocale`. | The locale comes from the cookie via `src/proxy.ts`, never the browser (docs/DECISIONS.md #6). |

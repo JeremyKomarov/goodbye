@@ -79,6 +79,12 @@ use if the wall or leaderboard needs one.
 | `utils/countdown.ts` | `splitCountdown(ms)` → days, hours, minutes, seconds; `pad(n)` → two digits. | Every countdown display, with `useNow`. |
 | `utils/slots.ts` | `RoomWindow` → hour slots in the room's timezone (`buildSlotDays`, `allSlots`, `hasSlotAfter`), DST holes as `null`. | The landing schedule step, the create handler, the room's heatmap. Never compute an hour with `Date` arithmetic. |
 
+## Types
+
+| File | What | When to use |
+|---|---|---|
+| `types/room.const.ts` | `HOST_GENDERS`, `LEAVE_REASONS`, `ROOM_STATUSES` and their unions — the database's values. | Any schema, type or branch on a room's gender, reason or status, in a feature or on the server. |
+
 ## Promotion rule
 
 A component starts inside a feature. The moment a second feature needs something close,

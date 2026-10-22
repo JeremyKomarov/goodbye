@@ -1,13 +1,13 @@
 import { z } from "zod";
+import {
+  HOST_GENDERS, LEAVE_REASONS, type HostGender, type LeaveReason,
+} from "@/shared/types/room.const";
 
 // The create-room contract. The input schema is the one the wizard's zodResolver and the Route
 // Handler both use (03-DATA.md §4): it says which field is wrong, the strings layer says how.
 
-export const HOST_GENDERS = { m: "m", f: "f" } as const;
-export const LEAVE_REASONS = { fired: "fired", quit: "quit", fedUp: "fed_up" } as const;
-
-export type HostGender = (typeof HOST_GENDERS)[keyof typeof HOST_GENDERS];
-export type LeaveReason = (typeof LEAVE_REASONS)[keyof typeof LEAVE_REASONS];
+// The enums are the room screen's too, so they live in shared/ and are re-exported for the wizard.
+export { HOST_GENDERS, LEAVE_REASONS, type HostGender, type LeaveReason };
 
 export const MAX_HOST_NAME = 30;
 export const MAX_GROUP_NAME = 60;

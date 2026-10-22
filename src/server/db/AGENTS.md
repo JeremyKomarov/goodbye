@@ -12,10 +12,13 @@ Such a test is named `*.db.test.ts` and skips unless a secret key is in the envi
 | File | What | Rule |
 |---|---|---|
 | `client.ts` | `db()` — the secret-key client, made once. It bypasses row-level security. | Imported by the `*.repo.ts` files here and nothing else (ESLint). |
-| `rooms.repo.ts` | `insertRoom` (room + admin-token hash, or neither), `findRoomBySlug`, `findAdminTokenHash`, `deleteRoom`; `RoomRecord`, `ROOM_STATUSES`. | Rows are mapped to camelCase here; snake_case never leaves this file. A Supabase failure throws `upstream_failed`. |
+| `rooms.repo.ts` | `insertRoom` (room + admin-token hash, or neither), `findRoomBySlug`, `findAdminTokenHash`, `deleteRoom`; `RoomRecord`. | Rows are mapped to camelCase here; snake_case never leaves this file. A Supabase failure throws `upstream_failed`. |
+| `players.repo.ts` | `listPlayers(roomId)` — `PlayerRecord`s, oldest first. | Same. |
+| `hosts.repo.ts` | `listHostIds(roomId)` — the host's user ids. | Same. Only the server writes this table. |
+| `votes.repo.ts` | `listVotes(roomId)` — `VoteRecord`s. | Same. |
 
-<!-- Repos for votes, players, hosts, wall, reactions, codes and scores arrive with the phase whose
-     handler first calls them (05–08). -->
+<!-- Repos for the wall, reactions, codes and scores arrive with the phase whose handler first calls
+     them (06–08). -->
 
 ## Keep this file current
 

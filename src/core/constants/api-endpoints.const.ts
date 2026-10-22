@@ -2,5 +2,6 @@
 export const API_ENDPOINTS = {
   rooms: {
     create: "/api/rooms",
+    one: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}`,
   },
 } as const;
