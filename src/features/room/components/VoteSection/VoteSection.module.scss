@@ -10,6 +10,11 @@
     flex-shrink: 0;
   }
 
+  // Above the status card while there is height for both; the header's ring opens them anyway.
+  &__stories {
+    display: none;
+  }
+
   &__grid {
     display: flex;
     flex: 1;
@@ -41,5 +46,11 @@
 
   .vote-section__grid {
     padding: 0;
+  }
+}
+
+@media (min-height: 800px) and (max-width: 63.99rem) {
+  .vote-section__stories {
+    display: block;
   }
 }

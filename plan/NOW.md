@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 06.7
+**Step:** 06.8
 **Since:** 2026-10-22
-**State:** the status stories: facts, the ring on the header's avatar, the strip, the viewer.
+**State:** the sweep: two browsers, both locales, phone and desktop; probe rooms removed.
 **Blocked by:** —
 
 ---

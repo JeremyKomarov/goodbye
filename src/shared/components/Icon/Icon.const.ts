@@ -5,6 +5,7 @@ import {
   CheckCheck,
   ChevronDown,
   ChevronLeft,
+  ChevronRight,
   Copy,
   Gamepad2,
   KeyRound,
@@ -38,6 +39,7 @@ export const ICONS = {
   exit: LogOut,
   close: X,
   back: ChevronLeft,
+  forward: ChevronRight,
   scrollDown: ChevronDown,
   send: SendHorizontal,
   copy: Copy,
@@ -68,7 +70,12 @@ export const ICON_NAMES = Object.fromEntries(Object.keys(ICONS).map((name) => [n
  * Glyphs that point along the reading direction. They are drawn for LTR and flipped under
  * `dir="rtl"`, so "back" points right in Hebrew (docs/DECISIONS.md #3).
  */
-export const MIRRORED_ICONS: ReadonlySet<IconName> = new Set<IconName>(["back", "send", "undo"]);
+export const MIRRORED_ICONS: ReadonlySet<IconName> = new Set<IconName>([
+  "back",
+  "forward",
+  "send",
+  "undo",
+]);
 
 export const ICON_SIZES = { sm: 16, md: 20, lg: 24 } as const;
 

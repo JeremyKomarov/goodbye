@@ -1,0 +1,88 @@
+// A story inside the kit's sheet: the progress bars, the groups to jump between, the fact in
+// display type over a wash of the group's colour, and the steps.
+.story-viewer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: min(32rem, 70dvh);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--story-color) 33%, transparent),
+    transparent 60%
+  );
+
+  &__bars {
+    display: flex;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-3) 0;
+  }
+
+  &__bar {
+    flex: 1;
+    height: 3px;
+    overflow: hidden;
+    border-radius: var(--radius-pill);
+    background: color-mix(in oklab, var(--text-primary) 25%, transparent);
+  }
+
+  &__fill {
+    width: 0;
+    height: 100%;
+    background: var(--text-primary);
+
+    &--full {
+      width: 100%;
+    }
+  }
+
+  &__groups {
+    display: flex;
+    gap: var(--space-2);
+    padding-inline: var(--space-3);
+  }
+
+  &__group {
+    opacity: 0.6;
+
+    &--current {
+      opacity: 1;
+    }
+  }
+
+  &__stage {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    padding-inline: var(--space-6);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  &__fact {
+    font-family: var(--font-display);
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1.02;
+  }
+
+  &__steps {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: 0 var(--space-2) var(--space-2);
+  }
+
+  &__hint {
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    text-align: center;
+  }
+}
+
+@media (max-height: 500px) {
+  .story-viewer__fact {
+    font-size: 2rem;
+  }
+}

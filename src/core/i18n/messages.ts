@@ -147,6 +147,15 @@ import {
 import { ROOM_NAV_NAMESPACE } from "@/features/room/components/RoomNav/RoomNav.keys.const";
 import { roomNavStrings } from "@/features/room/components/RoomNav/RoomNav.strings";
 import { roomNavStringsEn } from "@/features/room/components/RoomNav/RoomNav.strings.en";
+import {
+  STATUS_STORIES_NAMESPACE,
+} from "@/features/room/components/StatusStories/StatusStories.keys.const";
+import {
+  statusStoriesStrings,
+} from "@/features/room/components/StatusStories/StatusStories.strings";
+import {
+  statusStoriesStringsEn,
+} from "@/features/room/components/StatusStories/StatusStories.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -179,6 +188,7 @@ const he = {
   [MESSAGE_BUBBLE_NAMESPACE]: messageBubbleStrings,
   [FAREWELL_WALL_NAMESPACE]: farewellWallStrings,
   [ROOM_NAV_NAMESPACE]: roomNavStrings,
+  [STATUS_STORIES_NAMESPACE]: statusStoriesStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -210,6 +220,7 @@ const en: StringsOf<typeof he> = {
   [MESSAGE_BUBBLE_NAMESPACE]: messageBubbleStringsEn,
   [FAREWELL_WALL_NAMESPACE]: farewellWallStringsEn,
   [ROOM_NAV_NAMESPACE]: roomNavStringsEn,
+  [STATUS_STORIES_NAMESPACE]: statusStoriesStringsEn,
 };
 
 export type Messages = typeof he;

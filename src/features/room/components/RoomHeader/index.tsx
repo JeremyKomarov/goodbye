@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import type { ReactNode } from "react";
 import { ROOM_STATUSES } from "@/core/constants/room.const";
 import { PARTY_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
 import type { Player, Room } from "@/features/room/types/room.types";
@@ -15,10 +16,10 @@ import { ROOM_HEADER_NAMESPACE, roomHeaderKeys } from "./RoomHeader.keys.const";
 interface RoomHeaderProps {
   room: Room;
   me: Player | null;
-  /** How many are here now, by presence. */
-  online: number;
-  /** "Dana is typing…", in place of the line under the name. */
-  typing: string | null;
+  /** How many are here now, by presence; and "Dana is typing…", shown in place of that line. */
+  live: { online: number; typing: string | null };
+  /** In place of the group's initial: the status ring around it. */
+  avatar?: ReactNode;
   /** The clock beside the name — passed off the vote, where the big one already shows. */
   now?: number;
   /** Opens "you in the room" (rename, your code, "not you?"). Not offered to the host. */
@@ -29,7 +30,8 @@ interface RoomHeaderProps {
 
 /** The chat header: the group's avatar and name, and a line saying who you are and who's here. */
 export function RoomHeader(props: RoomHeaderProps) {
-  const { room, me, online, typing, now, onMe, onParty } = props;
+  const { room, me, live, avatar, now, onMe, onParty } = props;
+  const { online, typing } = live;
   const t = useTranslations(ROOM_HEADER_NAMESPACE);
   const hello = me && t(roomHeaderKeys.hello, { name: isolate(me.name) });
   const target = room.status === ROOM_STATUSES.locked ? room.lockedSlot : room.votingClosesAt;
@@ -45,9 +47,11 @@ export function RoomHeader(props: RoomHeaderProps) {
   return (
     <header className={roomHeaderClasses.root}>
       <div className={roomHeaderClasses.bar}>
-        <span className={roomHeaderClasses.avatar} aria-hidden>
-          {initialOf(room.groupName)}
-        </span>
+        {avatar ?? (
+          <span className={roomHeaderClasses.avatar} aria-hidden>
+            {initialOf(room.groupName)}
+          </span>
+        )}
         <div className={roomHeaderClasses.text}>
           <h1 className={roomHeaderClasses.title}>
             <bdi>{room.groupName}</bdi>

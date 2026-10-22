@@ -1,6 +1,7 @@
 "use client";
 
 import { Hero } from "@/features/room/components/Hero";
+import { StatusStories } from "@/features/room/components/StatusStories";
 import { VoteHeatmap } from "@/features/room/components/VoteHeatmap";
 import { useRoomContext } from "@/features/room/hooks/useRoomContext";
 import { useVote } from "@/features/room/hooks/useVote";
@@ -9,13 +10,16 @@ import { voteSectionClasses } from "./VoteSection.classes";
 
 /** The room's first section: the status card (on phones) and the hour grid. */
 export function VoteSection() {
-  const { slug, snapshot, me, isHost, leader } = useRoomContext();
+  const { slug, snapshot, me, isHost, leader, openStory } = useRoomContext();
   const vote = useVote(slug);
   const now = useNow();
 
   return (
     <div className={voteSectionClasses.root}>
       <div className={voteSectionClasses.hero}>
+        <div className={voteSectionClasses.stories}>
+          <StatusStories onOpen={openStory} />
+        </div>
         <Hero
           room={snapshot.room}
           now={now}

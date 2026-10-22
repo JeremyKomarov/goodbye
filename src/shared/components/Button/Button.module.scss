@@ -168,3 +168,20 @@
     color: var(--text-primary);
   }
 }
+
+.button.button--bare {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  white-space: normal;
+
+  .button__label {
+    display: contents;
+  }
+}

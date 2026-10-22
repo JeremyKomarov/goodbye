@@ -6,4 +6,6 @@ export const STORAGE_KEYS = {
   supabaseAuth: "exit-party-auth",
   // A player's login code, kept on each device once the server has it, to show it again.
   loginCode: (userId: string) => `exit-login:${userId}`,
+  // Which story groups this browser has watched to the end, comma-separated.
+  storiesSeen: "exit-stories-seen",
 } as const;

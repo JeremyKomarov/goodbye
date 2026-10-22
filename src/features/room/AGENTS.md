@@ -35,6 +35,10 @@ the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomN
 | `components/Welcome` | The hello pill, "the room will remember you" or "welcome back". Keyed by user. |
 | `components/Hero` | The status card, by `room.status`: `VotingHero` (why, time left to vote, who leads or the tie), `LockedHero` (time to the chosen hour, how it was chosen, `ExitRow` filling up), `ExitedHero` (the notice and the `verdict`). `Countdown` is days in words over `FlipDigits`, spoken in full. Compact on phones, roomy from 64rem. |
 | `components/EmojiRain` | The full-screen shower, fed by `onRain`; four fading drops instead of sixteen for reduced motion. `EmojiRain.const.ts`: `QUICK_EMOJI` (the wall's row), `PARTY_EMOJI` (the header's), `DOOR_EMOJI` (the hour). |
+| `components/StatusStories` | The story groups as a strip of status rings — in the side column, and above the status card on a phone tall enough for both. Owns the `stories` namespace: every fact, in both languages. |
+| `components/StoryRing` | The header's avatar in a status ring; opens the first group not yet watched. |
+| `components/StoryViewer` | One fact at a time in the kit's `Sheet`, moving on by itself (`STORY_MS`); a tap on the forward side goes on, a long press pauses, the arrow keys and two buttons step. Partials: `StoryBars`, `StoryGroupNav`. |
+| `components/StoryDisc` | A disc in a status ring: green into the group's colour while unseen, grey once seen. |
 | `components/FlipDigits` | Display-face digits that roll as they change. Decorative, always LTR. |
 | `components/VoteHeatmap` | Pick a day, then an hour: partials `DayStrip` (tabs with totals), `HourGrid` (chips shaded by `voteStep`, rings for yours and the winner, `columns()` per width), `VoteDetail` (who voted for the hour pointed at, "take back my vote", or how voting works). The chips are native buttons (docs/DECISIONS.md #7). |
 | `components/VoteLegend` | The five `--vote-*` shades, fewer → more. Hidden on short screens. |
@@ -54,6 +58,8 @@ the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomN
 | `api/login-code.api.ts` | `fetchLoginCode`. |
 | `hooks/useRoomChannel.ts` | The room's live channel: a wall change invalidates `room.wall`, any other `room.snapshot` (settled over 150ms); presence (`online`), `typers` (4s unless renewed), `sendTyping`, `sendEmoji` (here and everywhere), `rain` (here only), `onRain`. Presence and broadcasts are held here, the moment only (docs/DECISIONS.md #8). |
 | `hooks/useDoorAtTheHour.ts` | As the chosen hour arrives on an open screen: 🚪 rains there and the phone buzzes. Each screen has the clock, so nothing is sent. |
+| `hooks/useSeenStories.ts` | The groups this browser has watched to the end (`utils/storiesSeen.ts`, in `STORAGE_KEYS.storiesSeen`). |
+| `content/stories.const.ts` | `STORY_GROUPS` — each group's id, emoji, colour token and fact keys; `STORY_MS`, `LONG_PRESS_MS`. |
 | `hooks/useTypingLine.ts` | "Dana is typing…" / "3 people are typing…" or null. |
 | `hooks/useTypingSignal.ts` | A draft's keystrokes as typing on and off — renewed every 2s, off after 2.5s idle. |
 | `hooks/usePostMessage.ts` | Posts; invalidates the wall. |
@@ -71,7 +77,7 @@ the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomN
 | `utils/verdict.ts` | `verdict(room)` — on time (±`ON_TIME_MINUTES`), late, early, or left mid-vote. |
 | `utils/tally.ts` | `tallyVotes`, `leadingSlot` (`Lead` with every tied slot), `wonByDraw`. |
 | `hooks/useWallUnread.ts` | Goodbyes since you last looked at the wall, not your own; what was there when the room opened counts as read. |
-| `hooks/useRoomContext.ts` | `RoomContext` and `useRoomContext()` — `slug`, `snapshot`, `me`, `isHost`, `leader`, `live`, `typing`, from the shell to its sections. |
+| `hooks/useRoomContext.ts` | `RoomContext` and `useRoomContext()` — `slug`, `snapshot`, `me`, `isHost`, `leader`, `live`, `typing`, `openStory`, from the shell to its sections. |
 | `hooks/useRoom.ts` | `useQuery` on `QUERY_KEYS.room.snapshot(slug)` → `RoomSnapshot`, seeded from the page's read. |
 | `hooks/useIdentity.ts` | Who this browser is here: `state` (`IDENTITY_STATES` checking → join → ready), `me`, `isHost`, `returning`, `join`. Joins the host's browser under the host's name by itself, and claims the room for a host who joined unrecorded. |
 | `hooks/useSessionUser.ts` | `useQuery` on `QUERY_KEYS.session.user` — this browser's user id or null. |

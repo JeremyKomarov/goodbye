@@ -13,6 +13,10 @@ import { JoinGate } from "@/features/room/components/JoinGate";
 import { MeSheet } from "@/features/room/components/MeSheet";
 import { RoomHeader } from "@/features/room/components/RoomHeader";
 import { ROOM_NAV_VARIANTS, RoomNav } from "@/features/room/components/RoomNav";
+import { StatusStories } from "@/features/room/components/StatusStories";
+import { StoryRing } from "@/features/room/components/StoryRing";
+import { StoryViewer } from "@/features/room/components/StoryViewer";
+import type { StoryPosition } from "@/features/room/content/stories.const";
 import { RoomSkeleton } from "@/features/room/components/RoomSkeleton";
 import { Welcome } from "@/features/room/components/Welcome";
 import { useAutoFinalize } from "@/features/room/hooks/useAutoFinalize";
@@ -31,6 +35,7 @@ import { useWallUnread } from "@/features/room/hooks/useWallUnread";
 import { sameName } from "@/features/room/utils/names";
 import { leadingSlot, tallyVotes } from "@/features/room/utils/tally";
 import { useNow } from "@/shared/hooks/useNow";
+import { initialOf } from "@/shared/utils/avatar";
 import { roomShellClasses } from "./RoomShell.classes";
 
 interface RoomShellProps {
@@ -55,6 +60,7 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
   const switchUser = useSwitchUser();
   const loginCode = useEnsureLoginCode(me, isHost);
   const [isMeOpen, setIsMeOpen] = useState(false);
+  const [story, setStory] = useState<StoryPosition | null>(null);
   const now = useNow();
   const room = snapshot?.room;
   const votes = snapshot?.votes;
@@ -79,20 +85,23 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
 
   return (
     <MotionConfig reducedMotion="user">
-      <RoomContext value={{ slug, snapshot, me, isHost, leader, live, typing }}>
+      <RoomContext
+        value={{ slug, snapshot, me, isHost, leader, live, typing, openStory: setStory }}
+      >
         {/* Under the join gate the room is shown but out of reach: no focus, no screen reader. */}
         <div className={roomShellClasses.root} inert={identity.state !== IDENTITY_STATES.ready}>
           <RoomHeader
             room={room}
             me={me}
-            online={live.online.length}
-            typing={typing}
+            live={{ online: live.online.length, typing }}
+            avatar={<StoryRing onOpen={setStory}>{initialOf(room.groupName)}</StoryRing>}
             now={isOnVote ? undefined : now}
             onMe={isHost ? undefined : () => setIsMeOpen(true)}
             onParty={() => live.sendEmoji(PARTY_EMOJI)}
           />
           <div className={roomShellClasses.body}>
             <aside className={roomShellClasses.side}>
+              <StatusStories onOpen={setStory} />
               <Hero room={room} now={now} leader={leader} voterCount={snapshot.votes.length} />
               <RoomNav {...nav} variant={ROOM_NAV_VARIANTS.list} />
             </aside>
@@ -103,6 +112,9 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
       </RoomContext>
 
       <EmojiRain subscribe={live.onRain} />
+      <AnimatePresence>
+        {story && <StoryViewer key="stories" start={story} onClose={() => setStory(null)} />}
+      </AnimatePresence>
       <Welcome key={me?.userId} me={me} isReturning={identity.returning} />
       {me && (
         <MeSheet
