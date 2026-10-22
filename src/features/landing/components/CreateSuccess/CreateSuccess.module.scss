@@ -1,0 +1,52 @@
+.create-success {
+  display: grid;
+  gap: var(--space-4);
+
+  &__section {
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    border-radius: var(--radius-xl);
+    background: var(--surface-soft);
+  }
+
+  &__intro {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--text-secondary);
+  }
+
+  &__ballot {
+    flex-shrink: 0;
+    font-size: var(--text-3xl);
+  }
+
+  // Links that look like the primary button: they navigate, so they are not Buttons.
+  &__action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--control-height-lg);
+    padding-inline: var(--space-5);
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    transition: filter var(--duration-fast) var(--ease-standard);
+
+    &--share {
+      background: var(--surface-brand);
+      color: var(--text-on-brand);
+    }
+
+    &--enter {
+      border: 1px solid var(--border-strong);
+      color: var(--text-primary);
+    }
+  }
+}
+
+@media (hover: hover) {
+  .create-success__action:hover {
+    filter: brightness(1.1);
+  }
+}

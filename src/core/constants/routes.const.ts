@@ -12,3 +12,6 @@ const SLUG = "[slug]";
 export function roomPath(key: FeatureKey, slug: string): string {
   return ROUTES[key].replace(SLUG, encodeURIComponent(slug));
 }
+
+/** The admin link carries the token in its hash, `#k=…`, so it never reaches a server log. */
+export const ADMIN_TOKEN_PARAM = "k";

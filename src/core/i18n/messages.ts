@@ -59,6 +59,15 @@ import {
 import {
   scheduleStepStringsEn,
 } from "@/features/landing/components/CreateRoomForm/partials/ScheduleStep/ScheduleStep.strings.en";
+import {
+  CREATE_SUCCESS_NAMESPACE,
+} from "@/features/landing/components/CreateSuccess/CreateSuccess.keys.const";
+import {
+  createSuccessStrings,
+} from "@/features/landing/components/CreateSuccess/CreateSuccess.strings";
+import {
+  createSuccessStringsEn,
+} from "@/features/landing/components/CreateSuccess/CreateSuccess.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -72,6 +81,7 @@ const he = {
   [TAB_BAR_NAMESPACE]: tabBarStrings,
   [HERO_CHAT_NAMESPACE]: heroChatStrings,
   [LANDING_NAMESPACE]: landingStrings,
+  [CREATE_SUCCESS_NAMESPACE]: createSuccessStrings,
   [REASON_STEP_NAMESPACE]: reasonStepStrings,
   [IDENTITY_STEP_NAMESPACE]: identityStepStrings,
   [SCHEDULE_STEP_NAMESPACE]: scheduleStepStrings,
@@ -87,6 +97,7 @@ const en: StringsOf<typeof he> = {
   [TAB_BAR_NAMESPACE]: tabBarStringsEn,
   [HERO_CHAT_NAMESPACE]: heroChatStringsEn,
   [LANDING_NAMESPACE]: landingStringsEn,
+  [CREATE_SUCCESS_NAMESPACE]: createSuccessStringsEn,
   [REASON_STEP_NAMESPACE]: reasonStepStringsEn,
   [IDENTITY_STEP_NAMESPACE]: identityStepStringsEn,
   [SCHEDULE_STEP_NAMESPACE]: scheduleStepStringsEn,

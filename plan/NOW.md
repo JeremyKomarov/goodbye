@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 04.5
+**Step:** 04.6
 **Since:** 2026-10-22
-**State:** building the success card: share to WhatsApp, room and admin links, enter.
+**State:** composing LandingScreen and the panel, then the flag and a browser check.
 **Blocked by:** —
 
 ---

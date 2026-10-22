@@ -13,8 +13,8 @@ back the room and admin links — and the `landing` flag is on.
 - [x] ~~04.2 — browser helpers: admin-token storage, `isolate()` for typed names, `useNow` and the countdown split (S)~~
 - [x] ~~04.3 — HeroChat: the scripted group chat, steered by the story and the names typed (M)~~
 - [x] ~~04.4 — CreateRoomForm: three steps on react-hook-form, open-slot count, server codes on their fields (L)~~
-- [~] 04.5 — CreateSuccess: WhatsApp share, room link, admin link, enter the room (S)
-- [ ] 04.6 — LandingScreen and the page; `enable-feature landing`; checked in a browser in both locales (M)
+- [x] ~~04.5 — CreateSuccess: WhatsApp share, room link, admin link, enter the room (S)~~
+- [~] 04.6 — LandingScreen and the page; `enable-feature landing`; checked in a browser in both locales (M)
 
 ## Done when
 On `/`, in Hebrew and in English, picking a story changes the chat; a filled wizard creates a room

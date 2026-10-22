@@ -8,7 +8,7 @@ while it runs. The rule: `node .agents/cli.mjs rule 01 3`.
 |---|---|---|
 | `config/features.const.ts` | The feature registry: `landing`, `room`, `games`, `admin` — route + `enabled`. | Reference a key as `FEATURE_KEYS.room`, never `"room"`. Flip with `enable-feature`. |
 | `config/features.strings.ts` | Each feature's label and blurb (`.en.ts` beside it). | The `features` namespace. |
-| `constants/routes.const.ts` | `ROUTES`, derived from `FEATURES`; `roomPath(key, slug)` fills a room route. | Never restate a route; never build `/r/${slug}` by hand. |
+| `constants/routes.const.ts` | `ROUTES`, derived from `FEATURES`; `roomPath(key, slug)` fills a room route; `ADMIN_TOKEN_PARAM` names the admin link's hash. | Never restate a route; never build `/r/${slug}` by hand. |
 | `config/env.ts` | Validated public environment: Supabase URL and publishable key, site URL, Turnstile key, `useMocks`. Throws at boot on a missing value or mocks in production. | The only file that may read a `NEXT_PUBLIC_*` variable — ESLint enforces it. |
 | `config/env.server.ts` | `serverEnv.supabaseSecretKey`. `server-only`. | Read by `server/db/` alone. |
 | `constants/api-endpoints.const.ts` | `API_ENDPOINTS` — every Route Handler URL. | Never a URL literal at a call site. |
