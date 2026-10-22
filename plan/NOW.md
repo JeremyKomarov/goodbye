@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 02.8
+**Step:** 02.9
 **Since:** 2026-10-21
-**State:** writing TabBar — links with icon, label and an unread badge.
+**State:** writing Skeleton — line, block, circle.
 **Blocked by:** —
 
 ---

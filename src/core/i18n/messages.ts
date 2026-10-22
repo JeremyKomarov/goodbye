@@ -19,6 +19,9 @@ import { copyButtonStringsEn } from "@/shared/components/CopyButton/CopyButton.s
 import { LANGUAGE_SWITCH_NAMESPACE } from "@/shared/components/LanguageSwitch/LanguageSwitch.keys.const";
 import { languageSwitchStrings } from "@/shared/components/LanguageSwitch/LanguageSwitch.strings";
 import { languageSwitchStringsEn } from "@/shared/components/LanguageSwitch/LanguageSwitch.strings.en";
+import { TAB_BAR_NAMESPACE } from "@/shared/components/TabBar/TabBar.keys.const";
+import { tabBarStrings } from "@/shared/components/TabBar/TabBar.strings";
+import { tabBarStringsEn } from "@/shared/components/TabBar/TabBar.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -29,6 +32,7 @@ const he = {
   [SHEET_NAMESPACE]: sheetStrings,
   [COPY_BUTTON_NAMESPACE]: copyButtonStrings,
   [LANGUAGE_SWITCH_NAMESPACE]: languageSwitchStrings,
+  [TAB_BAR_NAMESPACE]: tabBarStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -38,6 +42,7 @@ const en: StringsOf<typeof he> = {
   [SHEET_NAMESPACE]: sheetStringsEn,
   [COPY_BUTTON_NAMESPACE]: copyButtonStringsEn,
   [LANGUAGE_SWITCH_NAMESPACE]: languageSwitchStringsEn,
+  [TAB_BAR_NAMESPACE]: tabBarStringsEn,
 };
 
 export type Messages = typeof he;

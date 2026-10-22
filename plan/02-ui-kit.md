@@ -13,8 +13,8 @@ both directions, before the first feature screen is built.
 - [x] ~~02.5 — `Bubble` — in/out chat bubble with the WhatsApp tail, mirrored in RTL (S)~~
 - [x] ~~02.6 — `SystemPill` and `Ticks` (S)~~
 - [x] ~~02.7 — `CopyButton` and `LanguageSwitch` (S)~~
-- [~] 02.8 — `TabBar` — bottom navigation of links, icon, label, badge (S)
-- [ ] 02.9 — `Skeleton` (S)
+- [x] ~~02.8 — `TabBar` — bottom navigation of links, icon, label, badge (S)~~
+- [~] 02.9 — `Skeleton` (S)
 - [ ] 02.10 — a dev-only `/dev/kit` catalog rendering every variant, `notFound()` in production (S)
 
 ## Done when

@@ -52,6 +52,7 @@ use if the wall or leaderboard needs one.
 | `components/Ticks` | One grey, two grey or two blue check marks · `TICK_STATES` sent, delivered, read. Decorative. | Next to a message's time, or as the app's "done" mark. | Never draw check marks in a feature. |
 | `components/CopyButton` | Secondary `Button` that copies `text` and shows "Copied" for 1.6s; optional translated `label`. | Room links, admin links, player codes, share text. | Never call `navigator.clipboard` from a feature. |
 | `components/LanguageSwitch` | עברית / English toggle; writes `LOCALE_COOKIE` and reloads so `<html lang dir>` follows. | Landing and the room header. | Never set the locale cookie or keep the locale in a store anywhere else. |
+| `components/TabBar` | Sticky bottom `<nav>` of `Link`s: `items` of `{ href, icon, label, badge? }`; the one matching the URL is `aria-current`; badge caps at 99+ and is read out. | The room's sections (room, games). | Never build a second bottom or tab navigation. |
 
 <!-- Rows are added as components are built. The kit for this project — which primitives are built
      ahead of the first feature screen — is chosen by the plan-kit playbook (step 01.9) and recorded
