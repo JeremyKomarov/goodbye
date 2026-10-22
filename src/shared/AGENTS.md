@@ -47,6 +47,7 @@ use if the wall or leaderboard needs one.
 | `components/Button` | `BUTTON_VARIANTS` primary, secondary, ghost, danger · `BUTTON_SIZES` sm, md, lg · `icon`, `isLoading`, `fullWidth`; icon with no children is icon-only. | Every clickable action that is not navigation. | Never style a raw `<button>` in a feature, and never build an IconButton — pass `icon` with no children. |
 | `components/Field` | Label + `<input>` (default) or `as="select"` with `<option>` children · `helper`, `error` (translated) wired by `aria-describedby`; takes `ref` for react-hook-form. | Every form control with a label. | Never put a bare `<input>`/`<select>` in a feature, and never build a second labelled-input wrapper. |
 | `components/Sheet` | `<Sheet open onClose title>` — modal bottom sheet (centred panel from `md`), portalled, focus-trapped, Escape and backdrop close. | Every dialog, confirm and side panel. | Never build a Modal or Dialog — this is the only one (see the kit above). |
+| `components/Bubble` | `BUBBLE_SIDES` in (start side) / out (end side) · `hasTail` for the first of a run · `meta` slot for time and ticks. Sides and tail follow the direction. | Every chat message: hero chat, the wall, admin's wall. | Never draw a chat bubble or its tail in a feature — compose reactions and names inside this. |
 
 <!-- Rows are added as components are built. The kit for this project — which primitives are built
      ahead of the first feature screen — is chosen by the plan-kit playbook (step 01.9) and recorded

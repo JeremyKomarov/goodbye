@@ -10,8 +10,8 @@ both directions, before the first feature screen is built.
 - [x] ~~02.2 — `Button` — primary, secondary, ghost, danger · sm, md, lg · loading (M)~~
 - [x] ~~02.3 — `Field` — labelled text input and select, error and helper text (M)~~
 - [x] ~~02.4 — `Sheet` — portal bottom sheet, focus trap, Escape and backdrop close (M)~~
-- [~] 02.5 — `Bubble` — in/out chat bubble with the WhatsApp tail, mirrored in RTL (S)
-- [ ] 02.6 — `SystemPill` and `Ticks` (S)
+- [x] ~~02.5 — `Bubble` — in/out chat bubble with the WhatsApp tail, mirrored in RTL (S)~~
+- [~] 02.6 — `SystemPill` and `Ticks` (S)
 - [ ] 02.7 — `CopyButton` and `LanguageSwitch` (S)
 - [ ] 02.8 — `TabBar` — bottom navigation of links, icon, label, badge (S)
 - [ ] 02.9 — `Skeleton` (S)
