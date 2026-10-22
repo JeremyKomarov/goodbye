@@ -1,0 +1,30 @@
+// A placeholder the size of what is loading. The caller sets width and height through
+// `--skeleton-width` / `--skeleton-height` when the shape's default does not fit.
+.skeleton {
+  display: block;
+  width: var(--skeleton-width, 100%);
+  background: var(--surface-soft);
+  animation: skeleton-pulse 1.4s var(--ease-standard) infinite;
+
+  &--line {
+    height: var(--skeleton-height, 1em);
+    border-radius: var(--radius-xs);
+  }
+
+  &--block {
+    height: var(--skeleton-height, var(--space-16));
+    border-radius: var(--radius-lg);
+  }
+
+  &--circle {
+    width: var(--skeleton-width, var(--space-10));
+    aspect-ratio: 1;
+    border-radius: var(--radius-pill);
+  }
+}
+
+@keyframes skeleton-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}

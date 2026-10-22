@@ -14,8 +14,8 @@ both directions, before the first feature screen is built.
 - [x] ~~02.6 — `SystemPill` and `Ticks` (S)~~
 - [x] ~~02.7 — `CopyButton` and `LanguageSwitch` (S)~~
 - [x] ~~02.8 — `TabBar` — bottom navigation of links, icon, label, badge (S)~~
-- [~] 02.9 — `Skeleton` (S)
-- [ ] 02.10 — a dev-only `/dev/kit` catalog rendering every variant, `notFound()` in production (S)
+- [x] ~~02.9 — `Skeleton` (S)~~
+- [~] 02.10 — a dev-only `/dev/kit` catalog rendering every variant, `notFound()` in production (S)
 
 ## Done when
 `/dev/kit` shows every primitive and variant, checked at 360px, 768px and 1280px in Hebrew (RTL)
