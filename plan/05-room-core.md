@@ -11,8 +11,8 @@ countdown change live — and the `room` flag is on.
 
 - [x] ~~05.1 — read a room: `GET /api/rooms/[slug]` (room, players, hosts, votes), repos, `useRoom` (M)~~
 - [x] ~~05.2 — the browser session in `core/supabase/`, the bearer check, a user-scoped db client (M)~~
-- [~] 05.3 — join: `POST /api/rooms/[slug]/players` (join, rename, `name_taken`), the host claim (M)
-- [ ] 05.4 — JoinGate and Welcome, over the room's header (L)
+- [x] ~~05.3 — join: `PUT /api/rooms/[slug]/me` (join, rename, `name_taken`), the host claim (M)~~
+- [~] 05.4 — JoinGate and Welcome, over the room's header (L)
 - [ ] 05.5 — vote: `PUT`/`DELETE /api/rooms/[slug]/vote`, optimistic `useVote`, tally and lead (M)
 - [ ] 05.6 — VoteHeatmap and VoteLegend (L)
 - [ ] 05.7 — the countdown: `POST /api/rooms/[slug]/finalize`, `Hero` with `FlipDigits` (M)

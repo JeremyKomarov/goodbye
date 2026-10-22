@@ -13,7 +13,7 @@ while it runs. The rule: `node .agents/cli.mjs rule 01 3`.
 | `config/env.server.ts` | `serverEnv.supabaseSecretKey`. `server-only`. | Read by `server/db/` alone. |
 | `constants/api-endpoints.const.ts` | `API_ENDPOINTS` — every Route Handler URL. | Never a URL literal at a call site. |
 | `constants/room.const.ts` | `HOST_GENDERS`, `LEAVE_REASONS`, `ROOM_STATUSES` and their unions — the database's values. | Any schema, type or branch on a room's gender, reason or status, in a feature or on the server. |
-| `constants/query-keys.const.ts` | `QUERY_KEYS` — every TanStack key; a room's all start with `room.all(slug)`. | Never an inline key array. Realtime invalidates `room.all(slug)` and nothing finer. |
+| `constants/query-keys.const.ts` | `QUERY_KEYS` — every TanStack key; a room's all start with `room.all(slug)`; `session.user` is this browser's user id. | Never an inline key array. Realtime invalidates `room.all(slug)` and nothing finer. |
 | `constants/storage-keys.const.ts` | `STORAGE_KEYS` — every browser-storage key; `adminToken(slug)` keeps the original app's `exit-admin:<slug>`. | Never a storage key literal at a call site. |
 | `api/api-error.ts` | `API_ERROR_CODES`, `API_ERROR_STATUS`, `ApiErrorBodySchema`, `ApiError`, `toApiError`. | The code picks the status. A new failure is a new code here, never a sentence. |
 | `i18n/routing.ts` | `LOCALES` (`he` default, `en`), `LOCALE_COOKIE`, `resolveLocale`, `localeDirection`, `isLocale`. | The locale comes from the cookie via `src/proxy.ts`, never the browser (docs/DECISIONS.md #6). |

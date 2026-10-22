@@ -3,5 +3,7 @@ export const API_ENDPOINTS = {
   rooms: {
     create: "/api/rooms",
     one: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}`,
+    me: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/me`,
+    hosts: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/hosts`,
   },
 } as const;

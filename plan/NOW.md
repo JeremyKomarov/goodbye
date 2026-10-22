@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 05.3
+**Step:** 05.4
 **Since:** 2026-10-22
-**State:** joining a room under a name, renaming, `name_taken`, and the host's claim.
+**State:** the join gate and the hello, over the room's header, on a first RoomScreen.
 **Blocked by:** —
 
 ---

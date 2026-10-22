@@ -17,3 +17,14 @@ export async function listHostIds(roomId: string): Promise<string[]> {
   if (error) throw failed();
   return data.map((row) => row.user_id);
 }
+
+/** Records `userId` as one of the room's host devices. Idempotent: a second claim changes nothing. */
+export async function addHost(roomId: string, userId: string): Promise<void> {
+  const { error } = await db()
+    .from("room_hosts")
+    .upsert(
+      { room_id: roomId, user_id: userId },
+      { onConflict: "room_id,user_id", ignoreDuplicates: true },
+    );
+  if (error) throw failed();
+}
