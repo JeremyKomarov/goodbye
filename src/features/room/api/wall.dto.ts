@@ -25,3 +25,17 @@ export const WallDtoSchema = z.object({
 
 export type WallMessageDto = z.infer<typeof WallMessageDtoSchema>;
 export type WallDto = z.infer<typeof WallDtoSchema>;
+
+/** The wall allows 1–140 characters once trimmed. */
+export const MAX_WALL_MESSAGE = 140;
+
+export const PostMessageInputSchema = z.object({
+  body: z.string().trim().min(1).max(MAX_WALL_MESSAGE),
+});
+
+export const ReactInputSchema = z.object({
+  emoji: z.enum(REACTION_EMOJIS),
+});
+
+export type PostMessageInput = z.input<typeof PostMessageInputSchema>;
+export type ReactInput = z.input<typeof ReactInputSchema>;

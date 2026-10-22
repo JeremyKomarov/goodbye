@@ -29,6 +29,17 @@ export async function listPlayers(roomId: string): Promise<PlayerRecord[]> {
   return data.map((row) => ({ userId: row.user_id, displayName: row.display_name }));
 }
 
+/** Whether the user has joined the room. */
+export async function isPlayer(roomId: string, userId: string): Promise<boolean> {
+  const { count, error } = await db()
+    .from("players")
+    .select("user_id", { count: "exact", head: true })
+    .eq("room_id", roomId)
+    .eq("user_id", userId);
+  if (error) throw failed();
+  return (count ?? 0) > 0;
+}
+
 const UNIQUE_VIOLATION = "23505";
 
 /**

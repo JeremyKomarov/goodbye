@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 06.2
+**Step:** 06.3
 **Since:** 2026-10-22
-**State:** posting to the wall and reacting, as the caller, with optimistic hooks.
+**State:** the `(room)` layout and `RoomShell`, the vote as a page, `TabBar` gaining a list variant.
 **Blocked by:** —
 
 ---

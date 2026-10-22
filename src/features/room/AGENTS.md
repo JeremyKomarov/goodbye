@@ -14,7 +14,8 @@ enabled. Route: `/r/[slug]`; an unknown slug renders `RoomNotFound`.
 | `API_ENDPOINTS.rooms.me` (PUT) | Live, bearer. Join under `{ name }` or rename; written as the caller, so `name_taken` (on `name`) comes from the database's trigger. 204. | `app/api/rooms/[slug]/me/route.ts` |
 | `API_ENDPOINTS.rooms.vote` (PUT, DELETE) | Live, bearer. `{ slotStart }` casts or moves the caller's vote; DELETE takes it back. `voting_closed` after the close, `invalid_input` on `slotStart` for an hour outside the window, `forbidden` for the host. 204. | `app/api/rooms/[slug]/vote/route.ts` |
 | `API_ENDPOINTS.rooms.finalize` (POST) | Live, no session needed. Locks the room to its winning hour once voting is over (ties drawn by the database), and answers the `RoomDto` — unchanged before the close. | `app/api/rooms/[slug]/finalize/route.ts` |
-| `API_ENDPOINTS.rooms.wall` (GET) | Live, no session needed. The newest 200 messages, oldest first, and their reactions. | `app/api/rooms/[slug]/wall/route.ts` |
+| `API_ENDPOINTS.rooms.wall` (GET, POST) | Live. GET, no session: the newest 200 messages, oldest first, and their reactions. POST, bearer: `{ body }` (1–140) as the caller, named by the database; `forbidden` for a non-player, `too_fast` within 3s of their last. 201 with the message. | `app/api/rooms/[slug]/wall/route.ts` |
+| `API_ENDPOINTS.rooms.reaction` (PUT, DELETE) | Live, bearer. `{ emoji }` from `REACTION_EMOJIS`, one per person per message; `forbidden` for a non-player or another room's message. 204. | `app/api/rooms/[slug]/wall/[messageId]/reaction/route.ts` |
 | `API_ENDPOINTS.me.loginCode` (POST) | Live, bearer. The caller's code for another device, per user, not per room: `{ code, created }`; `{ fresh: true }` replaces it. A new code becomes the user's password, so the browser signs back in with it. | `app/api/me/login-code/route.ts` |
 | `API_ENDPOINTS.rooms.hosts` (POST) | Live, bearer. `{ adminToken }` makes the caller a host device; `forbidden` for a wrong token. Idempotent, 204. | `app/api/rooms/[slug]/hosts/route.ts` |
 
@@ -46,6 +47,9 @@ enabled. Route: `/r/[slug]`; an unknown slug renders `RoomNotFound`.
 | `api/login-code.dto.ts` | `LoginCodeInputSchema`, `LoginCodeDtoSchema`, `SignInAsInputSchema` (the gate's code field). |
 | `api/login-code.api.ts` | `fetchLoginCode`. |
 | `hooks/useRoomRealtime.ts` | Subscribes to the room; a wall change invalidates `room.wall`, any other `room.snapshot`, each settled over 150ms. |
+| `hooks/usePostMessage.ts` | Posts; invalidates the wall. |
+| `hooks/useReact.ts` | React, change or take back (`null`), written into the wall before the request and rolled back on failure. Invalidates the wall. |
+| `utils/reactions.ts` | `reactionCounts` (chips, most used first), `withReaction`. |
 | `hooks/useWall.ts` | `useQuery` on `QUERY_KEYS.room.wall(slug)` → `Wall` (messages, `ReactionMap`). |
 | `api/wall.dto.ts`, `api/wall.mapper.ts`, `api/wall.api.ts` | The wall's wire shape, `mapWallDto` (reactions folded by message, then person), `fetchWall`. |
 | `types/wall.types.ts` | `WallMessage`, `ReactionMap`, `Wall`. |

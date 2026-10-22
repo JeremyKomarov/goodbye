@@ -10,8 +10,8 @@ under one room layout, with the tab bar on phones and a chat list on desktop.
 `[ ]` not started · `[~]` in flight now (one, and `plan/NOW.md` names it) · `[x]` done, struck through.
 
 - [x] ~~06.1 — read the wall: `GET /api/rooms/[slug]/wall`, repos, `useWall`; Realtime by table (M)~~
-- [~] 06.2 — post and react: `POST …/wall`, `PUT`/`DELETE …/wall/[id]/reaction`, optimistic (M)
-- [ ] 06.3 — sections as routes: the `(room)` layout and `RoomShell`, the vote page, `TabBar` list (M)
+- [x] ~~06.2 — post and react: `POST …/wall`, `PUT`/`DELETE …/wall/[id]/reaction`, optimistic (M)~~
+- [~] 06.3 — sections as routes: the `(room)` layout and `RoomShell`, the vote page, `TabBar` list (M)
 - [ ] 06.4 — FarewellWall, MessageBubble, the composer and the reaction picker on `/wall` (L)
 - [ ] 06.5 — presence, typing and the emoji broadcast; the header's live line, the unread badge (M)
 - [ ] 06.6 — EmojiRain: the 🎉 button, the wall's quick emoji, the door at the chosen hour (S)
