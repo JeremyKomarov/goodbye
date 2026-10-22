@@ -10,6 +10,9 @@ import { comingSoonStringsEn } from "@/shared/components/ComingSoon/ComingSoon.s
 import { BUTTON_NAMESPACE } from "@/shared/components/Button/Button.keys.const";
 import { buttonStrings } from "@/shared/components/Button/Button.strings";
 import { buttonStringsEn } from "@/shared/components/Button/Button.strings.en";
+import { SHEET_NAMESPACE } from "@/shared/components/Sheet/Sheet.keys.const";
+import { sheetStrings } from "@/shared/components/Sheet/Sheet.strings";
+import { sheetStringsEn } from "@/shared/components/Sheet/Sheet.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -17,12 +20,14 @@ const he = {
   [FEATURES_NAMESPACE]: featuresStrings,
   [COMING_SOON_NAMESPACE]: comingSoonStrings,
   [BUTTON_NAMESPACE]: buttonStrings,
+  [SHEET_NAMESPACE]: sheetStrings,
 };
 
 const en: StringsOf<typeof he> = {
   [FEATURES_NAMESPACE]: featuresStringsEn,
   [COMING_SOON_NAMESPACE]: comingSoonStringsEn,
   [BUTTON_NAMESPACE]: buttonStringsEn,
+  [SHEET_NAMESPACE]: sheetStringsEn,
 };
 
 export type Messages = typeof he;

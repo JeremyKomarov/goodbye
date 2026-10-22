@@ -1,0 +1,81 @@
+// A bottom sheet on phones, a centred panel from `md` up.
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: var(--layer-modal);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background: var(--scrim);
+  }
+
+  &__panel {
+    position: relative;
+    width: 100%;
+    max-width: 28rem;
+    max-height: calc(100dvh - var(--space-3));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-start-start-radius: var(--radius-xl);
+    border-start-end-radius: var(--radius-xl);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-md);
+    padding-block-end: max(var(--space-4), env(safe-area-inset-bottom));
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  &__header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4) var(--space-1);
+    background: var(--surface-card);
+  }
+
+  &__title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+
+  &__body {
+    padding-inline: var(--space-4);
+  }
+}
+
+@media (min-width: 42rem) {
+  .sheet {
+    align-items: center;
+  }
+
+  .sheet__panel {
+    max-height: calc(100dvh - var(--space-8));
+    border-radius: var(--radius-xl);
+  }
+
+  .sheet__header {
+    padding-inline: var(--space-5);
+  }
+
+  .sheet__body {
+    padding-inline: var(--space-5);
+  }
+}
+
+// A phone held sideways: little height, so a wider panel and less chrome.
+@media (max-height: 32rem) {
+  .sheet__panel {
+    max-width: 42rem;
+    max-height: calc(100dvh - var(--space-4));
+  }
+}
