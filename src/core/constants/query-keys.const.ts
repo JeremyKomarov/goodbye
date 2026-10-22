@@ -8,5 +8,6 @@ export const QUERY_KEYS = {
   room: {
     all: (slug: string) => ["room", slug] as const,
     snapshot: (slug: string) => ["room", slug, "snapshot"] as const,
+    wall: (slug: string) => ["room", slug, "wall"] as const,
   },
 } as const;

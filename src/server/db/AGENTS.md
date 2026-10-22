@@ -13,6 +13,7 @@ Such a test is named `*.db.test.ts` and skips unless a secret key is in the envi
 |---|---|---|
 | `client.ts` | `db()` — the secret-key client, made once; it bypasses row-level security. `asUser(token)` — the caller's own client, made per request, under row-level security. | Imported by the `*.repo.ts` files here and nothing else (ESLint). A write a player makes goes through `asUser`, so the policies and triggers still judge it. |
 | `users.repo.ts` | `userIdForAccessToken(token)` — Supabase Auth's answer to "whose token is this?"; `setLoginPassword` — the login code behind a player, which signs their sessions out. | The token check is `server/auth/bearer.ts`'s alone. |
+| `wall.repo.ts` | `listWallMessages` (the newest `WALL_LIMIT`, oldest first), `listWallReactions`. | Same. |
 | `login-codes.repo.ts` | `findLoginCode`, `saveLoginCode` — `public.login_codes`, readable by no client role. | Read by the code handler now, and by the host's page in 07. |
 | `rooms.repo.ts` | `insertRoom` (room + admin-token hash, or neither), `findRoomBySlug`, `findAdminTokenHash`, `deleteRoom`, `finalizeRoom` (the `finalize_room()` RPC: locks to the winner once voting is over, idempotent); `RoomRecord`. | Rows are mapped to camelCase here; snake_case never leaves this file. A Supabase failure throws `upstream_failed`. |
 | `players.repo.ts` | `listPlayers(roomId)` — `PlayerRecord`s, oldest first. `savePlayerName(token, …)` — join or rename, as the caller; `name_taken` from the trigger. | Same. |

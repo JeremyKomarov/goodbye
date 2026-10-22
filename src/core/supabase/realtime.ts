@@ -4,13 +4,19 @@ import { browserSupabase } from "./client";
 // The room's Realtime channel. It reports *that* something changed, never what: the caller
 // invalidates its queries and reads the room again through its handler (docs/DECISIONS.md #2).
 
-/** What changed: the room row, who is in it, who hosts it, or a vote. */
+/** What changed: the room row, who is in it, who hosts it, a vote, or the wall. */
 export const ROOM_TABLES = {
   rooms: "rooms",
   players: "players",
   hosts: "room_hosts",
   votes: "votes",
+  wallMessages: "wall_messages",
+  wallReactions: "wall_reactions",
 } as const;
+
+// A deleted row carries only its key, so these deletions can't be filtered by room: any one
+// anywhere is reported, and the read that follows is what tells.
+const UNFILTERED_DELETES = [ROOM_TABLES.votes, ROOM_TABLES.wallMessages, ROOM_TABLES.wallReactions];
 export type RoomTable = (typeof ROOM_TABLES)[keyof typeof ROOM_TABLES];
 
 // supabase.channel() hands back a channel with the same topic until its unsubscribe finishes, so a
@@ -31,30 +37,21 @@ export function subscribeToRoom(roomId: string, onChange: (table: RoomTable) => 
 
   const connect = () => {
     if (!active) return;
-    const changes = (table: RoomTable, filter?: string) =>
-      ({ event: "*", schema: "public", table, ...(filter && { filter }) }) as const;
-    channel = supabase
-      .channel(topic)
-      .on("postgres_changes", changes(ROOM_TABLES.rooms, `id=eq.${roomId}`), () =>
-        onChange(ROOM_TABLES.rooms),
-      )
-      .on("postgres_changes", changes(ROOM_TABLES.players, byRoom), () =>
-        onChange(ROOM_TABLES.players),
-      )
-      .on("postgres_changes", changes(ROOM_TABLES.hosts, byRoom), () =>
-        onChange(ROOM_TABLES.hosts),
-      )
-      .on("postgres_changes", changes(ROOM_TABLES.votes, byRoom), () =>
-        onChange(ROOM_TABLES.votes),
-      )
-      // A deleted row carries only its key, so a withdrawn vote can't be filtered by room: any
-      // withdrawal anywhere invalidates, and the read that follows is what tells.
-      .on("postgres_changes", { event: "DELETE", schema: "public", table: ROOM_TABLES.votes }, () =>
-        onChange(ROOM_TABLES.votes),
-      )
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") onChange(ROOM_TABLES.rooms);
-      });
+    const next = supabase.channel(topic);
+    for (const table of Object.values(ROOM_TABLES)) {
+      const filter = table === ROOM_TABLES.rooms ? `id=eq.${roomId}` : byRoom;
+      next.on("postgres_changes", { event: "*", schema: "public", table, filter }, () =>
+        onChange(table),
+      );
+    }
+    for (const table of UNFILTERED_DELETES)
+      next.on("postgres_changes", { event: "DELETE", schema: "public", table }, () =>
+        onChange(table),
+      );
+    channel = next.subscribe((status) => {
+      // Connected (or back after a drop): whatever changed meanwhile is read once, everywhere.
+      if (status === "SUBSCRIBED") for (const table of Object.values(ROOM_TABLES)) onChange(table);
+    });
   };
 
   const previous = teardowns.get(topic) ?? Promise.resolve();

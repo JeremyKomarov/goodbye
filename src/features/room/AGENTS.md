@@ -14,6 +14,7 @@ enabled. Route: `/r/[slug]`; an unknown slug renders `RoomNotFound`.
 | `API_ENDPOINTS.rooms.me` (PUT) | Live, bearer. Join under `{ name }` or rename; written as the caller, so `name_taken` (on `name`) comes from the database's trigger. 204. | `app/api/rooms/[slug]/me/route.ts` |
 | `API_ENDPOINTS.rooms.vote` (PUT, DELETE) | Live, bearer. `{ slotStart }` casts or moves the caller's vote; DELETE takes it back. `voting_closed` after the close, `invalid_input` on `slotStart` for an hour outside the window, `forbidden` for the host. 204. | `app/api/rooms/[slug]/vote/route.ts` |
 | `API_ENDPOINTS.rooms.finalize` (POST) | Live, no session needed. Locks the room to its winning hour once voting is over (ties drawn by the database), and answers the `RoomDto` — unchanged before the close. | `app/api/rooms/[slug]/finalize/route.ts` |
+| `API_ENDPOINTS.rooms.wall` (GET) | Live, no session needed. The newest 200 messages, oldest first, and their reactions. | `app/api/rooms/[slug]/wall/route.ts` |
 | `API_ENDPOINTS.me.loginCode` (POST) | Live, bearer. The caller's code for another device, per user, not per room: `{ code, created }`; `{ fresh: true }` replaces it. A new code becomes the user's password, so the browser signs back in with it. | `app/api/me/login-code/route.ts` |
 | `API_ENDPOINTS.rooms.hosts` (POST) | Live, bearer. `{ adminToken }` makes the caller a host device; `forbidden` for a wrong token. Idempotent, 204. | `app/api/rooms/[slug]/hosts/route.ts` |
 
@@ -44,7 +45,10 @@ enabled. Route: `/r/[slug]`; an unknown slug renders `RoomNotFound`.
 | `hooks/useRename.ts` | `saveName` for a player already in. Invalidates the room. |
 | `api/login-code.dto.ts` | `LoginCodeInputSchema`, `LoginCodeDtoSchema`, `SignInAsInputSchema` (the gate's code field). |
 | `api/login-code.api.ts` | `fetchLoginCode`. |
-| `hooks/useRoomRealtime.ts` | Subscribes to the room; any change invalidates `QUERY_KEYS.room.all(slug)`, settled over 150ms. |
+| `hooks/useRoomRealtime.ts` | Subscribes to the room; a wall change invalidates `room.wall`, any other `room.snapshot`, each settled over 150ms. |
+| `hooks/useWall.ts` | `useQuery` on `QUERY_KEYS.room.wall(slug)` → `Wall` (messages, `ReactionMap`). |
+| `api/wall.dto.ts`, `api/wall.mapper.ts`, `api/wall.api.ts` | The wall's wire shape, `mapWallDto` (reactions folded by message, then person), `fetchWall`. |
+| `types/wall.types.ts` | `WallMessage`, `ReactionMap`, `Wall`. |
 | `hooks/useFinalizeRoom.ts` | The finalize call. Invalidates the room once it has locked. |
 | `hooks/useAutoFinalize.ts` | When this screen's clock passes the close, asks for the result every 4s until the room is no longer voting. |
 | `hooks/useDuration.ts` | `exact(ms)` ("an hour and 5 minutes"), `rough(ms)` ("33 hours"), from the `room` namespace's `duration`. |

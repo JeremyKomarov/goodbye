@@ -7,6 +7,7 @@ export const API_ENDPOINTS = {
     hosts: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/hosts`,
     vote: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/vote`,
     finalize: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/finalize`,
+    wall: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/wall`,
   },
   me: {
     loginCode: "/api/me/login-code",
