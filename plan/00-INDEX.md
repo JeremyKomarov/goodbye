@@ -9,6 +9,7 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 01 | Foundation | done | [01-foundation.md](01-foundation.md) |
 | 02 | UI kit | done | [02-ui-kit.md](02-ui-kit.md) |
 | 03 | Data layer | done | [03-data.md](03-data.md) |
+| 04 | Landing | in progress | [04-landing.md](04-landing.md) |
 
 **Now:** 04 · **Next:** 05
 

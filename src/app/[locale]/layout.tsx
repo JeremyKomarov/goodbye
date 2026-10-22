@@ -6,6 +6,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { localeDirection, routing } from "@/core/i18n/routing";
 import "@/core/styles/tokens.scss";
+import { Providers } from "./providers";
 
 const karantina = localFont({
   src: [{ path: "../../../assets/Karantina-Bold.ttf", weight: "700" }],
@@ -55,7 +56,9 @@ export default async function LocaleLayout({ children }: { children: ReactNode }
       className={`${karantina.variable} ${rubik.variable}`}
     >
       <body>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <Providers>{children}</Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

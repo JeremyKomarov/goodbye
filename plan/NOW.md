@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** —
-**Since:** —
-**State:** nothing in flight.
+**Step:** 04.2
+**Since:** 2026-10-22
+**State:** writing admin-token storage, isolate(), useNow and the countdown split.
 **Blocked by:** —
 
 ---
