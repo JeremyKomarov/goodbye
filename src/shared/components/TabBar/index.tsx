@@ -28,7 +28,7 @@ export function TabBar({ items, label }: TabBarProps) {
               <span className={tabBarClasses.glyph}>
                 <Icon name={item.icon} />
                 {item.badge ? (
-                  <span className={tabBarClasses.badge} aria-hidden>
+                  <span className={tabBarClasses.badge} dir="ltr" aria-hidden>
                     {item.badge > BADGE_CAP ? `${BADGE_CAP}+` : item.badge}
                   </span>
                 ) : null}
