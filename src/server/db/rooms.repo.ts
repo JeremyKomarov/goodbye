@@ -1,0 +1,143 @@
+import "server-only";
+import { customAlphabet } from "nanoid";
+import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
+import { db } from "./client";
+
+// Rooms and their secrets. The table is `public.rooms`; the admin token's hash sits apart in
+// `public.room_secrets`, which no client role can read (supabase/migrations/…_init.sql).
+
+export const ROOM_STATUSES = { voting: "voting", locked: "locked", exited: "exited" } as const;
+export type RoomStatus = (typeof ROOM_STATUSES)[keyof typeof ROOM_STATUSES];
+
+export interface RoomRecord {
+  id: string;
+  slug: string;
+  hostName: string;
+  hostGender: "m" | "f";
+  groupName: string;
+  reason: "fired" | "quit" | "fed_up" | null;
+  timezone: string;
+  windowStart: string;
+  windowEnd: string;
+  dayStartHour: number;
+  dayEndHour: number;
+  votingClosesAt: string;
+  status: RoomStatus;
+  lockedSlot: string | null;
+  exitedAt: string | null;
+  createdAt: string;
+}
+
+export type NewRoom = Omit<RoomRecord, "id" | "slug" | "status" | "lockedSlot" | "exitedAt" |
+  "createdAt">;
+
+interface RoomRow {
+  id: string;
+  slug: string;
+  host_name: string;
+  host_gender: "m" | "f";
+  group_name: string;
+  reason: "fired" | "quit" | "fed_up" | null;
+  timezone: string;
+  window_start: string;
+  window_end: string;
+  day_start_hour: number;
+  day_end_hour: number;
+  voting_closes_at: string;
+  status: RoomStatus;
+  locked_slot: string | null;
+  exited_at: string | null;
+  created_at: string;
+}
+
+// Lowercase, no 0/o, 1/l/i: a slug gets read aloud and retyped. Matches the table's slug check.
+const newSlug = customAlphabet("23456789abcdefghjkmnpqrstuvwxyz", 8);
+const SLUG_PATTERN = /^[A-Za-z0-9_-]{6,16}$/;
+const UNIQUE_VIOLATION = "23505";
+const SLUG_ATTEMPTS = 3;
+
+const toRecord = (row: RoomRow): RoomRecord => ({
+  id: row.id,
+  slug: row.slug,
+  hostName: row.host_name,
+  hostGender: row.host_gender,
+  groupName: row.group_name,
+  reason: row.reason,
+  timezone: row.timezone,
+  windowStart: row.window_start,
+  windowEnd: row.window_end,
+  dayStartHour: row.day_start_hour,
+  dayEndHour: row.day_end_hour,
+  votingClosesAt: row.voting_closes_at,
+  status: row.status,
+  lockedSlot: row.locked_slot,
+  exitedAt: row.exited_at,
+  createdAt: row.created_at,
+});
+
+const failed = () => new ApiError(API_ERROR_CODES.upstream_failed, 502);
+
+/** Inserts the room and its admin-token hash together; neither is left behind without the other. */
+export async function insertRoom(room: NewRoom, adminTokenHash: string): Promise<RoomRecord> {
+  const row = {
+    host_name: room.hostName,
+    host_gender: room.hostGender,
+    group_name: room.groupName,
+    reason: room.reason,
+    timezone: room.timezone,
+    window_start: room.windowStart,
+    window_end: room.windowEnd,
+    day_start_hour: room.dayStartHour,
+    day_end_hour: room.dayEndHour,
+    voting_closes_at: room.votingClosesAt,
+  };
+
+  for (let attempt = 0; attempt < SLUG_ATTEMPTS; attempt++) {
+    const { data, error } = await db()
+      .from("rooms")
+      .insert({ ...row, slug: newSlug() })
+      .select("*")
+      .single<RoomRow>();
+    if (error?.code === UNIQUE_VIOLATION) continue;
+    if (error || !data) throw failed();
+
+    const { error: secretError } = await db()
+      .from("room_secrets")
+      .insert({ room_id: data.id, admin_token_hash: adminTokenHash });
+    if (secretError) {
+      await db().from("rooms").delete().eq("id", data.id);
+      throw failed();
+    }
+    return toRecord(data);
+  }
+  throw failed();
+}
+
+/** The room, or null for a slug that is malformed or unknown. */
+export async function findRoomBySlug(slug: string): Promise<RoomRecord | null> {
+  if (!SLUG_PATTERN.test(slug)) return null;
+  const { data, error } = await db()
+    .from("rooms")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle<RoomRow>();
+  if (error) throw failed();
+  return data ? toRecord(data) : null;
+}
+
+/** The stored hash of the room's admin token, for `tokenMatches` in server/auth/. */
+export async function findAdminTokenHash(roomId: string): Promise<string | null> {
+  const { data, error } = await db()
+    .from("room_secrets")
+    .select("admin_token_hash")
+    .eq("room_id", roomId)
+    .maybeSingle<{ admin_token_hash: string }>();
+  if (error) throw failed();
+  return data?.admin_token_hash ?? null;
+}
+
+/** Removes the room and, by cascade, everything in it. */
+export async function deleteRoom(roomId: string): Promise<void> {
+  const { error } = await db().from("rooms").delete().eq("id", roomId);
+  if (error) throw failed();
+}
