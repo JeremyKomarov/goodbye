@@ -22,6 +22,9 @@ import { languageSwitchStringsEn } from "@/shared/components/LanguageSwitch/Lang
 import { TAB_BAR_NAMESPACE } from "@/shared/components/TabBar/TabBar.keys.const";
 import { tabBarStrings } from "@/shared/components/TabBar/TabBar.strings";
 import { tabBarStringsEn } from "@/shared/components/TabBar/TabBar.strings.en";
+import { HERO_CHAT_NAMESPACE } from "@/features/landing/components/HeroChat/HeroChat.keys.const";
+import { heroChatStrings } from "@/features/landing/components/HeroChat/HeroChat.strings";
+import { heroChatStringsEn } from "@/features/landing/components/HeroChat/HeroChat.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -33,6 +36,7 @@ const he = {
   [COPY_BUTTON_NAMESPACE]: copyButtonStrings,
   [LANGUAGE_SWITCH_NAMESPACE]: languageSwitchStrings,
   [TAB_BAR_NAMESPACE]: tabBarStrings,
+  [HERO_CHAT_NAMESPACE]: heroChatStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -43,6 +47,7 @@ const en: StringsOf<typeof he> = {
   [COPY_BUTTON_NAMESPACE]: copyButtonStringsEn,
   [LANGUAGE_SWITCH_NAMESPACE]: languageSwitchStringsEn,
   [TAB_BAR_NAMESPACE]: tabBarStringsEn,
+  [HERO_CHAT_NAMESPACE]: heroChatStringsEn,
 };
 
 export type Messages = typeof he;

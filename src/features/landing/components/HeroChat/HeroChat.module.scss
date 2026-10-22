@@ -1,0 +1,32 @@
+// A phone-sized group chat: header, then lines that settle at the bottom and scroll.
+.hero-chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  background: color-mix(in srgb, var(--surface-page) 80%, transparent);
+  box-shadow: var(--shadow-md);
+
+  &__scroller {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  &__lines {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    min-height: 100%;
+    padding: var(--space-4);
+  }
+
+  &__system {
+    align-self: center;
+    padding-block-start: var(--space-2);
+  }
+}

@@ -31,6 +31,7 @@ disabled shell — not a 404, and not a half-working screen.
 | `api/rooms.mapper.ts` | `mapCreatedRoomDto` — `admin_token` → `adminToken`. |
 | `api/rooms.api.ts` | `createRoom(input)` — parses the input before sending, throws `ApiError` with the handler's code and field. |
 | `types/room.types.ts` | `CreatedRoom` — `slug`, `adminToken`. |
+| `components/HeroChat` | The scripted group chat: `story` picks the opening (`OPENERS`), a new story plays a correction (`CORRECTIONS`); the header previews `hostName` / `groupName`. Partials: ChatHeader, ChatLine, TypingDots, ClosingCountdown (decorative). |
 | `hooks/useCreateRoom.ts` | The mutation. Invalidates nothing: no query holds rooms until phase 05. |
 
 ## Next real work

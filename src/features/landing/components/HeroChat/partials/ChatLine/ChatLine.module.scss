@@ -1,0 +1,18 @@
+.chat-line {
+  &__name {
+    font-size: var(--text-sm);
+    font-weight: 600;
+
+    &--dana {
+      color: var(--sender-pink);
+    }
+
+    &--yossi {
+      color: var(--sender-blue);
+    }
+  }
+
+  &__text {
+    line-height: 1.375;
+  }
+}

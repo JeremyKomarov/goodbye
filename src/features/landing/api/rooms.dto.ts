@@ -6,6 +6,9 @@ import { z } from "zod";
 export const HOST_GENDERS = { m: "m", f: "f" } as const;
 export const LEAVE_REASONS = { fired: "fired", quit: "quit", fedUp: "fed_up" } as const;
 
+export type HostGender = (typeof HOST_GENDERS)[keyof typeof HOST_GENDERS];
+export type LeaveReason = (typeof LEAVE_REASONS)[keyof typeof LEAVE_REASONS];
+
 export const MAX_HOST_NAME = 30;
 export const MAX_GROUP_NAME = 60;
 export const MAX_WINDOW_DAYS = 7;
