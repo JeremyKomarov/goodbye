@@ -48,6 +48,8 @@ use if the wall or leaderboard needs one.
 | `components/Field` | Label + `<input>` (default) or `as="select"` with `<option>` children · `helper`, `error` (translated) wired by `aria-describedby`; takes `ref` for react-hook-form. | Every form control with a label. | Never put a bare `<input>`/`<select>` in a feature, and never build a second labelled-input wrapper. |
 | `components/Sheet` | `<Sheet open onClose title>` — modal bottom sheet (centred panel from `md`), portalled, focus-trapped, Escape and backdrop close. | Every dialog, confirm and side panel. | Never build a Modal or Dialog — this is the only one (see the kit above). |
 | `components/Bubble` | `BUBBLE_SIDES` in (start side) / out (end side) · `hasTail` for the first of a run · `meta` slot for time and ticks. Sides and tail follow the direction. | Every chat message: hero chat, the wall, admin's wall. | Never draw a chat bubble or its tail in a feature — compose reactions and names inside this. |
+| `components/SystemPill` | Small centred notice · `SYSTEM_PILL_TONES` default (yellow on raised), highlight (green). | "X joined", "voting closed", dates — any system line in a chat column. | Never build a second centred notice or status line. |
+| `components/Ticks` | One grey, two grey or two blue check marks · `TICK_STATES` sent, delivered, read. Decorative. | Next to a message's time, or as the app's "done" mark. | Never draw check marks in a feature. |
 
 <!-- Rows are added as components are built. The kit for this project — which primitives are built
      ahead of the first feature screen — is chosen by the plan-kit playbook (step 01.9) and recorded

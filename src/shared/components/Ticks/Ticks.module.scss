@@ -1,0 +1,13 @@
+.ticks {
+  display: inline-flex;
+  flex-shrink: 0;
+
+  &--sent,
+  &--delivered {
+    color: var(--text-muted);
+  }
+
+  &--read {
+    color: var(--tick-read);
+  }
+}

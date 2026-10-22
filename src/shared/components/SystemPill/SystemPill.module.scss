@@ -1,0 +1,22 @@
+// The small centred notice WhatsApp uses for "X joined", "X left", dates.
+.system-pill {
+  width: fit-content;
+  max-width: 90%;
+  margin-inline: auto;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  text-align: center;
+
+  &--default {
+    background: var(--surface-soft);
+    color: var(--accent-pill);
+  }
+
+  &--highlight {
+    background: var(--positive-surface);
+    color: var(--positive-text);
+  }
+}
