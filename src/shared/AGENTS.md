@@ -53,6 +53,7 @@ use if the wall or leaderboard needs one.
 | `components/CopyButton` | Secondary `Button` that copies `text` and shows "Copied" for 1.6s; optional translated `label`. | Room links, admin links, player codes, share text. | Never call `navigator.clipboard` from a feature. |
 | `components/LanguageSwitch` | עברית / English toggle; writes `LOCALE_COOKIE` and reloads so `<html lang dir>` follows. | Landing and the room header. | Never set the locale cookie or keep the locale in a store anywhere else. |
 | `components/TabBar` | Sticky bottom `<nav>` of `Link`s: `items` of `{ href, icon, label, badge? }`; the one matching the URL is `aria-current`; badge caps at 99+ and is read out. | The room's sections (room, games). | Never build a second bottom or tab navigation. |
+| `components/ChoiceGroup` | Pick one: real radios drawn as `CHOICE_GROUP_VARIANTS` card (emoji disc, label, description, check) or segment (pills in a track) · `isClearable` lets the chosen one be unpicked to `null`. Added in phase 04 for the wizard's story and pronoun choices. | Any one-of-few choice. | Never a row of `aria-pressed` buttons or bare radios in a feature. |
 | `components/Skeleton` | Pulsing placeholder · `SKELETON_SHAPES` line, block, circle · optional `width`/`height` as CSS lengths. Decorative. | While a query is pending, shaped like what will replace it. | Never build a spinner screen or a feature-local loading shimmer. |
 
 <!-- Rows are added as components are built. The kit for this project — which primitives are built

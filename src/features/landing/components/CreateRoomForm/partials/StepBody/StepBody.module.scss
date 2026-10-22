@@ -1,0 +1,40 @@
+.step-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  min-height: 19rem;
+  padding: var(--space-5) 0 0;
+  border: 0;
+
+  // A legend will not lay out as a flex child; `contents` lets its two lines join the column.
+  &__legend {
+    display: contents;
+  }
+
+  &__title {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 3.25rem;
+    font-weight: 700;
+    line-height: 0.9;
+  }
+
+  &__sub {
+    display: block;
+    margin-block-start: calc(-1 * var(--space-2));
+    color: var(--text-muted);
+  }
+}
+
+@media (max-height: 500px) {
+  .step-body {
+    gap: var(--space-3);
+    min-height: 0;
+    padding-block-start: var(--space-3);
+  }
+
+  .step-body__title {
+    font-size: var(--text-3xl);
+  }
+}

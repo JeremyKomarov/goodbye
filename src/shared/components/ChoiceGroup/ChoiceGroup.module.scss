@@ -1,0 +1,146 @@
+// A radio group drawn as cards or as a segmented control. The radios are real and only visually
+// hidden, so arrow keys, focus and form semantics are the browser's own.
+.choice-group {
+  &__option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard),
+      box-shadow var(--duration-fast) var(--ease-standard);
+
+    &:has(:focus-visible) {
+      outline: 2px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+  }
+
+  &__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__label {
+    display: block;
+    font-weight: 600;
+  }
+
+  &__description {
+    display: block;
+    overflow: hidden;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &--card {
+    display: grid;
+    gap: var(--space-2);
+
+    .choice-group__option {
+      gap: var(--space-3);
+      padding: var(--space-3);
+      border-radius: var(--radius-xl);
+      background: var(--surface-soft);
+      box-shadow: inset 0 0 0 2px transparent;
+
+      &:has(:checked) {
+        background: color-mix(in srgb, var(--accent-kraft) 15%, transparent);
+        box-shadow: inset 0 0 0 2px var(--accent-kraft);
+      }
+    }
+
+    .choice-group__leading {
+      display: grid;
+      flex-shrink: 0;
+      place-items: center;
+      width: var(--space-11);
+      height: var(--space-11);
+      border-radius: var(--radius-pill);
+      background: color-mix(in srgb, var(--surface-page) 60%, transparent);
+      font-size: var(--text-2xl);
+    }
+
+    .choice-group__option:has(:checked) .choice-group__leading {
+      animation: choice-group-wiggle calc(var(--duration-slow) * 1.5) var(--ease-standard);
+    }
+
+    .choice-group__mark {
+      display: grid;
+      flex-shrink: 0;
+      place-items: center;
+      width: var(--space-6);
+      height: var(--space-6);
+      border-radius: var(--radius-pill);
+      box-shadow: inset 0 0 0 1px var(--border-subtle);
+      color: var(--text-on-brand);
+    }
+
+    .choice-group__option:has(:checked) .choice-group__mark {
+      background: var(--accent-kraft);
+      box-shadow: none;
+    }
+  }
+
+  &--segment {
+    display: inline-flex;
+    gap: var(--space-1);
+    padding: var(--space-1);
+    border-radius: var(--radius-pill);
+    background: var(--surface-soft);
+
+    .choice-group__option {
+      padding: var(--space-1) var(--space-4);
+      border-radius: var(--radius-pill);
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+
+      &:has(:checked) {
+        background: var(--bubble-out);
+        color: var(--text-primary);
+      }
+    }
+
+    .choice-group__label {
+      font-weight: 500;
+    }
+  }
+}
+
+@media (hover: hover) {
+  .choice-group--card .choice-group__option:not(:has(:checked)):hover {
+    background: var(--border-subtle);
+  }
+
+  .choice-group--segment .choice-group__option:not(:has(:checked)):hover {
+    color: var(--text-primary);
+  }
+}
+
+@media (pointer: coarse) {
+  .choice-group--segment .choice-group__option {
+    min-height: var(--space-9);
+  }
+}
+
+@keyframes choice-group-wiggle {
+  33% {
+    transform: rotate(-14deg) scale(1.15);
+  }
+
+  66% {
+    transform: rotate(14deg) scale(1.1);
+  }
+}

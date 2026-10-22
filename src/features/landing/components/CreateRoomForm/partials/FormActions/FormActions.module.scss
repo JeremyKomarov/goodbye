@@ -1,0 +1,11 @@
+.form-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-block-start: var(--space-5);
+}
+
+@media (max-height: 500px) {
+  .form-actions {
+    margin-block-start: var(--space-3);
+  }
+}

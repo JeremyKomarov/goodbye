@@ -32,6 +32,11 @@ disabled shell — not a 404, and not a half-working screen.
 | `api/rooms.api.ts` | `createRoom(input)` — parses the input before sending, throws `ApiError` with the handler's code and field. |
 | `types/room.types.ts` | `CreatedRoom` — `slug`, `adminToken`. |
 | `components/HeroChat` | The scripted group chat: `story` picks the opening (`OPENERS`), a new story plays a correction (`CORRECTIONS`); the header previews `hostName` / `groupName`. Partials: ChatHeader, ChatLine, TypingDots, ClosingCountdown (decorative). |
+| `components/CreateRoomForm` | The three-step wizard (`FORM_STEPS`: reason → who → when) on react-hook-form with `CreateRoomInputSchema`. "Next" validates only that step's fields; a server code with a field lands on that field and jumps to its step. On success it keeps the admin token (`saveAdminToken`) and calls `onCreated`. Mounted in the browser only — its defaults read the clock. Partials: StepProgress, StepBody, ReasonStep, IdentityStep, ScheduleStep, ServerAlert, FormActions. |
+| `hooks/useOpenSlotCount.ts` | Hours left to vote on after the close time, for the window in the form. Disables "Create" at 0. |
+| `hooks/useWizardErrors.ts` | `field(name)` and `server`: the wizard's error sentences, from `strings/landing.strings.ts`. |
+| `strings/landing.strings.ts` | The wizard's buttons and step titles, field errors, and server codes — read by the form and its partials (`landing` namespace). |
+| `types/wizard.types.ts` | `ChatPreview` (wizard → hero chat), `OpenedRoom` (wizard → success card). |
 | `hooks/useCreateRoom.ts` | The mutation. Invalidates nothing: no query holds rooms until phase 05. |
 
 ## Next real work

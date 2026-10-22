@@ -1,0 +1,19 @@
+.identity-step {
+  &__fields {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  &__pronoun {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+}
+
+@media (min-width: 40rem) {
+  .identity-step__fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

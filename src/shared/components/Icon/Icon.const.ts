@@ -13,7 +13,9 @@ import {
   LockOpen,
   LogOut,
   MessageCircle,
+  Minus,
   PartyPopper,
+  Plus,
   SendHorizontal,
   Settings,
   Share2,
@@ -48,6 +50,8 @@ export const ICONS = {
   trash: Trash2,
   key: KeyRound,
   calendar: CalendarPlus,
+  less: Minus,
+  more: Plus,
   share: Share2,
 } as const;
 
