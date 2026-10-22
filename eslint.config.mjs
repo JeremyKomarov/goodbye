@@ -80,7 +80,17 @@ const NO_ICON_LIBRARY = {
     "matching.",
 };
 
-const BASE = [RELATIVE_PARENT, NO_SCSS_MODULE, NO_DB_CLIENT, NO_ICON_LIBRARY];
+// The project's own zone (docs/DECISIONS.md #2): the browser keeps Supabase for its anonymous
+// session and Realtime, in core/supabase/; every read and write is server/db/'s. Anywhere else,
+// importing the SDK is how a component ends up querying a table directly again.
+const NO_SUPABASE = {
+  group: ["@supabase/supabase-js", "@supabase/supabase-js/*", "@supabase/*"],
+  message:
+    "docs/DECISIONS.md #2: Supabase is imported in server/db/ (data) and core/supabase/ (the " +
+    "browser's session and Realtime) only. Read and write through a Route Handler and a hook.",
+};
+
+const BASE = [RELATIVE_PARENT, NO_SCSS_MODULE, NO_DB_CLIENT, NO_ICON_LIBRARY, NO_SUPABASE];
 
 // A zone, and the same zone for the class maps inside it. A *.classes.ts is the one file allowed
 // to import its stylesheet (02-COMPONENTS.md §2), and nothing else about its layer changes. One
@@ -160,10 +170,14 @@ export default [
   // server/db/ is where the client lives, so it is the one place that may import one.
   ...restrict(["src/server/db/**"], [RELATIVE_PARENT]),
 
+  // core/supabase/ is the browser's half of Supabase: everything core/ may not do still applies.
+  ...restrict(["src/core/supabase/**"],
+    [RELATIVE_PARENT, NO_SCSS_MODULE, NO_DB_CLIENT, NO_ICON_LIBRARY, NO_FEATURES, NO_SERVER]),
+
   // shared/components/Icon/ is where lucide-react is imported, so it is the one place exempt from
   // NO_ICON_LIBRARY — every other restriction on a shared/ file still applies (02-COMPONENTS.md §6a).
   ...restrict(["src/shared/components/Icon/**"],
-    [RELATIVE_PARENT, NO_SCSS_MODULE, NO_DB_CLIENT, NO_FEATURES, NO_SERVER]),
+    [RELATIVE_PARENT, NO_SCSS_MODULE, NO_DB_CLIENT, NO_SUPABASE, NO_FEATURES, NO_SERVER]),
 
   // -- the chokepoint exempts itself -----------------------------------------
   {

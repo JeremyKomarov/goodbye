@@ -8,6 +8,7 @@ The table of contents. **Status only — never content.** Every detail lives in 
 |---|---|---|---|
 | 01 | Foundation | done | [01-foundation.md](01-foundation.md) |
 | 02 | UI kit | done | [02-ui-kit.md](02-ui-kit.md) |
+| 03 | Data layer | in progress | [03-data.md](03-data.md) |
 
 **Now:** 03 · **Next:** 04
 
