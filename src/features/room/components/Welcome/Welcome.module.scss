@@ -1,0 +1,39 @@
+// A pill under the header, in your own bubble's green, with your avatar.
+.welcome {
+  position: fixed;
+  inset-inline: 0;
+  top: calc(env(safe-area-inset-top) + 4.75rem);
+  z-index: var(--layer-overlay);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: fit-content;
+  max-width: 90%;
+  margin-inline: auto;
+  padding-block: var(--space-1);
+  padding-inline: var(--space-1) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--bubble-out);
+  box-shadow: var(--shadow-md);
+  font-size: var(--text-sm);
+  pointer-events: none;
+
+  &__avatar {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: var(--space-7);
+    height: var(--space-7);
+    border-radius: var(--radius-pill);
+    background: var(--avatar-color);
+    color: var(--text-on-brand);
+    font-weight: 700;
+  }
+
+  &__text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

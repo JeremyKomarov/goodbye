@@ -17,7 +17,15 @@ disabled shell until then. Route: `/r/[slug]`.
 
 | File | What |
 |---|---|
-| `hooks/useRoom.ts` | `useQuery` on `QUERY_KEYS.room.snapshot(slug)` → `RoomSnapshot`. |
+| `components/RoomScreen` | The screen: `RoomHeader`, the room's main column, `Welcome`, and `JoinGate` until `useIdentity` is ready. Takes the snapshot the page read on the server as `initial`. |
+| `components/RoomHeader` | The chat header: group avatar and name, "Hi {name}" (a link to `onMe`) and how many are in the room; `children` fill its end. |
+| `components/JoinGate` | Covers the room until this browser has a name in it: whose room, why, how many voted; the name form on `SaveNameInputSchema`. `name_taken` reads as the host's name when it is, otherwise as taken. Carries the `LanguageSwitch`. |
+| `components/Welcome` | The hello pill, "the room will remember you" or "welcome back". Keyed by user. |
+| `components/RoomSkeleton` | The page's Suspense fallback, shaped like the room. |
+| `components/RoomNotFound` | `app/[locale]/r/[slug]/not-found.tsx` renders it. |
+| `strings/room.strings.ts` | The `room` namespace: `reason` (gendered), `votes`, `people` — said by more than one component. |
+| `utils/names.ts` | `sameName` — the database's `norm_name()` comparison. |
+| `hooks/useRoom.ts` | `useQuery` on `QUERY_KEYS.room.snapshot(slug)` → `RoomSnapshot`, seeded from the page's read. |
 | `hooks/useIdentity.ts` | Who this browser is here: `state` (`IDENTITY_STATES` checking → join → ready), `me`, `isHost`, `returning`, `join`. Joins the host's browser under the host's name by itself, and claims the room for a host who joined unrecorded. |
 | `hooks/useSessionUser.ts` | `useQuery` on `QUERY_KEYS.session.user` — this browser's user id or null. |
 | `hooks/useJoinRoom.ts` | Signs in if needed, claims the room if this browser holds the admin token, saves the name. Invalidates the session user and the room. |

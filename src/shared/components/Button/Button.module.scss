@@ -144,3 +144,27 @@
     min-height: var(--space-11);
   }
 }
+
+// After the sizes and the coarse-pointer minimum on purpose: a link inside a sentence takes the
+// sentence's size, and two classes outrank either.
+.button.button--link {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+
+  &:active:not(:disabled) {
+    transform: none;
+  }
+
+  &:hover:not(:disabled) {
+    color: var(--text-primary);
+  }
+}

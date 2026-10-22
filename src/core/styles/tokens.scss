@@ -95,8 +95,16 @@
   --accent-kraft: #c9a46a; // the finale's paper
   --hatch-line: rgb(255 255 255 / 0.04); // disabled vote cells
   --scrim: rgb(0 0 0 / 0.7); // behind a sheet
-  --sender-pink: #e26ab6; // a group member's name above their bubble
-  --sender-blue: #53bdeb; // another member's name
+  // WhatsApp's sender colours: a member's name above their bubble, and their avatar. A person's
+  // colour is picked by hashing their id (shared/utils/avatar.ts), so it stays theirs.
+  --sender-pink: #e26ab6;
+  --sender-blue: #53bdeb;
+  --sender-orange: #fc9775;
+  --sender-olive: #a5b337;
+  --sender-yellow: #ffd279;
+  --sender-violet: #7f66ff;
+  --sender-green: #25d366;
+  --sender-coral: #ff8a8c;
 
   // ------------------------------------------------------------------ typography
   // Rubik carries Hebrew and Latin; Karantina is the display face. Both are loaded with

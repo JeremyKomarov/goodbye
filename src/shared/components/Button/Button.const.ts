@@ -3,6 +3,8 @@ export const BUTTON_VARIANTS = {
   secondary: "secondary",
   ghost: "ghost",
   danger: "danger",
+  // A tappable phrase inside a line of text — "Hi Dana", "take back my vote". No box, no size.
+  link: "link",
 } as const;
 
 export type ButtonVariant = (typeof BUTTON_VARIANTS)[keyof typeof BUTTON_VARIANTS];

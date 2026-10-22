@@ -1,0 +1,72 @@
+// Covers the room until the visitor has a name in it, so a newcomer meets the question first.
+.join-gate {
+  position: fixed;
+  inset: 0;
+  z-index: var(--layer-overlay);
+  overflow-y: auto;
+  background: color-mix(in oklab, var(--surface-page) 95%, transparent);
+  backdrop-filter: blur(8px);
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-6);
+    max-width: 28rem;
+    min-height: 100dvh;
+    margin-inline: auto;
+    padding: var(--space-10) var(--space-6);
+  }
+
+  // The group's name, and the language switch for whoever got a Hebrew link and reads English.
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  &__group {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--text-muted);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__headline {
+    margin-block-start: var(--space-1);
+    font-family: var(--font-display);
+    font-size: min(4.25rem, 17vw);
+    font-weight: 700;
+    line-height: 0.85;
+  }
+
+  &__lede {
+    margin-block-start: var(--space-4);
+    color: var(--text-secondary);
+    font-size: var(--text-lg);
+  }
+
+  &__alert {
+    color: var(--critical-text);
+    font-size: var(--text-sm);
+  }
+}
+
+// A phone held sideways: the headline would push the field off the screen.
+@media (max-height: 500px) {
+  .join-gate__form {
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+  }
+
+  .join-gate__headline {
+    font-size: 2.5rem;
+  }
+
+  .join-gate__lede {
+    margin-block-start: var(--space-2);
+    font-size: var(--text-md);
+  }
+}

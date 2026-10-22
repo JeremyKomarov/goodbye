@@ -1,0 +1,27 @@
+.room-not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  min-height: 100dvh;
+  padding: var(--space-6);
+  text-align: center;
+
+  &__why {
+    max-width: 22rem;
+    color: var(--text-secondary);
+  }
+
+  // A link styled as the primary button: it navigates, so it is not a Button.
+  &__open {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-height-lg);
+    padding-inline: var(--space-6);
+    border-radius: var(--radius-pill);
+    background: var(--surface-brand);
+    color: var(--text-on-brand);
+    font-weight: 600;
+  }
+}

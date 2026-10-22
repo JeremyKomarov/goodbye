@@ -12,8 +12,8 @@ countdown change live — and the `room` flag is on.
 - [x] ~~05.1 — read a room: `GET /api/rooms/[slug]` (room, players, hosts, votes), repos, `useRoom` (M)~~
 - [x] ~~05.2 — the browser session in `core/supabase/`, the bearer check, a user-scoped db client (M)~~
 - [x] ~~05.3 — join: `PUT /api/rooms/[slug]/me` (join, rename, `name_taken`), the host claim (M)~~
-- [~] 05.4 — JoinGate and Welcome, over the room's header (L)
-- [ ] 05.5 — vote: `PUT`/`DELETE /api/rooms/[slug]/vote`, optimistic `useVote`, tally and lead (M)
+- [x] ~~05.4 — JoinGate and Welcome, over the room's header (L)~~
+- [~] 05.5 — vote: `PUT`/`DELETE /api/rooms/[slug]/vote`, optimistic `useVote`, tally and lead (M)
 - [ ] 05.6 — VoteHeatmap and VoteLegend (L)
 - [ ] 05.7 — the countdown: `POST /api/rooms/[slug]/finalize`, `Hero` with `FlipDigits` (M)
 - [ ] 05.8 — Realtime: one channel per room; a change invalidates `QUERY_KEYS.room` (S)
@@ -28,5 +28,9 @@ code, and the code from the first browser's sheet signs the second in as that pl
 Hebrew and English with no `MISSING_MESSAGE`; rooms made while checking are deleted afterwards.
 
 ## Notes
+- `BUTTON_VARIANTS.link` joined the kit: "Hi {name}" in the header, and later "not me" and "take
+  back my vote", are phrases inside a sentence, and the kit forbids a styled raw button.
+- An unknown room renders `RoomNotFound` with status 200, not 404: the page streams its shell
+  before the room is read inside `<Suspense>`, as the original did. Next marks it `noindex`.
 - The wall, presence, typing and the emoji rain are 06; the host's controls and the admin page
   are 07. The room's tab bar arrives with the second tab, in 06.

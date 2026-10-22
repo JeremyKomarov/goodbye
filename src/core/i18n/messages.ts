@@ -86,6 +86,32 @@ import {
 import {
   createRoomPanelStringsEn,
 } from "@/features/landing/components/CreateRoomPanel/CreateRoomPanel.strings.en";
+import { ROOM_NAMESPACE } from "@/features/room/strings/room.keys.const";
+import { roomStrings } from "@/features/room/strings/room.strings";
+import { roomStringsEn } from "@/features/room/strings/room.strings.en";
+import { JOIN_GATE_NAMESPACE } from "@/features/room/components/JoinGate/JoinGate.keys.const";
+import { joinGateStrings } from "@/features/room/components/JoinGate/JoinGate.strings";
+import { joinGateStringsEn } from "@/features/room/components/JoinGate/JoinGate.strings.en";
+import { WELCOME_NAMESPACE } from "@/features/room/components/Welcome/Welcome.keys.const";
+import { welcomeStrings } from "@/features/room/components/Welcome/Welcome.strings";
+import { welcomeStringsEn } from "@/features/room/components/Welcome/Welcome.strings.en";
+import { ROOM_HEADER_NAMESPACE } from "@/features/room/components/RoomHeader/RoomHeader.keys.const";
+import { roomHeaderStrings } from "@/features/room/components/RoomHeader/RoomHeader.strings";
+import { roomHeaderStringsEn } from "@/features/room/components/RoomHeader/RoomHeader.strings.en";
+import {
+  ROOM_SKELETON_NAMESPACE,
+} from "@/features/room/components/RoomSkeleton/RoomSkeleton.keys.const";
+import { roomSkeletonStrings } from "@/features/room/components/RoomSkeleton/RoomSkeleton.strings";
+import {
+  roomSkeletonStringsEn,
+} from "@/features/room/components/RoomSkeleton/RoomSkeleton.strings.en";
+import {
+  ROOM_NOT_FOUND_NAMESPACE,
+} from "@/features/room/components/RoomNotFound/RoomNotFound.keys.const";
+import { roomNotFoundStrings } from "@/features/room/components/RoomNotFound/RoomNotFound.strings";
+import {
+  roomNotFoundStringsEn,
+} from "@/features/room/components/RoomNotFound/RoomNotFound.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -105,6 +131,12 @@ const he = {
   [REASON_STEP_NAMESPACE]: reasonStepStrings,
   [IDENTITY_STEP_NAMESPACE]: identityStepStrings,
   [SCHEDULE_STEP_NAMESPACE]: scheduleStepStrings,
+  [ROOM_NAMESPACE]: roomStrings,
+  [JOIN_GATE_NAMESPACE]: joinGateStrings,
+  [WELCOME_NAMESPACE]: welcomeStrings,
+  [ROOM_HEADER_NAMESPACE]: roomHeaderStrings,
+  [ROOM_SKELETON_NAMESPACE]: roomSkeletonStrings,
+  [ROOM_NOT_FOUND_NAMESPACE]: roomNotFoundStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -123,6 +155,12 @@ const en: StringsOf<typeof he> = {
   [REASON_STEP_NAMESPACE]: reasonStepStringsEn,
   [IDENTITY_STEP_NAMESPACE]: identityStepStringsEn,
   [SCHEDULE_STEP_NAMESPACE]: scheduleStepStringsEn,
+  [ROOM_NAMESPACE]: roomStringsEn,
+  [JOIN_GATE_NAMESPACE]: joinGateStringsEn,
+  [WELCOME_NAMESPACE]: welcomeStringsEn,
+  [ROOM_HEADER_NAMESPACE]: roomHeaderStringsEn,
+  [ROOM_SKELETON_NAMESPACE]: roomSkeletonStringsEn,
+  [ROOM_NOT_FOUND_NAMESPACE]: roomNotFoundStringsEn,
 };
 
 export type Messages = typeof he;

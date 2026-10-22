@@ -1,0 +1,16 @@
+// The app shell: exactly one viewport tall, the header fixed at the top, only the content scrolls.
+.room-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+
+  &__main {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    width: 100%;
+    max-width: var(--content-max-width);
+    margin-inline: auto;
+    padding: var(--space-4);
+  }
+}

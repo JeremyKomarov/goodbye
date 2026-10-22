@@ -14,6 +14,7 @@ export const buttonClasses = classMap("Button", {
     secondary: styles["button--secondary"],
     ghost: styles["button--ghost"],
     danger: styles["button--danger"],
+    link: styles["button--link"],
   },
   size: {
     sm: styles["button--sm"],
