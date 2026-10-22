@@ -4,7 +4,7 @@
 another device, with their code), votes on the exit hour, and watches the heatmap and the
 countdown change live — and the `room` flag is on.
 **Depends on:** 03, 04
-**Status:** in progress
+**Status:** done
 
 ## Steps
 `[ ]` not started · `[~]` in flight now (one, and `plan/NOW.md` names it) · `[x]` done, struck through.
@@ -18,7 +18,7 @@ countdown change live — and the `room` flag is on.
 - [x] ~~05.7 — the countdown: `POST /api/rooms/[slug]/finalize`, `Hero` with `FlipDigits` (M)~~
 - [x] ~~05.8 — Realtime: one channel per room; a change invalidates `QUERY_KEYS.room` (S)~~
 - [x] ~~05.9 — login codes and `MeSheet`: rename, your code, sign in as yourself, "not you?" (L)~~
-- [~] 05.10 — RoomScreen on `/r/[slug]`, `enable-feature room`, checked in two browsers (M)
+- [x] ~~05.10 — RoomScreen on `/r/[slug]`, `enable-feature room`, checked in two browsers (M)~~
 
 ## Done when
 Two browsers, one of them private, open the same room link and join under different names; a vote
@@ -28,6 +28,10 @@ code, and the code from the first browser's sheet signs the second in as that pl
 Hebrew and English with no `MISSING_MESSAGE`; rooms made while checking are deleted afterwards.
 
 ## Notes
+- Joining is `PUT /api/rooms/[slug]/me` (join or rename, one idempotent call) rather than the
+  `POST …/players` first planned.
+- Writes a player makes go through `asUser(token)` in `server/db/`, so the database's policies and
+  triggers (`can_vote`, `is_voter`, the name check) still judge them (`docs/DECISIONS.md #2`).
 - `BUTTON_VARIANTS.link` joined the kit: "Hi {name}" in the header, and later "not me" and "take
   back my vote", are phrases inside a sentence, and the kit forbids a styled raw button.
 - The exit row only shows progress for now; tapping it to mark the exit is the host's, in 07.
@@ -37,3 +41,13 @@ Hebrew and English with no `MISSING_MESSAGE`; rooms made while checking are dele
   before the room is read inside `<Suspense>`, as the original did. Next marks it `noindex`.
 - The wall, presence, typing and the emoji rain are 06; the host's controls and the admin page
   are 07. The room's tab bar arrives with the second tab, in 06.
+- Checked in Chromium with two browsers (separate contexts) at 360, 1280 and 740×360, in Hebrew
+  and English: join, a taken name, the host's name, the host coming in by itself, a wrong code and
+  the right one, rename seen live by the other browser, "not you?", a vote and its withdrawal
+  seen live, a room locking by itself at the close. No overflow, no `MISSING_MESSAGE`, no console
+  errors but the deliberate 409s. The landscape phone first squeezed the hour grid to nothing; the
+  card and the grid now sit side by side there.
+- Four probe rooms and the 17 users in them were deleted; the project is back to its six rooms.
+  The few anonymous users whose first name was taken never joined a room, and are left to the
+  nightly cleanup. Supabase limits anonymous sign-ins per hour: a `test:db` run right after a
+  browser check can fail on that alone, and passes on a rerun.

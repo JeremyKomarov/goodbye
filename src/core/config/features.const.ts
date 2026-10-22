@@ -11,7 +11,7 @@ export type FeatureKey = (typeof FEATURE_KEYS)[keyof typeof FEATURE_KEYS];
 
 export const FEATURES: Record<FeatureKey, { route: string; enabled: boolean }> = {
   landing: { route: "/", enabled: true },
-  room: { route: "/r/[slug]", enabled: false },
+  room: { route: "/r/[slug]", enabled: true },
   games: { route: "/r/[slug]/games", enabled: false },
   admin: { route: "/r/[slug]/admin", enabled: false },
 };

@@ -1,5 +1,6 @@
 // The app shell: exactly one viewport tall, only the content scrolls. On a phone the status card
-// sits above the hour grid; from 64rem it gets a side column, like WhatsApp Web's chat list.
+// sits above the hour grid; on a phone held sideways the two sit side by side, and from 64rem the
+// card gets a side column, like WhatsApp Web's chat list.
 .room-screen {
   display: flex;
   flex-direction: column;
@@ -45,5 +46,21 @@
 
   .room-screen__main {
     padding: 0;
+  }
+}
+
+@media (max-height: 500px) and (min-width: 600px) {
+  .room-screen__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    max-width: none;
+  }
+
+  .room-screen__side {
+    overflow-y: auto;
+  }
+
+  .room-screen__main {
+    padding-block-start: var(--space-3);
   }
 }

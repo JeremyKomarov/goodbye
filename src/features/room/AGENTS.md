@@ -1,9 +1,10 @@
 # `room`
 
-The party room everyone joins from the link: join with a name, vote on the exit hour, the
-countdown once it locks, the farewell wall, presence and the emoji rain, and the finale when the
-host leaves. Feature flag: `room`, off while phase 05 builds it — the route renders the shared
-disabled shell until then. Route: `/r/[slug]`.
+The party room everyone joins from the link. A visitor comes in under a name (or as themselves
+from another device, with their login code), votes on the exit hour in a heatmap, and watches the
+countdown — to the close, then to the chosen hour — change live with everyone else's. The host's
+browser comes in under the host's name and watches rather than votes. Feature flag: `room`,
+enabled. Route: `/r/[slug]`; an unknown slug renders `RoomNotFound`.
 
 ## Status
 
@@ -67,12 +68,14 @@ disabled shell until then. Route: `/r/[slug]`.
 
 ## Ownership
 
-- The join gate (and signing in on a second device with a login code), voting, the heatmap,
-  the countdown, the wall, presence, typing, reactions, the finale and the calendar export.
+- Joining, login codes, voting, the heatmap, the countdown; next the wall, presence, typing,
+  reactions, the emoji rain, the finale and the calendar export.
 - The room's Realtime subscription, which invalidates query keys and nothing else
   (docs/DECISIONS.md #2).
 - Not the games and not the host's controls — `games` and `admin`.
 
 ## Next real work
 
-Phase 05 (`plan/05-room-core.md`): the session, joining, voting, the countdown, Realtime.
+Phase 06 — the farewell wall, presence and typing, the emoji rain and the status stories, and the
+tab bar once the room has a second section. The exit row in `Hero` becomes the host's button in
+07; the finale and the actions under the hero (calendar, share) are 09.

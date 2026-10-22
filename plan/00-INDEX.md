@@ -10,9 +10,9 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 02 | UI kit | done | [02-ui-kit.md](02-ui-kit.md) |
 | 03 | Data layer | done | [03-data.md](03-data.md) |
 | 04 | Landing | done | [04-landing.md](04-landing.md) |
-| 05 | Room core | in progress | [05-room-core.md](05-room-core.md) |
+| 05 | Room core | done | [05-room-core.md](05-room-core.md) |
 
-**Now:** 05 · **Next:** 06
+**Now:** 06 · **Next:** 07
 
 The step inside that phase, and how it is going, live in [`NOW.md`](NOW.md) — this line stays
 phase-level. `guard` fails if the two disagree.
