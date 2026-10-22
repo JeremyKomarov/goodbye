@@ -1,0 +1,7 @@
+.copy-button {
+  flex-shrink: 0;
+
+  &--copied {
+    color: var(--positive-text);
+  }
+}

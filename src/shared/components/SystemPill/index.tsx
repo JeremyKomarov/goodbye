@@ -9,7 +9,10 @@ export function SystemPill({
   ...rest
 }: HTMLAttributes<HTMLDivElement> & { tone?: SystemPillTone }) {
   return (
-    <div {...rest} className={cn(systemPillClasses.root, systemPillClasses.tone[tone], className)} />
+    <div
+      {...rest}
+      className={cn(systemPillClasses.root, systemPillClasses.tone[tone], className)}
+    />
   );
 }
 

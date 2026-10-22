@@ -50,6 +50,8 @@ use if the wall or leaderboard needs one.
 | `components/Bubble` | `BUBBLE_SIDES` in (start side) / out (end side) · `hasTail` for the first of a run · `meta` slot for time and ticks. Sides and tail follow the direction. | Every chat message: hero chat, the wall, admin's wall. | Never draw a chat bubble or its tail in a feature — compose reactions and names inside this. |
 | `components/SystemPill` | Small centred notice · `SYSTEM_PILL_TONES` default (yellow on raised), highlight (green). | "X joined", "voting closed", dates — any system line in a chat column. | Never build a second centred notice or status line. |
 | `components/Ticks` | One grey, two grey or two blue check marks · `TICK_STATES` sent, delivered, read. Decorative. | Next to a message's time, or as the app's "done" mark. | Never draw check marks in a feature. |
+| `components/CopyButton` | Secondary `Button` that copies `text` and shows "Copied" for 1.6s; optional translated `label`. | Room links, admin links, player codes, share text. | Never call `navigator.clipboard` from a feature. |
+| `components/LanguageSwitch` | עברית / English toggle; writes `LOCALE_COOKIE` and reloads so `<html lang dir>` follows. | Landing and the room header. | Never set the locale cookie or keep the locale in a store anywhere else. |
 
 <!-- Rows are added as components are built. The kit for this project — which primitives are built
      ahead of the first feature screen — is chosen by the plan-kit playbook (step 01.9) and recorded

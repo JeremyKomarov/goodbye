@@ -1,0 +1,30 @@
+.language-switch {
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  background: var(--surface-card);
+
+  &__option {
+    padding: var(--space-1) var(--space-3);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      background: var(--surface-soft);
+      color: var(--text-primary);
+      cursor: default;
+    }
+  }
+}
+
+@media (pointer: coarse) {
+  .language-switch__option {
+    min-height: var(--space-9);
+  }
+}

@@ -13,6 +13,12 @@ import { buttonStringsEn } from "@/shared/components/Button/Button.strings.en";
 import { SHEET_NAMESPACE } from "@/shared/components/Sheet/Sheet.keys.const";
 import { sheetStrings } from "@/shared/components/Sheet/Sheet.strings";
 import { sheetStringsEn } from "@/shared/components/Sheet/Sheet.strings.en";
+import { COPY_BUTTON_NAMESPACE } from "@/shared/components/CopyButton/CopyButton.keys.const";
+import { copyButtonStrings } from "@/shared/components/CopyButton/CopyButton.strings";
+import { copyButtonStringsEn } from "@/shared/components/CopyButton/CopyButton.strings.en";
+import { LANGUAGE_SWITCH_NAMESPACE } from "@/shared/components/LanguageSwitch/LanguageSwitch.keys.const";
+import { languageSwitchStrings } from "@/shared/components/LanguageSwitch/LanguageSwitch.strings";
+import { languageSwitchStringsEn } from "@/shared/components/LanguageSwitch/LanguageSwitch.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -21,6 +27,8 @@ const he = {
   [COMING_SOON_NAMESPACE]: comingSoonStrings,
   [BUTTON_NAMESPACE]: buttonStrings,
   [SHEET_NAMESPACE]: sheetStrings,
+  [COPY_BUTTON_NAMESPACE]: copyButtonStrings,
+  [LANGUAGE_SWITCH_NAMESPACE]: languageSwitchStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -28,6 +36,8 @@ const en: StringsOf<typeof he> = {
   [COMING_SOON_NAMESPACE]: comingSoonStringsEn,
   [BUTTON_NAMESPACE]: buttonStringsEn,
   [SHEET_NAMESPACE]: sheetStringsEn,
+  [COPY_BUTTON_NAMESPACE]: copyButtonStringsEn,
+  [LANGUAGE_SWITCH_NAMESPACE]: languageSwitchStringsEn,
 };
 
 export type Messages = typeof he;
