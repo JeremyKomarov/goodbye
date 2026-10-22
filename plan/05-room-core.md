@@ -1,0 +1,32 @@
+# 05 — Room core
+
+**Goal:** the room link opens the room — a visitor joins under a name (or as themselves from
+another device, with their code), votes on the exit hour, and watches the heatmap and the
+countdown change live — and the `room` flag is on.
+**Depends on:** 03, 04
+**Status:** not started
+
+## Steps
+`[ ]` not started · `[~]` in flight now (one, and `plan/NOW.md` names it) · `[x]` done, struck through.
+
+- [ ] 05.1 — read a room: `GET /api/rooms/[slug]` (room, players, hosts, votes), repos, `useRoom` (M)
+- [ ] 05.2 — the browser session in `core/supabase/`, the bearer check, a user-scoped db client (M)
+- [ ] 05.3 — join: `POST /api/rooms/[slug]/players` (join, rename, `name_taken`), the host claim (M)
+- [ ] 05.4 — JoinGate and Welcome, over the room's header (L)
+- [ ] 05.5 — vote: `PUT`/`DELETE /api/rooms/[slug]/vote`, optimistic `useVote`, tally and lead (M)
+- [ ] 05.6 — VoteHeatmap and VoteLegend (L)
+- [ ] 05.7 — the countdown: `POST /api/rooms/[slug]/finalize`, `Hero` with `FlipDigits` (M)
+- [ ] 05.8 — Realtime: one channel per room; a change invalidates `QUERY_KEYS.room` (S)
+- [ ] 05.9 — login codes and `MeSheet`: rename, your code, sign in as yourself, "not you?" (L)
+- [ ] 05.10 — RoomScreen on `/r/[slug]`, `enable-feature room`, checked in two browsers (M)
+
+## Done when
+Two browsers, one of them private, open the same room link and join under different names; a vote
+in one shows in the other's heatmap without a reload; a room whose voting has closed locks to the
+winning hour and both show its countdown. Typing the first browser's name in the second asks for a
+code, and the code from the first browser's sheet signs the second in as that player. Checked in
+Hebrew and English with no `MISSING_MESSAGE`; rooms made while checking are deleted afterwards.
+
+## Notes
+- The wall, presence, typing and the emoji rain are 06; the host's controls and the admin page
+  are 07. The room's tab bar arrives with the second tab, in 06.
