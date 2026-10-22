@@ -1,0 +1,27 @@
+.create-room-panel {
+  padding: var(--space-5);
+  border: 1px solid var(--border-subtle);
+  border-radius: calc(2 * var(--radius-xl));
+  background: var(--surface-card);
+  box-shadow: var(--shadow-md);
+
+  &__heading {
+    margin-block-end: var(--space-4);
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 0.9;
+  }
+}
+
+@media (min-width: 40rem) {
+  .create-room-panel {
+    padding: var(--space-7);
+  }
+}
+
+@media (max-height: 500px) {
+  .create-room-panel {
+    padding: var(--space-4);
+  }
+}

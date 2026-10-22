@@ -1,9 +1,12 @@
+// `minmax(0, 1fr)`: a grid track otherwise grows to its longest unbreakable line — the admin link.
 .create-success {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
 
   &__section {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-4);
     padding: var(--space-4);
     border-radius: var(--radius-xl);

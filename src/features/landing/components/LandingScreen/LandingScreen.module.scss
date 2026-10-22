@@ -1,0 +1,61 @@
+// Phones: headline, chat, form, stacked. Desktop: headline over form in the start column, the chat
+// sticky in the end column — on the left in Hebrew.
+.landing-screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 28rem;
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding-inline: var(--space-5);
+  padding-block: max(var(--space-8), env(safe-area-inset-top))
+    max(var(--space-5), env(safe-area-inset-bottom));
+
+  // A flex item will not shrink below its content unless told; long links would widen the page.
+  &__intro,
+  &__panel {
+    min-width: 0;
+  }
+
+  &__chat {
+    min-width: 0;
+    height: min(26rem, 50dvh);
+  }
+}
+
+@media (max-height: 700px) {
+  .landing-screen {
+    gap: var(--space-3);
+    padding-block-start: var(--space-4);
+  }
+}
+
+@media (min-width: 64rem) {
+  .landing-screen {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 26rem;
+    grid-template-rows: auto auto;
+    align-content: center;
+    gap: var(--space-8) calc(2 * var(--space-10));
+    max-width: 72rem;
+    padding: var(--space-10);
+  }
+
+  .landing-screen__intro {
+    grid-area: 1 / 1;
+    align-self: end;
+  }
+
+  .landing-screen__panel {
+    grid-area: 2 / 1;
+    align-self: start;
+  }
+
+  .landing-screen__chat {
+    position: sticky;
+    top: var(--space-10);
+    grid-area: 1 / 2 / span 2;
+    align-self: center;
+    height: min(42rem, calc(100dvh - 5rem));
+  }
+}

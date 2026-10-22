@@ -68,6 +68,24 @@ import {
 import {
   createSuccessStringsEn,
 } from "@/features/landing/components/CreateSuccess/CreateSuccess.strings.en";
+import {
+  INTRO_NAMESPACE,
+} from "@/features/landing/components/LandingScreen/partials/Intro/Intro.keys.const";
+import {
+  introStrings,
+} from "@/features/landing/components/LandingScreen/partials/Intro/Intro.strings";
+import {
+  introStringsEn,
+} from "@/features/landing/components/LandingScreen/partials/Intro/Intro.strings.en";
+import {
+  CREATE_ROOM_PANEL_NAMESPACE,
+} from "@/features/landing/components/CreateRoomPanel/CreateRoomPanel.keys.const";
+import {
+  createRoomPanelStrings,
+} from "@/features/landing/components/CreateRoomPanel/CreateRoomPanel.strings";
+import {
+  createRoomPanelStringsEn,
+} from "@/features/landing/components/CreateRoomPanel/CreateRoomPanel.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -82,6 +100,8 @@ const he = {
   [HERO_CHAT_NAMESPACE]: heroChatStrings,
   [LANDING_NAMESPACE]: landingStrings,
   [CREATE_SUCCESS_NAMESPACE]: createSuccessStrings,
+  [INTRO_NAMESPACE]: introStrings,
+  [CREATE_ROOM_PANEL_NAMESPACE]: createRoomPanelStrings,
   [REASON_STEP_NAMESPACE]: reasonStepStrings,
   [IDENTITY_STEP_NAMESPACE]: identityStepStrings,
   [SCHEDULE_STEP_NAMESPACE]: scheduleStepStrings,
@@ -98,6 +118,8 @@ const en: StringsOf<typeof he> = {
   [HERO_CHAT_NAMESPACE]: heroChatStringsEn,
   [LANDING_NAMESPACE]: landingStringsEn,
   [CREATE_SUCCESS_NAMESPACE]: createSuccessStringsEn,
+  [INTRO_NAMESPACE]: introStringsEn,
+  [CREATE_ROOM_PANEL_NAMESPACE]: createRoomPanelStringsEn,
   [REASON_STEP_NAMESPACE]: reasonStepStringsEn,
   [IDENTITY_STEP_NAMESPACE]: identityStepStringsEn,
   [SCHEDULE_STEP_NAMESPACE]: scheduleStepStringsEn,

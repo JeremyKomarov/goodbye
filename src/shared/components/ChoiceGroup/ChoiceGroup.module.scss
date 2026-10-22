@@ -1,6 +1,8 @@
 // A radio group drawn as cards or as a segmented control. The radios are real and only visually
 // hidden, so arrow keys, focus and form semantics are the browser's own.
 .choice-group {
+  min-width: 0;
+
   &__option {
     position: relative;
     display: flex;

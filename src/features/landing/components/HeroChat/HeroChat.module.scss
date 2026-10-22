@@ -25,8 +25,8 @@
     padding: var(--space-4);
   }
 
+  // Full width, so the pill inside centres itself and keeps its countdown on one line.
   &__system {
-    align-self: center;
     padding-block-start: var(--space-2);
   }
 }

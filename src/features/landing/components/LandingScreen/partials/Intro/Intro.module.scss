@@ -1,0 +1,45 @@
+.intro {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: min(5.5rem, 22vw);
+    font-weight: 700;
+    line-height: 0.82;
+    letter-spacing: -0.025em;
+  }
+
+  &__description {
+    color: var(--text-secondary);
+    font-size: var(--text-lg);
+    line-height: 1.6;
+  }
+}
+
+@media (max-height: 700px) {
+  .intro {
+    gap: var(--space-2);
+  }
+
+  .intro__title {
+    font-size: 3.75rem;
+  }
+
+  .intro__description {
+    font-size: var(--text-md);
+    line-height: 1.4;
+  }
+}
+
+@media (min-width: 64rem) {
+  .intro__title {
+    font-size: 6.5rem;
+  }
+
+  .intro__description {
+    max-width: 36rem;
+    font-size: var(--text-xl);
+  }
+}
