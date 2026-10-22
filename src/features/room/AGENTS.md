@@ -34,6 +34,7 @@ disabled shell until then. Route: `/r/[slug]`.
 | `hooks/useVote.ts` | `{ userId, slotMs }` (null takes it back), written into the snapshot before the request and rolled back on failure. Invalidates the room. |
 | `api/votes.dto.ts` | `CastVoteInputSchema`. |
 | `api/votes.api.ts` | `castVote`, `withdrawVote`. |
+| `hooks/useRoomRealtime.ts` | Subscribes to the room; any change invalidates `QUERY_KEYS.room.all(slug)`, settled over 150ms. |
 | `hooks/useFinalizeRoom.ts` | The finalize call. Invalidates the room once it has locked. |
 | `hooks/useAutoFinalize.ts` | When this screen's clock passes the close, asks for the result every 4s until the room is no longer voting. |
 | `hooks/useDuration.ts` | `exact(ms)` ("an hour and 5 minutes"), `rough(ms)` ("33 hours"), from the `room` namespace's `duration`. |

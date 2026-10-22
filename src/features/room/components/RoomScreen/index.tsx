@@ -12,6 +12,7 @@ import { VoteHeatmap } from "@/features/room/components/VoteHeatmap";
 import { useAutoFinalize } from "@/features/room/hooks/useAutoFinalize";
 import { IDENTITY_STATES, useIdentity } from "@/features/room/hooks/useIdentity";
 import { useRoom } from "@/features/room/hooks/useRoom";
+import { useRoomRealtime } from "@/features/room/hooks/useRoomRealtime";
 import { useVote } from "@/features/room/hooks/useVote";
 import { leadingSlot, tallyVotes } from "@/features/room/utils/tally";
 import { useNow } from "@/shared/hooks/useNow";
@@ -33,6 +34,7 @@ export function RoomScreen({ slug, initial }: RoomScreenProps) {
   const votes = snapshot?.votes;
   const leader = useMemo(() => (votes ? leadingSlot(tallyVotes(votes)) : null), [votes]);
   useAutoFinalize(room, now);
+  useRoomRealtime(slug, room?.id);
   if (!snapshot || !room) return <RoomSkeleton />;
   const { me } = identity;
 
