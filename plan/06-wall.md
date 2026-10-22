@@ -1,0 +1,27 @@
+# 06 — Wall & presence
+
+**Goal:** the room has its second section — the farewell wall, with reactions — and feels alive:
+who is online and typing, the emoji rain, the status stories; the vote and the wall are routes
+under one room layout, with the tab bar on phones and a chat list on desktop.
+**Depends on:** 05
+**Status:** in progress
+
+## Steps
+`[ ]` not started · `[~]` in flight now (one, and `plan/NOW.md` names it) · `[x]` done, struck through.
+
+- [~] 06.1 — read the wall: `GET /api/rooms/[slug]/wall`, repos, `useWall`; Realtime by table (M)
+- [ ] 06.2 — post and react: `POST …/wall`, `PUT`/`DELETE …/wall/[id]/reaction`, optimistic (M)
+- [ ] 06.3 — sections as routes: the `(room)` layout and `RoomShell`, the vote page, `TabBar` list (M)
+- [ ] 06.4 — FarewellWall, MessageBubble, the composer and the reaction picker on `/wall` (L)
+- [ ] 06.5 — presence, typing and the emoji broadcast; the header's live line, the unread badge (M)
+- [ ] 06.6 — EmojiRain: the 🎉 button, the wall's quick emoji, the door at the chosen hour (S)
+- [ ] 06.7 — status stories: the ring on the header's avatar, the strip, the viewer (M)
+- [ ] 06.8 — checked in two browsers, both locales, phone and desktop (S)
+
+## Done when
+In two browsers in the same room, a message posted in one appears on the other's wall, with its
+reaction, without a reload; the other's tab bar counts it while they are on the vote; typing shows
+as "… is typing" and both headers count two online; 🎉 rains on both screens. Checked in Hebrew and
+English at 360 and 1280; rooms made while checking are deleted afterwards.
+
+## Notes

@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** —
-**Since:** —
-**State:** nothing in flight.
+**Step:** 06.1
+**Since:** 2026-10-22
+**State:** reading the wall: handler, repos, `useWall`, Realtime invalidating by table.
 **Blocked by:** —
 
 ---
