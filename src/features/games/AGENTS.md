@@ -19,6 +19,7 @@ the room inside its `(room)` layout; they read the room through `useRoomFrame` (
 |---|---|
 | `components/GamesHub` | The hub: a `GameTile` per game (its picture, name, line, the room's record and your best) linking to the game — not links once the games are closed, under `GamesClosed`. |
 | `components/GameScreen` | One game (`app/[locale]/r/[slug]/(room)/games/[game]/page.tsx` checks the id inside `<Suspense>`): back to the hub, the name and `RecordLine`; the game, keyed by round; then `GameResult` — the score, a new room record (confetti) or personal best, the place out of how many, another round. The score is placed against the records as they were, then sent. |
+| `components/RunawayGame` | The red "exit group" button runs from the pointer (a mouse near it, or a press) to the farthest of 12 spots, taunting; each dodge makes it smaller, quicker and more tired. The score is the time to catch it, in ms. The button is a native piece (docs/DECISIONS.md #10). |
 | `components/RecordLine` | The room's record under the game's name, read out and popping in when it changes. |
 | `components/GamesClosed` | "The games are closed": the host left, so the records stay. |
 | `content/games.const.ts` | `GAME_ART` — each game's emoji on its tile. |
@@ -35,4 +36,4 @@ the room inside its `(room)` layout; they read the room through `useRoomFrame` (
 
 ## Next real work
 
-The games themselves, one per step of phase 08: Runaway, Catch, Trivia, the Picture game.
+The rest of the games, one per step of phase 08: Catch, Trivia, the Picture game.

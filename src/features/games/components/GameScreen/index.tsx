@@ -9,6 +9,7 @@ import { ROOM_STATUSES } from "@/core/constants/room.const";
 import { ROOM_SECTIONS, roomSectionPath } from "@/core/constants/routes.const";
 import { GamesClosed } from "@/features/games/components/GamesClosed";
 import { RecordLine } from "@/features/games/components/RecordLine";
+import { RunawayGame } from "@/features/games/components/RunawayGame";
 import { useSubmitScore } from "@/features/games/hooks/useSubmitScore";
 import type { GameProps } from "@/features/games/types/games.types";
 import { celebrate } from "@/features/games/utils/celebrate";
@@ -22,7 +23,9 @@ import { gameScreenClasses } from "./GameScreen.classes";
 import { GAME_SCREEN_NAMESPACE, gameScreenKeys } from "./GameScreen.keys.const";
 
 // Each game, as its step of phase 08 builds it.
-const GAMES: Partial<Record<GameId, ComponentType<GameProps>>> = {};
+const GAMES: Partial<Record<GameId, ComponentType<GameProps>>> = {
+  runaway: RunawayGame,
+};
 
 /** One game: played round after round, each score kept and placed against the room's. */
 export function GameScreen({ game }: { game: GameId }) {

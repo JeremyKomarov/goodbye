@@ -1,0 +1,89 @@
+// The arena fills the stage; the exit button starts in its middle and jumps around inside it.
+.runaway-game {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-block-end: var(--space-3);
+    padding-inline: var(--space-1);
+    font-size: var(--text-sm);
+  }
+
+  &__note {
+    color: var(--text-muted);
+  }
+
+  &__clock {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  &__arena {
+    position: relative;
+    flex: 1;
+    min-height: 10rem;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    background:
+      radial-gradient(
+        circle,
+        color-mix(in oklab, var(--accent-exit) 8%, transparent),
+        transparent 70%
+      ),
+      color-mix(in oklab, var(--surface-card) 90%, transparent);
+    touch-action: none;
+    user-select: none;
+  }
+
+  &__intro {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: var(--space-5);
+    padding: var(--space-6);
+    text-align: center;
+  }
+
+  &__lead {
+    color: var(--text-secondary);
+    font-size: var(--text-lg);
+  }
+
+  // The piece itself (docs/DECISIONS.md #10): centred, then moved by the game.
+  &__exit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    padding: var(--space-3) var(--space-5);
+    border: 0;
+    border-radius: var(--radius-lg);
+    background: var(--accent-exit);
+    box-shadow: 0 8px 30px -6px color-mix(in oklab, var(--accent-exit) 70%, transparent);
+    color: var(--text-on-brand);
+    font: inherit;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+}
+
+@media (max-height: 500px) {
+  .runaway-game__bar {
+    margin-block-end: var(--space-2);
+  }
+
+  .runaway-game__intro {
+    gap: var(--space-3);
+    padding: var(--space-3);
+  }
+}

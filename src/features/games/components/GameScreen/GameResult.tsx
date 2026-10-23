@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
 import type { GameId } from "@/core/constants/games.const";
-import { Button } from "@/shared/components/Button";
+import { BUTTON_SIZES, Button } from "@/shared/components/Button";
 import { useGameWords } from "@/shared/hooks/useGameWords";
 import { gameScreenClasses } from "./GameScreen.classes";
 import { GAME_SCREEN_NAMESPACE, gameScreenKeys } from "./GameScreen.keys.const";
@@ -60,7 +60,7 @@ export function GameResult({ game, result, error, hubHref, onAgain }: GameResult
       )}
       <div className={gameScreenClasses.actions}>
         {!isClosed && (
-          <Button fullWidth size="lg" onClick={onAgain}>
+          <Button fullWidth size={BUTTON_SIZES.lg} onClick={onAgain}>
             {t(gameScreenKeys.result.again)}
           </Button>
         )}

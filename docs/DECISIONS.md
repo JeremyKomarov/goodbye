@@ -133,3 +133,21 @@ content inside the room's folder, and the `games` flag would gate nothing of its
 > A section from another feature reads `useRoomFrame()` — the `Room`, `meId`, `isHost` — and
 > never `RoomContext`. Anything more it needs is either shared data with its own query, or a
 > reason to widen the frame here first.
+
+## 10. A game's playing pieces are native buttons inside the game
+
+**Locked 2026-10-23.**
+
+`#7` let a chart's cells be native buttons. A game has the same kind of element: the exit button
+that jumps away from the pointer, a notification that falls and is popped, an answer that turns
+green or red. Each is moved, scaled or coloured by the game every frame, reacts to a press rather
+than a click, and *is* the game's state. `Button` would need motion, pointer-down handling and a
+dozen one-off looks to draw them, all of which belong to one game.
+
+The argument that was wrong: a `motion(Button)` with a `bare` variant, as the story discs use.
+`bare` lays out a visual inside a plain button; it doesn't animate it, and a game piece's look
+changes with play.
+
+> A game's playing pieces — the things you play *with* — are native buttons styled in the game's
+> own folder. Every control around a game (start, next, another round) is still the kit's
+> `Button`, and navigation is a `Link`.
