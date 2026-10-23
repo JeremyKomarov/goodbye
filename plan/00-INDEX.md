@@ -14,6 +14,7 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 06 | Wall & presence | done | [06-wall.md](06-wall.md) |
 | 07 | Admin | done | [07-admin.md](07-admin.md) |
 | 08 | Games | done | [08-games.md](08-games.md) |
+| 09 | Finale & sharing | not started | [09-finale.md](09-finale.md) |
 
 **Now:** 09 · **Next:** —
 
