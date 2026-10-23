@@ -159,6 +159,9 @@ import {
 import { TIME_NAMESPACE } from "@/shared/strings/time.keys.const";
 import { timeStrings } from "@/shared/strings/time.strings";
 import { timeStringsEn } from "@/shared/strings/time.strings.en";
+import { ADMIN_NAMESPACE } from "@/features/admin/strings/admin.keys.const";
+import { adminStrings } from "@/features/admin/strings/admin.strings";
+import { adminStringsEn } from "@/features/admin/strings/admin.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -193,6 +196,7 @@ const he = {
   [ROOM_NAV_NAMESPACE]: roomNavStrings,
   [STATUS_STORIES_NAMESPACE]: statusStoriesStrings,
   [TIME_NAMESPACE]: timeStrings,
+  [ADMIN_NAMESPACE]: adminStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -226,6 +230,7 @@ const en: StringsOf<typeof he> = {
   [ROOM_NAV_NAMESPACE]: roomNavStringsEn,
   [STATUS_STORIES_NAMESPACE]: statusStoriesStringsEn,
   [TIME_NAMESPACE]: timeStringsEn,
+  [ADMIN_NAMESPACE]: adminStringsEn,
 };
 
 export type Messages = typeof he;
