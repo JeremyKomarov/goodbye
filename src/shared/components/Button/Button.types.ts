@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, Ref } from "react";
 import type { IconName } from "@/shared/components/Icon";
 import type { ButtonSize, ButtonVariant } from "./Button.const";
 
@@ -9,4 +9,6 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: IconName;
   isLoading?: boolean;
   fullWidth?: boolean;
+  /** To move focus to it — the way on after a game reveals its answer. */
+  ref?: Ref<HTMLButtonElement>;
 }

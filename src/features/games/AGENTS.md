@@ -22,6 +22,8 @@ the room inside its `(room)` layout; they read the room through `useRoomFrame` (
 | `components/RunawayGame` | The red "exit group" button runs from the pointer (a mouse near it, or a press) to the farthest of 12 spots, taunting; each dodge makes it smaller, quicker and more tired. The score is the time to catch it, in ms. The button is a native piece (docs/DECISIONS.md #10). |
 | `components/CatchGame` | Notifications fall faster and thicker for 30 seconds; pop them for points (`NOTICES`): messages, good-morning flowers, "exit group" the most — the boss costs you. The round runs in `useCatchRound`; each notice is a native piece (docs/DECISIONS.md #10). |
 | `components/TriviaGame` | Ten of the questions, fifteen seconds each (`useTriviaRound`); a right answer is 100 and up to 50 more for speed. The options are shuffled; each turns right or wrong (native pieces, docs/DECISIONS.md #10), then the fact and the way on. |
+| `components/PictureGame` | "What's in the picture?": six pictures (`usePictureRound`), only the top quarter showing; one guess or a skip, then the curtain drops. One picture a round is honest — the top thing *is* the answer; in the others naming it is wrong. 150 a right guess. Owns `things`, every name in both languages. |
+| `components/PictureStage` | One picture: the top strip of one thing over the bottom of another, under a curtain; an honest one has no bottom and is framed whole once shown. Always laid out left to right; the backdrop is `--picture-<id>`. |
 | `components/RecordLine` | The room's record under the game's name, read out and popping in when it changes. |
 | `components/GamesClosed` | "The games are closed": the host left, so the records stay. |
 | `content/games.const.ts` | `GAME_ART` — each game's emoji on its tile. |
@@ -29,6 +31,9 @@ the room inside its `(room)` layout; they read the room through `useRoomFrame` (
 | `content/trivia.const.ts` | `TRIVIA_ROUND`, `TRIVIA_SECONDS`, the points; `ANSWERS` — each question's right option. |
 | `strings/trivia.strings.ts` | The `trivia` namespace: every question, its four options `a`–`d` and its fact, in both languages. Every answer checkable. |
 | `hooks/useTriviaRound.ts` | One round of Trivia: the question asked (options in this round's order), the pick (`null` when time ran out), the clock, the score; `start`, `answer`, `next`. |
+| `content/pictures.const.ts` | `PICTURES` (each picture's two things, the guesses that count for each — Hebrew or English — and its icon layers), `ICON_BOUNDS`, `TOP_SHOWN`, `PICTURE_ROUND`, `PICTURE_POINTS`. The icons are `public/picture-game/*.svg`. |
+| `hooks/usePictureRound.ts` | One round: deals pictures not seen lately first, warms their icons; `guess`, `skip`, `next`; `PICTURE_STATUSES`. |
+| `utils/answers.ts` | `matches(guess, answers)` — forgiving of case, punctuation, a Hebrew article and final letters, and a typo in a longer word; `normalize`. |
 | `hooks/useCatchRound.ts` | One round of Catch in a ref, drawn once a frame: `isPlaying`, `frame` (notices, score, time left), `popups`, `start`, `pop`. |
 | `hooks/useSubmitScore.ts` | Sends a finished round's score; invalidates the records. |
 | `api/scores.api.ts` | `submitScore` — the shared `SubmitScoreInputSchema`, the session's bearer. |
@@ -43,4 +48,4 @@ the room inside its `(room)` layout; they read the room through `useRoomFrame` (
 
 ## Next real work
 
-The Picture game (08.6), then the room's board (08.7).
+The room's board (08.7): the most wanted hours and every game's records, and the games' line in the room's sections.

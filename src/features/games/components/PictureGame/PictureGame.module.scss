@@ -1,0 +1,118 @@
+// The picture takes whatever room is left and stays square; the guess sits under it, or beside it
+// on a phone held sideways.
+.picture-game {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+
+  &__intro {
+    display: grid;
+    flex: 1;
+    place-content: center;
+    justify-items: center;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    text-align: center;
+  }
+
+  &__lead {
+    max-width: 28rem;
+    color: var(--text-secondary);
+    font-size: var(--text-lg);
+  }
+
+  &__rules {
+    margin-block-end: var(--space-2);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: var(--space-1);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  &__score {
+    color: var(--warning-text);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  &__play {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-height: 0;
+  }
+
+  // Sized by its container, so the square fits both ways.
+  &__frame {
+    display: grid;
+    flex: 1;
+    place-items: center;
+    min-height: 8rem;
+    container-type: size;
+  }
+
+  &__picture {
+    width: min(100cqw, 100cqh);
+  }
+
+  &__panel {
+    flex-shrink: 0;
+  }
+
+  &__form {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  // The button beside the box, between its label and its helper line.
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__verdict {
+    margin-block-end: var(--space-3);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    text-align: center;
+
+    &--right {
+      color: var(--positive-text);
+    }
+
+    &--wrong {
+      color: var(--accent-exit);
+    }
+
+    &--skipped {
+      color: var(--text-muted);
+    }
+  }
+}
+
+@media (max-height: 500px) and (min-width: 600px) {
+  .picture-game__play {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .picture-game__panel {
+    width: 18rem;
+  }
+}

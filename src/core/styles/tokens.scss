@@ -96,6 +96,26 @@
   --hatch-line: rgb(255 255 255 / 0.04); // disabled vote cells
   --scrim: rgb(0 0 0 / 0.7); // behind a sheet
   --accent-flower: #4a3350; // a "good morning" flower notice, in the Catch game
+  // The Picture game's backdrops, a pastel per picture (features/games/content/pictures.const.ts).
+  --picture-train: #cfe6f7;
+  --picture-trump: #e4ecf7;
+  --picture-penguin: #e6f4ea;
+  --picture-couch: #fff2d9;
+  --picture-tv: #f0e6ff;
+  --picture-toilet: #e3f1f3;
+  --picture-bus: #fff1d6;
+  --picture-car: #ffe4ef;
+  --picture-tractor: #fbefe0;
+  --picture-sheep: #e8f3dc;
+  --picture-pig: #eef7e4;
+  --picture-bicycle: #e6f1ff;
+  --picture-printer: #efe9f7;
+  --picture-duck: #dff0f7;
+  --picture-trash: #e9f2ea;
+  --picture-sneaker: #fde8f0;
+  --picture-bathtub: #ffeedd;
+  --picture-elephant: #e4efe6;
+  --picture-guitar: #f6eadf;
   // WhatsApp's sender colours: a member's name above their bubble, and their avatar. A person's
   // colour is picked by hashing their id (shared/utils/avatar.ts), so it stays theirs.
   --sender-pink: #e26ab6;

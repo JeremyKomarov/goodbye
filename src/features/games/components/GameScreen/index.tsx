@@ -9,6 +9,7 @@ import { ROOM_STATUSES } from "@/core/constants/room.const";
 import { ROOM_SECTIONS, roomSectionPath } from "@/core/constants/routes.const";
 import { CatchGame } from "@/features/games/components/CatchGame";
 import { GamesClosed } from "@/features/games/components/GamesClosed";
+import { PictureGame } from "@/features/games/components/PictureGame";
 import { RecordLine } from "@/features/games/components/RecordLine";
 import { RunawayGame } from "@/features/games/components/RunawayGame";
 import { TriviaGame } from "@/features/games/components/TriviaGame";
@@ -29,6 +30,7 @@ const GAMES: Partial<Record<GameId, ComponentType<GameProps>>> = {
   runaway: RunawayGame,
   catch: CatchGame,
   trivia: TriviaGame,
+  picture: PictureGame,
 };
 
 /** One game: played round after round, each score kept and placed against the room's. */

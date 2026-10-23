@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 08.6
+**Step:** 08.7
 **Since:** 2026-10-23
-**State:** the Picture game — the pictures, their colours as tokens, the stage and the guess — starting.
+**State:** the room's board and the sections' live lines for the games — starting.
 **Blocked by:** —
 
 ---

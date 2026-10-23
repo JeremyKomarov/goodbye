@@ -14,8 +14,8 @@ game's top ten; the games close once the host has left; the `games` flag is on.
 - [x] ~~08.3 — Runaway: the exit button that runs away (M)~~
 - [x] ~~08.4 — Catch: pop the notifications, never the boss (M)~~
 - [x] ~~08.5 — Trivia: ten questions, in both languages (M)~~
-- [~] 08.6 — the Picture game: the stage, the curtain, the pictures, in both languages (L)
-- [ ] 08.7 — the board: the most wanted hours and every game's records; the sections' live lines (M)
+- [x] ~~08.6 — the Picture game: the stage, the curtain, the pictures, in both languages (L)~~
+- [~] 08.7 — the board: the most wanted hours and every game's records; the sections' live lines (M)
 - [ ] 08.8 — `enable-feature games`; checked in two browsers, both locales (M)
 
 ## Done when

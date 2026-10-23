@@ -1,0 +1,54 @@
+// A square picture, with a curtain over all but its top strip until it is revealed.
+.picture-stage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+
+  &__layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  &__icon {
+    position: absolute;
+    max-width: none;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+
+    // An honest picture pulls back to frame the whole thing once revealed.
+    &--zooming {
+      transition: left 700ms, top 700ms, width 700ms;
+      transition-delay: 500ms;
+      transition-timing-function: cubic-bezier(0.6, 0, 0.4, 1);
+    }
+  }
+
+  &__curtain {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    display: grid;
+    place-items: center;
+    border-block-start: 4px solid var(--accent-pill);
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 5px, var(--hatch-line) 5px 6px),
+      var(--surface-soft);
+  }
+
+  &__mark {
+    color: color-mix(in oklab, var(--text-muted) 25%, transparent);
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 16vw, 6rem);
+    font-weight: 700;
+    line-height: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .picture-stage__icon--zooming {
+    transition: none;
+  }
+}

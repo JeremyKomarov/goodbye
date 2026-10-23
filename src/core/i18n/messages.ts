@@ -203,6 +203,13 @@ import {
 } from "@/features/games/components/TriviaGame/TriviaGame.keys.const";
 import { triviaGameStrings } from "@/features/games/components/TriviaGame/TriviaGame.strings";
 import { triviaGameStringsEn } from "@/features/games/components/TriviaGame/TriviaGame.strings.en";
+import {
+  PICTURE_GAME_NAMESPACE,
+} from "@/features/games/components/PictureGame/PictureGame.keys.const";
+import { pictureGameStrings } from "@/features/games/components/PictureGame/PictureGame.strings";
+import {
+  pictureGameStringsEn,
+} from "@/features/games/components/PictureGame/PictureGame.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -247,6 +254,7 @@ const he = {
   [CATCH_GAME_NAMESPACE]: catchGameStrings,
   [TRIVIA_NAMESPACE]: triviaStrings,
   [TRIVIA_GAME_NAMESPACE]: triviaGameStrings,
+  [PICTURE_GAME_NAMESPACE]: pictureGameStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -290,6 +298,7 @@ const en: StringsOf<typeof he> = {
   [CATCH_GAME_NAMESPACE]: catchGameStringsEn,
   [TRIVIA_NAMESPACE]: triviaStringsEn,
   [TRIVIA_GAME_NAMESPACE]: triviaGameStringsEn,
+  [PICTURE_GAME_NAMESPACE]: pictureGameStringsEn,
 };
 
 export type Messages = typeof he;
