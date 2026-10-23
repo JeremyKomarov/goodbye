@@ -17,7 +17,7 @@ enabled. Route: `/`.
 | File | What |
 |---|---|
 | `components/LandingScreen` | The screen: `Intro` partial (language switch, headline), `HeroChat`, `CreateRoomPanel`. Owns the chat preview in `useState`; an unpicked story leaves the chat on the last one told. |
-| `components/HeroChat` | The scripted group chat: `story` picks the opening (`OPENERS`), a new story plays a correction (`CORRECTIONS`); the header previews `hostName` / `groupName`. Partials: ChatHeader, ChatLine, TypingDots, ClosingCountdown (decorative). |
+| `components/HeroChat` | The scripted group chat, played by `useChatScript`: `story` opens with one of its `OPENERS` at random, a new story plays a correction (`CORRECTIONS`), and then the group keeps talking about it — random `CHATTER` beats with reading pauses, typing that lasts as long as the line ("Dana is typing…" in the header), and `REACTIONS` landing on recent lines. Four colleagues, each story its own mix; lines to the host follow `hostGender`. The header previews `hostName` / `groupName`. Partials: ChatHeader, ChatLine (follow-up bubbles, reaction chips), TypingDots, ClosingCountdown (decorative). |
 | `components/CreateRoomPanel` | The card: a skeleton until the page runs in the browser, then the wizard, then the success card. |
 | `components/CreateRoomForm` | The three-step wizard (`FORM_STEPS`: reason → who → when) on react-hook-form with `CreateRoomInputSchema`. "Next" validates only that step's fields; a server code with a field lands on that field and jumps to its step. On success it keeps the admin token (`saveAdminToken`) and calls `onCreated`. Every step stays mounted in one grid cell, only the current one visible, so the card is the tallest step's size on every step. Partials: StepProgress, StepBody, ReasonStep, IdentityStep, ScheduleStep, ServerAlert, FormActions. |
 | `components/CreateSuccess` | The room is open: WhatsApp share with the invite (gendered in Hebrew), the room link, the admin link (`#k=<token>`, `ADMIN_TOKEN_PARAM`) set as a secret, and "enter the room". Partial: LinkRow. |
@@ -28,7 +28,7 @@ enabled. Route: `/`.
 | `api/rooms.mapper.ts` | `mapCreatedRoomDto` — `admin_token` → `adminToken`. |
 | `api/rooms.api.ts` | `createRoom(input)` — parses the input before sending, throws `ApiError` with the handler's code and field. |
 | `types/room.types.ts` | `CreatedRoom` — `slug`, `adminToken`. |
-| `types/wizard.types.ts` | `ChatPreview` (wizard → hero chat), `OpenedRoom` (wizard → success card). |
+| `types/wizard.types.ts` | `ChatPreview` (wizard → hero chat: story, names, the host's gender), `OpenedRoom` (wizard → success card). |
 | `strings/landing.strings.ts` | The `landing` namespace: the wizard's buttons and step titles, field errors and server codes, read by the form and its partials. |
 
 ## What moved to `shared/`

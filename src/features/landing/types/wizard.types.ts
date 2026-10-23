@@ -5,6 +5,7 @@ import type { CreatedRoom } from "./room.types";
 export interface ChatPreview {
   story: LeaveReason | null;
   hostName: string;
+  hostGender: HostGender;
   groupName: string;
 }
 

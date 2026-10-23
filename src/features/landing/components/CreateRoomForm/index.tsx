@@ -62,8 +62,8 @@ export function CreateRoomForm({
     () =>
       form.subscribe({
         formState: { values: true },
-        callback: ({ values: { reason, hostName, groupName } }) =>
-          onPreview({ story: reason, hostName, groupName }),
+        callback: ({ values: { reason, hostName, hostGender, groupName } }) =>
+          onPreview({ story: reason, hostName, hostGender, groupName }),
       }),
     [form, onPreview],
   );

@@ -43,6 +43,13 @@
   }
 }
 
+// Tall enough phones keep a couple of the chat's lines in view; the form's steps scroll instead.
+@media (min-height: 700px) {
+  .landing-screen__chat {
+    min-height: 10.5rem;
+  }
+}
+
 // Too short for a useful chat: the form gets the room.
 @media (max-height: 620px) {
   .landing-screen__chat {

@@ -1,4 +1,13 @@
+// One line: the bubble, and the reactions hanging off its lower edge, as in WhatsApp.
 .chat-line {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  &--mine {
+    align-items: flex-end;
+  }
+
   &__name {
     font-size: var(--text-sm);
     font-weight: 600;
@@ -10,9 +19,34 @@
     &--yossi {
       color: var(--sender-blue);
     }
+
+    &--noa {
+      color: var(--sender-violet);
+    }
+
+    &--avi {
+      color: var(--sender-orange);
+    }
   }
 
   &__text {
     line-height: 1.375;
+  }
+
+  &__reactions {
+    display: flex;
+    gap: 2px;
+    margin-block-start: calc(-1 * var(--space-1));
+    margin-inline: var(--space-3);
+    padding: 1px var(--space-1);
+    border: 1px solid var(--surface-page);
+    border-radius: var(--radius-pill);
+    background: var(--surface-soft);
+    font-size: var(--text-xs);
+    line-height: 1.5;
+  }
+
+  &__reaction {
+    font-variant-numeric: tabular-nums;
   }
 }

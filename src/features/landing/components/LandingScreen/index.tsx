@@ -13,8 +13,8 @@ export function LandingScreen() {
   const [chat, setChat] = useState(INITIAL_CHAT);
   // An unpicked story leaves the chat on the last one told.
   const showPreview = useCallback(
-    ({ story, hostName, groupName }: ChatPreview) =>
-      setChat((shown) => ({ story: story ?? shown.story, hostName, groupName })),
+    ({ story, ...names }: ChatPreview) =>
+      setChat((shown) => ({ ...names, story: story ?? shown.story })),
     [],
   );
 
@@ -24,7 +24,12 @@ export function LandingScreen() {
         <Intro />
       </div>
       <div className={landingScreenClasses.chat}>
-        <HeroChat story={chat.story} hostName={chat.hostName} groupName={chat.groupName} />
+        <HeroChat
+          story={chat.story}
+          hostName={chat.hostName}
+          hostGender={chat.hostGender}
+          groupName={chat.groupName}
+        />
       </div>
       <div className={landingScreenClasses.panel}>
         <CreateRoomPanel onPreview={showPreview} />
