@@ -7,8 +7,6 @@ const PublicEnvSchema = z.object({
   supabasePublishableKey: z.string().min(1),
   siteUrl: z.url().transform((url) => url.replace(/\/+$/, "")),
   turnstileSiteKey: z.string().min(1).optional(),
-  // Sentry's project DSN; without it nothing is reported (`shared/utils/errorReporting.ts`).
-  sentryDsn: z.url().optional(),
   useMocks: z.enum(["true", "false"]).default("false").transform((flag) => flag === "true"),
 });
 
@@ -27,6 +25,5 @@ export const env = parsePublicEnv({
   supabasePublishableKey: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL,
   turnstileSiteKey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || undefined,
-  sentryDsn: process.env.NEXT_PUBLIC_SENTRY_DSN || undefined,
   useMocks: process.env.NEXT_PUBLIC_USE_MOCKS || undefined,
 });
