@@ -11,7 +11,8 @@
     flex: 0 1 auto;
     min-width: 0;
     min-height: 0;
-    overflow-y: auto;
+    // Up and down only: a step sliding in or out sits off to the side, and must not be scrolled to.
+    overflow: hidden auto;
     overscroll-behavior: contain;
     // A scrollbar that comes and goes would narrow the step, rewrap it and resize the card under
     // the host's eyes; the faded edge already says there is more.
