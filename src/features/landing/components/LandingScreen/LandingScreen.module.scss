@@ -43,10 +43,11 @@
   }
 }
 
-// Tall enough phones keep a couple of the chat's lines in view; the form's steps scroll instead.
+// Tall enough screens keep two or three of the chat's lines in view; the form's step scrolls
+// inside its card instead.
 @media (min-height: 700px) {
   .landing-screen__chat {
-    min-height: 10.5rem;
+    min-height: clamp(11rem, 22dvh, 12.5rem);
   }
 }
 

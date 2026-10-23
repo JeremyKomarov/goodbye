@@ -3,18 +3,18 @@
   flex-shrink: 0;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-4);
   background: var(--surface-card);
 
   &__avatar {
     display: grid;
     flex-shrink: 0;
     place-items: center;
-    width: var(--space-10);
-    height: var(--space-10);
+    width: var(--space-8);
+    height: var(--space-8);
     border-radius: var(--radius-pill);
     background: var(--surface-soft);
-    font-size: var(--text-xl);
+    font-size: var(--text-lg);
   }
 
   &__text {
@@ -35,5 +35,20 @@
   &__members {
     color: var(--text-muted);
     font-size: var(--text-xs);
+  }
+}
+
+
+// Slim above the form on a phone or tablet, where every line of the chat counts; full size beside
+// it on a laptop.
+@media (min-width: 64rem) {
+  .chat-header {
+    padding-block: var(--space-3);
+  }
+
+  .chat-header__avatar {
+    width: var(--space-10);
+    height: var(--space-10);
+    font-size: var(--text-xl);
   }
 }

@@ -16,8 +16,8 @@ import { TypingDots } from "./partials/TypingDots";
 import { useChatScript } from "./useChatScript";
 
 /**
- * The landing page's group chat. It plays `story` (`useChatScript`) and keeps the group talking
- * about it; a new story continues the same chat with a correction. The header previews the names
+ * The landing page's group chat. It plays `story` (`useChatScript`); a new story continues the
+ * same chat with a correction. The header previews the names
  * the host is typing into the wizard, and the colleagues speak to the host in their gender.
  */
 export function HeroChat({
@@ -91,7 +91,6 @@ export function HeroChat({
                     gender: hostGender,
                   })}
                   time={line.time}
-                  reactions={line.reactions}
                 />
               );
               if (line.id !== noticeAfter) return [shown];

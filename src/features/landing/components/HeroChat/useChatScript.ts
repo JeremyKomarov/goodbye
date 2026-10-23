@@ -5,15 +5,10 @@ import type { LeaveReason } from "@/features/landing/api/rooms.dto";
 import { pad } from "@/shared/utils/countdown";
 import {
   CHAT_SENDERS,
-  CHATTER,
-  CHATTER_GAP_MS,
   CORRECTIONS,
   FIRST_LINE_MS,
   MAX_LINES,
   OPENERS,
-  REACTION_CHANCE,
-  REACTION_REACH,
-  REACTIONS,
   READ_PAUSE_MS,
   TYPING_MS,
   type Colleague,
@@ -26,14 +21,12 @@ export interface ShownLine extends ScriptLine {
   id: number;
   not: LeaveReason | null;
   time: string;
-  reactions: Record<string, number>;
 }
 
 /**
  * Plays the group chat for `story`, the way a real one arrives: a pause, someone typing for as long
- * as their line takes, the line, now and then a reaction. The first story opens with one of its
- * openings at random; a new story plays its correction; after either the group keeps chatting
- * about the story told, a random beat at a time, for as long as the page is open.
+ * as their line takes, then the line. The first story opens with one of its openings, a new story
+ * plays one of its corrections — each picked at random — and then the chat waits.
  */
 export function useChatScript(story: LeaveReason) {
   const t = useTranslations(HERO_CHAT_NAMESPACE);
@@ -54,7 +47,7 @@ export function useChatScript(story: LeaveReason) {
         ? pickOne(OPENERS[story])
         : before === story
           ? []
-          : CORRECTIONS[story];
+          : pickOne(CORRECTIONS[story]);
     const not = before === null || before === story ? null : before;
     let timer: ReturnType<typeof setTimeout> | undefined;
     let isFirst = before === null;
@@ -71,14 +64,16 @@ export function useChatScript(story: LeaveReason) {
         id: nextId.current++,
         not,
         time: clockNow(),
-        reactions: {},
       };
       setLines((all) => [...all, shown].slice(-MAX_LINES));
     };
 
-    const play = (queue: readonly ScriptLine[], then: () => void) => {
+    const play = (queue: readonly ScriptLine[]) => {
       const [line, ...rest] = queue;
-      if (!line) return then();
+      if (!line) {
+        setNoticeAfter((after) => after ?? nextId.current - 1);
+        return;
+      }
       const text = t(line.key, {
         not: not ? t(heroChatKeys.not[not]) : "",
         gender: "m",
@@ -92,7 +87,7 @@ export function useChatScript(story: LeaveReason) {
       wait(pause, () => {
         const next = () => {
           say(line);
-          play(rest, then);
+          play(rest);
         };
         // The host's own lines arrive without anyone seen typing.
         if (line.from === CHAT_SENDERS.me) return wait(typed / 2, next);
@@ -101,39 +96,7 @@ export function useChatScript(story: LeaveReason) {
       });
     };
 
-    const react = () => {
-      const emoji = pickOne(REACTIONS[story]);
-      setLines((all) => {
-        if (all.length === 0) return all;
-        const at =
-          all.length -
-          1 -
-          Math.floor(Math.random() * Math.min(REACTION_REACH, all.length));
-        const target = all[at];
-        const reactions = {
-          ...target.reactions,
-          [emoji]: (target.reactions[emoji] ?? 0) + 1,
-        };
-        return all.with(at, { ...target, reactions });
-      });
-    };
-
-    let bag: (readonly ScriptLine[])[] = [];
-    const nextBeat = () => {
-      if (bag.length === 0) bag = shuffle(CHATTER[story]);
-      return bag.pop()!;
-    };
-    const chat = () =>
-      wait(between(CHATTER_GAP_MS), () => {
-        if (Math.random() < REACTION_CHANCE) react();
-        play(nextBeat(), chat);
-      });
-
-    play(script, () => {
-      setNoticeAfter((after) => after ?? nextId.current - 1);
-      // Reduced motion: the story, told at once, and then a quiet chat.
-      if (!still) chat();
-    });
+    play(script);
 
     return () => {
       clearTimeout(timer);
@@ -150,15 +113,6 @@ function between([min, max]: readonly [number, number]) {
 
 function pickOne<T>(items: readonly T[]): T {
   return items[Math.floor(Math.random() * items.length)];
-}
-
-function shuffle<T>(items: readonly T[]): T[] {
-  const out = [...items];
-  for (let i = out.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [out[i], out[j]] = [out[j], out[i]];
-  }
-  return out;
 }
 
 /** The time a line arrives, as the chat shows it. */

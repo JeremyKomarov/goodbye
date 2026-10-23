@@ -4,29 +4,16 @@
   flex-direction: column;
   min-height: 0;
 
-  // Every step in one cell: the tallest sets the height, so the card never changes size between
-  // steps. Scrolls inside the card when the screen is too short for it.
+  // Sized in script to the tallest step (see the component), shrinking with a short screen. The
+  // step showing is in the flow and scrolls; the others lie over it, out of the flow.
   &__steps {
-    display: grid;
+    position: relative;
     flex: 0 1 auto;
     min-width: 0;
     min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
-    // Room for a focused field's ring, which `overflow` would otherwise clip.
+    // Room for a focused field's ring, which `overflow` would otherwise clip; the steps pad it back.
     margin-inline: calc(-1 * var(--space-1));
-    padding: var(--space-5) var(--space-1) var(--space-1);
-  }
-}
-
-@media (max-height: 860px) {
-  .create-room-form__steps {
-    padding-block-start: var(--space-4);
-  }
-}
-
-@media (max-height: 500px) {
-  .create-room-form__steps {
-    padding-block-start: var(--space-3);
   }
 }

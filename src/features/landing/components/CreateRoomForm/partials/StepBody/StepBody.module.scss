@@ -1,16 +1,19 @@
 .step-body {
   display: flex;
   flex-direction: column;
-  grid-area: 1 / 1;
   gap: var(--space-4);
   min-width: 0;
   margin: 0;
-  padding: 0;
+  padding: var(--space-5) var(--space-1) var(--space-1);
   border: 0;
   // Stays visible while it fades out, then leaves the accessibility tree and the tab order.
   transition: visibility 0s;
 
   &--hidden {
+    position: absolute;
+    inset: 0;
+    // Clipped to the box, so a hidden step taller than the one showing adds nothing to scroll.
+    overflow: hidden;
     visibility: hidden;
     transition-delay: 0.18s;
   }
@@ -38,6 +41,7 @@
 @media (max-height: 860px) {
   .step-body {
     gap: var(--space-3);
+    padding-block-start: var(--space-4);
   }
 
   .step-body__title {
@@ -46,6 +50,10 @@
 }
 
 @media (max-height: 500px) {
+  .step-body {
+    padding-block-start: var(--space-3);
+  }
+
   .step-body__title {
     font-size: var(--text-3xl);
   }

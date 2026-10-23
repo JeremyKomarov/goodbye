@@ -22,7 +22,7 @@ export const SENDER_GENDERS: Record<Colleague, HostGender> = {
   avi: HOST_GENDERS.m,
 };
 
-const { openers, corrections, chatter } = heroChatKeys;
+const { openers, corrections } = heroChatKeys;
 
 type Leaves<T> = T extends string
   ? T
@@ -32,8 +32,7 @@ export interface ScriptLine {
   from: ChatSender;
   key:
     | Leaves<typeof openers>
-    | Leaves<typeof corrections>
-    | Leaves<typeof chatter>;
+    | Leaves<typeof corrections>;
 }
 
 const { dana, yossi, noa, avi, me } = CHAT_SENDERS;
@@ -107,81 +106,35 @@ export const OPENERS: Record<LeaveReason, readonly (readonly ScriptLine[])[]> =
     ],
   };
 
-/** What follows when the host switches to this story: they take back the last, two react. */
-export const CORRECTIONS: Record<LeaveReason, readonly ScriptLine[]> = {
+/**
+ * What follows when the host switches to this story — they take back the last, two react — one
+ * of three at random.
+ */
+export const CORRECTIONS: Record<LeaveReason, readonly (readonly ScriptLine[])[]> = {
   fired: [
-    line(me, corrections.fired.l1),
-    line(dana, corrections.fired.l2),
-    line(yossi, corrections.fired.l3),
+    [line(me, corrections.fired.a.l1), line(dana, corrections.fired.a.l2), line(yossi, corrections.fired.a.l3)],
+    [line(me, corrections.fired.b.l1), line(avi, corrections.fired.b.l2), line(dana, corrections.fired.b.l3)],
+    [line(me, corrections.fired.c.l1), line(noa, corrections.fired.c.l2), line(yossi, corrections.fired.c.l3)],
   ],
   quit: [
-    line(me, corrections.quit.l1),
-    line(dana, corrections.quit.l2),
-    line(yossi, corrections.quit.l3),
+    [line(me, corrections.quit.a.l1), line(dana, corrections.quit.a.l2), line(yossi, corrections.quit.a.l3)],
+    [line(me, corrections.quit.b.l1), line(avi, corrections.quit.b.l2), line(dana, corrections.quit.b.l3)],
+    [line(me, corrections.quit.c.l1), line(yossi, corrections.quit.c.l2), line(noa, corrections.quit.c.l3)],
   ],
   fed_up: [
-    line(me, corrections.fed_up.l1),
-    line(dana, corrections.fed_up.l2),
-    line(yossi, corrections.fed_up.l3),
+    [line(me, corrections.fed_up.a.l1), line(dana, corrections.fed_up.a.l2), line(yossi, corrections.fed_up.a.l3)],
+    [line(me, corrections.fed_up.b.l1), line(avi, corrections.fed_up.b.l2), line(yossi, corrections.fed_up.b.l3)],
+    [line(me, corrections.fed_up.c.l1), line(dana, corrections.fed_up.c.l2), line(noa, corrections.fed_up.c.l3)],
   ],
 };
 
 /**
- * Once the story is told the group keeps talking, a beat at a time in a random order. A beat is
- * one line, or a line and the answer it gets.
- */
-export const CHATTER: Record<LeaveReason, readonly (readonly ScriptLine[])[]> =
-  {
-    fired: [
-      [line(dana, chatter.fired.c1)],
-      [line(yossi, chatter.fired.c2)],
-      [line(avi, chatter.fired.c3), line(yossi, chatter.fired.c4)],
-      [line(dana, chatter.fired.c5), line(me, chatter.fired.c6)],
-      [line(noa, chatter.fired.c7), line(dana, chatter.fired.c8)],
-      [line(yossi, chatter.fired.c9)],
-      [line(me, chatter.fired.c10)],
-    ],
-    quit: [
-      [line(dana, chatter.quit.c1)],
-      [line(yossi, chatter.quit.c2)],
-      [line(avi, chatter.quit.c3)],
-      [line(noa, chatter.quit.c4)],
-      [line(dana, chatter.quit.c5)],
-      [line(me, chatter.quit.c6), line(yossi, chatter.quit.c7)],
-      [line(avi, chatter.quit.c8)],
-      [line(dana, chatter.quit.c9)],
-      [line(yossi, chatter.quit.c10)],
-    ],
-    fed_up: [
-      [line(yossi, chatter.fed_up.c1)],
-      [line(dana, chatter.fed_up.c2)],
-      [line(avi, chatter.fed_up.c3), line(me, chatter.fed_up.c4)],
-      [line(noa, chatter.fed_up.c5), line(yossi, chatter.fed_up.c6)],
-      [line(dana, chatter.fed_up.c7)],
-      [line(avi, chatter.fed_up.c8), line(me, chatter.fed_up.c9)],
-      [line(yossi, chatter.fed_up.c10)],
-    ],
-  };
-
-/** The emoji the group reacts with, per story. */
-export const REACTIONS: Record<LeaveReason, readonly string[]> = {
-  fired: ["😢", "❤️", "🫂", "💪"],
-  quit: ["🥂", "🫡", "👏", "🔥"],
-  fed_up: ["😂", "🍿", "💅", "💀"],
-};
-
-/**
- * The pacing, in ms, each a [min, max] picked at random: a pause before someone starts typing,
- * how long they type (by the length of what they write), and the quiet between beats.
+ * The pacing, in ms: the first line's wait, a pause picked at random from [min, max] before each
+ * line after it, and how long someone types — by the length of what they write.
  */
 export const FIRST_LINE_MS = 500;
 export const READ_PAUSE_MS = [300, 1200] as const;
 export const TYPING_MS = { base: 500, perChar: 40, max: 3000 } as const;
-export const CHATTER_GAP_MS = [2000, 5000] as const;
 
-/** How likely a reaction lands on a recent line between beats, and how far back it looks. */
-export const REACTION_CHANCE = 0.4;
-export const REACTION_REACH = 4;
-
-/** The chat keeps the newest lines only, so it can talk all day. */
-export const MAX_LINES = 40;
+/** The chat keeps the newest lines only, however many times the story is switched. */
+export const MAX_LINES = 30;

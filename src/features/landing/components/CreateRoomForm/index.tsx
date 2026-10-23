@@ -58,6 +58,19 @@ export function CreateRoomForm({
     stepsRef.current?.scrollTo({ top: 0 });
   }, [step]);
 
+  // The steps' box is as tall as the tallest step, whichever is showing, so the card never changes
+  // size. Only the step showing is in the flow, so a short screen scrolls that one and no further.
+  useEffect(() => {
+    const box = stepsRef.current;
+    if (!box) return;
+    const steps = [...box.children] as HTMLElement[];
+    const observer = new ResizeObserver(() => {
+      box.style.height = `${Math.max(...steps.map((each) => each.scrollHeight))}px`;
+    });
+    steps.forEach((each) => observer.observe(each));
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(
     () =>
       form.subscribe({
@@ -95,7 +108,7 @@ export function CreateRoomForm({
     <FormProvider {...form}>
       <form className={createRoomFormClasses.root} onSubmit={submit} noValidate>
         <StepProgress step={step} total={FORM_STEPS.length} />
-        {/* Every step is mounted in the same cell, so the card is always the tallest one's size. */}
+        {/* Every step stays mounted, so the tallest can set the box's height. */}
         <div ref={stepsRef} className={createRoomFormClasses.steps}>
           {FORM_STEPS.map(({ key }, at) => {
             const Body = STEP_BODIES[key];
