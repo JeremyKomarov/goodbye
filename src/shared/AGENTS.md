@@ -68,6 +68,7 @@ use if the wall or leaderboard needs one.
 | `hooks/useDuration.ts` | `exact(ms)` ("an hour and 5 minutes"), `rough(ms)` ("33 hours"). | Every duration in words. |
 | `hooks/useRoomFrame.ts` | `RoomFrameContext`, `useRoomFrame()` → `{ room, meId, isHost }`, provided by the room's shell around its sections (docs/DECISIONS.md #9). | A section of the room owned by another feature — the games. Never reach for the room's own context. |
 | `hooks/useGameWords.ts` | `title(game)`, `score(game, n)` — "2.41 שנ׳" for Runaway's time, points otherwise, in the reader's language. | Every game name or score, on any screen. |
+| `hooks/useListFormat.ts` | Joins names the reader's way: "Dana, Noa and you". | Every list of names in a sentence. |
 | `hooks/useRecords.ts` | `useQuery` on `QUERY_KEYS.room.scores(slug)` → `GameRecord[]`, each player's best per game. Kept fresh by the room's channel. | The games, the room's board and nav line, the finale. |
 | `hooks/useNow.ts` | The current time in ms from one shared 250ms ticker; 0 on the server and while hydrating. | Every countdown or "time left" display. Never start a `setInterval` for a clock in a component. |
 

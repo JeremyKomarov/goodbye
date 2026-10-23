@@ -1,0 +1,131 @@
+// The records as cards: the hours first, then each game's top ten. Two columns once there is room.
+.board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  align-items: start;
+  gap: var(--space-3);
+  overflow-y: auto;
+  min-height: 0;
+  padding: var(--space-3);
+
+  &__card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-xl);
+    background: color-mix(in oklab, var(--surface-card) 90%, transparent);
+  }
+
+  &__title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+
+  &__empty {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  &__play {
+    margin-inline-start: var(--space-1);
+    color: var(--positive-text);
+    font-weight: 600;
+  }
+
+  &__hours,
+  &__rows {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__hour {
+    display: flex;
+    justify-content: space-between;
+    margin-block-end: var(--space-1);
+    font-size: var(--text-sm);
+  }
+
+  &__track {
+    height: 0.5rem;
+    overflow: hidden;
+    border-radius: var(--radius-pill);
+    background: var(--surface-soft);
+  }
+
+  &__bar {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--vote-4);
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-lg);
+
+    &--mine {
+      background: color-mix(in oklab, var(--bubble-out) 40%, transparent);
+    }
+  }
+
+  &__rank {
+    width: 1.25rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+
+    &--first {
+      color: var(--warning-text);
+      font-weight: 700;
+    }
+  }
+
+  &__avatar {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-pill);
+    color: var(--text-on-brand);
+    font-weight: 600;
+  }
+
+  &__name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__you {
+    color: var(--text-muted);
+  }
+
+  &__score {
+    color: var(--warning-text);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 40rem) {
+  .board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .board {
+    padding: 0;
+  }
+}

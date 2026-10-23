@@ -13,6 +13,15 @@ export const roomNavStrings = {
   games: {
     title: "משחקים",
     idle: "כפתור בורח, טריוויה, 99+ הודעות ומה בתמונה?",
+    holders: "👑 בשיאים: {names}",
+    closed: "🏁 המשחקים נסגרו",
+    closedHolders: "🏁 המשחקים נסגרו · 👑 {names}",
+    you: "את/ה",
+  },
+  board: {
+    title: "טבלה",
+    players: "{count, plural, one {שחקן אחד} other {# שחקנים}} בטבלה",
+    none: "עוד אף אחד לא שיחק",
   },
   wall: {
     title: "קיר פרידה",

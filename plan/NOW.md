@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 08.7
+**Step:** 08.8
 **Since:** 2026-10-23
-**State:** the room's board and the sections' live lines for the games — starting.
+**State:** `enable-feature games`; the two-browser check in both locales — starting.
 **Blocked by:** —
 
 ---

@@ -25,7 +25,7 @@ the room inside its `(room)` layout; they read the room through `useRoomFrame` (
 | `components/PictureGame` | "What's in the picture?": six pictures (`usePictureRound`), only the top quarter showing; one guess or a skip, then the curtain drops. One picture a round is honest — the top thing *is* the answer; in the others naming it is wrong. 150 a right guess. Owns `things`, every name in both languages. |
 | `components/PictureStage` | One picture: the top strip of one thing over the bottom of another, under a curtain; an honest one has no bottom and is framed whole once shown. Always laid out left to right; the backdrop is `--picture-<id>`. |
 | `components/RecordLine` | The room's record under the game's name, read out and popping in when it changes. |
-| `components/GamesClosed` | "The games are closed": the host left, so the records stay. |
+| `components/GamesClosed` | "The games are closed": the host left, so the records stay — and a link to the room's board. |
 | `content/games.const.ts` | `GAME_ART` — each game's emoji on its tile. |
 | `content/catch.const.ts` | `CATCH_SECONDS`, `NOTICE_KINDS`, `NOTICES` — each kind's points and how often it falls. Their lines are in `CatchGame`'s strings. |
 | `content/trivia.const.ts` | `TRIVIA_ROUND`, `TRIVIA_SECONDS`, the points; `ANSWERS` — each question's right option. |
@@ -48,4 +48,4 @@ the room inside its `(room)` layout; they read the room through `useRoomFrame` (
 
 ## Next real work
 
-The room's board (08.7): the most wanted hours and every game's records, and the games' line in the room's sections.
+Turn the `games` flag on (08.8), checked with two players in two browsers.

@@ -15,7 +15,7 @@ export function roomPath(key: FeatureKey, slug: string): string {
 }
 
 /** The room's sections below its own route: the vote is the room itself, the rest beside it. */
-export const ROOM_SECTIONS = { vote: "", wall: "wall", games: "games" } as const;
+export const ROOM_SECTIONS = { vote: "", wall: "wall", games: "games", board: "board" } as const;
 export type RoomSection = (typeof ROOM_SECTIONS)[keyof typeof ROOM_SECTIONS];
 
 /** A section of the room: `roomSectionPath("abc", ROOM_SECTIONS.wall)` → `/r/abc/wall`. */

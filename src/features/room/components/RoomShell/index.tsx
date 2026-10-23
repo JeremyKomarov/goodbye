@@ -77,7 +77,8 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
   const typing = useTypingLine(live.typers);
   useDoorAtTheHour(room, now, live.rain);
   if (!snapshot || !room) return <RoomSkeleton />;
-  const nav = { snapshot, leader, lastMessage: wall?.messages.at(-1), unread, typing };
+  const lastMessage = wall?.messages.at(-1);
+  const nav = { snapshot, leader, lastMessage, unread, typing, meId: me?.userId ?? null };
 
   return (
     <MotionConfig reducedMotion="user">

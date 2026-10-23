@@ -5,4 +5,5 @@ export const gamesClosedClasses = classMap("GamesClosed", {
   root: styles["games-closed"],
   title: styles["games-closed__title"],
   body: styles["games-closed__body"],
+  board: styles["games-closed__board"],
 });

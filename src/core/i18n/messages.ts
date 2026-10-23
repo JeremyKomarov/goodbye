@@ -210,6 +210,9 @@ import { pictureGameStrings } from "@/features/games/components/PictureGame/Pict
 import {
   pictureGameStringsEn,
 } from "@/features/games/components/PictureGame/PictureGame.strings.en";
+import { BOARD_NAMESPACE } from "@/features/room/components/Board/Board.keys.const";
+import { boardStrings } from "@/features/room/components/Board/Board.strings";
+import { boardStringsEn } from "@/features/room/components/Board/Board.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -255,6 +258,7 @@ const he = {
   [TRIVIA_NAMESPACE]: triviaStrings,
   [TRIVIA_GAME_NAMESPACE]: triviaGameStrings,
   [PICTURE_GAME_NAMESPACE]: pictureGameStrings,
+  [BOARD_NAMESPACE]: boardStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -299,6 +303,7 @@ const en: StringsOf<typeof he> = {
   [TRIVIA_NAMESPACE]: triviaStringsEn,
   [TRIVIA_GAME_NAMESPACE]: triviaGameStringsEn,
   [PICTURE_GAME_NAMESPACE]: pictureGameStringsEn,
+  [BOARD_NAMESPACE]: boardStringsEn,
 };
 
 export type Messages = typeof he;

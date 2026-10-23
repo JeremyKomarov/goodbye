@@ -15,6 +15,15 @@ export const roomNavStringsEn: StringsOf<typeof roomNavStrings> = {
   games: {
     title: "Games",
     idle: "A runaway button, trivia, 99+ messages and what's in the picture?",
+    holders: "👑 Record holders: {names}",
+    closed: "🏁 The games are closed",
+    closedHolders: "🏁 The games are closed · 👑 {names}",
+    you: "you",
+  },
+  board: {
+    title: "Records",
+    players: "{count, plural, one {One player} other {# players}} on the board",
+    none: "Nobody has played yet",
   },
   wall: {
     title: "Farewell wall",
