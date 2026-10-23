@@ -1,4 +1,11 @@
+// A column that shrinks with the screen: the form's step scrolls inside it, the opened room's card
+// scrolls as a whole.
 .create-room-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: var(--space-5);
   border: 1px solid var(--border-subtle);
   border-radius: calc(2 * var(--radius-xl));
@@ -20,7 +27,7 @@
   }
 }
 
-@media (max-height: 500px) {
+@media (max-height: 700px) {
   .create-room-panel {
     padding: var(--space-4);
   }

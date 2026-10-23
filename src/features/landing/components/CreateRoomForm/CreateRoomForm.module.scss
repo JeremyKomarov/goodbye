@@ -1,4 +1,6 @@
+// The progress and the buttons stay put; the step between them scrolls when the card is short.
 .create-room-form {
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }

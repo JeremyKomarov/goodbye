@@ -1,32 +1,52 @@
-// Phones: headline, chat, form, stacked. Desktop: headline over form in the start column, the chat
-// sticky in the end column — on the left in Hebrew.
+// Exactly one viewport tall, never a page scroll. Phones: headline, chat, form, stacked — the chat
+// takes what the other two leave, and a step too tall for what is left scrolls inside its card.
+// Desktop: headline over form in the start column, the chat in the end column — on the left in
+// Hebrew.
 .landing-screen {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-4);
   max-width: 28rem;
-  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
   margin-inline: auto;
   padding-inline: var(--space-5);
-  padding-block: max(var(--space-8), env(safe-area-inset-top))
-    max(var(--space-5), env(safe-area-inset-bottom));
+  padding-block: max(var(--space-5), env(safe-area-inset-top))
+    max(var(--space-4), env(safe-area-inset-bottom));
 
   // A flex item will not shrink below its content unless told; long links would widen the page.
-  &__intro,
-  &__panel {
+  &__intro {
+    flex-shrink: 0;
     min-width: 0;
   }
 
   &__chat {
+    flex: 1 1 0;
     min-width: 0;
-    height: min(26rem, 50dvh);
+    min-height: 7rem;
+  }
+
+  // Shrinks to what is left; the card inside scrolls its step rather than push the page.
+  &__panel {
+    display: flex;
+    flex: 0 1 auto;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
   }
 }
 
 @media (max-height: 700px) {
   .landing-screen {
     gap: var(--space-3);
-    padding-block-start: var(--space-4);
+    padding-block-start: max(var(--space-3), env(safe-area-inset-top));
+  }
+}
+
+// Too short for a useful chat: the form gets the room.
+@media (max-height: 620px) {
+  .landing-screen__chat {
+    display: none;
   }
 }
 
@@ -34,11 +54,11 @@
   .landing-screen {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 26rem;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto minmax(0, auto);
     align-content: center;
-    gap: var(--space-8) calc(2 * var(--space-10));
+    gap: var(--space-6) calc(2 * var(--space-10));
     max-width: 72rem;
-    padding: var(--space-10);
+    padding: var(--space-8) var(--space-10);
   }
 
   .landing-screen__intro {
@@ -49,13 +69,14 @@
   .landing-screen__panel {
     grid-area: 2 / 1;
     align-self: start;
+    max-height: 100%;
   }
 
   .landing-screen__chat {
-    position: sticky;
-    top: var(--space-10);
+    display: block;
     grid-area: 1 / 2 / span 2;
     align-self: center;
-    height: min(42rem, calc(100dvh - 5rem));
+    height: min(42rem, 100%);
+    min-height: 0;
   }
 }

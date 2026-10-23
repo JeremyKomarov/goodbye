@@ -1,11 +1,13 @@
+// Sized by the screen's height as well as its width: the page is one viewport tall, and the form
+// and the chat need what the headline leaves.
 .intro {
   display: grid;
   justify-items: start;
-  gap: var(--space-4);
+  gap: var(--space-3);
 
   &__title {
     font-family: var(--font-display);
-    font-size: min(5.5rem, 22vw);
+    font-size: min(5.5rem, 22vw, 8.5dvh);
     font-weight: 700;
     line-height: 0.82;
     letter-spacing: -0.025em;
@@ -13,33 +15,42 @@
 
   &__description {
     color: var(--text-secondary);
-    font-size: var(--text-lg);
-    line-height: 1.6;
+    font-size: var(--text-md);
+    line-height: 1.45;
   }
 }
 
-@media (max-height: 700px) {
-  .intro {
-    gap: var(--space-2);
-  }
-
-  .intro__title {
-    font-size: 3.75rem;
-  }
-
+// A phone's screen is the form's and the chat's; the line on what the app does waits for room.
+@media (max-height: 900px) and (max-width: 63.99rem) {
   .intro__description {
-    font-size: var(--text-md);
-    line-height: 1.4;
+    display: none;
   }
 }
 
 @media (min-width: 64rem) {
+  .intro {
+    gap: var(--space-4);
+  }
+
   .intro__title {
-    font-size: 6.5rem;
+    font-size: min(6.5rem, 10dvh);
   }
 
   .intro__description {
     max-width: 36rem;
+    font-size: var(--text-lg);
+    line-height: 1.5;
+  }
+}
+
+@media (min-width: 64rem) and (min-height: 960px) {
+  .intro__description {
     font-size: var(--text-xl);
+  }
+}
+
+@media (min-width: 64rem) and (max-height: 820px) {
+  .intro__description {
+    display: none;
   }
 }
