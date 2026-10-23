@@ -3,6 +3,7 @@ import type { siteStrings } from "./site.strings";
 
 export const siteStringsEn: StringsOf<typeof siteStrings> = {
   name: "When do I leave the group?",
+  shortName: "Exit group",
   description:
     "Open a room, send the link to the group, and everyone votes on the hour you leave it.",
   card: {

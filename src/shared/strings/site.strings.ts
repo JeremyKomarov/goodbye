@@ -1,6 +1,8 @@
 // The site itself: its name in a browser tab and a shared link, and the landing's preview card.
 export const siteStrings = {
   name: "מתי לצאת מהקבוצה?",
+  // Under the icon on a home screen, where only a few letters fit.
+  shortName: "יציאה מהקבוצה",
   description: "פותחים חדר, שולחים קישור לקבוצה, וכולם מצביעים באיזו שעה תצאו ממנה.",
   // The preview card: a pill, two big lines, and the red badge under them.
   card: {

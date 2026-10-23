@@ -114,7 +114,7 @@ use if the wall or leaderboard needs one.
 | `api/admin-action.dto.ts` | `ADMIN_ACTIONS`, `AdminActionInputSchema` — what the host can do to their room. | The admin page sends every action; the room sends `exit`. | Never a second action shape for the host. |
 | `strings/games.strings.ts` | The `games` namespace: each game's `title`, a `score` as time or points. | Read by `useGameWords`. | Never word a game's name or score in a feature's strings. |
 | `strings/calendar.strings.ts` | The `calendar` namespace: the event's `title` and `details`, and the handler's `notYet`. | The room's calendar sheet with `useTranslations`, the handler with `createTranslator`. | Never word the event twice. |
-| `strings/site.strings.ts` | The `site` namespace: the site's `name` and `description`, and the preview `card`'s pill, lines and badge. | The root layout's metadata, the site's preview, every room's preview badge. | Never name the site in a feature's strings. |
+| `strings/site.strings.ts` | The `site` namespace: the site's `name`, `shortName` (under a home-screen icon) and `description`, and the preview `card`'s pill, lines and badge. | The root layout's metadata, `app/manifest.ts`, the site's preview, every room's preview badge. | Never name the site in a feature's strings. |
 | `strings/time.strings.ts` | The `time` namespace: `slot`, `duration`. | Read by the two hooks above. | Never word an hour or a duration in a feature's strings. |
 
 ## Promotion rule
