@@ -8,4 +8,6 @@ export const STORAGE_KEYS = {
   loginCode: (userId: string) => `exit-login:${userId}`,
   // Which story groups this browser has watched to the end, comma-separated.
   storiesSeen: "exit-stories-seen",
+  // The exit whose finale this browser has watched — it plays by itself once per exit.
+  finaleSeen: (slug: string) => `exit-finale:${slug}`,
 } as const;

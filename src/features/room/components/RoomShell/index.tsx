@@ -7,9 +7,8 @@ import { FEATURE_KEYS } from "@/core/config/features.const";
 import { ROOM_SECTIONS, roomPath, roomSectionPath } from "@/core/constants/routes.const";
 import type { RoomSnapshotDto } from "@/features/room/api/room.dto";
 import { EmojiRain } from "@/features/room/components/EmojiRain";
+import { Finale } from "@/features/room/components/Finale";
 import { PARTY_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
-import { ExitActions } from "@/features/room/components/ExitActions";
-import { Hero } from "@/features/room/components/Hero";
 import { JoinGate } from "@/features/room/components/JoinGate";
 import { MeSheet } from "@/features/room/components/MeSheet";
 import { RoomHeader } from "@/features/room/components/RoomHeader";
@@ -19,10 +18,12 @@ import { StoryRing } from "@/features/room/components/StoryRing";
 import { StoryViewer } from "@/features/room/components/StoryViewer";
 import type { StoryPosition } from "@/features/room/content/stories.const";
 import { RoomSkeleton } from "@/features/room/components/RoomSkeleton";
+import { RoomStatus } from "@/features/room/components/RoomStatus";
 import { Welcome } from "@/features/room/components/Welcome";
 import { useAutoFinalize } from "@/features/room/hooks/useAutoFinalize";
 import { useDoorAtTheHour } from "@/features/room/hooks/useDoorAtTheHour";
 import { useEnsureLoginCode } from "@/features/room/hooks/useEnsureLoginCode";
+import { useFinale } from "@/features/room/hooks/useFinale";
 import { useHostExit } from "@/features/room/hooks/useHostExit";
 import { IDENTITY_STATES, useIdentity } from "@/features/room/hooks/useIdentity";
 import { useRename } from "@/features/room/hooks/useRename";
@@ -77,6 +78,8 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
   const hostExit = useHostExit(room, identity.adminToken);
   const typing = useTypingLine(live.typers);
   useDoorAtTheHour(room, now, live.rain);
+  const isIn = identity.state === IDENTITY_STATES.ready;
+  const finale = useFinale(room, isIn);
   if (!snapshot || !room) return <RoomSkeleton />;
   const lastMessage = wall?.messages.at(-1);
   const nav = { snapshot, leader, lastMessage, unread, typing, meId: me?.userId ?? null };
@@ -84,10 +87,13 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
   return (
     <MotionConfig reducedMotion="user">
       <RoomContext
-        value={{ slug, snapshot, me, isHost, leader, live, typing, openStory: setStory, hostExit }}
+        value={{
+          slug, snapshot, me, isHost, leader, live, typing, openStory: setStory, hostExit,
+          replayFinale: finale.replay,
+        }}
       >
-        {/* Under the join gate the room is shown but out of reach: no focus, no screen reader. */}
-        <div className={roomShellClasses.root} inert={identity.state !== IDENTITY_STATES.ready}>
+        {/* Under the join gate or the finale, the room is out of reach: no focus, no reader. */}
+        <div className={roomShellClasses.root} inert={!isIn || finale.isOpen}>
           <RoomHeader
             room={room}
             me={me}
@@ -103,14 +109,7 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
           <div className={roomShellClasses.body}>
             <aside className={roomShellClasses.side}>
               <StatusStories onOpen={setStory} />
-              <Hero
-                room={room}
-                now={now}
-                leader={leader}
-                voterCount={snapshot.votes.length}
-                hostExit={hostExit}
-                actions={<ExitActions />}
-              />
+              <RoomStatus />
               <RoomNav {...nav} variant={ROOM_NAV_VARIANTS.list} />
             </aside>
             <main className={roomShellClasses.main}>
@@ -126,6 +125,7 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
       <EmojiRain subscribe={live.onRain} />
       <AnimatePresence>
         {story && <StoryViewer key="stories" start={story} onClose={() => setStory(null)} />}
+        {finale.isOpen && <Finale key="finale" room={room} onClose={finale.close} />}
       </AnimatePresence>
       <Welcome key={me?.userId} me={me} isReturning={identity.returning} />
       {me && (
@@ -139,7 +139,7 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
         />
       )}
       <AnimatePresence>
-        {identity.state !== IDENTITY_STATES.ready && (
+        {!isIn && (
           <JoinGate
             key="gate"
             room={room}

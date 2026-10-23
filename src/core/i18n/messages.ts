@@ -228,6 +228,9 @@ import {
 } from "@/shared/components/ShareMessages/ShareMessages.keys.const";
 import { shareMessagesStrings } from "@/shared/components/ShareMessages/ShareMessages.strings";
 import { shareMessagesStringsEn } from "@/shared/components/ShareMessages/ShareMessages.strings.en";
+import { FINALE_NAMESPACE } from "@/features/room/components/Finale/Finale.keys.const";
+import { finaleStrings } from "@/features/room/components/Finale/Finale.strings";
+import { finaleStringsEn } from "@/features/room/components/Finale/Finale.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -277,6 +280,7 @@ const he = {
   [CALENDAR_NAMESPACE]: calendarStrings,
   [EXIT_ACTIONS_NAMESPACE]: exitActionsStrings,
   [SHARE_MESSAGES_NAMESPACE]: shareMessagesStrings,
+  [FINALE_NAMESPACE]: finaleStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -325,6 +329,7 @@ const en: StringsOf<typeof he> = {
   [CALENDAR_NAMESPACE]: calendarStringsEn,
   [EXIT_ACTIONS_NAMESPACE]: exitActionsStringsEn,
   [SHARE_MESSAGES_NAMESPACE]: shareMessagesStringsEn,
+  [FINALE_NAMESPACE]: finaleStringsEn,
 };
 
 export type Messages = typeof he;

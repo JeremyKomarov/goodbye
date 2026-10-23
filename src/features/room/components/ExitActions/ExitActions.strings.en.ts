@@ -2,6 +2,7 @@ import type { StringsOf } from "@/core/i18n/strings.types";
 import type { exitActionsStrings } from "./ExitActions.strings";
 
 export const exitActionsStringsEn: StringsOf<typeof exitActionsStrings> = {
+  replay: "Watch the ending again",
   share: {
     locked: "Send to the group",
     exited: "The goodbye message",

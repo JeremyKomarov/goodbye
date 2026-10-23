@@ -1,0 +1,153 @@
+// The finale covers the whole room, a dark column centred in it; shorter screens tighten the gaps
+// and, in landscape, lay the numbers in one row.
+.finale {
+  position: fixed;
+  inset: 0;
+  z-index: var(--layer-modal);
+  overflow-y: auto;
+  background: color-mix(in oklab, var(--surface-page) 97%, transparent);
+
+  &__column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-6);
+    max-width: 32rem;
+    min-height: 100dvh;
+    margin-inline: auto;
+    padding: var(--space-12) var(--space-6);
+    text-align: center;
+  }
+
+  &__notice {
+    width: 100%;
+  }
+
+  &__headline {
+    font-family: var(--font-display);
+    font-size: min(5.5rem, 20vw);
+    font-weight: 700;
+    line-height: 0.85;
+    text-wrap: balance;
+  }
+
+  &__body {
+    display: grid;
+    gap: var(--space-4);
+    width: 100%;
+  }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+    margin: 0;
+  }
+
+  &__stat {
+    padding: var(--space-3);
+    border-radius: var(--radius-xl);
+    background: var(--surface-card);
+  }
+
+  &__label {
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+  }
+
+  &__value {
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+
+  &__loved {
+    margin: 0;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-xl);
+    background: var(--surface-card);
+  }
+
+  &__quote {
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-lg);
+    overflow-wrap: anywhere;
+  }
+
+  &__author {
+    margin-block-start: var(--space-1);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+  }
+
+  &__champions {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  &__champions-title {
+    font-size: var(--text-md);
+    font-weight: 600;
+  }
+
+  &__list {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__champion {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-1) var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-lg);
+    background: var(--surface-card);
+    font-size: var(--text-sm);
+  }
+
+  &__game {
+    color: var(--text-secondary);
+  }
+
+  &__holder {
+    font-weight: 600;
+  }
+}
+
+@media (min-width: 64rem) {
+  .finale__headline {
+    font-size: 6.5rem;
+  }
+}
+
+@media (max-height: 700px) {
+  .finale__column {
+    gap: var(--space-4);
+    padding-block: var(--space-6);
+  }
+
+  .finale__headline {
+    font-size: 3.5rem;
+  }
+}
+
+@media (max-height: 500px) {
+  .finale__column {
+    max-width: 42rem;
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+  }
+
+  .finale__headline {
+    font-size: 2.75rem;
+  }
+
+  .finale__stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

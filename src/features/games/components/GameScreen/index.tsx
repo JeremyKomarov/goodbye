@@ -15,7 +15,7 @@ import { RunawayGame } from "@/features/games/components/RunawayGame";
 import { TriviaGame } from "@/features/games/components/TriviaGame";
 import { useSubmitScore } from "@/features/games/hooks/useSubmitScore";
 import type { GameProps } from "@/features/games/types/games.types";
-import { celebrate } from "@/features/games/utils/celebrate";
+import { celebrate } from "@/shared/utils/celebrate";
 import { Icon, ICON_NAMES } from "@/shared/components/Icon";
 import { useGameWords } from "@/shared/hooks/useGameWords";
 import { useRecords } from "@/shared/hooks/useRecords";

@@ -39,7 +39,11 @@ the room inside its `(room)` layout; they read the room through `useRoomFrame` (
 | `hooks/useSubmitScore.ts` | Sends a finished round's score; invalidates the records. |
 | `api/scores.api.ts` | `submitScore` — the shared `SubmitScoreInputSchema`, the session's bearer. |
 | `types/games.types.ts` | `GameProps` — `onFinish(score)`, all a game is given. |
-| `utils/celebrate.ts` | The confetti, in the tokens' colours; none for reduced motion. |
+
+## What moved to `shared/`
+
+In phase 09, because the room's finale throws it too: `utils/celebrate.ts`, the confetti in the
+tokens' colours. The room cannot import this feature.
 
 ## Ownership
 

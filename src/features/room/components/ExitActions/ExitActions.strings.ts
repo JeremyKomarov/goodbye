@@ -1,6 +1,8 @@
 // The actions under the countdown and the exit card: the calendar for everyone while the hour is
-// ahead, and the host's messages to the group — the decision and the goodbye, then the goodbye.
+// ahead, the host's messages to the group — the decision and the goodbye, then the goodbye — and
+// once the host has left, the finale again.
 export const exitActionsStrings = {
+  replay: "לצפייה בסיום שוב",
   share: {
     locked: "שליחה לקבוצה",
     exited: "הודעת הפרידה",

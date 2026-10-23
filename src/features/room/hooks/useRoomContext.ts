@@ -24,6 +24,8 @@ export interface RoomContextValue {
   openStory: (start: StoryPosition) => void;
   /** The host's exit button, for the browser holding the admin token once the hour is set. */
   hostExit: HostExit | null;
+  /** Plays the finale again, once the host has left. */
+  replayFinale: () => void;
 }
 
 export const RoomContext = createContext<RoomContextValue | null>(null);
