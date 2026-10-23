@@ -43,8 +43,8 @@
   }
 }
 
-// Too short for a useful chat: the form gets the room.
-@media (max-height: 620px) {
+// Too short for the chat and the whole form: the form gets the room.
+@media (max-height: 700px) {
   .landing-screen__chat {
     display: none;
   }

@@ -3,6 +3,7 @@ import { classMap } from "@/shared/utils/classMap";
 
 export const scheduleStepClasses = classMap("ScheduleStep", {
   row: styles["schedule-step__row"],
+  pair: styles["schedule-step__row--pair"],
   hours: styles["schedule-step__hours"],
   stepper: styles["schedule-step__stepper"],
   stepperLabel: styles["schedule-step__stepper-label"],

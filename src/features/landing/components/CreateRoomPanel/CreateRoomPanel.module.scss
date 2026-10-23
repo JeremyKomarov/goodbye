@@ -6,7 +6,7 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: var(--space-5);
+  padding: var(--space-4);
   border: 1px solid var(--border-subtle);
   border-radius: calc(2 * var(--radius-xl));
   background: var(--surface-card);
@@ -23,12 +23,18 @@
 
 @media (min-width: 40rem) {
   .create-room-panel {
+    padding: var(--space-5);
+  }
+}
+
+@media (min-width: 64rem) {
+  .create-room-panel {
     padding: var(--space-7);
   }
 }
 
 @media (max-height: 700px) {
   .create-room-panel {
-    padding: var(--space-4);
+    padding: var(--space-3) var(--space-4);
   }
 }

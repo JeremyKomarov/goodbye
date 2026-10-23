@@ -2,6 +2,11 @@
   &__row {
     display: grid;
     gap: var(--space-3);
+
+    // The day and the stepper fit side by side on any phone; the hours and the close wait for room.
+    &--pair {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
   }
 
   &__hours {

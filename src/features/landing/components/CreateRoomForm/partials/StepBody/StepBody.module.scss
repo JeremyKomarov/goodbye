@@ -1,10 +1,10 @@
 .step-body {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
   min-width: 0;
   margin: 0;
-  padding: var(--space-5) var(--space-1) var(--space-1);
+  padding: var(--space-3) var(--space-1) var(--space-1);
   border: 0;
   // Stays visible while it fades out, then leaves the accessibility tree and the tab order.
   transition: visibility 0s;
@@ -26,7 +26,7 @@
   &__title {
     display: block;
     font-family: var(--font-display);
-    font-size: 3.25rem;
+    font-size: 2.25rem;
     font-weight: 700;
     line-height: 0.9;
   }
@@ -38,7 +38,19 @@
   }
 }
 
-@media (max-height: 860px) {
+// A laptop has the room for the full-size step.
+@media (min-width: 64rem) {
+  .step-body {
+    gap: var(--space-4);
+    padding-block-start: var(--space-5);
+  }
+
+  .step-body__title {
+    font-size: 3.25rem;
+  }
+}
+
+@media (min-width: 64rem) and (max-height: 860px) {
   .step-body {
     gap: var(--space-3);
     padding-block-start: var(--space-4);
@@ -49,9 +61,25 @@
   }
 }
 
+@media (max-height: 700px) {
+  .step-body {
+    gap: var(--space-2);
+    padding-block-start: var(--space-2);
+  }
+
+  .step-body__title {
+    font-size: 2rem;
+  }
+
+  // The title says enough; the line under it gives its room to the fields.
+  .step-body__sub {
+    display: none;
+  }
+}
+
 @media (max-height: 500px) {
   .step-body {
-    padding-block-start: var(--space-3);
+    padding-block-start: var(--space-2);
   }
 
   .step-body__title {

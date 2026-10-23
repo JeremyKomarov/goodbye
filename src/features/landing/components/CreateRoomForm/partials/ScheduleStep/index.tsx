@@ -27,7 +27,7 @@ export function ScheduleStep() {
 
   return (
     <>
-      <div className={scheduleStepClasses.row}>
+      <div className={cn(scheduleStepClasses.row, scheduleStepClasses.pair)}>
         <Field
           type="date"
           label={t(scheduleStepKeys.windowStart)}
