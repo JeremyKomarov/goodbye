@@ -43,14 +43,6 @@
   }
 }
 
-// Tall enough screens keep two or three of the chat's lines in view; the form's step scrolls
-// inside its card instead.
-@media (min-height: 700px) {
-  .landing-screen__chat {
-    min-height: clamp(11rem, 22dvh, 12.5rem);
-  }
-}
-
 // Too short for a useful chat: the form gets the room.
 @media (max-height: 620px) {
   .landing-screen__chat {

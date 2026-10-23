@@ -13,6 +13,12 @@
     letter-spacing: -0.025em;
   }
 
+  // English's first line is the longer, so it also follows the column's width: two lines, never a
+  // word left alone on a third.
+  &__title:lang(en) {
+    font-size: min(4.25rem, 15vw, 8.5dvh);
+  }
+
   &__description {
     color: var(--text-secondary);
     font-size: var(--text-md);
@@ -34,6 +40,10 @@
 
   .intro__title {
     font-size: min(6.5rem, 10dvh);
+  }
+
+  .intro__title:lang(en) {
+    font-size: min(6rem, 10dvh);
   }
 
   .intro__description {

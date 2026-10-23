@@ -15,5 +15,28 @@
     overscroll-behavior: contain;
     // Room for a focused field's ring, which `overflow` would otherwise clip; the steps pad it back.
     margin-inline: calc(-1 * var(--space-1));
+
+    // Only the alpha of a mask counts; the token is any opaque colour.
+    &[data-more-below] {
+      mask-image: linear-gradient(
+        to bottom,
+        var(--surface-card) calc(100% - var(--space-10)),
+        transparent
+      );
+    }
+
+    &[data-more-above] {
+      mask-image: linear-gradient(to top, var(--surface-card) calc(100% - var(--space-6)), transparent);
+    }
+
+    &[data-more-above][data-more-below] {
+      mask-image: linear-gradient(
+        to bottom,
+        transparent,
+        var(--surface-card) var(--space-6),
+        var(--surface-card) calc(100% - var(--space-10)),
+        transparent
+      );
+    }
   }
 }
