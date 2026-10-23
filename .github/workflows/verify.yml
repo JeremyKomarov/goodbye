@@ -26,3 +26,25 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run verify
+
+  # The end-to-end run (playwright.config.ts), against the dev server. CI holds no secret key, so
+  # nothing is written: the room's run and the database read skip (`E2E_NO_DATABASE`), and the
+  # key is a placeholder only so the server boots. The public URL and key are the site's own,
+  # the ones every visitor's browser gets, kept as repository variables.
+  e2e:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      SUPABASE_SECRET_KEY: ci-has-no-secret-key
+      E2E_NO_DATABASE: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run e2e

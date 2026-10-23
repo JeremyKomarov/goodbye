@@ -1,7 +1,8 @@
 // A visitor's way through a real room: in under a name, a vote, and back after a reload. The room
 // is read on the server, which a browser stub can't reach, so this one writes: a throwaway room
 // through the app's own create handler, deleted afterwards with everyone who joined it. Like the
-// `*.db.test.ts` files, it skips without the secret key (`.env.local`, loaded by the config).
+// `*.db.test.ts` files, it skips without the secret key (`.env.local`, loaded by the config), and
+// in CI, which has none (`E2E_NO_DATABASE`).
 import { createClient } from "@supabase/supabase-js";
 import { expect, test } from "@playwright/test";
 
@@ -10,7 +11,7 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const DAY_MS = 86_400_000;
 
 test.skip(
-  !SECRET_KEY || !SUPABASE_URL,
+  !SECRET_KEY || !SUPABASE_URL || Boolean(process.env.E2E_NO_DATABASE),
   "needs the Supabase secret key, as `npm run test:db` does",
 );
 

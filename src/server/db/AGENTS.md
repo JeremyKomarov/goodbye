@@ -8,7 +8,8 @@ The database is the hosted project the original app runs on (`docs/DECISIONS.md 
 migrations are already applied there, and live rooms are in it. A test that writes cleans up.
 Such a test is named `*.db.test.ts` and skips unless a secret key is in the environment;
 `npm run test:db` runs them with `.env.local` loaded. `e2e/room.spec.ts` writes the same way:
-a throwaway room, deleted with its users afterwards.
+a throwaway room, deleted with its users afterwards. Every test room's group ends "— delete me"; one
+an interrupted run left is swept, an hour on, before the next run (`e2e/sweep.ts`).
 
 | File | What | Rule |
 |---|---|---|

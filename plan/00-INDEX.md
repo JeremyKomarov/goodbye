@@ -22,6 +22,7 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 14 | The host's page, live | done | [14-live-admin.md](14-live-admin.md) |
 | 15 | The host's page and the room, tested end to end | done | [15-admin-e2e.md](15-admin-e2e.md) |
 | 16 | A deletion reaches its own room only | in progress | [16-room-deletes.md](16-room-deletes.md) |
+| 17 | End to end on every push, and no test room left behind | done | [17-e2e-in-ci.md](17-e2e-in-ci.md) |
 
 **Now:** 16 · **Next:** —
 

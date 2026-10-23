@@ -162,7 +162,8 @@ test("refuses a wrong admin link", async ({ page }) => {
 });
 
 test("an unknown room's link says so", async ({ page }) => {
-  // A real read, and nothing written: no room has this slug.
+  // A real read, and nothing written: no room has this slug. CI has no secret key to read with.
+  test.skip(Boolean(process.env.E2E_NO_DATABASE), "reads the database");
   await page.goto("/r/e2enoroom");
   await expect(page.getByText("This link doesn't work anymore")).toBeVisible();
   await noSidewaysScroll(page);

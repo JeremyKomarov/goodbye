@@ -1,5 +1,6 @@
 // The end-to-end run, apart from `npm run verify`: it needs a browser and a running app, which the
-// gate and CI do not. `npm run e2e` starts the dev server unless one is already on port 3000.
+// gate does not. CI runs it as its own job, without the database (.github/workflows/verify.yml).
+// `npm run e2e` starts the dev server unless one is already on port 3000.
 import { defineConfig, devices } from "@playwright/test";
 
 // The room's run writes a throwaway room and deletes it with the secret key, as `npm run test:db`
@@ -12,6 +13,8 @@ const BASE_URL = "http://localhost:3000";
 
 export default defineConfig({
   testDir: "e2e",
+  // Leftovers of a run that was killed before its clean-up.
+  globalSetup: "./e2e/sweep.ts",
   fullyParallel: true,
   reporter: "list",
   use: { baseURL: BASE_URL },

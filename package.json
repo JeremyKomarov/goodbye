@@ -11,7 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
-    "test:db": "node --env-file=.env.local ./node_modules/vitest/vitest.mjs run db.test",
+    "test:db": "node --env-file=.env.local ./node_modules/vitest/vitest.mjs run db.test --globalSetup e2e/sweep.ts",
     "rule": "node .agents/cli.mjs rule",
     "guard": "node .agents/cli.mjs check",
     "sync:agents": "node .agents/cli.mjs sync",
