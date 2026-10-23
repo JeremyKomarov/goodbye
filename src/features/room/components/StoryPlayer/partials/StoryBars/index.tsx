@@ -1,5 +1,5 @@
 import type { RefObject } from "react";
-import { storyViewerClasses } from "@/features/room/components/StoryViewer/StoryViewer.classes";
+import { storyPlayerClasses } from "@/features/room/components/StoryPlayer/StoryPlayer.classes";
 import { cn } from "@/shared/utils/cn";
 
 interface StoryBarsProps {
@@ -9,16 +9,16 @@ interface StoryBarsProps {
   barRef: RefObject<HTMLDivElement | null>;
 }
 
-/** One bar per fact in the group: full behind, filling now, empty ahead. Decorative. */
+/** One bar per slide: full behind, filling now, empty ahead. Decorative. */
 export function StoryBars({ count, current, barRef }: StoryBarsProps) {
   return (
-    <div className={storyViewerClasses.bars} aria-hidden>
+    <div className={storyPlayerClasses.bars} aria-hidden>
       {Array.from({ length: count }, (_, index) => (
-        <div key={index} className={storyViewerClasses.bar}>
+        <div key={index} className={storyPlayerClasses.bar}>
           {index < current && (
-            <div className={cn(storyViewerClasses.fill, storyViewerClasses.full)} />
+            <div className={cn(storyPlayerClasses.fill, storyPlayerClasses.full)} />
           )}
-          {index === current && <div ref={barRef} className={storyViewerClasses.fill} />}
+          {index === current && <div ref={barRef} className={storyPlayerClasses.fill} />}
         </div>
       ))}
     </div>

@@ -3,6 +3,7 @@ import type { exitActionsStrings } from "./ExitActions.strings";
 
 export const exitActionsStringsEn: StringsOf<typeof exitActionsStrings> = {
   replay: "Watch the ending again",
+  goodbyes: "Replay the goodbyes",
   share: {
     locked: "Send to the group",
     exited: "The goodbye message",

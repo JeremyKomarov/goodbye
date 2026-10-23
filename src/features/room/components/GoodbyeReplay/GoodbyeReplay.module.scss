@@ -1,0 +1,42 @@
+// One goodbye in the `StoryPlayer`: who said it in their colour, the words in display type —
+// larger while short — and the reactions it got.
+.goodbye-replay {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  &__name {
+    color: var(--sender-color);
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+
+  &__body {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.05;
+    overflow-wrap: anywhere;
+
+    &--short {
+      font-size: 2.75rem;
+    }
+  }
+
+  &__reactions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    color: var(--text-secondary);
+    font-size: var(--text-md);
+  }
+}
+
+@media (max-height: 500px) {
+  .goodbye-replay__body,
+  .goodbye-replay__body--short {
+    font-size: 1.75rem;
+  }
+}

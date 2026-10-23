@@ -224,6 +224,13 @@ import {
   exitActionsStringsEn,
 } from "@/features/room/components/ExitActions/ExitActions.strings.en";
 import {
+  GOODBYE_REPLAY_NAMESPACE,
+} from "@/features/room/components/GoodbyeReplay/GoodbyeReplay.keys.const";
+import { goodbyeReplayStrings } from "@/features/room/components/GoodbyeReplay/GoodbyeReplay.strings";
+import {
+  goodbyeReplayStringsEn,
+} from "@/features/room/components/GoodbyeReplay/GoodbyeReplay.strings.en";
+import {
   SHARE_MESSAGES_NAMESPACE,
 } from "@/shared/components/ShareMessages/ShareMessages.keys.const";
 import { shareMessagesStrings } from "@/shared/components/ShareMessages/ShareMessages.strings";
@@ -285,6 +292,7 @@ const he = {
   [BOARD_NAMESPACE]: boardStrings,
   [CALENDAR_NAMESPACE]: calendarStrings,
   [EXIT_ACTIONS_NAMESPACE]: exitActionsStrings,
+  [GOODBYE_REPLAY_NAMESPACE]: goodbyeReplayStrings,
   [SHARE_MESSAGES_NAMESPACE]: shareMessagesStrings,
   [FINALE_NAMESPACE]: finaleStrings,
   [SITE_NAMESPACE]: siteStrings,
@@ -336,6 +344,7 @@ const en: StringsOf<typeof he> = {
   [BOARD_NAMESPACE]: boardStringsEn,
   [CALENDAR_NAMESPACE]: calendarStringsEn,
   [EXIT_ACTIONS_NAMESPACE]: exitActionsStringsEn,
+  [GOODBYE_REPLAY_NAMESPACE]: goodbyeReplayStringsEn,
   [SHARE_MESSAGES_NAMESPACE]: shareMessagesStringsEn,
   [FINALE_NAMESPACE]: finaleStringsEn,
   [SITE_NAMESPACE]: siteStringsEn,
