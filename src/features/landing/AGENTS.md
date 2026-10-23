@@ -34,7 +34,8 @@ enabled. Route: `/`.
 ## What moved to `shared/`
 
 Built for this screen and placed in `shared/` because the room and admin screens need them next:
-`ChoiceGroup`, `useNow`, `adminTokens`, `isolate`, `countdown`, `localDateTime`.
+`ChoiceGroup`, `useNow`, `adminTokens`, `isolate`, `countdown`, `localDateTime`; and in phase 07,
+`whatsappLink`, when the admin page sent codes and links too.
 
 ## Next real work
 

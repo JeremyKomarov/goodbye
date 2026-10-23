@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 07.5
+**Step:** 07.6
 **Since:** 2026-10-23
-**State:** the admin's wall, the players' codes, the admin link sent to yourself.
+**State:** in the room: the exit row as the host's button, the header's link to the admin page.
 **Blocked by:** —
 
 ---

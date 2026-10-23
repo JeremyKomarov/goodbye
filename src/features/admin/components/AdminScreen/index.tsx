@@ -2,18 +2,24 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import type { ReactNode } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
 import { FEATURE_KEYS } from "@/core/config/features.const";
-import { roomPath } from "@/core/constants/routes.const";
+import { ADMIN_TOKEN_PARAM, roomPath } from "@/core/constants/routes.const";
 import { AdminControls } from "@/features/admin/components/AdminControls";
+import { AdminLink } from "@/features/admin/components/AdminLink";
+import { AdminWall } from "@/features/admin/components/AdminWall";
+import { PlayerCodes } from "@/features/admin/components/PlayerCodes";
 import { useAdminAction } from "@/features/admin/hooks/useAdminAction";
 import { useAdminRoom } from "@/features/admin/hooks/useAdminRoom";
+import { useDeleteMessage } from "@/features/admin/hooks/useDeleteMessage";
 import { useLinkToken } from "@/features/admin/hooks/useLinkToken";
 import { ADMIN_NAMESPACE, adminKeys } from "@/features/admin/strings/admin.keys.const";
 import { Skeleton, SKELETON_SHAPES } from "@/shared/components/Skeleton";
 import { SystemPill } from "@/shared/components/SystemPill";
 import { adminScreenClasses } from "./AdminScreen.classes";
+
+const noSubscription = () => () => {};
 
 /**
  * The host's page, opened from the admin link. The token proves it: without it — or with a wrong
@@ -24,7 +30,10 @@ export function AdminScreen({ slug }: { slug: string }) {
   const token = useLinkToken(slug);
   const admin = useAdminRoom(slug, token || null);
   const action = useAdminAction(slug, token ?? "");
+  const remove = useDeleteMessage(slug, token ?? "");
+  const origin = useSyncExternalStore(noSubscription, () => window.location.origin, () => "");
   const roomHref = roomPath(FEATURE_KEYS.room, slug);
+  const adminHref = roomPath(FEATURE_KEYS.admin, slug);
 
   const code = admin.error instanceof ApiError ? admin.error.code : null;
   const isRefused =
@@ -50,7 +59,19 @@ export function AdminScreen({ slug }: { slug: string }) {
         <div className={adminScreenClasses.column}>
           <AdminControls room={admin.data.room} onAct={action.mutateAsync} />
         </div>
-        <div className={adminScreenClasses.column} />
+        <div className={adminScreenClasses.column}>
+          <AdminWall
+            messages={admin.data.messages}
+            onRefresh={() => void admin.refetch()}
+            onDelete={(messageId) => remove.mutate(messageId)}
+            isBusy={remove.isPending}
+          />
+          <PlayerCodes players={admin.data.players} roomUrl={`${origin}${roomHref}`} />
+          <AdminLink
+            adminUrl={`${origin}${adminHref}#${ADMIN_TOKEN_PARAM}=${token}`}
+            groupName={admin.data.room.groupName}
+          />
+        </div>
       </div>
     );
   }

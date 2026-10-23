@@ -9,8 +9,8 @@ import { ADMIN_TOKEN_PARAM, roomPath } from "@/core/constants/routes.const";
 import type { OpenedRoom } from "@/features/landing/types/wizard.types";
 import { cn } from "@/shared/utils/cn";
 import { isolate } from "@/shared/utils/isolate";
+import { whatsappLink } from "@/shared/utils/whatsapp";
 import { createSuccessClasses } from "./CreateSuccess.classes";
-import { WHATSAPP_SHARE_URL } from "./CreateSuccess.const";
 import { CREATE_SUCCESS_NAMESPACE, createSuccessKeys } from "./CreateSuccess.keys.const";
 import { LINK_ROW_TONES, LinkRow } from "./partials/LinkRow";
 
@@ -47,7 +47,7 @@ export function CreateSuccess({ opened }: { opened: OpenedRoom }) {
           <p>{t(createSuccessKeys.intro)}</p>
         </div>
         <a
-          href={`${WHATSAPP_SHARE_URL}?text=${encodeURIComponent(invite)}`}
+          href={whatsappLink(invite)}
           target="_blank"
           rel="noreferrer"
           className={cn(createSuccessClasses.action, createSuccessClasses.share)}

@@ -44,6 +44,32 @@ export const adminStringsEn: StringsOf<typeof adminStrings> = {
     action: "Forget admin on this device",
     help: "For a shared computer. The admin link brings you back any time.",
   },
+  wall: {
+    title: "Messages on the wall",
+    refresh: "Refresh",
+    empty: "No messages yet.",
+    delete: "Delete",
+    ask: "Delete this message?",
+  },
+  codes: {
+    title: "Codes for other devices",
+    help: "Joining from another device takes a name, then the code. Forgot it? Send it from here.",
+    empty: "Nobody has joined yet.",
+    pending: "The code is made the next time they open the room",
+    send: "Send",
+    sendTo: "Send {name} their code on WhatsApp",
+    message:
+      "Hi {name} 👋 your code for the room: {code}\n" +
+      "Open it here, type {name}, then the code: {url}",
+  },
+  link: {
+    title: "Your admin link",
+    help:
+      "To manage the room from another device, send the link to yourself. Whoever has it can " +
+      "close the vote and mark your exit, so don't send it to the group.",
+    send: "Send it to myself on WhatsApp",
+    message: "My admin link for the {group} room (don't send it to the group): {url}",
+  },
   errors: {
     close_time_in_past: "The closing time has to be in the future",
     no_slots_after_close: "There are no hours to vote on after that time",

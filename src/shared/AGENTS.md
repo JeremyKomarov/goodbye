@@ -79,6 +79,7 @@ use if the wall or leaderboard needs one.
 | `utils/adminTokens.ts` | `saveAdminToken` / `loadAdminToken` / `forgetAdminToken` — the host's token in `localStorage` under `STORAGE_KEYS.adminToken`; silent where storage refuses. | Landing keeps it after creating a room; the room and admin screens read it. |
 | `utils/avatar.ts` | `senderColor(id)` — one of the `--sender-*` tokens, the same for the same id; `initialOf(name)`. | Every avatar or sender name: the room header, the hello, the wall. |
 | `utils/loginCodes.ts` | `saveLoginCode` / `loadLoginCode` — a player's code on this device under `STORAGE_KEYS.loginCode`; silent where storage refuses. | The room keeps it once made; the "you in the room" sheet shows it. |
+| `utils/whatsapp.ts` | `whatsappLink(text)` — WhatsApp's share link with the text ready to send. | Every "send on WhatsApp": the landing's invite, the admin's codes and link, the finale's goodbye. |
 | `utils/isolate.ts` | Wraps typed text in Unicode direction isolates. | Every name or group name placed inside a sentence. |
 | `utils/countdown.ts` | `splitCountdown(ms)` → days, hours, minutes, seconds; `pad(n)` → two digits. | Every countdown display, with `useNow`. |
 | `utils/duration.ts` | `exactParts`, `roughPart` — a duration split into units for words. | Through `useDuration`. |

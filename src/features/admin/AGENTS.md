@@ -18,11 +18,14 @@ Feature flag: `admin`, off while phase 07 builds it. Route: `/r/[slug]/admin`.
 |---|---|
 | `components/AdminScreen` | The page (`app/[locale]/r/[slug]/admin/page.tsx` reads the slug inside `<Suspense>`): the heading, the private-page warning, and the panels — or "this admin link doesn't work" for no token or a wrong one. |
 | `components/AdminControls` | The room's state; "I left the group" (warning first if early or mid-vote), close the vote now, move the close or reopen (`ReopenForm`, the handler's codes on its field), undo the exit; forget admin on this device. Every action asks first. |
+| `components/AdminWall` | The newest goodbyes, each with Delete (asks first); Refresh. |
+| `components/PlayerCodes` | Every player but the host with their login code: copy it, or send it on WhatsApp with the room's link. |
+| `components/AdminLink` | The admin link itself, to copy or send to yourself — the way back from another device. |
 | `hooks/useLinkToken.ts` | The token from the link's `#k=` — kept in this browser and taken out of the address bar — or the one kept before. |
 | `strings/admin.strings.ts` | The `admin` namespace, for the screen and its panels. |
 | `hooks/useAdminRoom.ts` | `useQuery` on `QUERY_KEYS.room.admin(slug)` → `AdminRoom`, once there is a token; a refusal is not retried. |
 | `hooks/useAdminAction.ts` | The host's actions. The room it answers goes straight into the host's view (the request's own answer, not an event), and the room is invalidated. |
-| `hooks/useDeleteMessage.ts` | Removes a goodbye; invalidates the room. |
+| `hooks/useDeleteMessage.ts` | Removes a goodbye: out of the host's list once the server has, and the room invalidated. |
 | `api/admin.dto.ts` | `AdminRoomDtoSchema` — around the shared `RoomDtoSchema`. |
 | `api/admin.mapper.ts` | `mapAdminRoomDto`. |
 | `api/admin.api.ts` | `fetchAdminRoom`, `runAdminAction`, `deleteMessage` — the token in `ADMIN_TOKEN_HEADER`. |
