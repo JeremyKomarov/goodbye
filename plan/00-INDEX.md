@@ -29,10 +29,10 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 21 | Errors reported, not just shown | done | [21-error-reporting.md](21-error-reporting.md) |
 | 22 | The games, played end to end | done | [22-games-e2e.md](22-games-e2e.md) |
 | 23 | On the home screen | done | [23-install.md](23-install.md) |
-| 24 | The features' logic, tested | not started | [24-feature-tests.md](24-feature-tests.md) |
+| 24 | The features' logic, tested | done | [24-feature-tests.md](24-feature-tests.md) |
 | 25 | A deletion reaching its own room, checked live | not started | [25-room-deletes-live.md](25-room-deletes-live.md) |
 
-**Now:** — · **Next:** 24
+**Now:** — · **Next:** 25
 
 The step inside that phase, and how it is going, live in [`NOW.md`](NOW.md) — this line stays
 phase-level. `guard` fails if the two disagree.

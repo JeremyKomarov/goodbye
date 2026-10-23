@@ -22,8 +22,10 @@ enabled. Route: `/`.
 | `components/CreateRoomForm` | The three-step wizard (`FORM_STEPS`: reason → who → when) on react-hook-form with `CreateRoomInputSchema`. "Next" validates only that step's fields; a server code with a field lands on that field and jumps to its step. On success it keeps the admin token (`saveAdminToken`) and calls `onCreated`. Every step stays mounted and the steps' box is sized in script to the tallest, before the first paint, so the card keeps one size on every step; only the step showing is in the flow, so a short screen scrolls just that one, its cut edge faded. Partials: StepProgress, StepBody, ReasonStep, IdentityStep, ScheduleStep, ServerAlert, FormActions. |
 | `components/CreateSuccess` | The room is open: WhatsApp share with the invite (gendered in Hebrew), the room link, the admin link (`#k=<token>`, `ADMIN_TOKEN_PARAM`) set as a secret, and "enter the room". Partial: LinkRow. |
 | `hooks/useCreateRoom.ts` | The only `useMutation`. Invalidates nothing: no query holds a room before it exists. |
-| `hooks/useOpenSlotCount.ts` | Hours left to vote on after the close time, for the window in the form. Disables "Create" at 0. |
+| `hooks/useOpenSlotCount.ts` | `openSlotCount` for the window in the form, as it is typed. Disables "Create" at 0. |
+| `utils/openSlotCount.ts` | `openSlotCount(window)` — the hours left to vote on after the close time; 0 for an unfinished or backwards window. |
 | `hooks/useWizardErrors.ts` | `field(name)` and `server`: the wizard's error sentences. |
+| `utils/wizardErrors.ts` | `wizardCode(type)` — the server code an error carries, if the wizard words it. Its test also holds `FORM_STEPS` to the schema: every field is asked for, or filled by the wizard. |
 | `api/rooms.dto.ts` | `CreateRoomInputSchema` (shared by the wizard and the handler), `CreatedRoomDtoSchema`, `HOST_GENDERS`, `LEAVE_REASONS`, the length limits. |
 | `api/rooms.mapper.ts` | `mapCreatedRoomDto` — `admin_token` → `adminToken`. |
 | `api/rooms.api.ts` | `createRoom(input)` — parses the input before sending, throws `ApiError` with the handler's code and field. |

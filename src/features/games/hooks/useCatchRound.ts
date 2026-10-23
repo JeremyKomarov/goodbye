@@ -3,6 +3,7 @@ import { SCORE_RANGES } from "@/core/constants/games.const";
 import {
   CATCH_SECONDS, NOTICE_KINDS, NOTICES, type NoticeKind,
 } from "@/features/games/content/catch.const";
+import { pickNoticeKind } from "@/features/games/utils/rounds";
 
 /** A falling notification: `x` across the arena in %, `y` down it in px. */
 export interface Notice {
@@ -24,15 +25,6 @@ export interface Popup {
 }
 
 const POPUP_MS = 700;
-
-function pickKind(): NoticeKind {
-  let r = Math.random();
-  for (const kind of Object.values(NOTICE_KINDS)) {
-    r -= NOTICES[kind].weight;
-    if (r <= 0) return kind;
-  }
-  return NOTICE_KINDS.message;
-}
 
 /**
  * One round of Catch: notifications fall faster and thicker for `CATCH_SECONDS`, held in a ref
@@ -79,7 +71,7 @@ export function useCatchRound(
       const interval = 640 - 380 * progress;
       while (spawn > interval) {
         spawn -= interval;
-        const kind = pickKind();
+        const kind = pickNoticeKind();
         const pace = kind === NOTICE_KINDS.exit ? 1.5 : 0.85 + Math.random() * 0.3;
         s.notices.push({
           id: s.nextId++,

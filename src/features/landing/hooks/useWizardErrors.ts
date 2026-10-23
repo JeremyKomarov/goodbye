@@ -2,9 +2,9 @@ import { useTranslations } from "next-intl";
 import { useFormState } from "react-hook-form";
 import type { CreateRoomInput } from "@/features/landing/api/rooms.dto";
 import { LANDING_NAMESPACE, landingKeys } from "@/features/landing/strings/landing.keys.const";
+import { wizardCode } from "@/features/landing/utils/wizardErrors";
 
 type FieldName = keyof typeof landingKeys.fields;
-type CodeName = keyof typeof landingKeys.codes;
 
 /** Where the wizard puts a server failure that belongs to no field. */
 export const SERVER_ERROR = "root.server";
@@ -21,18 +21,15 @@ export function useWizardErrors() {
   function field(name: FieldName): string | undefined {
     const type = errors[name]?.type;
     if (type === undefined) return undefined;
-    return isCode(type) ? t(landingKeys.codes[type]) : t(landingKeys.fields[name]);
+    const code = wizardCode(type);
+    return code ? t(landingKeys.codes[code]) : t(landingKeys.fields[name]);
   }
 
   const serverType = errors.root?.server?.type;
   const server =
     serverType === undefined
       ? undefined
-      : t(landingKeys.codes[isCode(serverType) ? serverType : "failed"]);
+      : t(landingKeys.codes[wizardCode(serverType) ?? "failed"]);
 
   return { field, server };
-}
-
-function isCode(type: string | number): type is CodeName {
-  return typeof type === "string" && type in landingKeys.codes;
 }

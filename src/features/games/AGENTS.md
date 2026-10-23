@@ -31,10 +31,13 @@ the room inside its `(room)` layout; they read the room through `useRoomFrame` (
 | `content/catch.const.ts` | `CATCH_SECONDS`, `NOTICE_KINDS`, `NOTICES` — each kind's points and how often it falls. Their lines are in `CatchGame`'s strings. |
 | `content/trivia.const.ts` | `TRIVIA_ROUND`, `TRIVIA_SECONDS`, the points; `ANSWERS` — each question's right option. |
 | `strings/trivia.strings.ts` | The `trivia` namespace: every question, its four options `a`–`d` and its fact, in both languages. Every answer checkable. |
-| `hooks/useTriviaRound.ts` | One round of Trivia: the question asked (options in this round's order), the pick (`null` when time ran out), the clock, the score; `start`, `answer`, `next`. |
+| `hooks/useTriviaRound.ts` | One round of Trivia: the question asked (options in this round's order), the pick (`null` when time ran out), the clock, the score (`triviaPoints`); `start`, `answer`, `next`. |
 | `content/pictures.const.ts` | `PICTURES` (each picture's two things, the guesses that count for each — Hebrew or English — and its icon layers), `ICON_BOUNDS`, `TOP_SHOWN`, `PICTURE_ROUND`, `PICTURE_POINTS`. The icons are `public/picture-game/*.svg`. |
-| `hooks/usePictureRound.ts` | One round: deals pictures not seen lately first, warms their icons; `guess`, `skip`, `next`; `PICTURE_STATUSES`. |
-| `utils/answers.ts` | `matches(guess, answers)` — forgiving of case, punctuation, a Hebrew article and final letters, and a typo in a longer word; `normalize`. |
+| `hooks/usePictureRound.ts` | One round: `dealPictures` against what this screen has seen, warms their icons; `guess`, `skip`, `next`; `PICTURE_STATUSES`. |
+| `utils/answers.ts` | `matches(guess, answers)` — forgiving of case, punctuation, a leading article (Hebrew "ה", English "a"/"an"/"the") and final letters, and a typo in a longer word; `normalize`. |
+| `utils/rounds.ts` | The rules, apart from the hooks that play them: `triviaPoints(isRight, leftMs)`, `dealPictures(seen)` → `{ cards, seen }` (`Card`), `pickNoticeKind(r)`. |
+| `utils/shuffle.ts` | `shuffle(list, random?)` — a copy, Fisher–Yates. The games' only shuffle. |
+| `content/content.test.ts` | The pictures agree with their words and files: each thing's shown name is a right guess in both languages, each icon is on disk. |
 | `hooks/useCatchRound.ts` | One round of Catch in a ref, drawn once a frame: `isPlaying`, `frame` (notices, score, time left), `popups`, `start`, `pop`. |
 | `hooks/useSubmitScore.ts` | Sends a finished round's score; invalidates the records. |
 | `api/scores.api.ts` | `submitScore` — the shared `SubmitScoreInputSchema`, the session's bearer. |

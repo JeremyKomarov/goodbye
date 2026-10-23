@@ -1,6 +1,7 @@
 // Forgiving matching for a typed guess, in Hebrew or English.
 
 const NIQQUD = /[֑-ׇ]/g;
+const ENGLISH_ARTICLE = /^(a|an|the) (?=\S)/;
 const FINALS: Record<string, string> = { ך: "כ", ם: "מ", ן: "נ", ף: "פ", ץ: "צ" };
 
 /** Lowercase, strip niqqud and punctuation, unify Hebrew final letters, collapse spaces. */
@@ -30,14 +31,17 @@ function editDistance(a: string, b: string): number {
 }
 
 /**
- * Whether the guess is one of the answers. Ignores a leading Hebrew definite article ("הבננה"),
- * spacing and punctuation, and forgives a typo in a longer word (two in a long one).
+ * Whether the guess is one of the answers. Ignores a leading article — Hebrew's "ה" ("הבננה") or
+ * English "a", "an", "the" ("a TV", the way the game names it) — spacing and punctuation, and
+ * forgives a typo in a longer word (two in a long one).
  */
 export function matches(input: string, answers: readonly string[]): boolean {
   const guess = normalize(input);
   if (!guess) return false;
   const guesses = new Set([guess, guess.replace(/ /g, "")]);
   if (guess.startsWith("ה") && guess.length >= 3) guesses.add(guess.slice(1));
+  const article = ENGLISH_ARTICLE.exec(guess);
+  if (article) guesses.add(guess.slice(article[0].length));
 
   return answers.some((answer) => {
     const target = normalize(answer);

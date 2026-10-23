@@ -95,7 +95,10 @@ a playbook already does it.
 
 ## What is next, in order
 
-Nothing is planned: phases 01–23 are done. New work starts as a phase (`/new-phase`), not ad hoc.
+Phases 01–24 are done. New work starts as a phase (`/new-phase`), not ad hoc.
+
+1. **25 — the deletion broadcast, checked live.** Waits on the owner applying
+   `20261024000000_room_delete_broadcast.sql` in the SQL Editor; push nothing past phase 16 before.
 
 *(Keep this to three. A list of fourteen is a wish list, not an order.)*
 

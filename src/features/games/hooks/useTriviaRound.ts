@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  ANSWERS, OPTIONS, type OptionId, type QuestionId, RIGHT_POINTS, SPEED_POINTS, TRIVIA_ROUND,
-  TRIVIA_SECONDS,
+  ANSWERS, OPTIONS, type OptionId, type QuestionId, TRIVIA_ROUND, TRIVIA_SECONDS,
 } from "@/features/games/content/trivia.const";
+import { triviaPoints } from "@/features/games/utils/rounds";
+import { shuffle } from "@/features/games/utils/shuffle";
 
 /** A question as asked: its options in this round's order. */
 export interface AskedQuestion {
@@ -14,15 +15,6 @@ export interface AskedQuestion {
 export type Pick = OptionId | null | undefined;
 
 const SECONDS_MS = TRIVIA_SECONDS * 1000;
-
-function shuffle<T>(list: readonly T[]): T[] {
-  const copy = list.slice();
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
 
 const buildRound = (): AskedQuestion[] =>
   shuffle(Object.keys(ANSWERS) as QuestionId[])
@@ -61,8 +53,7 @@ export function useTriviaRound(onFinish: (score: number) => void) {
     clearTimeout(timer.current);
     setPicked(choice);
     const isRight = choice === ANSWERS[round[index].id];
-    const left = Math.max(0, deadline - Date.now());
-    const points = isRight ? RIGHT_POINTS + Math.round((SPEED_POINTS * left) / SECONDS_MS) : 0;
+    const points = triviaPoints(isRight, deadline - Date.now());
     navigator.vibrate?.(isRight ? 12 : [30, 40, 30]);
     setGained(points);
     setScore((s) => s + points);

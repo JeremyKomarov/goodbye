@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { ROOM_STATUSES } from "@/core/constants/room.const";
 import { ADMIN_NAMESPACE, adminKeys } from "@/features/admin/strings/admin.keys.const";
 import type { AdminPlayer } from "@/features/admin/types/admin.types";
+import { voteProgress } from "@/features/admin/utils/voteProgress";
 import { useListFormat } from "@/shared/hooks/useListFormat";
 import { useSlotFormat } from "@/shared/hooks/useSlotFormat";
 import type { Room } from "@/shared/types/room.types";
@@ -25,10 +26,9 @@ export function VoteReminder({ room, players, roomUrl }: VoteReminderProps) {
   const t = useTranslations(ADMIN_NAMESPACE);
   const format = useSlotFormat(room.timezone);
   const list = useListFormat();
-  const guests = players.filter((player) => !player.isHost);
-  const waiting = guests.filter((player) => !player.hasVoted);
+  const { total, voted, waiting } = voteProgress(players);
 
-  if (room.status !== ROOM_STATUSES.voting || guests.length === 0) return null;
+  if (room.status !== ROOM_STATUSES.voting || total === 0) return null;
 
   const message = t(adminKeys.reminder.message, {
     names: list(waiting.map((player) => isolate(player.name))),
@@ -40,12 +40,12 @@ export function VoteReminder({ room, players, roomUrl }: VoteReminderProps) {
     <section className={voteReminderClasses.root}>
       <h2 className={voteReminderClasses.title}>{t(adminKeys.reminder.title)}</h2>
       <p className={voteReminderClasses.count}>
-        {t(adminKeys.reminder.count, { voted: guests.length - waiting.length, total: guests.length })}
+        {t(adminKeys.reminder.count, { voted, total })}
       </p>
       <progress
         className={voteReminderClasses.bar}
-        value={guests.length - waiting.length}
-        max={guests.length}
+        value={voted}
+        max={total}
         aria-hidden
       />
       {waiting.length === 0 ? (

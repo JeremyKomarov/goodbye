@@ -1,8 +1,7 @@
 import { useState } from "react";
-import {
-  PICTURE_POINTS, PICTURE_ROUND, PICTURES, type PicturePuzzle,
-} from "@/features/games/content/pictures.const";
+import { PICTURE_POINTS, PICTURE_ROUND } from "@/features/games/content/pictures.const";
 import { matches } from "@/features/games/utils/answers";
+import { type Card, dealPictures } from "@/features/games/utils/rounds";
 
 export const PICTURE_STATUSES = {
   asking: "asking",
@@ -13,35 +12,8 @@ export const PICTURE_STATUSES = {
 
 export type PictureStatus = (typeof PICTURE_STATUSES)[keyof typeof PICTURE_STATUSES];
 
-/** A picture as dealt: honest ones really are the thing at the top. */
-export interface Card {
-  puzzle: PicturePuzzle;
-  honest: boolean;
-}
-
-function shuffle<T>(list: readonly T[]): T[] {
-  const copy = list.slice();
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
-
 // The pictures of recent rounds, on this screen: a new round deals the others first.
-let seen = new Set<string>();
-
-function dealRound(): Card[] {
-  const fresh = shuffle(PICTURES.filter((p) => !seen.has(p.id)));
-  const rest = shuffle(PICTURES.filter((p) => seen.has(p.id)));
-  const picked = shuffle([...fresh, ...rest].slice(0, PICTURE_ROUND));
-  // Once every picture has had its turn, the cycle starts again from this round.
-  if (fresh.length <= PICTURE_ROUND) seen = new Set();
-  for (const p of picked) seen.add(p.id);
-  // Exactly one picture a round is honest, at a random place in it.
-  const honest = Math.floor(Math.random() * picked.length);
-  return picked.map((puzzle, i) => ({ puzzle, honest: i === honest }));
-}
+let seen: ReadonlySet<string> = new Set();
 
 // Loaded ahead, so the reveal shows the picture whole.
 function warm(cards: Card[]) {
@@ -59,7 +31,9 @@ export function usePictureRound(onFinish: (score: number) => void) {
   const card = round?.[index] ?? null;
 
   function start() {
-    const cards = dealRound();
+    const dealt = dealPictures(seen);
+    seen = dealt.seen;
+    const cards = dealt.cards;
     warm(cards);
     setRound(cards);
     setIndex(0);

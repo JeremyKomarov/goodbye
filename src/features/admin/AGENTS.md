@@ -22,7 +22,7 @@ host's browser, and the room's exit row sends the same `exit` action.
 | `components/AdminControls` | The room's state; "I left the group" (warning first if early or mid-vote), close the vote now, move the close or reopen (`ReopenForm`, the handler's codes on its field), undo the exit; forget admin on this device. Every action asks first. |
 | `components/AdminWall` | The newest goodbyes, each with Delete (asks first); no Refresh — the page is live (`useAdminChannel`). |
 | `components/GroupMessages` | The host's messages to the group — the shared `ShareMessages`, the same as the room's sheet — under the controls. |
-| `components/VoteReminder` | While the vote is open and someone but the host has joined: "3 of 5 voted", a bar, the names still to vote, and one WhatsApp reminder to the group naming them, with the close time and the room's link. Everyone in: says so. |
+| `components/VoteReminder` | While the vote is open and someone but the host has joined (`voteProgress`): "3 of 5 voted", a bar, the names still to vote, and one WhatsApp reminder to the group naming them, with the close time and the room's link. Everyone in: says so. |
 | `components/PlayerCodes` | Every player but the host with their login code: copy it, or send it on WhatsApp with the room's link. |
 | `components/AdminLink` | The admin link itself, to copy or send to yourself — the way back from another device. |
 | `hooks/useLinkToken.ts` | The token from the link's `#k=` — kept in this browser and taken out of the address bar — or the one kept before. |
@@ -33,6 +33,7 @@ host's browser, and the room's exit row sends the same `exit` action.
 | `hooks/useDeleteMessage.ts` | Removes a goodbye: out of the host's list once the server has, and the room invalidated. |
 | `api/admin.dto.ts` | `AdminRoomDtoSchema` — around the shared `RoomDtoSchema`. |
 | `api/admin.mapper.ts` | `mapAdminRoomDto`. |
+| `utils/voteProgress.ts` | `voteProgress(players)` → `{ total, voted, waiting }`, among the guests: the host never votes. |
 | `api/admin.api.ts` | `fetchAdminRoom`, `runAdminAction`, `deleteMessage` — the token in `ADMIN_TOKEN_HEADER`. |
 | `types/admin.types.ts` | `AdminRoom`, `AdminPlayer` (with `hasVoted`), `AdminMessage`. |
 
