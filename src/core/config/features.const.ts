@@ -13,7 +13,7 @@ export const FEATURES: Record<FeatureKey, { route: string; enabled: boolean }> =
   landing: { route: "/", enabled: true },
   room: { route: "/r/[slug]", enabled: true },
   games: { route: "/r/[slug]/games", enabled: false },
-  admin: { route: "/r/[slug]/admin", enabled: false },
+  admin: { route: "/r/[slug]/admin", enabled: true },
 };
 
 export function isFeatureEnabled(key: FeatureKey): boolean {

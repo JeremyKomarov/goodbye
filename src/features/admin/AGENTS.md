@@ -2,7 +2,8 @@
 
 The host's page, opened from the admin link: prove the admin token, then close or reopen voting,
 press "I left the group" (or undo it), delete wall messages, and see every player's login code.
-Feature flag: `admin`, off while phase 07 builds it. Route: `/r/[slug]/admin`.
+Feature flag: `admin`, enabled. Route: `/r/[slug]/admin`; the room's header links here for the
+host's browser, and the room's exit row sends the same `exit` action.
 
 ## Status
 
@@ -39,4 +40,5 @@ Feature flag: `admin`, off while phase 07 builds it. Route: `/r/[slug]/admin`.
 
 ## Next real work
 
-Phase 07 (`plan/07-admin.md`): the host's actions, then the page.
+Phase 09 — the "send to the group" messages (the goodbye with the room's numbers) belong on this
+page too, with the rest of sharing.

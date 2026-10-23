@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 07.7
-**Since:** 2026-10-23
-**State:** `enable-feature admin`; the two-browser check, both locales; probe rooms removed.
+**Step:** —
+**Since:** —
+**State:** nothing in flight.
 **Blocked by:** —
 
 ---
