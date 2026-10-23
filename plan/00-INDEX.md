@@ -13,9 +13,9 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 05 | Room core | done | [05-room-core.md](05-room-core.md) |
 | 06 | Wall & presence | done | [06-wall.md](06-wall.md) |
 | 07 | Admin | done | [07-admin.md](07-admin.md) |
-| 08 | Games | in progress | [08-games.md](08-games.md) |
+| 08 | Games | done | [08-games.md](08-games.md) |
 
-**Now:** 08 · **Next:** 09
+**Now:** 09 · **Next:** —
 
 The step inside that phase, and how it is going, live in [`NOW.md`](NOW.md) — this line stays
 phase-level. `guard` fails if the two disagree.

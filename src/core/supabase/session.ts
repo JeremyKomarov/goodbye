@@ -24,8 +24,32 @@ export async function ensureSession(language: string): Promise<string> {
   return signedIn.user.id;
 }
 
+// A new login code signs out every session of the user (server/db/users.repo.ts) until this
+// browser signs back in with it. A request made in between waits here instead of going out with a
+// token the server has just revoked — a score sent right after joining, say.
+let resigning: Promise<void> | null = null;
+
+/**
+ * Runs `work`, which may replace the user's login code and sign back in, holding every other
+ * request's headers until it is done. `work`'s own first request reads its headers before the hold
+ * begins, so it never waits on itself.
+ */
+export function holdingSession<T>(work: () => Promise<T>): Promise<T> {
+  const running = work();
+  const held = running.then(
+    () => undefined,
+    () => undefined,
+  );
+  resigning = held;
+  void held.then(() => {
+    if (resigning === held) resigning = null;
+  });
+  return running;
+}
+
 /** The `authorization` header for a handler that acts as this browser's user. */
 export async function sessionHeaders(): Promise<Record<string, string>> {
+  if (resigning) await resigning;
   const { data } = await browserSupabase().auth.getSession();
   if (!data.session) throw new ApiError(API_ERROR_CODES.unauthorized, 401);
   return { authorization: `Bearer ${data.session.access_token}` };

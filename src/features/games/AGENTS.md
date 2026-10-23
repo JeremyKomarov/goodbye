@@ -1,7 +1,8 @@
 # `games`
 
 The games players pass the time with until the hour — Runaway, Trivia, Catch and the Picture
-game — each round's score kept, and placed against the room's records. Feature flag: `games`.
+game — each round's score kept, and placed against the room's records. Feature flag: `games`,
+enabled.
 Routes: `/r/[slug]/games` (the hub) and `/r/[slug]/games/[game]` (`roomGamePath`), sections of
 the room inside its `(room)` layout; they read the room through `useRoomFrame` (docs/DECISIONS.md
 #9). Once the host has left, the games are closed and the records final.
@@ -48,4 +49,5 @@ the room inside its `(room)` layout; they read the room through `useRoomFrame` (
 
 ## Next real work
 
-Turn the `games` flag on (08.8), checked with two players in two browsers.
+Phase 09 — the finale names each game's champion, and the goodbye message sent to the group
+lists them (`champions` in `shared/utils/records.ts`).

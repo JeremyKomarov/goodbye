@@ -23,15 +23,18 @@ interface GameResultProps {
   result: Result;
   /** Why the score wasn't kept, once the server has said. */
   error: Error | null;
+  /** The host has left: no more rounds. */
+  isClosed: boolean;
   hubHref: Route;
   onAgain: () => void;
 }
 
 /** The round's score, and where it puts you in the room. */
-export function GameResult({ game, result, error, hubHref, onAgain }: GameResultProps) {
+export function GameResult(props: GameResultProps) {
+  const { game, result, error, isClosed, hubHref, onAgain } = props;
   const t = useTranslations(GAME_SCREEN_NAMESPACE);
   const words = useGameWords();
-  const isClosed = error instanceof ApiError && error.code === API_ERROR_CODES.games_closed;
+  const isRefused = error instanceof ApiError && error.code === API_ERROR_CODES.games_closed;
   const verdict =
     result.isBest && result.rank === 1
       ? gameScreenKeys.result.roomRecord
@@ -55,11 +58,11 @@ export function GameResult({ game, result, error, hubHref, onAgain }: GameResult
       </p>
       {error && (
         <p className={gameScreenClasses.error} role="alert">
-          {t(isClosed ? gameScreenKeys.result.closed : gameScreenKeys.result.failed)}
+          {t(isRefused ? gameScreenKeys.result.closed : gameScreenKeys.result.failed)}
         </p>
       )}
       <div className={gameScreenClasses.actions}>
-        {!isClosed && (
+        {!isClosed && !isRefused && (
           <Button fullWidth size={BUTTON_SIZES.lg} onClick={onAgain}>
             {t(gameScreenKeys.result.again)}
           </Button>

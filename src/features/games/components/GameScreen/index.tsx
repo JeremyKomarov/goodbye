@@ -43,6 +43,7 @@ export function GameScreen({ game }: { game: GameId }) {
   const [result, setResult] = useState<Result | null>(null);
   const [round, setRound] = useState(0);
   const hubHref = roomSectionPath(room.slug, ROOM_SECTIONS.games) as Route;
+  const isClosed = room.status === ROOM_STATUSES.exited;
   const Game = GAMES[game];
 
   function finish(score: number) {
@@ -76,10 +77,11 @@ export function GameScreen({ game }: { game: GameId }) {
             game={game}
             result={result}
             error={submit.error}
+            isClosed={isClosed}
             hubHref={hubHref}
             onAgain={again}
           />
-        ) : room.status === ROOM_STATUSES.exited ? (
+        ) : isClosed ? (
           <GamesClosed room={room} />
         ) : (
           Game && <Game key={round} onFinish={finish} />
