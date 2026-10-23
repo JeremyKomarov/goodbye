@@ -23,6 +23,9 @@ import { languageSwitchStrings } from "@/shared/components/LanguageSwitch/Langua
 import {
   languageSwitchStringsEn,
 } from "@/shared/components/LanguageSwitch/LanguageSwitch.strings.en";
+import { ERROR_SCREEN_NAMESPACE } from "@/shared/components/ErrorScreen/ErrorScreen.keys.const";
+import { errorScreenStrings } from "@/shared/components/ErrorScreen/ErrorScreen.strings";
+import { errorScreenStringsEn } from "@/shared/components/ErrorScreen/ErrorScreen.strings.en";
 import { TAB_BAR_NAMESPACE } from "@/shared/components/TabBar/TabBar.keys.const";
 import { tabBarStrings } from "@/shared/components/TabBar/TabBar.strings";
 import { tabBarStringsEn } from "@/shared/components/TabBar/TabBar.strings.en";
@@ -269,6 +272,7 @@ const he = {
   [ROOM_HEADER_NAMESPACE]: roomHeaderStrings,
   [ROOM_SKELETON_NAMESPACE]: roomSkeletonStrings,
   [ROOM_NOT_FOUND_NAMESPACE]: roomNotFoundStrings,
+  [ERROR_SCREEN_NAMESPACE]: errorScreenStrings,
   [VOTE_LEGEND_NAMESPACE]: voteLegendStrings,
   [VOTE_HEATMAP_NAMESPACE]: voteHeatmapStrings,
   [HERO_NAMESPACE]: heroStrings,
@@ -321,6 +325,7 @@ const en: StringsOf<typeof he> = {
   [ROOM_HEADER_NAMESPACE]: roomHeaderStringsEn,
   [ROOM_SKELETON_NAMESPACE]: roomSkeletonStringsEn,
   [ROOM_NOT_FOUND_NAMESPACE]: roomNotFoundStringsEn,
+  [ERROR_SCREEN_NAMESPACE]: errorScreenStringsEn,
   [VOTE_LEGEND_NAMESPACE]: voteLegendStringsEn,
   [VOTE_HEATMAP_NAMESPACE]: voteHeatmapStringsEn,
   [HERO_NAMESPACE]: heroStringsEn,

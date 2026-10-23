@@ -1,4 +1,4 @@
-.room-not-found {
+.notice-screen {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,8 +13,16 @@
     color: var(--text-secondary);
   }
 
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+  }
+
   // A link styled as the primary button: it navigates, so it is not a Button.
-  &__open {
+  &__link {
     display: inline-flex;
     align-items: center;
     min-height: var(--control-height-lg);

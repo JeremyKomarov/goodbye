@@ -52,7 +52,7 @@ the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`;
 | `components/VoteHeatmap` | Pick a day, then an hour: partials `DayStrip` (tabs with totals), `HourGrid` (chips shaded by `voteStep`, rings for yours and the winner, `columns()` per width), `VoteDetail` (who voted for the hour pointed at, "take back my vote", or how voting works). The chips are native buttons (docs/DECISIONS.md #7). |
 | `components/VoteLegend` | The five `--vote-*` shades, fewer → more. Hidden on short screens. |
 | `components/RoomSkeleton` | The page's Suspense fallback, shaped like the room. |
-| `components/RoomNotFound` | `app/[locale]/r/[slug]/not-found.tsx` renders it. |
+| `components/RoomNotFound` | `app/[locale]/r/[slug]/not-found.tsx` renders it; its words on the shared `NoticeScreen`. |
 | `strings/room.strings.ts` | The `room` namespace: `reason` (gendered), `votes`, `people`, `typing` — said by more than one component. |
 | `utils/roomPreview.ts` | `roomPreview(room, locale)` → the title, description and card lines a shared link shows, by status; no React, so the metadata and the preview image read the same. Owns the `roomPreview` namespace (`strings/roomPreview.strings.ts`). |
 | `utils/names.ts` | `sameName` — the database's `norm_name()` comparison. |
