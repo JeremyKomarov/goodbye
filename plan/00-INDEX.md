@@ -12,6 +12,7 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 04 | Landing | done | [04-landing.md](04-landing.md) |
 | 05 | Room core | done | [05-room-core.md](05-room-core.md) |
 | 06 | Wall & presence | done | [06-wall.md](06-wall.md) |
+| 07 | Admin | in progress | [07-admin.md](07-admin.md) |
 
 **Now:** 07 · **Next:** 08
 
