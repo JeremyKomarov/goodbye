@@ -14,12 +14,12 @@ type Context = RouteContext<"/api/rooms/[slug]/exit.ics">;
 
 // The locked hour as a calendar file — Apple Calendar, Outlook, most phones. A link the browser
 // follows, not a call: the answer is the file or a line of text, never the API's error shape. In
-// the language of the room as this browser reads it.
+// the room's language (docs/DECISIONS.md #13); an unknown room's line in the visitor's.
 export const GET = handlingApiErrors(ROUTE, async (request: NextRequest, { params }: Context) => {
   const { slug } = await params;
-  const locale = resolveLocale(request.cookies.get(LOCALE_COOKIE)?.value);
-  const t = createTranslator({ locale, messages: messages[locale], namespace: CALENDAR_NAMESPACE });
   const room = await findRoomBySlug(slug);
+  const locale = room?.locale ?? resolveLocale(request.cookies.get(LOCALE_COOKIE)?.value);
+  const t = createTranslator({ locale, messages: messages[locale], namespace: CALENDAR_NAMESPACE });
   const url = `${request.nextUrl.origin}${roomPath(FEATURE_KEYS.room, slug)}`;
   const event =
     room &&

@@ -10,7 +10,7 @@ enabled. Route: `/`.
 
 | Endpoint | Status | Source |
 |---|---|---|
-| `API_ENDPOINTS.rooms.create` (POST) | Live, no session needed. Validates with `CreateRoomInputSchema`, writes the room and its admin-token hash to Supabase, answers `{ slug, admin_token }` (201), or `invalid_input` / `close_time_in_past` / `no_slots_after_close` with the field, which the wizard puts on that field. | `app/api/rooms/route.ts` |
+| `API_ENDPOINTS.rooms.create` (POST) | Live, no session needed. Validates with `CreateRoomInputSchema`, writes the room — in the wizard's language, `locale`, which becomes the whole room's (docs/DECISIONS.md #13) — and its admin-token hash to Supabase, answers `{ slug, admin_token }` (201), or `invalid_input` / `close_time_in_past` / `no_slots_after_close` with the field, which the wizard puts on that field. | `app/api/rooms/route.ts` |
 
 ## Inventory
 

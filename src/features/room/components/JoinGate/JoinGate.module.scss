@@ -37,14 +37,8 @@
     text-transform: uppercase;
   }
 
-  // The group's name, and the language switch for whoever got a Hebrew link and reads English.
-  &__top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
-  }
-
+  // The group's name. No language switch: the room is in its host's language
+  // (docs/DECISIONS.md #13).
   &__group {
     min-width: 0;
     overflow: hidden;

@@ -19,6 +19,7 @@ const input = (overrides: Record<string, unknown> = {}) => ({
   dayStartHour: 9,
   dayEndHour: 22,
   votingClosesAt: new Date(Date.now() + DAY_MS).toISOString(),
+  locale: "en",
   ...overrides,
 });
 
@@ -50,7 +51,7 @@ describe.skipIf(!enabled)("POST /api/rooms against Supabase", () => {
     const room = await findRoomBySlug(body.slug);
     expect(room).not.toBeNull();
     created.push(room!.id);
-    expect(room).toMatchObject({ groupName: "test:db — delete me", status: "voting" });
+    expect(room).toMatchObject({ groupName: "test:db — delete me", status: "voting", locale: "en" });
     expect(room!.windowEnd).toBe(isoDate(Date.now() + 3 * DAY_MS));
 
     const { tokenMatches } = await import("@/server/auth/admin-token");

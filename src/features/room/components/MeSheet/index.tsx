@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 import type { SaveNameInput } from "@/features/room/api/players.dto";
 import type { Player } from "@/features/room/types/room.types";
-import { LanguageSwitch } from "@/shared/components/LanguageSwitch";
 import { Sheet } from "@/shared/components/Sheet";
 import { meSheetClasses } from "./MeSheet.classes";
 import { ME_SHEET_NAMESPACE, meSheetKeys } from "./MeSheet.keys.const";
@@ -39,9 +38,6 @@ export function MeSheet({ me, open, onClose, onRename, onLoginCode, onSwitch }: 
             onSwitch();
           }}
         />
-        <section className={meSheetClasses.section}>
-          <LanguageSwitch />
-        </section>
       </div>
     </Sheet>
   );

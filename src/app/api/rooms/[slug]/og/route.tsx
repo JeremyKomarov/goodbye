@@ -12,10 +12,12 @@ import { SITE_NAMESPACE, siteKeys } from "@/shared/strings/site.keys.const";
 type Context = RouteContext<"/api/rooms/[slug]/og">;
 
 // A room's link preview tells the story so far — the question, the decision, the verdict — in the
-// language the page asked for (`?locale=`). An unknown room still gets a card, saying so.
+// room's language (docs/DECISIONS.md #13). An unknown room still gets a card, saying so, in the
+// language the page asked for (`?locale=`).
 export async function GET(request: NextRequest, { params }: Context) {
-  const locale = resolveLocale(request.nextUrl.searchParams.get("locale") ?? undefined);
   const record = await findRoomBySlug((await params).slug);
+  const locale =
+    record?.locale ?? resolveLocale(request.nextUrl.searchParams.get("locale") ?? undefined);
   const { card } = roomPreview(record && mapRoomDto(toRoomDto(record)), locale);
   const t = createTranslator({ locale, messages: messages[locale], namespace: SITE_NAMESPACE });
   return renderCard(locale, { ...card, badge: t(siteKeys.card.badge) });

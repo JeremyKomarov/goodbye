@@ -28,7 +28,7 @@ Chosen with the `plan-kit` playbook on 2026-10-21, from the screens of the origi
 | SystemPill | landing, room, wall, admin, finale | default, highlight |
 | Ticks | landing, wall, vote, games | sent, delivered, read |
 | CopyButton | landing, admin | icon + label; copied state |
-| LanguageSwitch | landing, room | he ↔ en; writes `LOCALE_COOKIE` |
+| LanguageSwitch | landing | he ↔ en; writes `LOCALE_COOKIE` — the language a new room is made in |
 | TabBar | room, games | bottom bar of links with icon, label and a badge |
 | Skeleton | room, games | line, block, circle |
 
@@ -51,7 +51,7 @@ use if the wall or leaderboard needs one.
 | `components/SystemPill` | Small centred notice · `SYSTEM_PILL_TONES` default (yellow on raised), highlight (green). | "X joined", "voting closed", dates — any system line in a chat column. | Never build a second centred notice or status line. |
 | `components/Ticks` | One grey, two grey or two blue check marks · `TICK_STATES` sent, delivered, read. Decorative. | Next to a message's time, or as the app's "done" mark. | Never draw check marks in a feature. |
 | `components/CopyButton` | Secondary `Button` that copies `text` and shows "Copied" for 1.6s; optional translated `label`. | Room links, admin links, player codes, share text. | Never call `navigator.clipboard` from a feature. |
-| `components/LanguageSwitch` | עברית / English toggle; writes `LOCALE_COOKIE` and reloads so `<html lang dir>` follows. | Landing and the room header. | Never set the locale cookie or keep the locale in a store anywhere else. |
+| `components/LanguageSwitch` | עברית / English toggle; writes `LOCALE_COOKIE` and reloads so `<html lang dir>` follows. | The landing only — a room is in its host's language (docs/DECISIONS.md #13). | Never set the locale cookie or keep the locale in a store anywhere else. |
 | `components/TabBar` | `<nav>` of `Link`s: `items` of `{ href, icon, label, badge?, subtitle?, meta?, isLive? }`; the one matching the URL is `aria-current`; badge caps at 99+ and is read out. `TAB_BAR_VARIANTS` bar (sticky bottom, icon over label) · list (a chat list with each section's live line — added in phase 06). | The room's sections (room, games); `hasNested` keeps a section current on the routes under it (a game under the games — added in phase 08). | Never build a second bottom or tab navigation. |
 | `components/ChoiceGroup` | Pick one: real radios drawn as `CHOICE_GROUP_VARIANTS` card (emoji disc, label, description, check) or segment (pills in a track) · `isClearable` lets the chosen one be unpicked to `null`. Added in phase 04 for the wizard's story and pronoun choices. | Any one-of-few choice. | Never a row of `aria-pressed` buttons or bare radios in a feature. |
 | `components/ShareMessages` | `<ShareMessages room url />` — the host's messages to the group as they will read: the decision (while the hour is locked and ahead of the exit) and the goodbye with the room's numbers, the most loved goodbye and each game's champion; send on WhatsApp or copy. Reads `useExitSummary` and `useRecords` itself (`useShareTexts`); a skeleton until they arrive. Owns the `shareMessages` namespace. Added in phase 09. | The room's share sheet and the admin page — both the host's. | Never word the host's messages, or count what they tell, in a feature. |

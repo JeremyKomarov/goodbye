@@ -15,6 +15,7 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 07 | Admin | done | [07-admin.md](07-admin.md) |
 | 08 | Games | done | [08-games.md](08-games.md) |
 | 09 | Finale & sharing | done | [09-finale.md](09-finale.md) |
+| 10 | Room language | done | [10-room-language.md](10-room-language.md) |
 
 **Now:** — · **Next:** —
 

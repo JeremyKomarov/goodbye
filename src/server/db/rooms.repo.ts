@@ -4,6 +4,7 @@ import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
 import {
   ROOM_STATUSES, type HostGender, type LeaveReason, type RoomStatus,
 } from "@/core/constants/room.const";
+import type { Locale } from "@/core/i18n/routing";
 import { db } from "./client";
 
 // Rooms and their secrets. The table is `public.rooms`; the admin token's hash sits apart in
@@ -26,6 +27,8 @@ export interface RoomRecord {
   lockedSlot: string | null;
   exitedAt: string | null;
   createdAt: string;
+  /** The room's one language, set when it is created (plan/10-room-language.md). */
+  locale: Locale;
 }
 
 export type NewRoom = Omit<RoomRecord, "id" | "slug" | "status" | "lockedSlot" | "exitedAt" |
@@ -48,6 +51,7 @@ interface RoomRow {
   locked_slot: string | null;
   exited_at: string | null;
   created_at: string;
+  locale: Locale;
 }
 
 // Lowercase, no 0/o, 1/l/i: a slug gets read aloud and retyped. Matches the table's slug check.
@@ -73,6 +77,7 @@ const toRecord = (row: RoomRow): RoomRecord => ({
   lockedSlot: row.locked_slot,
   exitedAt: row.exited_at,
   createdAt: row.created_at,
+  locale: row.locale,
 });
 
 const failed = () => new ApiError(API_ERROR_CODES.upstream_failed, 502);
@@ -90,6 +95,7 @@ export async function insertRoom(room: NewRoom, adminTokenHash: string): Promise
     day_start_hour: room.dayStartHour,
     day_end_hour: room.dayEndHour,
     voting_closes_at: room.votingClosesAt,
+    locale: room.locale,
   };
 
   for (let attempt = 0; attempt < SLUG_ATTEMPTS; attempt++) {
@@ -123,6 +129,18 @@ export async function findRoomBySlug(slug: string): Promise<RoomRecord | null> {
     .maybeSingle<RoomRow>();
   if (error) throw failed();
   return data ? toRecord(data) : null;
+}
+
+/** The room's language alone, for the proxy; null for a slug that is malformed or unknown. */
+export async function findRoomLocale(slug: string): Promise<Locale | null> {
+  if (!SLUG_PATTERN.test(slug)) return null;
+  const { data, error } = await db()
+    .from("rooms")
+    .select("locale")
+    .eq("slug", slug)
+    .maybeSingle<{ locale: Locale }>();
+  if (error) throw failed();
+  return data?.locale ?? null;
 }
 
 /** The stored hash of the room's admin token, for `tokenMatches` in server/auth/. */

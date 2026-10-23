@@ -187,3 +187,24 @@ included — a query per click to change a status no person sees.
 
 > An unknown room is the not-found page with `noindex`, at status 200. Don't move the room's read
 > out of `<Suspense>` or into the proxy to change that.
+
+## 13. A room is in one language, its host's, read by the proxy and remembered
+
+**Locked 2026-10-23.**
+
+The host's language when they create the room — the landing's, from its switch — is stored on the
+room (`rooms.locale`, `he` for rooms made before it) and every page under `/r/<slug>` renders in
+it for everyone, the admin page and the games included; the link preview and the `.ics` read it
+too. The room has no language switch. A WhatsApp group reads one language, and a host who wrote
+their invitation in English should not have the room greet the group in Hebrew because one
+visitor's cookie says so.
+
+The locale is the hidden `[locale]` segment (`#6`), which only the proxy chooses, so the proxy
+reads the room's language (`findRoomLocale`). That is the database read in the proxy `#12` turned
+down — but here it is once per room per server, not per click: a room's language never changes,
+so the answer is kept in memory. An unknown slug is not remembered and falls back to the cookie,
+so the not-found page is in the visitor's language; a failed read does the same rather than fail
+the page.
+
+> A room's pages are in the room's language, chosen by the proxy from `rooms.locale`. Don't put
+> a language switch inside the room, and don't read the locale cookie on a room route.

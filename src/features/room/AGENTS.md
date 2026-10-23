@@ -5,7 +5,7 @@ from another device, with their login code), votes on the exit hour in a heatmap
 countdown — to the close, then to the chosen hour — change live with everyone else's. The host's
 browser comes in under the host's name and watches rather than votes. Feature flag: `room`,
 enabled. Routes: the sections of `/r/[slug]` share the `(room)` layout — the vote at `/r/[slug]`,
-the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`; the `games` feature's), the records at `/r/[slug]/board`; an unknown slug renders `RoomNotFound`, at status 200 with `noindex` (`docs/DECISIONS.md #12`).
+the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`; the `games` feature's), the records at `/r/[slug]/board`; an unknown slug renders `RoomNotFound`, at status 200 with `noindex` (`docs/DECISIONS.md #12`). Every route is in the room's language, `rooms.locale`, chosen by `src/proxy.ts` (`docs/DECISIONS.md #13`).
 
 ## Status
 
@@ -36,8 +36,8 @@ the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`;
 | `components/RoomStatus` | The status card in either place: `Hero` from the room's context, with `ExitActions` under it. |
 | `components/Finale` | The host has left: the notice drops in, the verdict, the room in numbers (`FinaleStats`: the hour chosen or leading, when the host really left, voters, goodbyes), the most loved goodbye and the champions (`FinaleHighlights`), with confetti; over the whole room, Escape or the button closes it. Reads `useExitSummary` and `useRecords`. |
 | `components/RoomHeader` | The chat header: group avatar and name, "Hi {name}" (a link to `onMe`) and how many are online — or who is typing; the time left in a pill off the vote; `actions`: the 🎉 button, and the admin page's link for the host's browser. |
-| `components/JoinGate` | Covers the room until this browser has a name in it: whose room, why, how many voted, and the `LanguageSwitch`. Partials: `NameForm` (on `SaveNameInputSchema`; the host's name says whose it is), `CodeForm` (a taken name asks for that player's code; "that's not me" goes back). |
-| `components/MeSheet` | "Hi {name}" opens it, for players, not the host. Partials: `RenameForm`, `DeviceCode` (show, copy, replace the code), `NotYou` (forget this browser's player); and the `LanguageSwitch`. |
+| `components/JoinGate` | Covers the room until this browser has a name in it: whose room, why, how many voted. No language switch: the room is in its host's language (docs/DECISIONS.md #13). Partials: `NameForm` (on `SaveNameInputSchema`; the host's name says whose it is), `CodeForm` (a taken name asks for that player's code; "that's not me" goes back). |
+| `components/MeSheet` | "Hi {name}" opens it, for players, not the host. Partials: `RenameForm`, `DeviceCode` (show, copy, replace the code), `NotYou` (forget this browser's player). |
 | `components/Welcome` | The hello pill, "the room will remember you" or "welcome back". Keyed by user. |
 | `components/Hero` | The status card, by `room.status`: `VotingHero` (why, time left to vote, who leads or the tie), `LockedHero` (time to the chosen hour, how it was chosen, `ExitRow` filling up — the host's button when `hostExit` is given), `ExitedHero` (the notice and the `verdict`); `actions` sit under the countdown and the exit card. `Countdown` is days in words over `FlipDigits`, spoken in full. Compact on phones, roomy from 64rem. |
 | `components/ExitActions` | Under the countdown and the exit card, in both of the hero's places: "add to calendar" while the hour is ahead (`CalendarSheet`: Google's link, the `.ics` file); for the host, "send to the group" — the shared `ShareMessages` in a sheet — kept after the exit as "the goodbye message"; once the host has left, "watch the ending again". |

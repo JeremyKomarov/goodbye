@@ -15,6 +15,7 @@ const input: CreateRoomInput = {
   dayStartHour: 9,
   dayEndHour: 22,
   votingClosesAt: "2026-11-10T05:00:00.000Z",
+  locale: "he",
 };
 
 function answer(status: number, body: unknown) {

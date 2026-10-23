@@ -4,7 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useState, type FormEvent } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useLocale } from "next-intl";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
+import type { Locale } from "@/core/i18n/routing";
 import {
   CreateRoomInputSchema, HOST_GENDERS, LEAVE_REASONS, type CreateRoomInput,
 } from "@/features/landing/api/rooms.dto";
@@ -39,7 +41,9 @@ export function CreateRoomForm({
   onCreated: (opened: OpenedRoom) => void;
   onPreview: (preview: ChatPreview) => void;
 }) {
-  const [defaultValues] = useState(() => initialValues(Date.now()));
+  // The room is in the language the host is reading the wizard in; the switch reloads the page.
+  const locale = useLocale();
+  const [defaultValues] = useState(() => initialValues(Date.now(), locale));
   const form = useForm<CreateRoomInput>({
     resolver: zodResolver(CreateRoomInputSchema),
     defaultValues,
@@ -105,7 +109,7 @@ export function CreateRoomForm({
   );
 }
 
-function initialValues(now: number): CreateRoomInput {
+function initialValues(now: number, locale: Locale): CreateRoomInput {
   const closesAt = new Date(now);
   closesAt.setHours(closesAt.getHours() + DEFAULT_CLOSE_AFTER_HOURS, 0, 0, 0);
   return {
@@ -119,5 +123,6 @@ function initialValues(now: number): CreateRoomInput {
     dayStartHour: DEFAULT_DAY_START_HOUR,
     dayEndHour: DEFAULT_DAY_END_HOUR,
     votingClosesAt: closesAt.toISOString(),
+    locale,
   };
 }

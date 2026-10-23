@@ -18,7 +18,7 @@ while it runs. The rule: `node .agents/cli.mjs rule 01 3`.
 | `constants/query-keys.const.ts` | `QUERY_KEYS` — every TanStack key; a room's all start with `room.all(slug)`; `session.user` is this browser's user id; `room.admin` the host's view, under the room's prefix; `room.scores` the records. | Never an inline key array. Realtime invalidates by table — the wall, the records, or the snapshot (`useRoomChannel`). |
 | `constants/storage-keys.const.ts` | `STORAGE_KEYS` — every browser-storage key; `adminToken(slug)`, `supabaseAuth`, `loginCode(userId)`, `storiesSeen`, `finaleSeen(slug)` keep the original app's keys. | Never a storage key literal at a call site. |
 | `api/api-error.ts` | `API_ERROR_CODES`, `API_ERROR_STATUS`, `ApiErrorBodySchema`, `ApiError`, `toApiError`. | The code picks the status. A new failure is a new code here, never a sentence. |
-| `i18n/routing.ts` | `LOCALES` (`he` default, `en`), `LOCALE_COOKIE`, `resolveLocale`, `localeDirection`, `isLocale`. | The locale comes from the cookie via `src/proxy.ts`, never the browser (docs/DECISIONS.md #6). |
+| `i18n/routing.ts` | `LOCALES` (`he` default, `en`), `LOCALE_COOKIE`, `resolveLocale`, `localeDirection`, `isLocale`. | The locale comes from the cookie via `src/proxy.ts`, never the browser (docs/DECISIONS.md #6) — except on a room's routes, where it is the room's (#13). |
 | `i18n/messages.ts` | Namespace → strings file, once per locale. | The one file in `core/` allowed to import from `features/`. Nothing is authored here. |
 | `i18n/request.ts` | next-intl's request config: the `[locale]` root param → its dictionary. | Read through `next/root-params`, so pages stay prerenderable. |
 | `i18n/global.d.ts` | Types every `t()` key and locale from `messages`. | — |

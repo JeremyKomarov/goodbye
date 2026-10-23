@@ -46,6 +46,7 @@ describe.skipIf(!enabled)("voting against Supabase", { timeout: 20_000 }, () => 
         dayStartHour: 9,
         dayEndHour: 22,
         votingClosesAt: new Date(closesAt).toISOString(),
+        locale: "he",
       },
       hashToken("vote-test-token"),
     );

@@ -33,6 +33,7 @@ describe.skipIf(!enabled)("GET /api/rooms/[slug] against Supabase", () => {
         dayStartHour: 9,
         dayEndHour: 22,
         votingClosesAt: new Date(Date.now() + DAY_MS).toISOString(),
+        locale: "he",
       },
       "not-a-real-hash",
     );

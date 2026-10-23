@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { ROOM_STATUSES } from "@/core/constants/room.const";
 import { ROOM_NAMESPACE, roomKeys } from "@/features/room/strings/room.keys.const";
-import { LanguageSwitch } from "@/shared/components/LanguageSwitch";
 import { isolate } from "@/shared/utils/isolate";
 import { joinGateClasses } from "./JoinGate.classes";
 import { JOIN_GATE_NAMESPACE, joinGateKeys } from "./JoinGate.keys.const";
@@ -40,12 +39,9 @@ export function JoinGate({ room, voterCount, isChecking, onJoin, onSignInAs }: J
           transition={{ type: "spring", damping: 22, stiffness: 220 }}
         >
           <div>
-            <div className={joinGateClasses.top}>
-              <p className={joinGateClasses.group}>
-                <bdi>{room.groupName}</bdi>
-              </p>
-              <LanguageSwitch />
-            </div>
+            <p className={joinGateClasses.group}>
+              <bdi>{room.groupName}</bdi>
+            </p>
             <h1 className={joinGateClasses.headline}>
               {t(joinGateKeys.headline, { status: room.status, name: host, gender })}
             </h1>

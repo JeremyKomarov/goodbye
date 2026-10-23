@@ -37,6 +37,7 @@ describe.skipIf(!enabled)("the exit summary against Supabase", { timeout: 30_000
         dayStartHour: 9,
         dayEndHour: 22,
         votingClosesAt: new Date(Date.now() + DAY_MS).toISOString(),
+        locale: "he",
       },
       "not-a-real-hash",
     );

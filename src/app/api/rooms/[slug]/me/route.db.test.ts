@@ -45,6 +45,7 @@ describe.skipIf(!enabled)("joining a room against Supabase", { timeout: 20_000 }
         dayStartHour: 9,
         dayEndHour: 22,
         votingClosesAt: new Date(Date.now() + DAY_MS).toISOString(),
+        locale: "he",
       },
       hashToken(adminToken),
     );

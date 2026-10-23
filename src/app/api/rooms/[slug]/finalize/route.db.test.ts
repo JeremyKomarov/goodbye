@@ -28,6 +28,7 @@ describe.skipIf(!enabled)("POST /api/rooms/[slug]/finalize against Supabase", ()
         dayStartHour: 9,
         dayEndHour: 22,
         votingClosesAt: new Date(closesAt).toISOString(),
+        locale: "he",
       },
       "not-a-real-hash",
     );

@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   HOST_GENDERS, LEAVE_REASONS, type HostGender, type LeaveReason,
 } from "@/core/constants/room.const";
+import { LOCALES } from "@/core/i18n/routing";
 
 // The create-room contract. The input schema is the one the wizard's zodResolver and the Route
 // Handler both use (03-DATA.md §4): it says which field is wrong, the strings layer says how.
@@ -34,6 +35,8 @@ export const CreateRoomInputSchema = z
     dayStartHour: z.number().int().min(0).max(23),
     dayEndHour: z.number().int().min(1).max(24),
     votingClosesAt: z.iso.datetime({ offset: true }),
+    /** The language the host created the room in — the whole room's, for everyone. */
+    locale: z.enum(LOCALES),
   })
   .refine((input) => input.dayEndHour > input.dayStartHour, { path: ["dayEndHour"] });
 

@@ -44,6 +44,7 @@ export const POST = handlingApiErrors(ROUTE, async (request: Request) => {
       reason: input.reason,
       ...window,
       votingClosesAt: new Date(closesAt).toISOString(),
+      locale: input.locale,
     },
     hashToken(adminToken),
   );
