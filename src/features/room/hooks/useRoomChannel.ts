@@ -14,12 +14,21 @@ const TYPING_TTL_MS = 4000;
 
 const WALL_TABLES: readonly RoomTable[] = [ROOM_TABLES.wallMessages, ROOM_TABLES.wallReactions];
 
+/** The reads a table's change makes stale. The records carry the players' names. */
+function staleKeys(slug: string, table: RoomTable) {
+  if (WALL_TABLES.includes(table)) return [QUERY_KEYS.room.wall(slug)];
+  if (table === ROOM_TABLES.scores) return [QUERY_KEYS.room.scores(slug)];
+  if (table === ROOM_TABLES.players)
+    return [QUERY_KEYS.room.snapshot(slug), QUERY_KEYS.room.scores(slug)];
+  return [QUERY_KEYS.room.snapshot(slug)];
+}
+
 type RainListener = (emoji: string) => void;
 
 /**
  * The room's live channel, for as long as the room is open. Table changes invalidate the room's
- * queries — the wall's, or the snapshot (docs/DECISIONS.md #2); who is here, who is typing and the
- * emoji rain are held here, as the moment only (#8).
+ * queries — the wall's, the records, or the snapshot (docs/DECISIONS.md #2); who is here, who is
+ * typing and the emoji rain are held here, as the moment only (#8).
  */
 export function useRoomChannel(slug: string, roomId: string | undefined, me: Player | null) {
   const queryClient = useQueryClient();
@@ -34,12 +43,12 @@ export function useRoomChannel(slug: string, roomId: string | undefined, me: Pla
     const timers = new Map<string, ReturnType<typeof setTimeout>>();
     const joined = joinRoomChannel(roomId, {
       onChange: (table) => {
-        const queryKey = WALL_TABLES.includes(table)
-          ? QUERY_KEYS.room.wall(slug)
-          : QUERY_KEYS.room.snapshot(slug);
-        const id = queryKey.join("/");
-        clearTimeout(timers.get(id));
-        timers.set(id, setTimeout(() => queryClient.invalidateQueries({ queryKey }), SETTLE_MS));
+        for (const queryKey of staleKeys(slug, table)) {
+          const id = queryKey.join("/");
+          clearTimeout(timers.get(id));
+          const invalidate = () => queryClient.invalidateQueries({ queryKey });
+          timers.set(id, setTimeout(invalidate, SETTLE_MS));
+        }
       },
       onPresence: setOnline,
       onTyping: (peer, isTyping) =>

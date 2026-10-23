@@ -66,6 +66,7 @@ use if the wall or leaderboard needs one.
 |---|---|---|
 | `hooks/useSlotFormat.ts` | `day`, `weekday`, `dayMonth`, `time`, `slot` — a room's timezone, the reader's language. | Every hour shown on the room's or the admin's screens. Never `toLocaleString` a slot by hand. |
 | `hooks/useDuration.ts` | `exact(ms)` ("an hour and 5 minutes"), `rough(ms)` ("33 hours"). | Every duration in words. |
+| `hooks/useRecords.ts` | `useQuery` on `QUERY_KEYS.room.scores(slug)` → `GameRecord[]`, each player's best per game. Kept fresh by the room's channel. | The games, the room's board and nav line, the finale. |
 | `hooks/useNow.ts` | The current time in ms from one shared 250ms ticker; 0 on the server and while hydrating. | Every countdown or "time left" display. Never start a `setInterval` for a clock in a component. |
 
 ## Utils
@@ -84,6 +85,7 @@ use if the wall or leaderboard needs one.
 | `utils/countdown.ts` | `splitCountdown(ms)` → days, hours, minutes, seconds; `pad(n)` → two digits. | Every countdown display, with `useNow`. |
 | `utils/duration.ts` | `exactParts`, `roughPart` — a duration split into units for words. | Through `useDuration`. |
 | `utils/verdict.ts` | `verdict(room)` — on time (±`ON_TIME_MINUTES`), late, early, or left mid-vote. | The room's exit card, the admin's warning before an early exit, the finale. |
+| `utils/records.ts` | `rankRecords(records, game)` best first, `champions(records)`, `beats(game, a, b)`, `placeOf(records, game, userId, score)` → `{ isBest, rank, total }`. | Every record, rank or champion: the games, the board, the finale. Never sort scores by hand — Runaway is timed. |
 | `utils/slots.ts` | `RoomWindow` → hour slots in the room's timezone (`buildSlotDays`, `allSlots`, `hasSlotAfter`), DST holes as `null`. | The landing schedule step, the create handler, the room's heatmap. Never compute an hour with `Date` arithmetic. |
 
 ## Data and words
@@ -92,6 +94,7 @@ use if the wall or leaderboard needs one.
 |---|---|---|---|
 | `types/room.types.ts` | `Room` — a room, times as epoch milliseconds; a `RoomWindow`, so it builds its own slots. | Any screen that shows a room. | Never a second room type in a feature. |
 | `api/room.dto.ts`, `api/room.mapper.ts` | `RoomDtoSchema` / `RoomDto` — a room on the wire; `mapRoomDto`. Every handler that answers with a room sends this shape (`server/api/room-snapshot.server.ts`). | A feature's DTO that carries a room nests this schema. | Never restate the room's fields in a feature's DTO. |
+| `types/records.types.ts`, `api/records.dto.ts`, `api/records.mapper.ts`, `api/records.api.ts` | `GameRecord`; `RecordsDtoSchema` (`GET …/scores`), `SubmitScoreInputSchema` (a game and a score in its `SCORE_RANGES`); `mapRecordsDto`; `fetchRecords`. | The records are read by the games and the room alike; only `games` submits. | Never a second record shape. |
 | `api/admin-action.dto.ts` | `ADMIN_ACTIONS`, `AdminActionInputSchema` — what the host can do to their room. | The admin page sends every action; the room sends `exit`. | Never a second action shape for the host. |
 | `strings/time.strings.ts` | The `time` namespace: `slot`, `duration`. | Read by the two hooks above. | Never word an hour or a duration in a feature's strings. |
 

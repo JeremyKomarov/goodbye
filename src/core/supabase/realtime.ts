@@ -4,7 +4,7 @@ import { browserSupabase } from "./client";
 // The room's Realtime channel. It reports *that* something changed, never what: the caller
 // invalidates its queries and reads the room again through its handler (docs/DECISIONS.md #2).
 
-/** What changed: the room row, who is in it, who hosts it, a vote, or the wall. */
+/** What changed: the room row, who is in it, who hosts it, a vote, the wall, or a score. */
 export const ROOM_TABLES = {
   rooms: "rooms",
   players: "players",
@@ -12,6 +12,7 @@ export const ROOM_TABLES = {
   votes: "votes",
   wallMessages: "wall_messages",
   wallReactions: "wall_reactions",
+  scores: "scores",
 } as const;
 
 // A deleted row carries only its key, so these deletions can't be filtered by room: any one

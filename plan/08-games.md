@@ -4,13 +4,13 @@
 kept and ranked live for everyone in the room, and a board with the most wanted hours and every
 game's top ten; the games close once the host has left; the `games` flag is on.
 **Depends on:** 05, 06
-**Status:** not started
+**Status:** in progress
 
 ## Steps
 `[ ]` not started · `[~]` in flight now (one, and `plan/NOW.md` names it) · `[x]` done, struck through.
 
-- [ ] 08.1 — scores: the repo, `GET`/`POST /api/rooms/[slug]/scores`, the shared records, live (M)
-- [ ] 08.2 — the room's frame for other features; the hub, a game's screen, its result and score (L)
+- [x] ~~08.1 — scores: the repo, `GET`/`POST /api/rooms/[slug]/scores`, the shared records, live (M)~~
+- [~] 08.2 — the room's frame for other features; the hub, a game's screen, its result and score (L)
 - [ ] 08.3 — Runaway: the exit button that runs away (M)
 - [ ] 08.4 — Catch: pop the notifications, never the boss (M)
 - [ ] 08.5 — Trivia: ten questions, in both languages (M)
