@@ -10,7 +10,7 @@ import { voteSectionClasses } from "./VoteSection.classes";
 
 /** The room's first section: the status card (on phones) and the hour grid. */
 export function VoteSection() {
-  const { slug, snapshot, me, isHost, leader, openStory } = useRoomContext();
+  const { slug, snapshot, me, isHost, leader, openStory, hostExit } = useRoomContext();
   const vote = useVote(slug);
   const now = useNow();
 
@@ -25,6 +25,7 @@ export function VoteSection() {
           now={now}
           leader={leader}
           voterCount={snapshot.votes.length}
+          hostExit={hostExit}
         />
       </div>
       <div className={voteSectionClasses.grid}>

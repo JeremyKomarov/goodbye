@@ -3,8 +3,8 @@
 import { AnimatePresence, MotionConfig } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useMemo, useState, type ReactNode } from "react";
-import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
-import { ROOM_SECTIONS, roomSectionPath } from "@/core/constants/routes.const";
+import { FEATURE_KEYS } from "@/core/config/features.const";
+import { ROOM_SECTIONS, roomPath, roomSectionPath } from "@/core/constants/routes.const";
 import type { RoomSnapshotDto } from "@/features/room/api/room.dto";
 import { EmojiRain } from "@/features/room/components/EmojiRain";
 import { PARTY_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
@@ -22,6 +22,7 @@ import { Welcome } from "@/features/room/components/Welcome";
 import { useAutoFinalize } from "@/features/room/hooks/useAutoFinalize";
 import { useDoorAtTheHour } from "@/features/room/hooks/useDoorAtTheHour";
 import { useEnsureLoginCode } from "@/features/room/hooks/useEnsureLoginCode";
+import { useHostExit } from "@/features/room/hooks/useHostExit";
 import { IDENTITY_STATES, useIdentity } from "@/features/room/hooks/useIdentity";
 import { useRename } from "@/features/room/hooks/useRename";
 import { useRoom } from "@/features/room/hooks/useRoom";
@@ -32,7 +33,6 @@ import { useSignInAs } from "@/features/room/hooks/useSignInAs";
 import { useSwitchUser } from "@/features/room/hooks/useSwitchUser";
 import { useWall } from "@/features/room/hooks/useWall";
 import { useWallUnread } from "@/features/room/hooks/useWallUnread";
-import { sameName } from "@/features/room/utils/names";
 import { leadingSlot, tallyVotes } from "@/features/room/utils/tally";
 import { useNow } from "@/shared/hooks/useNow";
 import { initialOf } from "@/shared/utils/avatar";
@@ -56,7 +56,7 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
   const identity = useIdentity(slug, snapshot);
   const { me, isHost } = identity;
   const rename = useRename(slug);
-  const signInAs = useSignInAs();
+  const signInAs = useSignInAs(snapshot?.players);
   const switchUser = useSwitchUser();
   const loginCode = useEnsureLoginCode(me, isHost);
   const [isMeOpen, setIsMeOpen] = useState(false);
@@ -72,21 +72,16 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
   const unread = useWallUnread(wall?.messages, me?.userId, isOnWall);
   useAutoFinalize(room, now);
   const live = useRoomChannel(slug, room?.id, me);
+  const hostExit = useHostExit(room, identity.adminToken);
   const typing = useTypingLine(live.typers);
   useDoorAtTheHour(room, now, live.rain);
   if (!snapshot || !room) return <RoomSkeleton />;
   const nav = { snapshot, leader, lastMessage: wall?.messages.at(-1), unread, typing };
 
-  async function signInAsPlayer(name: string, code: string) {
-    const player = snapshot?.players.find((candidate) => sameName(candidate.name, name));
-    if (!player) throw new ApiError(API_ERROR_CODES.not_found, 404);
-    await signInAs.mutateAsync({ userId: player.userId, code });
-  }
-
   return (
     <MotionConfig reducedMotion="user">
       <RoomContext
-        value={{ slug, snapshot, me, isHost, leader, live, typing, openStory: setStory }}
+        value={{ slug, snapshot, me, isHost, leader, live, typing, openStory: setStory, hostExit }}
       >
         {/* Under the join gate the room is shown but out of reach: no focus, no screen reader. */}
         <div className={roomShellClasses.root} inert={identity.state !== IDENTITY_STATES.ready}>
@@ -97,12 +92,21 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
             avatar={<StoryRing onOpen={setStory}>{initialOf(room.groupName)}</StoryRing>}
             now={isOnVote ? undefined : now}
             onMe={isHost ? undefined : () => setIsMeOpen(true)}
-            onParty={() => live.sendEmoji(PARTY_EMOJI)}
+            actions={{
+              onParty: () => live.sendEmoji(PARTY_EMOJI),
+              adminHref: identity.adminToken ? roomPath(FEATURE_KEYS.admin, slug) : undefined,
+            }}
           />
           <div className={roomShellClasses.body}>
             <aside className={roomShellClasses.side}>
               <StatusStories onOpen={setStory} />
-              <Hero room={room} now={now} leader={leader} voterCount={snapshot.votes.length} />
+              <Hero
+                room={room}
+                now={now}
+                leader={leader}
+                voterCount={snapshot.votes.length}
+                hostExit={hostExit}
+              />
               <RoomNav {...nav} variant={ROOM_NAV_VARIANTS.list} />
             </aside>
             <main className={roomShellClasses.main}>{children}</main>
@@ -134,7 +138,7 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
             voterCount={snapshot.votes.length}
             isChecking={identity.state === IDENTITY_STATES.checking}
             onJoin={identity.join.mutateAsync}
-            onSignInAs={signInAsPlayer}
+            onSignInAs={signInAs}
           />
         )}
       </AnimatePresence>

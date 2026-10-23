@@ -29,11 +29,11 @@ the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomN
 | `components/MessageBubble` | One goodbye on the kit's `Bubble`: the sender's name in their colour with a host badge, the time and ticks, a react button, the picker, and the reaction chips. |
 | `components/RoomNav` | The sections, through the kit's `TabBar`: `bar` on phones, `list` in the side column from 64rem with each section's live line (who leads; the last goodbye and its time) and the wall's unread count. |
 | `components/VoteSection` | The vote page: `Hero` (phones only — wide screens show it in the side column) and `VoteHeatmap`. |
-| `components/RoomHeader` | The chat header: group avatar and name, "Hi {name}" (a link to `onMe`) and how many are online — or who is typing; the time left in a pill off the vote; the 🎉 button (`onParty`). |
+| `components/RoomHeader` | The chat header: group avatar and name, "Hi {name}" (a link to `onMe`) and how many are online — or who is typing; the time left in a pill off the vote; `actions`: the 🎉 button, and the admin page's link for the host's browser. |
 | `components/JoinGate` | Covers the room until this browser has a name in it: whose room, why, how many voted, and the `LanguageSwitch`. Partials: `NameForm` (on `SaveNameInputSchema`; the host's name says whose it is), `CodeForm` (a taken name asks for that player's code; "that's not me" goes back). |
 | `components/MeSheet` | "Hi {name}" opens it, for players, not the host. Partials: `RenameForm`, `DeviceCode` (show, copy, replace the code), `NotYou` (forget this browser's player); and the `LanguageSwitch`. |
 | `components/Welcome` | The hello pill, "the room will remember you" or "welcome back". Keyed by user. |
-| `components/Hero` | The status card, by `room.status`: `VotingHero` (why, time left to vote, who leads or the tie), `LockedHero` (time to the chosen hour, how it was chosen, `ExitRow` filling up), `ExitedHero` (the notice and the `verdict`). `Countdown` is days in words over `FlipDigits`, spoken in full. Compact on phones, roomy from 64rem. |
+| `components/Hero` | The status card, by `room.status`: `VotingHero` (why, time left to vote, who leads or the tie), `LockedHero` (time to the chosen hour, how it was chosen, `ExitRow` filling up — the host's button when `hostExit` is given), `ExitedHero` (the notice and the `verdict`). `Countdown` is days in words over `FlipDigits`, spoken in full. Compact on phones, roomy from 64rem. |
 | `components/EmojiRain` | The full-screen shower, fed by `onRain`; four fading drops instead of sixteen for reduced motion. `EmojiRain.const.ts`: `QUICK_EMOJI` (the wall's row), `PARTY_EMOJI` (the header's), `DOOR_EMOJI` (the hour). |
 | `components/StatusStories` | The story groups as a strip of status rings — in the side column, and above the status card on a phone tall enough for both. Owns the `stories` namespace: every fact, in both languages. |
 | `components/StoryRing` | The header's avatar in a status ring; opens the first group not yet watched. |
@@ -51,11 +51,13 @@ the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomN
 | `api/votes.api.ts` | `castVote`, `withdrawVote`. |
 | `hooks/useLoginCode.ts` | Fetches the code (`fresh` for a new one), signs back in when it is new, keeps it on the device. |
 | `hooks/useEnsureLoginCode.ts` | Every player but the host gets a code as they come in, so the host can send it later. Returns `useLoginCode`'s mutation. |
-| `hooks/useSignInAs.ts` | Signs in as another device's player with their code. Invalidates the session user. |
+| `hooks/useSignInAs.ts` | Comes in as the player with a name, with their code (`not_found` for an unknown name). Invalidates the session user. |
 | `hooks/useSwitchUser.ts` | "Not you?": signs this browser out locally. Invalidates the session user. |
 | `hooks/useRename.ts` | `saveName` for a player already in. Invalidates the room. |
 | `api/login-code.dto.ts` | `LoginCodeInputSchema`, `LoginCodeDtoSchema`, `SignInAsInputSchema` (the gate's code field). |
 | `api/login-code.api.ts` | `fetchLoginCode`. |
+| `hooks/useHostExit.ts` | The host's "I left the group" from the room — for the browser holding the admin token once the hour is set; warns first if early. Null for anyone else. |
+| `hooks/useMarkExit.ts` | The exit action (`markExit`, the shared admin action with this browser's token). Invalidates the room. |
 | `hooks/useRoomChannel.ts` | The room's live channel: a wall change invalidates `room.wall`, any other `room.snapshot` (settled over 150ms); presence (`online`), `typers` (4s unless renewed), `sendTyping`, `sendEmoji` (here and everywhere), `rain` (here only), `onRain`. Presence and broadcasts are held here, the moment only (docs/DECISIONS.md #8). |
 | `hooks/useDoorAtTheHour.ts` | As the chosen hour arrives on an open screen: 🚪 rains there and the phone buzzes. Each screen has the clock, so nothing is sent. |
 | `hooks/useSeenStories.ts` | The groups this browser has watched to the end (`utils/storiesSeen.ts`, in `STORAGE_KEYS.storiesSeen`). |
@@ -73,7 +75,7 @@ the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomN
 | `utils/voteScale.ts` | `voteStep(count, max)` → shade, `columns(n, min, max)`, `VOTE_STEPS`, `DARK_TEXT_FROM`. |
 | `utils/tally.ts` | `tallyVotes`, `leadingSlot` (`Lead` with every tied slot), `wonByDraw`. |
 | `hooks/useWallUnread.ts` | Goodbyes since you last looked at the wall, not your own; what was there when the room opened counts as read. |
-| `hooks/useRoomContext.ts` | `RoomContext` and `useRoomContext()` — `slug`, `snapshot`, `me`, `isHost`, `leader`, `live`, `typing`, `openStory`, from the shell to its sections. |
+| `hooks/useRoomContext.ts` | `RoomContext` and `useRoomContext()` — `slug`, `snapshot`, `me`, `isHost`, `leader`, `live`, `typing`, `openStory`, `hostExit`, from the shell to its sections. |
 | `hooks/useRoom.ts` | `useQuery` on `QUERY_KEYS.room.snapshot(slug)` → `RoomSnapshot`, seeded from the page's read. |
 | `hooks/useIdentity.ts` | Who this browser is here: `state` (`IDENTITY_STATES` checking → join → ready), `me`, `isHost`, `returning`, `join`. Joins the host's browser under the host's name by itself, and claims the room for a host who joined unrecorded. |
 | `hooks/useSessionUser.ts` | `useQuery` on `QUERY_KEYS.session.user` — this browser's user id or null. |
@@ -96,14 +98,14 @@ admin feature import this one.
 
 ## Ownership
 
-- Joining, login codes, voting, the heatmap, the countdown; next the wall, presence, typing,
-  reactions, the emoji rain, the finale and the calendar export.
+- Joining, login codes, voting, the heatmap, the countdown, the wall, presence, typing,
+  reactions, the emoji rain, the stories, and the host's exit from inside the room; next the
+  finale and the calendar export.
 - The room's Realtime subscription, which invalidates query keys and nothing else
   (docs/DECISIONS.md #2).
 - Not the games and not the host's controls — `games` and `admin`.
 
 ## Next real work
 
-Phase 06 — the farewell wall, presence and typing, the emoji rain and the status stories, and the
-tab bar once the room has a second section. The exit row in `Hero` becomes the host's button in
-07; the finale and the actions under the hero (calendar, share) are 09.
+Phase 08 — the games and the leaderboard, as sections of the room with their tabs. Then 09: the
+finale when the host leaves, and the actions under the hero (calendar, share).

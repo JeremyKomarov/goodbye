@@ -53,6 +53,17 @@
     }
   }
 
+  // A link to the admin page, drawn as a round icon: only the host's browser has it.
+  &__admin {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: var(--space-10);
+    height: var(--space-10);
+    border-radius: var(--radius-pill);
+    color: var(--text-muted);
+  }
+
   // Off the vote, the time left in a pill; red once it counts down to the chosen hour.
   &__clock {
     flex-shrink: 0;
@@ -74,5 +85,12 @@
 @media (max-height: 500px) {
   .room-header__bar {
     height: var(--space-12);
+  }
+}
+
+@media (hover: hover) {
+  .room-header__admin:hover {
+    background: var(--surface-soft);
+    color: var(--text-primary);
   }
 }

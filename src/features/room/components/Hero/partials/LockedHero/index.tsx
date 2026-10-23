@@ -10,7 +10,8 @@ import { COUNTDOWN_TONES, Countdown } from "@/features/room/components/Hero/part
 import { ExitRow } from "@/features/room/components/Hero/partials/ExitRow";
 
 /** The hour is chosen: the countdown to it, how it was chosen, and the exit row filling up. */
-export function LockedHero({ room, now, leader, lockedSlot }: HeroProps & { lockedSlot: number }) {
+export function LockedHero(props: HeroProps & { lockedSlot: number }) {
+  const { room, now, leader, lockedSlot, hostExit } = props;
   const t = useTranslations(HERO_NAMESPACE);
   const tRoom = useTranslations(ROOM_NAMESPACE);
   const format = useSlotFormat(room.timezone);
@@ -24,7 +25,9 @@ export function LockedHero({ room, now, leader, lockedSlot }: HeroProps & { lock
   const slot = format.slot(target);
 
   const note = overtime
-    ? t(heroKeys.locked.waiting, { name, gender })
+    ? hostExit
+      ? t(heroKeys.locked.hostNow)
+      : t(heroKeys.locked.waiting, { name, gender })
     : wonByDraw(leader, lockedSlot)
       ? t(heroKeys.locked.drawn, { slot, count: leader?.tied.length ?? 0 })
       : leader
@@ -45,7 +48,7 @@ export function LockedHero({ room, now, leader, lockedSlot }: HeroProps & { lock
         tone={overtime ? COUNTDOWN_TONES.overtime : COUNTDOWN_TONES.plain}
       />
       <p className={heroClasses.note}>{note}</p>
-      <ExitRow progress={progress} />
+      <ExitRow progress={progress} isOvertime={overtime} hostExit={hostExit ?? null} />
     </section>
   );
 }

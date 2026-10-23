@@ -1,4 +1,5 @@
 import type { Room } from "@/shared/types/room.types";
+import type { HostExit } from "@/features/room/hooks/useHostExit";
 import type { Lead } from "@/features/room/utils/tally";
 
 export interface HeroProps {
@@ -8,4 +9,6 @@ export interface HeroProps {
   leader: Lead | null;
   /** How many have voted. */
   voterCount: number;
+  /** The host's browser, once the hour is set: the exit row is their button. */
+  hostExit?: HostExit | null;
 }

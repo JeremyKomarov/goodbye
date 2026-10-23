@@ -2,6 +2,7 @@ import { createContext, useContext } from "react";
 import type { StoryPosition } from "@/features/room/content/stories.const";
 import type { Player, RoomSnapshot } from "@/features/room/types/room.types";
 import type { Lead } from "@/features/room/utils/tally";
+import type { HostExit } from "./useHostExit";
 import type { RoomLive } from "./useRoomChannel";
 
 /**
@@ -21,6 +22,8 @@ export interface RoomContextValue {
   typing: string | null;
   /** Opens the status stories at a group. */
   openStory: (start: StoryPosition) => void;
+  /** The host's exit button, for the browser holding the admin token once the hour is set. */
+  hostExit: HostExit | null;
 }
 
 export const RoomContext = createContext<RoomContextValue | null>(null);

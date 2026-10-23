@@ -14,8 +14,8 @@ room the red exit row is the host's button; the `admin` flag is on.
 - [x] ~~07.3 — `PATCH …/admin` (lock, reopen, exit, undo the exit), `DELETE …/admin/messages/[id]` (M)~~
 - [x] ~~07.4 — the admin page: the link's token, the room's state, its actions, forgetting this device (L)~~
 - [x] ~~07.5 — the admin's wall, the players' codes, the admin link sent to yourself (M)~~
-- [~] 07.6 — in the room: the exit row as the host's button, the header's link to the admin page (S)
-- [ ] 07.7 — `enable-feature admin`; checked in two browsers, both locales (M)
+- [x] ~~07.6 — in the room: the exit row as the host's button, the header's link to the admin page (S)~~
+- [~] 07.7 — `enable-feature admin`; checked in two browsers, both locales (M)
 
 ## Done when
 With the admin link in one browser and a player in another: closing the vote early locks the room

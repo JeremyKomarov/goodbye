@@ -22,12 +22,23 @@ export const heroStringsEn: StringsOf<typeof heroStrings> = {
       "true {It's time! Overdue by} " +
       "other {{name} leaves the group in}}",
     waiting: "Now we just wait for {name} to leave 👀",
+    hostNow: "Leave the group in WhatsApp, then tap here 👇",
     drawn: "{slot}. It was a tie between {count} hours, and the draw picked this one 🎲",
     decided: "{slot}. The group decided, with {votes}.",
     decidedPlain: "{slot}. The group decided.",
   },
   exitRow: {
     label: "Exit group",
+    mark: "Exit group: mark that you left",
+    tapHere: "Tap here",
+    wait: "One moment…",
+    askEarly:
+      "{left} until the hour the group chose. Mark that you left now? Everyone in the room will " +
+      "see you ran off early 😅",
+    ask:
+      "Sent your goodbye and left the group in WhatsApp? After this, everyone in the room sees " +
+      "you left.",
+    failed: "We couldn't mark your exit. Try again",
   },
   exited: {
     left: "{name} left the group",

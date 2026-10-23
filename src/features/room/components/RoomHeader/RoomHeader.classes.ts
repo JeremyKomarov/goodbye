@@ -10,5 +10,6 @@ export const roomHeaderClasses = classMap("RoomHeader", {
   subtitle: styles["room-header__subtitle"],
   live: styles["room-header__subtitle--live"],
   clock: styles["room-header__clock"],
+  admin: styles["room-header__admin"],
   clockLocked: styles["room-header__clock--locked"],
 });

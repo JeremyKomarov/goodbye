@@ -8,6 +8,24 @@
   background: color-mix(in oklab, var(--surface-soft) 60%, transparent);
   text-align: start;
 
+  // The host's: it is a button, and looks pressable.
+  &--action {
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease-standard);
+  }
+
+  // The hour has come: the row asks to be pressed.
+  &--urgent {
+    box-shadow: 0 0 0 2px var(--accent-exit);
+  }
+
+  &__button {
+    display: block;
+    width: 100%;
+    max-width: 24rem;
+    margin-inline: auto;
+  }
+
   &__fill {
     position: absolute;
     inset-block: 0;
@@ -51,5 +69,11 @@
 @media (min-width: 64rem) {
   .exit-row {
     margin-block-start: var(--space-5);
+  }
+}
+
+@media (hover: hover) {
+  .exit-row--action:hover {
+    background: var(--surface-soft);
   }
 }
