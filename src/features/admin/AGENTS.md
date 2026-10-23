@@ -27,6 +27,7 @@ host's browser, and the room's exit row sends the same `exit` action.
 | `components/AdminLink` | The admin link itself, to copy or send to yourself — the way back from another device. |
 | `hooks/useLinkToken.ts` | The token from the link's `#k=` — kept in this browser and taken out of the address bar — or the one kept before. |
 | `strings/admin.strings.ts` | The `admin` namespace, for the screen and its panels. |
+| `hooks/useAdminChannel.ts` | The room's live channel on this page, once the host's view has loaded: any change but a score re-reads `room.admin` (settled over 150ms), so the count, the names and the wall follow the room. Nothing tracked or sent. |
 | `hooks/useAdminRoom.ts` | `useQuery` on `QUERY_KEYS.room.admin(slug)` → `AdminRoom`, once there is a token; a refusal is not retried. |
 | `hooks/useAdminAction.ts` | The host's actions. The room it answers goes straight into the host's view (the request's own answer, not an event), and the room is invalidated. |
 | `hooks/useDeleteMessage.ts` | Removes a goodbye: out of the host's list once the server has, and the room invalidated. |
@@ -43,4 +44,4 @@ host's browser, and the room's exit row sends the same `exit` action.
 
 ## Next real work
 
-None planned. Phase 13 added `VoteReminder`.
+None planned. Phase 13 added `VoteReminder`; phase 14 made the page live (`useAdminChannel`).

@@ -95,7 +95,7 @@ a playbook already does it.
 
 ## What is next, in order
 
-Nothing is planned: phases 01–13 are done. New work starts as a phase (`/new-phase`), not ad hoc.
+Nothing is planned: phases 01–14 are done. New work starts as a phase (`/new-phase`), not ad hoc.
 
 *(Keep this to three. A list of fourteen is a wish list, not an order.)*
 

@@ -13,6 +13,7 @@ import { GroupMessages } from "@/features/admin/components/GroupMessages";
 import { PlayerCodes } from "@/features/admin/components/PlayerCodes";
 import { VoteReminder } from "@/features/admin/components/VoteReminder";
 import { useAdminAction } from "@/features/admin/hooks/useAdminAction";
+import { useAdminChannel } from "@/features/admin/hooks/useAdminChannel";
 import { useAdminRoom } from "@/features/admin/hooks/useAdminRoom";
 import { useDeleteMessage } from "@/features/admin/hooks/useDeleteMessage";
 import { useLinkToken } from "@/features/admin/hooks/useLinkToken";
@@ -31,6 +32,7 @@ export function AdminScreen({ slug }: { slug: string }) {
   const t = useTranslations(ADMIN_NAMESPACE);
   const token = useLinkToken(slug);
   const admin = useAdminRoom(slug, token || null);
+  useAdminChannel(slug, admin.data?.room.id);
   const action = useAdminAction(slug, token ?? "");
   const remove = useDeleteMessage(slug, token ?? "");
   const origin = useSyncExternalStore(noSubscription, () => window.location.origin, () => "");

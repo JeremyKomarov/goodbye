@@ -19,6 +19,7 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 11 | Room themes | done | [11-room-themes.md](11-room-themes.md) |
 | 12 | Polish | done | [12-polish.md](12-polish.md) |
 | 13 | Who hasn't voted | done | [13-vote-reminder.md](13-vote-reminder.md) |
+| 14 | The host's page, live | done | [14-live-admin.md](14-live-admin.md) |
 
 **Now:** — · **Next:** —
 
