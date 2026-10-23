@@ -179,6 +179,16 @@ export default [
   ...restrict(["src/shared/components/Icon/**"],
     [RELATIVE_PARENT, NO_SCSS_MODULE, NO_DB_CLIENT, NO_SUPABASE, NO_FEATURES, NO_SERVER]),
 
+  // -- the end-to-end run sits outside the app ---------------------------------
+  // e2e/ drives the app from a browser, so it imports none of src/. The room's run makes and
+  // deletes a throwaway room with the secret key, as the *.db.test.ts files do (server/db/AGENTS.md).
+  ...restrict(["e2e/**"],
+    [RELATIVE_PARENT, NO_SCSS_MODULE, NO_DB_CLIENT, NO_ICON_LIBRARY, NO_FEATURES, NO_SERVER]),
+  {
+    files: ["e2e/**"],
+    rules: { "no-restricted-syntax": "off" },
+  },
+
   // -- the chokepoint exempts itself -----------------------------------------
   {
     files: ["src/core/config/env.ts"],

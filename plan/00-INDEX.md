@@ -20,7 +20,7 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 12 | Polish | done | [12-polish.md](12-polish.md) |
 | 13 | Who hasn't voted | done | [13-vote-reminder.md](13-vote-reminder.md) |
 | 14 | The host's page, live | done | [14-live-admin.md](14-live-admin.md) |
-| 15 | The host's page, tested end to end | done | [15-admin-e2e.md](15-admin-e2e.md) |
+| 15 | The host's page and the room, tested end to end | done | [15-admin-e2e.md](15-admin-e2e.md) |
 
 **Now:** — · **Next:** —
 

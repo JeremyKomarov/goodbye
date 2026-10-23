@@ -2,6 +2,12 @@
 // gate and CI do not. `npm run e2e` starts the dev server unless one is already on port 3000.
 import { defineConfig, devices } from "@playwright/test";
 
+// The room's run writes a throwaway room and deletes it with the secret key, as `npm run test:db`
+// does; without the file it skips.
+try {
+  process.loadEnvFile(".env.local");
+} catch {}
+
 const BASE_URL = "http://localhost:3000";
 
 export default defineConfig({
