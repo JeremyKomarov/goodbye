@@ -26,13 +26,13 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 18 | The host's page without Refresh, and Lighthouse again | done | [18-admin-tidy.md](18-admin-tidy.md) |
 | 19 | The goodbyes, played back | done | [19-goodbye-replay.md](19-goodbye-replay.md) |
 | 20 | Something went wrong, said in the reader's language | done | [20-error-screen.md](20-error-screen.md) |
-| 21 | Errors reported, not just shown | not started | [21-error-reporting.md](21-error-reporting.md) |
+| 21 | Errors reported, not just shown | done | [21-error-reporting.md](21-error-reporting.md) |
 | 22 | The games, played end to end | not started | [22-games-e2e.md](22-games-e2e.md) |
 | 23 | On the home screen | not started | [23-install.md](23-install.md) |
 | 24 | The features' logic, tested | not started | [24-feature-tests.md](24-feature-tests.md) |
 | 25 | A deletion reaching its own room, checked live | not started | [25-room-deletes-live.md](25-room-deletes-live.md) |
 
-**Now:** — · **Next:** 21
+**Now:** — · **Next:** 22
 
 The step inside that phase, and how it is going, live in [`NOW.md`](NOW.md) — this line stays
 phase-level. `guard` fails if the two disagree.
