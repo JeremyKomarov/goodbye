@@ -52,7 +52,7 @@ use if the wall or leaderboard needs one.
 | `components/Ticks` | One grey, two grey or two blue check marks · `TICK_STATES` sent, delivered, read. Decorative. | Next to a message's time, or as the app's "done" mark. | Never draw check marks in a feature. |
 | `components/CopyButton` | Secondary `Button` that copies `text` and shows "Copied" for 1.6s; optional translated `label`. | Room links, admin links, player codes, share text. | Never call `navigator.clipboard` from a feature. |
 | `components/LanguageSwitch` | עברית / English toggle; writes `LOCALE_COOKIE` and reloads so `<html lang dir>` follows. | Landing and the room header. | Never set the locale cookie or keep the locale in a store anywhere else. |
-| `components/TabBar` | `<nav>` of `Link`s: `items` of `{ href, icon, label, badge?, subtitle?, meta?, isLive? }`; the one matching the URL is `aria-current`; badge caps at 99+ and is read out. `TAB_BAR_VARIANTS` bar (sticky bottom, icon over label) · list (a chat list with each section's live line — added in phase 06). | The room's sections (room, games). | Never build a second bottom or tab navigation. |
+| `components/TabBar` | `<nav>` of `Link`s: `items` of `{ href, icon, label, badge?, subtitle?, meta?, isLive? }`; the one matching the URL is `aria-current`; badge caps at 99+ and is read out. `TAB_BAR_VARIANTS` bar (sticky bottom, icon over label) · list (a chat list with each section's live line — added in phase 06). | The room's sections (room, games); `hasNested` keeps a section current on the routes under it (a game under the games — added in phase 08). | Never build a second bottom or tab navigation. |
 | `components/ChoiceGroup` | Pick one: real radios drawn as `CHOICE_GROUP_VARIANTS` card (emoji disc, label, description, check) or segment (pills in a track) · `isClearable` lets the chosen one be unpicked to `null`. Added in phase 04 for the wizard's story and pronoun choices. | Any one-of-few choice. | Never a row of `aria-pressed` buttons or bare radios in a feature. |
 | `components/Skeleton` | Pulsing placeholder · `SKELETON_SHAPES` line, block, circle · optional `width`/`height` as CSS lengths. Decorative. | While a query is pending, shaped like what will replace it. | Never build a spinner screen or a feature-local loading shimmer. |
 
@@ -66,6 +66,8 @@ use if the wall or leaderboard needs one.
 |---|---|---|
 | `hooks/useSlotFormat.ts` | `day`, `weekday`, `dayMonth`, `time`, `slot` — a room's timezone, the reader's language. | Every hour shown on the room's or the admin's screens. Never `toLocaleString` a slot by hand. |
 | `hooks/useDuration.ts` | `exact(ms)` ("an hour and 5 minutes"), `rough(ms)` ("33 hours"). | Every duration in words. |
+| `hooks/useRoomFrame.ts` | `RoomFrameContext`, `useRoomFrame()` → `{ room, meId, isHost }`, provided by the room's shell around its sections (docs/DECISIONS.md #9). | A section of the room owned by another feature — the games. Never reach for the room's own context. |
+| `hooks/useGameWords.ts` | `title(game)`, `score(game, n)` — "2.41 שנ׳" for Runaway's time, points otherwise, in the reader's language. | Every game name or score, on any screen. |
 | `hooks/useRecords.ts` | `useQuery` on `QUERY_KEYS.room.scores(slug)` → `GameRecord[]`, each player's best per game. Kept fresh by the room's channel. | The games, the room's board and nav line, the finale. |
 | `hooks/useNow.ts` | The current time in ms from one shared 250ms ticker; 0 on the server and while hydrating. | Every countdown or "time left" display. Never start a `setInterval` for a clock in a component. |
 
@@ -96,6 +98,7 @@ use if the wall or leaderboard needs one.
 | `api/room.dto.ts`, `api/room.mapper.ts` | `RoomDtoSchema` / `RoomDto` — a room on the wire; `mapRoomDto`. Every handler that answers with a room sends this shape (`server/api/room-snapshot.server.ts`). | A feature's DTO that carries a room nests this schema. | Never restate the room's fields in a feature's DTO. |
 | `types/records.types.ts`, `api/records.dto.ts`, `api/records.mapper.ts`, `api/records.api.ts` | `GameRecord`; `RecordsDtoSchema` (`GET …/scores`), `SubmitScoreInputSchema` (a game and a score in its `SCORE_RANGES`); `mapRecordsDto`; `fetchRecords`. | The records are read by the games and the room alike; only `games` submits. | Never a second record shape. |
 | `api/admin-action.dto.ts` | `ADMIN_ACTIONS`, `AdminActionInputSchema` — what the host can do to their room. | The admin page sends every action; the room sends `exit`. | Never a second action shape for the host. |
+| `strings/games.strings.ts` | The `games` namespace: each game's `title`, a `score` as time or points. | Read by `useGameWords`. | Never word a game's name or score in a feature's strings. |
 | `strings/time.strings.ts` | The `time` namespace: `slot`, `duration`. | Read by the two hooks above. | Never word an hour or a duration in a feature's strings. |
 
 ## Promotion rule

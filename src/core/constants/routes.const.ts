@@ -1,4 +1,5 @@
 import { FEATURE_KEYS, FEATURES, type FeatureKey } from "@/core/config/features.const";
+import type { GameId } from "@/core/constants/games.const";
 
 // Derived from the registry, never restated (04-FEATURES.md §1). A room route is a pattern; build
 // a real path with `roomPath`.
@@ -13,14 +14,19 @@ export function roomPath(key: FeatureKey, slug: string): string {
   return ROUTES[key].replace(SLUG, encodeURIComponent(slug));
 }
 
-/** The room's sections below its own route: the vote is the room itself, the wall beside it. */
-export const ROOM_SECTIONS = { vote: "", wall: "wall" } as const;
+/** The room's sections below its own route: the vote is the room itself, the rest beside it. */
+export const ROOM_SECTIONS = { vote: "", wall: "wall", games: "games" } as const;
 export type RoomSection = (typeof ROOM_SECTIONS)[keyof typeof ROOM_SECTIONS];
 
 /** A section of the room: `roomSectionPath("abc", ROOM_SECTIONS.wall)` → `/r/abc/wall`. */
 export function roomSectionPath(slug: string, section: RoomSection): string {
   const room = roomPath(FEATURE_KEYS.room, slug);
   return section ? `${room}/${section}` : room;
+}
+
+/** One game, under the games: `roomGamePath("abc", "trivia")` → `/r/abc/games/trivia`. */
+export function roomGamePath(slug: string, game: GameId): string {
+  return `${roomSectionPath(slug, ROOM_SECTIONS.games)}/${game}`;
 }
 
 /** The admin link carries the token in its hash, `#k=…`, so it never reaches a server log. */

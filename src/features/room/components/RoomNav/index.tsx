@@ -27,7 +27,7 @@ interface RoomNavProps {
   variant: (typeof ROOM_NAV_VARIANTS)[keyof typeof ROOM_NAV_VARIANTS];
 }
 
-/** The room's sections — the vote and the wall — each with what is happening in it. */
+/** The room's sections — the vote, the games, the wall — each with what is happening in it. */
 export function RoomNav(props: RoomNavProps) {
   const { snapshot, leader, lastMessage, unread, typing, variant } = props;
   const t = useTranslations(ROOM_NAV_NAMESPACE);
@@ -61,6 +61,13 @@ export function RoomNav(props: RoomNavProps) {
       meta: snapshot.votes.length
         ? t(roomNavKeys.vote.voted, { count: snapshot.votes.length })
         : undefined,
+    },
+    {
+      href: roomSectionPath(room.slug, ROOM_SECTIONS.games) as Route,
+      icon: ICON_NAMES.games,
+      label: t(roomNavKeys.games.title),
+      subtitle: t(roomNavKeys.games.idle),
+      hasNested: true,
     },
     {
       href: roomSectionPath(room.slug, ROOM_SECTIONS.wall) as Route,

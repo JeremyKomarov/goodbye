@@ -162,6 +162,29 @@ import { timeStringsEn } from "@/shared/strings/time.strings.en";
 import { ADMIN_NAMESPACE } from "@/features/admin/strings/admin.keys.const";
 import { adminStrings } from "@/features/admin/strings/admin.strings";
 import { adminStringsEn } from "@/features/admin/strings/admin.strings.en";
+import { GAMES_NAMESPACE } from "@/shared/strings/games.keys.const";
+import { gamesStrings } from "@/shared/strings/games.strings";
+import { gamesStringsEn } from "@/shared/strings/games.strings.en";
+import {
+  RECORD_LINE_NAMESPACE,
+} from "@/features/games/components/RecordLine/RecordLine.keys.const";
+import { recordLineStrings } from "@/features/games/components/RecordLine/RecordLine.strings";
+import { recordLineStringsEn } from "@/features/games/components/RecordLine/RecordLine.strings.en";
+import {
+  GAMES_CLOSED_NAMESPACE,
+} from "@/features/games/components/GamesClosed/GamesClosed.keys.const";
+import { gamesClosedStrings } from "@/features/games/components/GamesClosed/GamesClosed.strings";
+import {
+  gamesClosedStringsEn,
+} from "@/features/games/components/GamesClosed/GamesClosed.strings.en";
+import { GAMES_HUB_NAMESPACE } from "@/features/games/components/GamesHub/GamesHub.keys.const";
+import { gamesHubStrings } from "@/features/games/components/GamesHub/GamesHub.strings";
+import { gamesHubStringsEn } from "@/features/games/components/GamesHub/GamesHub.strings.en";
+import {
+  GAME_SCREEN_NAMESPACE,
+} from "@/features/games/components/GameScreen/GameScreen.keys.const";
+import { gameScreenStrings } from "@/features/games/components/GameScreen/GameScreen.strings";
+import { gameScreenStringsEn } from "@/features/games/components/GameScreen/GameScreen.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -197,6 +220,11 @@ const he = {
   [STATUS_STORIES_NAMESPACE]: statusStoriesStrings,
   [TIME_NAMESPACE]: timeStrings,
   [ADMIN_NAMESPACE]: adminStrings,
+  [GAMES_NAMESPACE]: gamesStrings,
+  [RECORD_LINE_NAMESPACE]: recordLineStrings,
+  [GAMES_CLOSED_NAMESPACE]: gamesClosedStrings,
+  [GAMES_HUB_NAMESPACE]: gamesHubStrings,
+  [GAME_SCREEN_NAMESPACE]: gameScreenStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -231,6 +259,11 @@ const en: StringsOf<typeof he> = {
   [STATUS_STORIES_NAMESPACE]: statusStoriesStringsEn,
   [TIME_NAMESPACE]: timeStringsEn,
   [ADMIN_NAMESPACE]: adminStringsEn,
+  [GAMES_NAMESPACE]: gamesStringsEn,
+  [RECORD_LINE_NAMESPACE]: recordLineStringsEn,
+  [GAMES_CLOSED_NAMESPACE]: gamesClosedStringsEn,
+  [GAMES_HUB_NAMESPACE]: gamesHubStringsEn,
+  [GAME_SCREEN_NAMESPACE]: gameScreenStringsEn,
 };
 
 export type Messages = typeof he;

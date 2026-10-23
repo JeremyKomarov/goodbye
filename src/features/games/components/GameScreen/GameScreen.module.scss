@@ -1,0 +1,107 @@
+// A game fills the section under a header like an open chat's: back, the game's name, its record.
+.game-screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+
+  &__head {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-block-end: 1px solid var(--border-subtle);
+  }
+
+  &__back {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: var(--control-height-md);
+    height: var(--control-height-md);
+    border-radius: var(--radius-pill);
+    color: var(--text-secondary);
+
+    &:hover {
+      background: var(--surface-soft);
+      color: var(--text-primary);
+    }
+  }
+
+  &__heading {
+    min-width: 0;
+  }
+
+  &__title {
+    overflow: hidden;
+    font-size: var(--text-lg);
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // The game's own space: it lays itself out inside.
+  &__stage {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    padding: var(--space-3);
+  }
+
+  &__result {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-2);
+    margin: auto;
+    width: 100%;
+    max-width: 24rem;
+    padding: var(--space-6) var(--space-4);
+    border-radius: var(--radius-xl);
+    background: var(--surface-card);
+    text-align: center;
+  }
+
+  &__verdict {
+    color: var(--text-secondary);
+  }
+
+  &__score {
+    color: var(--warning-text);
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+
+  &__place {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  &__error {
+    color: var(--critical-text);
+    font-size: var(--text-sm);
+  }
+
+  &__actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+    width: 100%;
+    margin-block-start: var(--space-2);
+  }
+
+  // A link back to the hub, styled as the secondary button beside "another round".
+  &__all {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--control-height-lg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+}

@@ -10,6 +10,10 @@ export const roomNavStrings = {
     none: "עוד אף אחד לא הצביע",
     voted: "{count} הצביעו",
   },
+  games: {
+    title: "משחקים",
+    idle: "כפתור בורח, טריוויה, 99+ הודעות ומה בתמונה?",
+  },
   wall: {
     title: "קיר פרידה",
     last: "{name}: {body}",

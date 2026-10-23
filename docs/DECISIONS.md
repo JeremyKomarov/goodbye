@@ -115,3 +115,21 @@ Only the room shows it, and a global store would outlive the room it describes.
 
 > Table changes invalidate queries (`#2`). Presence and broadcasts live in the room shell's state
 > and die with it; they never reach a store, the query cache or the database.
+
+## 9. Another feature's section reads the room through a shared frame, not the room's context
+
+**Locked 2026-10-23.**
+
+The games are a feature of their own (`04 §1`: their own flag, folder and guide) but they are
+sections of the room: their pages sit in the room's `(room)` layout, under its header, gate and
+channel. They need three things the room's shell already holds — the room, who this browser is,
+and whether it hosts — and a feature never imports another (`01 §1`), so `RoomContext` is out of
+reach. `shared/hooks/useRoomFrame.ts` holds those three, provided by `RoomShell` beside its own
+context. Its records come from the shared `useRecords`, kept fresh by the room's channel.
+
+The argument that was wrong: fold the games into `room`. It would put four games and their
+content inside the room's folder, and the `games` flag would gate nothing of its own.
+
+> A section from another feature reads `useRoomFrame()` — the `Room`, `meId`, `isHost` — and
+> never `RoomContext`. Anything more it needs is either shared data with its own query, or a
+> reason to widen the frame here first.

@@ -15,6 +15,8 @@ export interface TabBarItem {
   meta?: string;
   /** `list` only: the subtitle in the brand colour — someone is typing. */
   isLive?: boolean;
+  /** Also the current one on the routes below it — a game under the games. */
+  hasNested?: boolean;
 }
 
 export interface TabBarProps {

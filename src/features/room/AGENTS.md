@@ -5,7 +5,7 @@ from another device, with their login code), votes on the exit hour in a heatmap
 countdown — to the close, then to the chosen hour — change live with everyone else's. The host's
 browser comes in under the host's name and watches rather than votes. Feature flag: `room`,
 enabled. Routes: the sections of `/r/[slug]` share the `(room)` layout — the vote at `/r/[slug]`,
-the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomNotFound`.
+the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`; the `games` feature's); an unknown slug renders `RoomNotFound`.
 
 ## Status
 
@@ -24,10 +24,10 @@ the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomN
 
 | File | What |
 |---|---|
-| `components/RoomShell` | The frame every section sits in, rendered by `app/[locale]/r/[slug]/(room)/layout.tsx`: `RoomHeader`, the side column (the `Hero` and the `RoomNav` list) from 64rem, the `RoomNav` bar on phones, `Welcome`, `MeSheet`, `JoinGate` until `useIdentity` is ready (the room under it `inert`), and the live channel. Provides `RoomContext` to the sections. Takes the snapshot the layout read on the server as `initial`. |
+| `components/RoomShell` | The frame every section sits in, rendered by `app/[locale]/r/[slug]/(room)/layout.tsx`: `RoomHeader`, the side column (the `Hero` and the `RoomNav` list) from 64rem, the `RoomNav` bar on phones, `Welcome`, `MeSheet`, `JoinGate` until `useIdentity` is ready (the room under it `inert`), and the live channel. Provides `RoomContext` to the sections, and `RoomFrameContext` (shared) to every section — the games' too (docs/DECISIONS.md #9). Takes the snapshot the layout read on the server as `initial`. |
 | `components/FarewellWall` | The wall page: the system notice, `MessageList` (follows new messages at the bottom, a "jump to latest" button with the unseen count when scrolled up, one reaction picker open at a time) and `Composer` (140 characters, `too_fast` / `forbidden` read out). |
 | `components/MessageBubble` | One goodbye on the kit's `Bubble`: the sender's name in their colour with a host badge, the time and ticks, a react button, the picker, and the reaction chips. |
-| `components/RoomNav` | The sections, through the kit's `TabBar`: `bar` on phones, `list` in the side column from 64rem with each section's live line (who leads; the last goodbye and its time) and the wall's unread count. |
+| `components/RoomNav` | The sections — the vote, the games (current on a game too), the wall — through the kit's `TabBar`: `bar` on phones, `list` in the side column from 64rem with each section's live line (who leads; the last goodbye and its time) and the wall's unread count. |
 | `components/VoteSection` | The vote page: `Hero` (phones only — wide screens show it in the side column) and `VoteHeatmap`. |
 | `components/RoomHeader` | The chat header: group avatar and name, "Hi {name}" (a link to `onMe`) and how many are online — or who is typing; the time left in a pill off the vote; `actions`: the 🎉 button, and the admin page's link for the host's browser. |
 | `components/JoinGate` | Covers the room until this browser has a name in it: whose room, why, how many voted, and the `LanguageSwitch`. Partials: `NameForm` (on `SaveNameInputSchema`; the host's name says whose it is), `CodeForm` (a taken name asks for that player's code; "that's not me" goes back). |

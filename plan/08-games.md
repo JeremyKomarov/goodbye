@@ -10,8 +10,8 @@ game's top ten; the games close once the host has left; the `games` flag is on.
 `[ ]` not started · `[~]` in flight now (one, and `plan/NOW.md` names it) · `[x]` done, struck through.
 
 - [x] ~~08.1 — scores: the repo, `GET`/`POST /api/rooms/[slug]/scores`, the shared records, live (M)~~
-- [~] 08.2 — the room's frame for other features; the hub, a game's screen, its result and score (L)
-- [ ] 08.3 — Runaway: the exit button that runs away (M)
+- [x] ~~08.2 — the room's frame for other features; the hub, a game's screen, its result and score (L)~~
+- [~] 08.3 — Runaway: the exit button that runs away (M)
 - [ ] 08.4 — Catch: pop the notifications, never the boss (M)
 - [ ] 08.5 — Trivia: ten questions, in both languages (M)
 - [ ] 08.6 — the Picture game: the stage, the curtain, the pictures, in both languages (L)

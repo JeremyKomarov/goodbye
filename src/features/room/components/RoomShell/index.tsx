@@ -35,6 +35,7 @@ import { useWall } from "@/features/room/hooks/useWall";
 import { useWallUnread } from "@/features/room/hooks/useWallUnread";
 import { leadingSlot, tallyVotes } from "@/features/room/utils/tally";
 import { useNow } from "@/shared/hooks/useNow";
+import { RoomFrameContext } from "@/shared/hooks/useRoomFrame";
 import { initialOf } from "@/shared/utils/avatar";
 import { roomShellClasses } from "./RoomShell.classes";
 
@@ -42,7 +43,7 @@ interface RoomShellProps {
   slug: string;
   /** The room as the layout read it on the server, so the first paint is the real room. */
   initial: RoomSnapshotDto;
-  /** The section's page: the vote, the wall. */
+  /** The section's page: the vote, the wall, the games. */
   children: ReactNode;
 }
 
@@ -109,7 +110,11 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
               />
               <RoomNav {...nav} variant={ROOM_NAV_VARIANTS.list} />
             </aside>
-            <main className={roomShellClasses.main}>{children}</main>
+            <main className={roomShellClasses.main}>
+              <RoomFrameContext value={{ room, meId: me?.userId ?? null, isHost }}>
+                {children}
+              </RoomFrameContext>
+            </main>
           </div>
           <RoomNav {...nav} variant={ROOM_NAV_VARIANTS.bar} />
         </div>

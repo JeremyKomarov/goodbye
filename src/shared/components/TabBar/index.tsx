@@ -12,6 +12,9 @@ import type { TabBarItem, TabBarProps } from "./TabBar.types";
 
 const BADGE_CAP = 99;
 
+const isCurrent = (item: TabBarItem, pathname: string) =>
+  item.href === pathname || (!!item.hasNested && pathname.startsWith(`${item.href}/`));
+
 /**
  * Navigation between sibling routes; the link matching the URL is the current one. A bottom bar
  * on a phone (`bar`), or a chat list with each section's live line on a wide screen (`list`).
@@ -37,7 +40,7 @@ export function TabBar({ items, label, variant = TAB_BAR_VARIANTS.bar, className
             <Link
               href={item.href}
               className={tabBarClasses.link}
-              aria-current={item.href === pathname ? "page" : undefined}
+              aria-current={isCurrent(item, pathname) ? "page" : undefined}
             >
               <span className={tabBarClasses.glyph}>
                 <Icon name={item.icon} />

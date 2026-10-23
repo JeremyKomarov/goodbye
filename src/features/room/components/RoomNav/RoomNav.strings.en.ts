@@ -12,6 +12,10 @@ export const roomNavStringsEn: StringsOf<typeof roomNavStrings> = {
     none: "Nobody has voted yet",
     voted: "{count} voted",
   },
+  games: {
+    title: "Games",
+    idle: "A runaway button, trivia, 99+ messages and what's in the picture?",
+  },
   wall: {
     title: "Farewell wall",
     last: "{name}: {body}",

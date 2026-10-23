@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 08.2
+**Step:** 08.3
 **Since:** 2026-10-23
-**State:** the room's frame for other features, the hub, a game's screen and its result — starting.
+**State:** Runaway — porting the old game onto `GameProps` — starting.
 **Blocked by:** —
 
 ---
