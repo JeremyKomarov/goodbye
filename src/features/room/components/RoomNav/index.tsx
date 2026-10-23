@@ -9,7 +9,7 @@ import { useRecords } from "@/shared/hooks/useRecords";
 import { useSlotFormat } from "@/shared/hooks/useSlotFormat";
 import type { RoomSnapshot } from "@/features/room/types/room.types";
 import type { WallMessage } from "@/features/room/types/wall.types";
-import { type Lead, wonByDraw } from "@/features/room/utils/tally";
+import { type Lead, wonByDraw } from "@/shared/utils/tally";
 import { ICON_NAMES } from "@/shared/components/Icon";
 import { TAB_BAR_VARIANTS, TabBar, type TabBarItem } from "@/shared/components/TabBar";
 import type { GameRecord } from "@/shared/types/records.types";

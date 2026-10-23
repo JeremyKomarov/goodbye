@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import type { StoryPosition } from "@/features/room/content/stories.const";
 import type { Player, RoomSnapshot } from "@/features/room/types/room.types";
-import type { Lead } from "@/features/room/utils/tally";
+import type { Lead } from "@/shared/utils/tally";
 import type { HostExit } from "./useHostExit";
 import type { RoomLive } from "./useRoomChannel";
 

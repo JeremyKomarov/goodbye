@@ -7,6 +7,7 @@ rule 01 8`.
 | Path | What | Rule |
 |---|---|---|
 | `api/error-response.server.ts` | `apiError(code, { route })`, `handlingApiErrors(route, fn)`. | Every Route Handler is wrapped; a failure is a code from `core/api`. |
+| `api/exit-summary.server.ts` | `exitSummary(room)` — the votes counted and tallied, every goodbye counted, the most reacted one (the earliest of a tie), as `ExitSummaryDto`. | The summary handler. |
 | `api/room-snapshot.server.ts` | `roomSnapshot(room)` — the room and its players, hosts and votes as `RoomSnapshotDto`; `toRoomDto`. | Every handler that answers with the room builds it here. |
 | `auth/admin-token.ts` | `newAdminToken`, `hashToken`, `tokenMatches` (constant-time). | Only the hash is stored; the token itself is shown once, to the host. |
 | `auth/admin.ts` | `requireAdmin(request, slug)` → the room, for a request with its admin token in `ADMIN_TOKEN_HEADER`; `forbidden` otherwise. | First line of every host-only handler. |

@@ -16,11 +16,13 @@ const WALL_TABLES: readonly RoomTable[] = [ROOM_TABLES.wallMessages, ROOM_TABLES
 
 /** The reads a table's change makes stale. The records carry the players' names. */
 function staleKeys(slug: string, table: RoomTable) {
-  if (WALL_TABLES.includes(table)) return [QUERY_KEYS.room.wall(slug)];
   if (table === ROOM_TABLES.scores) return [QUERY_KEYS.room.scores(slug)];
+  // Everything else is counted in the exit summary: votes, goodbyes, reactions, the room's hour.
+  const summary = QUERY_KEYS.room.summary(slug);
+  if (WALL_TABLES.includes(table)) return [QUERY_KEYS.room.wall(slug), summary];
   if (table === ROOM_TABLES.players)
-    return [QUERY_KEYS.room.snapshot(slug), QUERY_KEYS.room.scores(slug)];
-  return [QUERY_KEYS.room.snapshot(slug)];
+    return [QUERY_KEYS.room.snapshot(slug), QUERY_KEYS.room.scores(slug), summary];
+  return [QUERY_KEYS.room.snapshot(slug), summary];
 }
 
 type RainListener = (emoji: string) => void;

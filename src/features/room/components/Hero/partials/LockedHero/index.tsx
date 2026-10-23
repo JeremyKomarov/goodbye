@@ -4,7 +4,7 @@ import { HERO_NAMESPACE, heroKeys } from "@/features/room/components/Hero/Hero.k
 import type { HeroProps } from "@/features/room/components/Hero/Hero.types";
 import { useSlotFormat } from "@/shared/hooks/useSlotFormat";
 import { ROOM_NAMESPACE, roomKeys } from "@/features/room/strings/room.keys.const";
-import { wonByDraw } from "@/features/room/utils/tally";
+import { wonByDraw } from "@/shared/utils/tally";
 import { isolate } from "@/shared/utils/isolate";
 import { COUNTDOWN_TONES, Countdown } from "@/features/room/components/Hero/partials/Countdown";
 import { ExitRow } from "@/features/room/components/Hero/partials/ExitRow";

@@ -33,7 +33,7 @@ import { useSignInAs } from "@/features/room/hooks/useSignInAs";
 import { useSwitchUser } from "@/features/room/hooks/useSwitchUser";
 import { useWall } from "@/features/room/hooks/useWall";
 import { useWallUnread } from "@/features/room/hooks/useWallUnread";
-import { leadingSlot, tallyVotes } from "@/features/room/utils/tally";
+import { leadingSlot, tallyVotes } from "@/shared/utils/tally";
 import { useNow } from "@/shared/hooks/useNow";
 import { RoomFrameContext } from "@/shared/hooks/useRoomFrame";
 import { initialOf } from "@/shared/utils/avatar";

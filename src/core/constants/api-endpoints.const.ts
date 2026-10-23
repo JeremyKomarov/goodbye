@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
     finalize: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/finalize`,
     wall: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/wall`,
     scores: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/scores`,
+    summary: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/summary`,
     admin: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/admin`,
     adminMessage: (slug: string, messageId: number) =>
       `/api/rooms/${encodeURIComponent(slug)}/admin/messages/${messageId}`,

@@ -11,6 +11,8 @@ export const QUERY_KEYS = {
     wall: (slug: string) => ["room", slug, "wall"] as const,
     // Each player's best per game; their names come from the players, so either table refreshes it.
     scores: (slug: string) => ["room", slug, "scores"] as const,
+    // What the finale and the host's messages tell: the votes, the goodbyes, the most loved one.
+    summary: (slug: string) => ["room", slug, "summary"] as const,
     // The host's view: under the room's prefix, so anything that refreshes the room refreshes it.
     admin: (slug: string) => ["room", slug, "admin"] as const,
   },

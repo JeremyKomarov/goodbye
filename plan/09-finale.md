@@ -5,13 +5,13 @@ host leaves and replays from the exit card; under the countdown everyone can add
 calendar and the host can send the decision and the goodbye to the group, from the room or the
 admin page; a shared link previews as the room's story so far, in both languages.
 **Depends on:** 05, 07, 08
-**Status:** not started
+**Status:** in progress
 
 ## Steps
 `[ ]` not started · `[~]` in flight now (one, and `plan/NOW.md` names it) · `[x]` done, struck through.
 
-- [ ] 09.1 — the exit summary: votes, goodbyes, the most loved one, a draw; `GET …/summary` (M)
-- [ ] 09.2 — the calendar: `GET …/exit.ics`, Google's link; the actions under the hero (M)
+- [x] ~~09.1 — the exit summary: votes, goodbyes, the most loved one, a draw; `GET …/summary` (M)~~
+- [~] 09.2 — the calendar: `GET …/exit.ics`, Google's link; the actions under the hero (M)
 - [ ] 09.3 — the host's messages to the group, in the room and on the admin page (M)
 - [ ] 09.4 — the finale: plays once per exit on each browser, replays from the exit card (L)
 - [ ] 09.5 — link previews: each room's title and description, the site's and its images (M)

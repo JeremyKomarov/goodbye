@@ -7,7 +7,7 @@ import { ROOM_STATUSES } from "@/core/constants/room.const";
 import { roomGamePath } from "@/core/constants/routes.const";
 import { useRoomContext } from "@/features/room/hooks/useRoomContext";
 import { ROOM_NAMESPACE, roomKeys } from "@/features/room/strings/room.keys.const";
-import { tallyVotes } from "@/features/room/utils/tally";
+import { tallyVotes } from "@/shared/utils/tally";
 import { useRecords } from "@/shared/hooks/useRecords";
 import { useSlotFormat } from "@/shared/hooks/useSlotFormat";
 import { rankRecords } from "@/shared/utils/records";

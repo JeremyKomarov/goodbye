@@ -1,6 +1,6 @@
 import type { Room } from "@/shared/types/room.types";
 import type { HostExit } from "@/features/room/hooks/useHostExit";
-import type { Lead } from "@/features/room/utils/tally";
+import type { Lead } from "@/shared/utils/tally";
 
 export interface HeroProps {
   room: Room;

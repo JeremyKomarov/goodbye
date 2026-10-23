@@ -8,7 +8,7 @@ import { VoteLegend } from "@/features/room/components/VoteLegend";
 import { useSlotFormat } from "@/shared/hooks/useSlotFormat";
 import { ROOM_NAMESPACE, roomKeys } from "@/features/room/strings/room.keys.const";
 import type { Player, RoomSnapshot } from "@/features/room/types/room.types";
-import { tallyVotes } from "@/features/room/utils/tally";
+import { tallyVotes } from "@/shared/utils/tally";
 import { isolate } from "@/shared/utils/isolate";
 import { buildSlotDays } from "@/shared/utils/slots";
 import { DayStrip } from "./partials/DayStrip";

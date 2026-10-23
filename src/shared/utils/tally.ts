@@ -1,11 +1,14 @@
-import type { Vote } from "@/features/room/types/room.types";
-
 // Counting the votes. Ported from the original's core/slots.ts. The database decides the winner
-// (compute_winner() in the migrations); this only shows who is leading on the way there.
+// (compute_winner() in the migrations); this only shows who is leading on the way there, and
+// whether a tie was drawn. Anything with the slot it is for counts as a vote.
+
+interface Vote {
+  slotMs: number;
+}
 
 /** Votes grouped by the slot they are for. */
-export function tallyVotes(votes: Vote[]): Map<number, Vote[]> {
-  const tally = new Map<number, Vote[]>();
+export function tallyVotes<V extends Vote>(votes: V[]): Map<number, V[]> {
+  const tally = new Map<number, V[]>();
   for (const vote of votes) {
     const list = tally.get(vote.slotMs);
     if (list) list.push(vote);

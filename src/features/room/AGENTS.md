@@ -17,6 +17,7 @@ the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`;
 | `API_ENDPOINTS.rooms.finalize` (POST) | Live, no session needed. Locks the room to its winning hour once voting is over (ties drawn by the database), and answers the `RoomDto` — unchanged before the close. | `app/api/rooms/[slug]/finalize/route.ts` |
 | `API_ENDPOINTS.rooms.wall` (GET, POST) | Live. GET, no session: the newest 200 messages, oldest first, and their reactions. POST, bearer: `{ body }` (1–140) as the caller, named by the database; `forbidden` for a non-player, `too_fast` within 3s of their last. 201 with the message. | `app/api/rooms/[slug]/wall/route.ts` |
 | `API_ENDPOINTS.rooms.reaction` (PUT, DELETE) | Live, bearer. `{ emoji }` from `REACTION_EMOJIS`, one per person per message; `forbidden` for a non-player or another room's message. 204. | `app/api/rooms/[slug]/wall/[messageId]/reaction/route.ts` |
+| `API_ENDPOINTS.rooms.summary` (GET) | Live, no session needed. `ExitSummaryDto` (shared): the voters, every goodbye counted, the most loved one, whether the locked hour was drawn, the lone leader while none is locked. Read by the finale and the host's messages here and on the admin page. | `app/api/rooms/[slug]/summary/route.ts` |
 | `API_ENDPOINTS.me.loginCode` (POST) | Live, bearer. The caller's code for another device, per user, not per room: `{ code, created }`; `{ fresh: true }` replaces it. A new code becomes the user's password, so the browser signs back in with it. | `app/api/me/login-code/route.ts` |
 | `API_ENDPOINTS.rooms.hosts` (POST) | Live, bearer. `{ adminToken }` makes the caller a host device and drops any vote it cast; `forbidden` for a wrong token. Idempotent, 204. | `app/api/rooms/[slug]/hosts/route.ts` |
 
@@ -74,7 +75,6 @@ the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`;
 | `hooks/useFinalizeRoom.ts` | The finalize call. Invalidates the room once it has locked. |
 | `hooks/useAutoFinalize.ts` | When this screen's clock passes the close, asks for the result every 4s until the room is no longer voting. |
 | `utils/voteScale.ts` | `voteStep(count, max)` → shade, `columns(n, min, max)`, `VOTE_STEPS`, `DARK_TEXT_FROM`. |
-| `utils/tally.ts` | `tallyVotes`, `leadingSlot` (`Lead` with every tied slot), `wonByDraw`. |
 | `hooks/useWallUnread.ts` | Goodbyes since you last looked at the wall, not your own; what was there when the room opened counts as read. |
 | `hooks/useRoomContext.ts` | `RoomContext` and `useRoomContext()` — `slug`, `snapshot`, `me`, `isHost`, `leader`, `live`, `typing`, `openStory`, `hostExit`, from the shell to its sections. |
 | `hooks/useRoom.ts` | `useQuery` on `QUERY_KEYS.room.snapshot(slug)` → `RoomSnapshot`, seeded from the page's read. |
@@ -96,6 +96,9 @@ In phase 07, because the admin page shows the same room: the `Room` type, `RoomD
 `mapRoomDto` (`shared/types`, `shared/api`), `useSlotFormat` and `useDuration` with their words
 (the `time` namespace), and the `duration` and `verdict` utils. Moving them back would make the
 admin feature import this one.
+
+In phase 09, because the server counts the votes for the exit summary: the `tally` util. Its
+votes are anything with a `slotMs`, so it no longer reads this feature's `Vote`.
 
 ## Ownership
 

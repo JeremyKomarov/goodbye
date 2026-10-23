@@ -58,6 +58,38 @@ export async function listWallMessages(roomId: string): Promise<WallMessageRecor
   }));
 }
 
+/** How many goodbyes the room holds — all of them, not only the ones the wall shows. */
+export async function countWallMessages(roomId: string): Promise<number> {
+  const { count, error } = await db()
+    .from("wall_messages")
+    .select("id", { count: "exact", head: true })
+    .eq("room_id", roomId);
+  if (error) throw failed();
+  return count ?? 0;
+}
+
+/** One of the room's goodbyes, or null once it is gone. */
+export async function findWallMessage(
+  roomId: string,
+  messageId: number,
+): Promise<WallMessageRecord | null> {
+  const { data, error } = await db()
+    .from("wall_messages")
+    .select("id, user_id, display_name, body, created_at")
+    .eq("room_id", roomId)
+    .eq("id", messageId)
+    .maybeSingle<MessageRow>();
+  if (error) throw failed();
+  if (!data) return null;
+  return {
+    id: data.id,
+    userId: data.user_id,
+    displayName: data.display_name,
+    body: data.body,
+    createdAt: data.created_at,
+  };
+}
+
 export async function listWallReactions(roomId: string): Promise<WallReactionRecord[]> {
   const { data, error } = await db()
     .from("wall_reactions")
