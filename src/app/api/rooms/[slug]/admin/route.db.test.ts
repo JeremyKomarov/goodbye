@@ -7,7 +7,7 @@ const enabled = Boolean(process.env.SUPABASE_SECRET_KEY);
 const DAY_MS = 86_400_000;
 const TOKEN = "a-token-of-at-least-twenty-characters";
 
-describe.skipIf(!enabled)("GET /api/rooms/[slug]/admin against Supabase", { timeout: 20_000 }, () => {
+describe.skipIf(!enabled)("the host's page against Supabase", { timeout: 20_000 }, () => {
   let slug = "";
   let roomId = "";
   let userId = "";
