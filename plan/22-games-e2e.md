@@ -19,7 +19,8 @@ it writes a throwaway room, deletes it after, and skips without the secret key (
 - Supabase allows an address 30 anonymous sign-ins an hour, and a run of joins used them up
   (`429 over_request_rate_limit`). So the games' player is seated, not joined (`seatPlayer`):
   made with the secret key, given a stored login code, and signed in with it from the test —
-  password sign-ins are not that scarce. Joining stays `room.spec.ts`'s, at four sign-ins a run.
+  password sign-ins are not that scarce. The replay in `room.spec.ts` seats its player too, so
+  only the join test signs in anonymously: two a run.
 - The code is stored up front because the room makes one for a player who has none, and making one
   signs out every session of the user until the browser signs back in.
 - Seen on the way, not fixed here: if a page is left in the moment between a new code signing the

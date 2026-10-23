@@ -4,9 +4,11 @@
 // handler, or straight into the tables for one that has already ended — deleted afterwards with
 // everyone who joined them. Like the
 // `*.db.test.ts` files, it skips without the secret key (`.env.local`, loaded by the config), and
-// in CI, which has none (`E2E_NO_DATABASE`). The making and deleting are `rooms.ts`'s.
+// in CI, which has none (`E2E_NO_DATABASE`). The making, seating and deleting are `rooms.ts`'s.
 import { expect, test } from "@playwright/test";
-import { createRoom, DAY_MS, db, deleteRoom, joinRoom, skipWithoutDatabase, TEST_GROUP } from "./rooms";
+import {
+  createRoom, DAY_MS, db, deleteRoom, joinRoom, seatPlayer, skipWithoutDatabase, TEST_GROUP,
+} from "./rooms";
 
 skipWithoutDatabase();
 
@@ -89,7 +91,9 @@ test("plays the goodbyes back once the host has left", async ({ page }) => {
       expect(posted.error).toBeNull();
     }
 
-    await joinRoom(page, slug);
+    // Seated, not joined: joining is the test above's, and anonymous sign-ins are scarce.
+    await seatPlayer(page, slug);
+    await page.goto(`/r/${slug}`);
     // The finale opens by itself once per exit.
     await page.getByRole("button", { name: "Back to the room" }).click();
 
