@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 // The host's view against the real project (`npm run test:db`): only the admin token reads it,
-// and it shows the players with their codes. The room and the user are deleted afterwards.
+// and it shows the players with their codes and whether they have voted. The room and the user are deleted afterwards.
 vi.mock("server-only", () => ({}));
 const enabled = Boolean(process.env.SUPABASE_SECRET_KEY);
 const DAY_MS = 86_400_000;
@@ -11,6 +11,8 @@ describe.skipIf(!enabled)("the host's page against Supabase", { timeout: 20_000 
   let slug = "";
   let roomId = "";
   let userId = "";
+  let accessToken = "";
+  let firstSlot = "";
 
   beforeAll(async () => {
     const { insertRoom } = await import("@/server/db/rooms.repo");
@@ -34,6 +36,8 @@ describe.skipIf(!enabled)("the host's page against Supabase", { timeout: 20_000 
     );
     slug = room.slug;
     roomId = room.id;
+    const { allSlots } = await import("@/shared/utils/slots");
+    firstSlot = new Date(allSlots(room)[0].ms).toISOString();
     const { createClient } = await import("@supabase/supabase-js");
     const { env } = await import("@/core/config/env");
     const browser = createClient(env.supabaseUrl, env.supabasePublishableKey, {
@@ -41,9 +45,10 @@ describe.skipIf(!enabled)("the host's page against Supabase", { timeout: 20_000 
     });
     const { data } = await browser.auth.signInAnonymously();
     userId = data.user!.id;
+    accessToken = data.session!.access_token;
     const { savePlayerName } = await import("@/server/db/players.repo");
     const { saveLoginCode } = await import("@/server/db/login-codes.repo");
-    await savePlayerName(data.session!.access_token, roomId, userId, "Player");
+    await savePlayerName(accessToken, roomId, userId, "Player");
     await saveLoginCode(userId, "ABC234");
   });
 
@@ -68,6 +73,13 @@ describe.skipIf(!enabled)("the host's page against Supabase", { timeout: 20_000 
     expect(body.players).toEqual([
       { user_id: userId, display_name: "Player", is_host: false, code: "ABC234", has_voted: false },
     ]);
+  });
+
+  it("says who has voted", async () => {
+    const { saveVote } = await import("@/server/db/votes.repo");
+    await saveVote(accessToken, roomId, userId, firstSlot);
+    const body = await (await get(TOKEN)).json();
+    expect(body.players).toEqual([expect.objectContaining({ user_id: userId, has_voted: true })]);
   });
 
   it("refuses no token and a wrong one alike", async () => {

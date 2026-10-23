@@ -95,7 +95,7 @@ a playbook already does it.
 
 ## What is next, in order
 
-Nothing is planned: phases 01–14 are done. New work starts as a phase (`/new-phase`), not ad hoc.
+Nothing is planned: phases 01–15 are done. New work starts as a phase (`/new-phase`), not ad hoc.
 
 *(Keep this to three. A list of fourteen is a wish list, not an order.)*
 
@@ -105,7 +105,7 @@ Nothing is planned: phases 01–14 are done. New work starts as a phase (`/new-p
 |---|---|
 | App shell | None by design — a single chat column. Every route renders through `featurePage()`. |
 | Hosting | Vercel, deployed from `main` on GitHub; `verify` runs on every push. |
-| End to end | `npm run e2e` (Playwright, `e2e/`): the landing wizard at 360px and 1280px, both languages. Outside `verify`: it needs a browser and the dev server. |
+| End to end | `npm run e2e` (Playwright, `e2e/`) at 360px and 1280px: the landing wizard in both languages; the host's page against a stubbed answer, and an unknown room's link. Outside `verify`: it needs a browser and the dev server. |
 | Design tokens | WhatsApp dark, `core/styles/tokens.scss` (docs/DECISIONS.md #4). |
 | i18n | Hebrew (RTL) default, English by cookie; hidden `[locale]` segment (docs/DECISIONS.md #6). |
 | Features | `landing`, `room`, `games`, `admin` — all built and on (`core/config/features.const.ts`). Phases 01–11 done. |
