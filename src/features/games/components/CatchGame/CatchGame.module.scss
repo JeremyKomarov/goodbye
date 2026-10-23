@@ -1,0 +1,117 @@
+// The arena fills the stage; notifications fall through it from the top.
+.catch-game {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-block-end: var(--space-3);
+    padding-inline: var(--space-1);
+  }
+
+  &__count {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+
+    &--hurry {
+      color: var(--accent-exit);
+    }
+  }
+
+  &__arena {
+    position: relative;
+    flex: 1;
+    min-height: 10rem;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    background: color-mix(in oklab, var(--surface-card) 90%, transparent);
+    touch-action: none;
+    user-select: none;
+  }
+
+  &__intro {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    text-align: center;
+  }
+
+  &__lead {
+    color: var(--text-secondary);
+    font-size: var(--text-lg);
+  }
+
+  &__rules {
+    margin-block-end: var(--space-2);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  // A piece (docs/DECISIONS.md #10): placed across by `left`, moved down by the game.
+  &__notice {
+    position: absolute;
+    top: 0;
+    max-width: 60%;
+    padding: var(--space-2) var(--space-3);
+    border: 0;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
+
+    &--message {
+      background: var(--surface-soft);
+      color: var(--text-primary);
+    }
+
+    &--flower {
+      background: var(--accent-flower);
+      color: var(--text-primary);
+    }
+
+    &--boss {
+      background: var(--accent-exit);
+      color: var(--text-on-brand);
+    }
+
+    &--exit {
+      background: var(--accent-pill);
+      color: var(--text-on-brand);
+    }
+  }
+
+  &__points {
+    position: absolute;
+    color: var(--positive-text);
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    pointer-events: none;
+
+    &--lost {
+      color: var(--accent-exit);
+    }
+  }
+}
+
+@media (max-height: 500px) {
+  .catch-game__bar {
+    margin-block-end: var(--space-2);
+  }
+
+  .catch-game__intro {
+    padding: var(--space-3);
+  }
+}

@@ -12,8 +12,8 @@ game's top ten; the games close once the host has left; the `games` flag is on.
 - [x] ~~08.1 — scores: the repo, `GET`/`POST /api/rooms/[slug]/scores`, the shared records, live (M)~~
 - [x] ~~08.2 — the room's frame for other features; the hub, a game's screen, its result and score (L)~~
 - [x] ~~08.3 — Runaway: the exit button that runs away (M)~~
-- [~] 08.4 — Catch: pop the notifications, never the boss (M)
-- [ ] 08.5 — Trivia: ten questions, in both languages (M)
+- [x] ~~08.4 — Catch: pop the notifications, never the boss (M)~~
+- [~] 08.5 — Trivia: ten questions, in both languages (M)
 - [ ] 08.6 — the Picture game: the stage, the curtain, the pictures, in both languages (L)
 - [ ] 08.7 — the board: the most wanted hours and every game's records; the sections' live lines (M)
 - [ ] 08.8 — `enable-feature games`; checked in two browsers, both locales (M)

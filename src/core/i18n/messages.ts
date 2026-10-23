@@ -192,6 +192,9 @@ import { runawayGameStrings } from "@/features/games/components/RunawayGame/Runa
 import {
   runawayGameStringsEn,
 } from "@/features/games/components/RunawayGame/RunawayGame.strings.en";
+import { CATCH_GAME_NAMESPACE } from "@/features/games/components/CatchGame/CatchGame.keys.const";
+import { catchGameStrings } from "@/features/games/components/CatchGame/CatchGame.strings";
+import { catchGameStringsEn } from "@/features/games/components/CatchGame/CatchGame.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -233,6 +236,7 @@ const he = {
   [GAMES_HUB_NAMESPACE]: gamesHubStrings,
   [GAME_SCREEN_NAMESPACE]: gameScreenStrings,
   [RUNAWAY_GAME_NAMESPACE]: runawayGameStrings,
+  [CATCH_GAME_NAMESPACE]: catchGameStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -273,6 +277,7 @@ const en: StringsOf<typeof he> = {
   [GAMES_HUB_NAMESPACE]: gamesHubStringsEn,
   [GAME_SCREEN_NAMESPACE]: gameScreenStringsEn,
   [RUNAWAY_GAME_NAMESPACE]: runawayGameStringsEn,
+  [CATCH_GAME_NAMESPACE]: catchGameStringsEn,
 };
 
 export type Messages = typeof he;
