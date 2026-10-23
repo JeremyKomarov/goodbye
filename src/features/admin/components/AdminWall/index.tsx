@@ -10,13 +10,12 @@ import { adminWallClasses } from "./AdminWall.classes";
 interface AdminWallProps {
   /** Newest first. */
   messages: AdminMessage[];
-  onRefresh: () => void;
   onDelete: (messageId: number) => void;
   isBusy: boolean;
 }
 
-/** The newest goodbyes, to take one down that shouldn't be there. It asks first. */
-export function AdminWall({ messages, onRefresh, onDelete, isBusy }: AdminWallProps) {
+/** The newest goodbyes, to take one down that shouldn't be there. It asks first. Live, so no Refresh. */
+export function AdminWall({ messages, onDelete, isBusy }: AdminWallProps) {
   const t = useTranslations(ADMIN_NAMESPACE);
   const titleId = useId();
 
@@ -29,9 +28,6 @@ export function AdminWall({ messages, onRefresh, onDelete, isBusy }: AdminWallPr
             <span className={adminWallClasses.count}>{messages.length}</span>
           )}
         </h2>
-        <Button variant={BUTTON_VARIANTS.ghost} size={BUTTON_SIZES.sm} onClick={onRefresh}>
-          {t(adminKeys.wall.refresh)}
-        </Button>
       </div>
       {messages.length === 0 ? (
         <p className={adminWallClasses.empty}>{t(adminKeys.wall.empty)}</p>

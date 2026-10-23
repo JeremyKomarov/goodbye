@@ -46,7 +46,6 @@ export const adminStringsEn: StringsOf<typeof adminStrings> = {
   },
   wall: {
     title: "Messages on the wall",
-    refresh: "Refresh",
     empty: "No messages yet.",
     delete: "Delete",
     ask: "Delete this message?",

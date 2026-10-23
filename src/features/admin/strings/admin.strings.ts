@@ -41,7 +41,6 @@ export const adminStrings = {
   },
   wall: {
     title: "הודעות בקיר",
-    refresh: "רענון",
     empty: "אין הודעות עדיין.",
     delete: "מחיקה",
     ask: "למחוק את ההודעה?",

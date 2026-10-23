@@ -20,7 +20,7 @@ host's browser, and the room's exit row sends the same `exit` action.
 |---|---|
 | `components/AdminScreen` | The page (`app/[locale]/r/[slug]/admin/page.tsx` reads the slug inside `<Suspense>`): the heading, the private-page warning, and the panels — or "this admin link doesn't work" for no token or a wrong one. |
 | `components/AdminControls` | The room's state; "I left the group" (warning first if early or mid-vote), close the vote now, move the close or reopen (`ReopenForm`, the handler's codes on its field), undo the exit; forget admin on this device. Every action asks first. |
-| `components/AdminWall` | The newest goodbyes, each with Delete (asks first); Refresh. |
+| `components/AdminWall` | The newest goodbyes, each with Delete (asks first); no Refresh — the page is live (`useAdminChannel`). |
 | `components/GroupMessages` | The host's messages to the group — the shared `ShareMessages`, the same as the room's sheet — under the controls. |
 | `components/VoteReminder` | While the vote is open and someone but the host has joined: "3 of 5 voted", a bar, the names still to vote, and one WhatsApp reminder to the group naming them, with the close time and the room's link. Everyone in: says so. |
 | `components/PlayerCodes` | Every player but the host with their login code: copy it, or send it on WhatsApp with the room's link. |

@@ -74,7 +74,6 @@ export function AdminScreen({ slug }: { slug: string }) {
         <div className={adminScreenClasses.column}>
           <AdminWall
             messages={admin.data.messages}
-            onRefresh={() => void admin.refetch()}
             onDelete={(messageId) => remove.mutate(messageId)}
             isBusy={remove.isPending}
           />
