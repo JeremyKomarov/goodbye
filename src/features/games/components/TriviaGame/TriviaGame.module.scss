@@ -1,0 +1,137 @@
+// The question and its options scroll if they must; the verdict and the way on stay below them.
+.trivia-game {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+
+  &__intro {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: var(--space-5);
+    flex: 1;
+    padding: var(--space-6);
+    text-align: center;
+  }
+
+  &__lead {
+    max-width: 28rem;
+    color: var(--text-secondary);
+    font-size: var(--text-lg);
+  }
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: var(--space-1);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  &__score {
+    color: var(--warning-text);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  &__clock {
+    flex-shrink: 0;
+    height: 0.375rem;
+    overflow: hidden;
+    border-radius: var(--radius-pill);
+    background: var(--surface-soft);
+  }
+
+  &__fill {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--positive-strong);
+
+    &--hurry {
+      background: var(--accent-exit);
+    }
+  }
+
+  &__body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  &__question {
+    margin-block-end: var(--space-4);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  &__options {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  // A piece (docs/DECISIONS.md #10): it turns right or wrong once answered.
+  &__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    width: 100%;
+    min-height: var(--control-height-lg);
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: default;
+    }
+
+    &--idle {
+      background: var(--surface-card);
+      color: var(--text-primary);
+
+      &:hover {
+        background: var(--surface-soft);
+      }
+    }
+
+    &--right {
+      border-color: var(--positive-border);
+      background: var(--positive-surface);
+      color: var(--positive-text);
+    }
+
+    &--wrong {
+      border-color: var(--critical-border);
+      background: var(--critical-surface);
+      color: var(--critical-text);
+    }
+
+    &--dim {
+      background: var(--surface-card);
+      color: var(--text-muted);
+    }
+  }
+
+  &__verdict {
+    display: grid;
+    flex-shrink: 0;
+    gap: var(--space-3);
+  }
+
+  &__said {
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+
+  &__fact {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+  }
+}

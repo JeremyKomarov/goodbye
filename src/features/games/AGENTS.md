@@ -21,10 +21,14 @@ the room inside its `(room)` layout; they read the room through `useRoomFrame` (
 | `components/GameScreen` | One game (`app/[locale]/r/[slug]/(room)/games/[game]/page.tsx` checks the id inside `<Suspense>`): back to the hub, the name and `RecordLine`; the game, keyed by round; then `GameResult` — the score, a new room record (confetti) or personal best, the place out of how many, another round. The score is placed against the records as they were, then sent. |
 | `components/RunawayGame` | The red "exit group" button runs from the pointer (a mouse near it, or a press) to the farthest of 12 spots, taunting; each dodge makes it smaller, quicker and more tired. The score is the time to catch it, in ms. The button is a native piece (docs/DECISIONS.md #10). |
 | `components/CatchGame` | Notifications fall faster and thicker for 30 seconds; pop them for points (`NOTICES`): messages, good-morning flowers, "exit group" the most — the boss costs you. The round runs in `useCatchRound`; each notice is a native piece (docs/DECISIONS.md #10). |
+| `components/TriviaGame` | Ten of the questions, fifteen seconds each (`useTriviaRound`); a right answer is 100 and up to 50 more for speed. The options are shuffled; each turns right or wrong (native pieces, docs/DECISIONS.md #10), then the fact and the way on. |
 | `components/RecordLine` | The room's record under the game's name, read out and popping in when it changes. |
 | `components/GamesClosed` | "The games are closed": the host left, so the records stay. |
 | `content/games.const.ts` | `GAME_ART` — each game's emoji on its tile. |
 | `content/catch.const.ts` | `CATCH_SECONDS`, `NOTICE_KINDS`, `NOTICES` — each kind's points and how often it falls. Their lines are in `CatchGame`'s strings. |
+| `content/trivia.const.ts` | `TRIVIA_ROUND`, `TRIVIA_SECONDS`, the points; `ANSWERS` — each question's right option. |
+| `strings/trivia.strings.ts` | The `trivia` namespace: every question, its four options `a`–`d` and its fact, in both languages. Every answer checkable. |
+| `hooks/useTriviaRound.ts` | One round of Trivia: the question asked (options in this round's order), the pick (`null` when time ran out), the clock, the score; `start`, `answer`, `next`. |
 | `hooks/useCatchRound.ts` | One round of Catch in a ref, drawn once a frame: `isPlaying`, `frame` (notices, score, time left), `popups`, `start`, `pop`. |
 | `hooks/useSubmitScore.ts` | Sends a finished round's score; invalidates the records. |
 | `api/scores.api.ts` | `submitScore` — the shared `SubmitScoreInputSchema`, the session's bearer. |
@@ -39,4 +43,4 @@ the room inside its `(room)` layout; they read the room through `useRoomFrame` (
 
 ## Next real work
 
-The rest of the games, one per step of phase 08: Trivia, the Picture game.
+The Picture game (08.6), then the room's board (08.7).

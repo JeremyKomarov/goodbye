@@ -11,6 +11,7 @@ import { CatchGame } from "@/features/games/components/CatchGame";
 import { GamesClosed } from "@/features/games/components/GamesClosed";
 import { RecordLine } from "@/features/games/components/RecordLine";
 import { RunawayGame } from "@/features/games/components/RunawayGame";
+import { TriviaGame } from "@/features/games/components/TriviaGame";
 import { useSubmitScore } from "@/features/games/hooks/useSubmitScore";
 import type { GameProps } from "@/features/games/types/games.types";
 import { celebrate } from "@/features/games/utils/celebrate";
@@ -27,6 +28,7 @@ import { GAME_SCREEN_NAMESPACE, gameScreenKeys } from "./GameScreen.keys.const";
 const GAMES: Partial<Record<GameId, ComponentType<GameProps>>> = {
   runaway: RunawayGame,
   catch: CatchGame,
+  trivia: TriviaGame,
 };
 
 /** One game: played round after round, each score kept and placed against the room's. */

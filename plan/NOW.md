@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 08.5
+**Step:** 08.6
 **Since:** 2026-10-23
-**State:** Trivia — the questions in both languages, the game on `GameProps` — starting.
+**State:** the Picture game — the pictures, their colours as tokens, the stage and the guess — starting.
 **Blocked by:** —
 
 ---

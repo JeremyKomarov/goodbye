@@ -195,6 +195,14 @@ import {
 import { CATCH_GAME_NAMESPACE } from "@/features/games/components/CatchGame/CatchGame.keys.const";
 import { catchGameStrings } from "@/features/games/components/CatchGame/CatchGame.strings";
 import { catchGameStringsEn } from "@/features/games/components/CatchGame/CatchGame.strings.en";
+import { TRIVIA_NAMESPACE } from "@/features/games/strings/trivia.keys.const";
+import { triviaStrings } from "@/features/games/strings/trivia.strings";
+import { triviaStringsEn } from "@/features/games/strings/trivia.strings.en";
+import {
+  TRIVIA_GAME_NAMESPACE,
+} from "@/features/games/components/TriviaGame/TriviaGame.keys.const";
+import { triviaGameStrings } from "@/features/games/components/TriviaGame/TriviaGame.strings";
+import { triviaGameStringsEn } from "@/features/games/components/TriviaGame/TriviaGame.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -237,6 +245,8 @@ const he = {
   [GAME_SCREEN_NAMESPACE]: gameScreenStrings,
   [RUNAWAY_GAME_NAMESPACE]: runawayGameStrings,
   [CATCH_GAME_NAMESPACE]: catchGameStrings,
+  [TRIVIA_NAMESPACE]: triviaStrings,
+  [TRIVIA_GAME_NAMESPACE]: triviaGameStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -278,6 +288,8 @@ const en: StringsOf<typeof he> = {
   [GAME_SCREEN_NAMESPACE]: gameScreenStringsEn,
   [RUNAWAY_GAME_NAMESPACE]: runawayGameStringsEn,
   [CATCH_GAME_NAMESPACE]: catchGameStringsEn,
+  [TRIVIA_NAMESPACE]: triviaStringsEn,
+  [TRIVIA_GAME_NAMESPACE]: triviaGameStringsEn,
 };
 
 export type Messages = typeof he;
