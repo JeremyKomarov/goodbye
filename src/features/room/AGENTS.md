@@ -18,7 +18,7 @@ the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomN
 | `API_ENDPOINTS.rooms.wall` (GET, POST) | Live. GET, no session: the newest 200 messages, oldest first, and their reactions. POST, bearer: `{ body }` (1–140) as the caller, named by the database; `forbidden` for a non-player, `too_fast` within 3s of their last. 201 with the message. | `app/api/rooms/[slug]/wall/route.ts` |
 | `API_ENDPOINTS.rooms.reaction` (PUT, DELETE) | Live, bearer. `{ emoji }` from `REACTION_EMOJIS`, one per person per message; `forbidden` for a non-player or another room's message. 204. | `app/api/rooms/[slug]/wall/[messageId]/reaction/route.ts` |
 | `API_ENDPOINTS.me.loginCode` (POST) | Live, bearer. The caller's code for another device, per user, not per room: `{ code, created }`; `{ fresh: true }` replaces it. A new code becomes the user's password, so the browser signs back in with it. | `app/api/me/login-code/route.ts` |
-| `API_ENDPOINTS.rooms.hosts` (POST) | Live, bearer. `{ adminToken }` makes the caller a host device; `forbidden` for a wrong token. Idempotent, 204. | `app/api/rooms/[slug]/hosts/route.ts` |
+| `API_ENDPOINTS.rooms.hosts` (POST) | Live, bearer. `{ adminToken }` makes the caller a host device and drops any vote it cast; `forbidden` for a wrong token. Idempotent, 204. | `app/api/rooms/[slug]/hosts/route.ts` |
 
 ## Inventory
 

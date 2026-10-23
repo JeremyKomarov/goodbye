@@ -1,4 +1,7 @@
 // Every Route Handler URL, once (03-DATA.md §1). A call site imports it, never writes a literal.
+
+/** The host's admin token travels in this header — never in a URL, which a server log keeps. */
+export const ADMIN_TOKEN_HEADER = "x-admin-token";
 export const API_ENDPOINTS = {
   rooms: {
     create: "/api/rooms",
@@ -8,6 +11,9 @@ export const API_ENDPOINTS = {
     vote: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/vote`,
     finalize: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/finalize`,
     wall: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/wall`,
+    admin: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/admin`,
+    adminMessage: (slug: string, messageId: number) =>
+      `/api/rooms/${encodeURIComponent(slug)}/admin/messages/${messageId}`,
     reaction: (slug: string, messageId: number) =>
       `/api/rooms/${encodeURIComponent(slug)}/wall/${messageId}/reaction`,
   },

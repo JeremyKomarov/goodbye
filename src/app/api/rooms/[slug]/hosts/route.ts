@@ -6,6 +6,7 @@ import { tokenMatches } from "@/server/auth/admin-token";
 import { requireCaller } from "@/server/auth/bearer";
 import { addHost } from "@/server/db/hosts.repo";
 import { findAdminTokenHash, findRoomBySlug } from "@/server/db/rooms.repo";
+import { deleteVoteOf } from "@/server/db/votes.repo";
 
 const ROUTE = "/api/rooms/[slug]/hosts";
 
@@ -26,6 +27,8 @@ export const POST = handlingApiErrors(
       return apiError(API_ERROR_CODES.forbidden, { route: ROUTE });
 
     await addHost(room.id, caller.userId);
+    // The host doesn't vote: a vote cast from this browser before the room knew it goes.
+    await deleteVoteOf(room.id, caller.userId);
     return new NextResponse(null, { status: 204 });
   },
 );

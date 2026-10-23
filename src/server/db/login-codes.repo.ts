@@ -23,3 +23,15 @@ export async function saveLoginCode(userId: string, code: string): Promise<void>
     .upsert({ user_id: userId, code, updated_at: new Date().toISOString() });
   if (error) throw failed();
 }
+
+/** The codes of these users, by user id; a user who has none is left out. */
+export async function findLoginCodes(userIds: string[]): Promise<Map<string, string>> {
+  if (userIds.length === 0) return new Map();
+  const { data, error } = await db()
+    .from("login_codes")
+    .select("user_id, code")
+    .in("user_id", userIds)
+    .overrideTypes<{ user_id: string; code: string }[], { merge: false }>();
+  if (error) throw failed();
+  return new Map(data.map((row) => [row.user_id, row.code]));
+}

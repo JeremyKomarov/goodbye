@@ -65,3 +65,12 @@ export async function withdrawVote(accessToken: string, roomId: string, userId: 
     .eq("user_id", userId);
   if (error) throw failed();
 }
+
+/**
+ * Drops one user's vote — the host's, cast before the room knew them as its host. With the secret
+ * key: a host may no longer vote, so the policies would not let them withdraw it themselves.
+ */
+export async function deleteVoteOf(roomId: string, userId: string) {
+  const { error } = await db().from("votes").delete().eq("room_id", roomId).eq("user_id", userId);
+  if (error) throw failed();
+}
