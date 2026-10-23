@@ -8,6 +8,7 @@ import { ROOM_SECTIONS, roomPath, roomSectionPath } from "@/core/constants/route
 import type { RoomSnapshotDto } from "@/features/room/api/room.dto";
 import { EmojiRain } from "@/features/room/components/EmojiRain";
 import { PARTY_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
+import { ExitActions } from "@/features/room/components/ExitActions";
 import { Hero } from "@/features/room/components/Hero";
 import { JoinGate } from "@/features/room/components/JoinGate";
 import { MeSheet } from "@/features/room/components/MeSheet";
@@ -108,6 +109,7 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
                 leader={leader}
                 voterCount={snapshot.votes.length}
                 hostExit={hostExit}
+                actions={<ExitActions />}
               />
               <RoomNav {...nav} variant={ROOM_NAV_VARIANTS.list} />
             </aside>

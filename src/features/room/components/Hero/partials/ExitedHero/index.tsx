@@ -9,7 +9,7 @@ import { cn } from "@/shared/utils/cn";
 import { isolate } from "@/shared/utils/isolate";
 
 /** The host has left: the notice, and how it went against the hour the group chose. */
-export function ExitedHero({ room }: Pick<HeroProps, "room">) {
+export function ExitedHero({ room, actions }: Pick<HeroProps, "room" | "actions">) {
   const t = useTranslations(HERO_NAMESPACE);
   const { rough } = useDuration();
   const gender = room.hostGender;
@@ -27,6 +27,7 @@ export function ExitedHero({ room }: Pick<HeroProps, "room">) {
           })}
         </p>
       )}
+      {actions}
     </section>
   );
 }

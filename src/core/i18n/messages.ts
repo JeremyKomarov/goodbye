@@ -213,6 +213,16 @@ import {
 import { BOARD_NAMESPACE } from "@/features/room/components/Board/Board.keys.const";
 import { boardStrings } from "@/features/room/components/Board/Board.strings";
 import { boardStringsEn } from "@/features/room/components/Board/Board.strings.en";
+import { CALENDAR_NAMESPACE } from "@/shared/strings/calendar.keys.const";
+import { calendarStrings } from "@/shared/strings/calendar.strings";
+import { calendarStringsEn } from "@/shared/strings/calendar.strings.en";
+import {
+  EXIT_ACTIONS_NAMESPACE,
+} from "@/features/room/components/ExitActions/ExitActions.keys.const";
+import { exitActionsStrings } from "@/features/room/components/ExitActions/ExitActions.strings";
+import {
+  exitActionsStringsEn,
+} from "@/features/room/components/ExitActions/ExitActions.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -259,6 +269,8 @@ const he = {
   [TRIVIA_GAME_NAMESPACE]: triviaGameStrings,
   [PICTURE_GAME_NAMESPACE]: pictureGameStrings,
   [BOARD_NAMESPACE]: boardStrings,
+  [CALENDAR_NAMESPACE]: calendarStrings,
+  [EXIT_ACTIONS_NAMESPACE]: exitActionsStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -304,6 +316,8 @@ const en: StringsOf<typeof he> = {
   [TRIVIA_GAME_NAMESPACE]: triviaGameStringsEn,
   [PICTURE_GAME_NAMESPACE]: pictureGameStringsEn,
   [BOARD_NAMESPACE]: boardStringsEn,
+  [CALENDAR_NAMESPACE]: calendarStringsEn,
+  [EXIT_ACTIONS_NAMESPACE]: exitActionsStringsEn,
 };
 
 export type Messages = typeof he;

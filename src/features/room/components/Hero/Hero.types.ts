@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Room } from "@/shared/types/room.types";
 import type { HostExit } from "@/features/room/hooks/useHostExit";
 import type { Lead } from "@/shared/utils/tally";
@@ -11,4 +12,6 @@ export interface HeroProps {
   voterCount: number;
   /** The host's browser, once the hour is set: the exit row is their button. */
   hostExit?: HostExit | null;
+  /** Under the countdown or the exit card: the calendar, the host's messages, the finale. */
+  actions?: ReactNode;
 }

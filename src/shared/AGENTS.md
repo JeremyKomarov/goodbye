@@ -90,6 +90,7 @@ use if the wall or leaderboard needs one.
 | `utils/duration.ts` | `exactParts`, `roughPart` — a duration split into units for words. | Through `useDuration`. |
 | `utils/verdict.ts` | `verdict(room)` — on time (±`ON_TIME_MINUTES`), late, early, or left mid-vote. | The room's exit card, the admin's warning before an early exit, the finale. |
 | `utils/records.ts` | `rankRecords(records, game)` best first, `champions(records)`, `beats(game, a, b)`, `placeOf(records, game, userId, score)` → `{ isBest, rank, total }`. | Every record, rank or champion: the games, the board, the finale. Never sort scores by hand — Runaway is timed. |
+| `utils/calendar.ts` | `exitEvent(room, words, url)` — the locked hour as a 15-minute `CalendarEvent`, null before; `googleCalendarUrl(event)`; `icsFile(event)` — RFC 5545, folded at 75 octets, a reminder 10 minutes before. | The room's "add to calendar" and the `.ics` handler. Word the event with the `calendar` namespace. |
 | `utils/tally.ts` | `tallyVotes(votes)` by slot, `leadingSlot(tally)` → `Lead` with every tied slot, `wonByDraw(lead, lockedSlot)`. A vote is anything with a `slotMs`. Moved from `room` in phase 09. | The room's heatmap, hero and nav; the server's exit summary. Never count votes by hand. |
 | `utils/slots.ts` | `RoomWindow` → hour slots in the room's timezone (`buildSlotDays`, `allSlots`, `hasSlotAfter`), DST holes as `null`. | The landing schedule step, the create handler, the room's heatmap. Never compute an hour with `Date` arithmetic. |
 
@@ -103,6 +104,7 @@ use if the wall or leaderboard needs one.
 | `types/summary.types.ts`, `api/summary.dto.ts`, `api/summary.mapper.ts`, `api/summary.api.ts` | `ExitSummary` (`LovedMessage`); `ExitSummaryDtoSchema` (`GET …/summary`); `mapExitSummaryDto`; `fetchExitSummary`. | What the room adds up to, read by the room and the admin page alike. | Never count the goodbyes or find the most loved one in a feature — the wall it holds is only the newest 200. |
 | `api/admin-action.dto.ts` | `ADMIN_ACTIONS`, `AdminActionInputSchema` — what the host can do to their room. | The admin page sends every action; the room sends `exit`. | Never a second action shape for the host. |
 | `strings/games.strings.ts` | The `games` namespace: each game's `title`, a `score` as time or points. | Read by `useGameWords`. | Never word a game's name or score in a feature's strings. |
+| `strings/calendar.strings.ts` | The `calendar` namespace: the event's `title` and `details`, and the handler's `notYet`. | The room's calendar sheet with `useTranslations`, the handler with `createTranslator`. | Never word the event twice. |
 | `strings/time.strings.ts` | The `time` namespace: `slot`, `duration`. | Read by the two hooks above. | Never word an hour or a duration in a feature's strings. |
 
 ## Promotion rule

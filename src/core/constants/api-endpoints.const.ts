@@ -12,6 +12,8 @@ export const API_ENDPOINTS = {
     finalize: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/finalize`,
     wall: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/wall`,
     scores: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/scores`,
+    // A file to download, so the browser follows it as a link rather than fetching it.
+    calendar: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/exit.ics`,
     summary: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/summary`,
     admin: (slug: string) => `/api/rooms/${encodeURIComponent(slug)}/admin`,
     adminMessage: (slug: string, messageId: number) =>

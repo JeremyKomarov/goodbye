@@ -1,5 +1,6 @@
 "use client";
 
+import { ExitActions } from "@/features/room/components/ExitActions";
 import { Hero } from "@/features/room/components/Hero";
 import { StatusStories } from "@/features/room/components/StatusStories";
 import { VoteHeatmap } from "@/features/room/components/VoteHeatmap";
@@ -26,6 +27,7 @@ export function VoteSection() {
           leader={leader}
           voterCount={snapshot.votes.length}
           hostExit={hostExit}
+          actions={<ExitActions />}
         />
       </div>
       <div className={voteSectionClasses.grid}>

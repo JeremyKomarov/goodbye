@@ -11,7 +11,7 @@ import { ExitRow } from "@/features/room/components/Hero/partials/ExitRow";
 
 /** The hour is chosen: the countdown to it, how it was chosen, and the exit row filling up. */
 export function LockedHero(props: HeroProps & { lockedSlot: number }) {
-  const { room, now, leader, lockedSlot, hostExit } = props;
+  const { room, now, leader, lockedSlot, hostExit, actions } = props;
   const t = useTranslations(HERO_NAMESPACE);
   const tRoom = useTranslations(ROOM_NAMESPACE);
   const format = useSlotFormat(room.timezone);
@@ -49,6 +49,7 @@ export function LockedHero(props: HeroProps & { lockedSlot: number }) {
       />
       <p className={heroClasses.note}>{note}</p>
       <ExitRow progress={progress} isOvertime={overtime} hostExit={hostExit ?? null} />
+      {actions}
     </section>
   );
 }

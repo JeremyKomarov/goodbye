@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 09.2
+**Step:** 09.3
 **Since:** 2026-10-23
-**State:** porting the calendar event and its tests; then `exit.ics`, and the actions under the hero.
+**State:** the host's two messages (the decision, the goodbye) as a shared panel; then the room's share sheet and the admin page.
 **Blocked by:** —
 
 ---
