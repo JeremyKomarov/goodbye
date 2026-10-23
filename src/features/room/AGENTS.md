@@ -118,4 +118,5 @@ votes are anything with a `slotMs`, so it no longer reads this feature's `Vote`.
 
 ## Next real work
 
-Phase 09's last step: the whole story walked through in two browsers, both locales.
+None planned: phase 09 finished the story — the finale, the calendar, the host's messages and
+the link previews.
