@@ -13,6 +13,7 @@ import { listPlayers } from "@/server/db/players.repo";
 import {
   lockRoomNow, markExited, reopenRoom, undoExit, type RoomRecord,
 } from "@/server/db/rooms.repo";
+import { listVotes } from "@/server/db/votes.repo";
 import { listWallMessages } from "@/server/db/wall.repo";
 
 const ROUTE = "/api/rooms/[slug]/admin";
@@ -21,15 +22,17 @@ type Context = RouteContext<"/api/rooms/[slug]/admin">;
 // The admin page shows this many of the newest goodbyes, to delete one that shouldn't be there.
 const ADMIN_MESSAGES = 50;
 
-// The host's view: the room, everyone in it with their login code, the newest goodbyes. Only to
-// the admin token (`forbidden` otherwise).
+// The host's view: the room, everyone in it with their login code and whether they have voted, the
+// newest goodbyes. Only to the admin token (`forbidden` otherwise).
 export const GET = handlingApiErrors(ROUTE, async (request: Request, { params }: Context) => {
   const room = await requireAdmin(request, (await params).slug);
-  const [players, hostIds, messages] = await Promise.all([
+  const [players, hostIds, messages, votes] = await Promise.all([
     listPlayers(room.id),
     listHostIds(room.id),
     listWallMessages(room.id),
+    listVotes(room.id),
   ]);
+  const voterIds = new Set(votes.map((vote) => vote.userId));
   const codes = await findLoginCodes(players.map((player) => player.userId));
   const body: AdminRoomDto = {
     room: toRoomDto(room),
@@ -38,6 +41,7 @@ export const GET = handlingApiErrors(ROUTE, async (request: Request, { params }:
       display_name: player.displayName,
       is_host: hostIds.includes(player.userId),
       code: codes.get(player.userId) ?? null,
+      has_voted: voterIds.has(player.userId),
     })),
     messages: messages
       .slice(-ADMIN_MESSAGES)

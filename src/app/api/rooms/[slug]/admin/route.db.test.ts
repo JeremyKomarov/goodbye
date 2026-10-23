@@ -66,7 +66,7 @@ describe.skipIf(!enabled)("the host's page against Supabase", { timeout: 20_000 
     const body = await response.json();
     expect(body.room.slug).toBe(slug);
     expect(body.players).toEqual([
-      { user_id: userId, display_name: "Player", is_host: false, code: "ABC234" },
+      { user_id: userId, display_name: "Player", is_host: false, code: "ABC234", has_voted: false },
     ]);
   });
 

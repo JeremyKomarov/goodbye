@@ -11,6 +11,7 @@ import { AdminLink } from "@/features/admin/components/AdminLink";
 import { AdminWall } from "@/features/admin/components/AdminWall";
 import { GroupMessages } from "@/features/admin/components/GroupMessages";
 import { PlayerCodes } from "@/features/admin/components/PlayerCodes";
+import { VoteReminder } from "@/features/admin/components/VoteReminder";
 import { useAdminAction } from "@/features/admin/hooks/useAdminAction";
 import { useAdminRoom } from "@/features/admin/hooks/useAdminRoom";
 import { useDeleteMessage } from "@/features/admin/hooks/useDeleteMessage";
@@ -59,6 +60,13 @@ export function AdminScreen({ slug }: { slug: string }) {
       <div className={adminScreenClasses.grid}>
         <div className={adminScreenClasses.column}>
           <AdminControls room={admin.data.room} onAct={action.mutateAsync} />
+          {origin && (
+            <VoteReminder
+              room={admin.data.room}
+              players={admin.data.players}
+              roomUrl={`${origin}${roomHref}`}
+            />
+          )}
           {origin && <GroupMessages room={admin.data.room} roomUrl={`${origin}${roomHref}`} />}
         </div>
         <div className={adminScreenClasses.column}>

@@ -6,6 +6,8 @@ export interface AdminPlayer {
   isHost: boolean;
   /** Null until the player's browser has made one. */
   code: string | null;
+  /** Whether they have a vote in; the host never does. */
+  hasVoted: boolean;
 }
 
 export interface AdminMessage {

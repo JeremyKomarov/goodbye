@@ -10,6 +10,7 @@ export function mapAdminRoomDto(dto: AdminRoomDto): AdminRoom {
       name: p.display_name,
       isHost: p.is_host,
       code: p.code,
+      hasVoted: p.has_voted,
     })),
     messages: dto.messages.map((m) => ({
       id: m.id,

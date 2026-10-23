@@ -62,6 +62,14 @@ export const adminStringsEn: StringsOf<typeof adminStrings> = {
       "Hi {name} 👋 your code for the room: {code}\n" +
       "Open it here, type {name}, then the code: {url}",
   },
+  reminder: {
+    title: "Who hasn't voted",
+    count: "{voted} of {total} voted",
+    waiting: "Still to vote:",
+    everyone: "Everyone has voted 🎉 Close the vote now, or let it close by itself.",
+    send: "Remind the group on WhatsApp",
+    message: "🗳️ Still to vote: {names}\nVoting is open until {slot}. Vote here: {url}",
+  },
   link: {
     title: "Your admin link",
     help:

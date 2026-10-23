@@ -18,6 +18,7 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 10 | Room language | done | [10-room-language.md](10-room-language.md) |
 | 11 | Room themes | done | [11-room-themes.md](11-room-themes.md) |
 | 12 | Polish | done | [12-polish.md](12-polish.md) |
+| 13 | Who hasn't voted | done | [13-vote-reminder.md](13-vote-reminder.md) |
 
 **Now:** — · **Next:** —
 

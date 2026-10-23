@@ -2,7 +2,8 @@ import { z } from "zod";
 import { RoomDtoSchema } from "@/shared/api/room.dto";
 
 // The host's view of their room, as GET /api/rooms/[slug]/admin sends it to the admin token:
-// the room, everyone in it with their login code, and the newest goodbyes on the wall.
+// the room, everyone in it with their login code and whether they have voted, and the newest
+// goodbyes on the wall.
 
 export const AdminPlayerDtoSchema = z.object({
   user_id: z.string(),
@@ -10,6 +11,8 @@ export const AdminPlayerDtoSchema = z.object({
   is_host: z.boolean(),
   /** Null until the player's browser has made one. */
   code: z.string().nullable(),
+  /** Whether they have a vote in; the host never does. */
+  has_voted: z.boolean(),
 });
 
 export const AdminMessageDtoSchema = z.object({

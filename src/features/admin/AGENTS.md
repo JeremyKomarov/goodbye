@@ -1,8 +1,8 @@
 # `admin`
 
 The host's page, opened from the admin link: prove the admin token, then close or reopen voting,
-press "I left the group" (or undo it), delete wall messages, see every player's login code, and
-send the group the decision and the goodbye.
+press "I left the group" (or undo it), see who has not voted and remind the group, delete wall
+messages, see every player's login code, and send the group the decision and the goodbye.
 Feature flag: `admin`, enabled. Route: `/r/[slug]/admin`; the room's header links here for the
 host's browser, and the room's exit row sends the same `exit` action.
 
@@ -10,7 +10,7 @@ host's browser, and the room's exit row sends the same `exit` action.
 
 | Endpoint | Status | Source |
 |---|---|---|
-| `API_ENDPOINTS.rooms.admin` (GET) | Live, admin token in `ADMIN_TOKEN_HEADER`. The room, every player with `is_host` and their login code, and the newest 50 goodbyes, newest first; `forbidden` for a missing or wrong token. | `app/api/rooms/[slug]/admin/route.ts` |
+| `API_ENDPOINTS.rooms.admin` (GET) | Live, admin token in `ADMIN_TOKEN_HEADER`. The room, every player with `is_host`, their login code and `has_voted`, and the newest 50 goodbyes, newest first; `forbidden` for a missing or wrong token. | `app/api/rooms/[slug]/admin/route.ts` |
 | `API_ENDPOINTS.rooms.admin` (PATCH) | Live, admin token. `AdminActionInputSchema` (shared): `lock`, `reopen` (`votingClosesAt`; `close_time_in_past` / `no_slots_after_close` on it), `exit` (locks first if the vote is over and unlocked; a second press keeps the first time), `undo_exit`. Answers the `RoomDto`. | `app/api/rooms/[slug]/admin/route.ts` |
 | `API_ENDPOINTS.rooms.adminMessage` (DELETE) | Live, admin token. Removes this room's goodbye. 204. | `app/api/rooms/[slug]/admin/messages/[messageId]/route.ts` |
 
@@ -22,6 +22,7 @@ host's browser, and the room's exit row sends the same `exit` action.
 | `components/AdminControls` | The room's state; "I left the group" (warning first if early or mid-vote), close the vote now, move the close or reopen (`ReopenForm`, the handler's codes on its field), undo the exit; forget admin on this device. Every action asks first. |
 | `components/AdminWall` | The newest goodbyes, each with Delete (asks first); Refresh. |
 | `components/GroupMessages` | The host's messages to the group — the shared `ShareMessages`, the same as the room's sheet — under the controls. |
+| `components/VoteReminder` | While the vote is open and someone but the host has joined: "3 of 5 voted", a bar, the names still to vote, and one WhatsApp reminder to the group naming them, with the close time and the room's link. Everyone in: says so. |
 | `components/PlayerCodes` | Every player but the host with their login code: copy it, or send it on WhatsApp with the room's link. |
 | `components/AdminLink` | The admin link itself, to copy or send to yourself — the way back from another device. |
 | `hooks/useLinkToken.ts` | The token from the link's `#k=` — kept in this browser and taken out of the address bar — or the one kept before. |
@@ -32,7 +33,7 @@ host's browser, and the room's exit row sends the same `exit` action.
 | `api/admin.dto.ts` | `AdminRoomDtoSchema` — around the shared `RoomDtoSchema`. |
 | `api/admin.mapper.ts` | `mapAdminRoomDto`. |
 | `api/admin.api.ts` | `fetchAdminRoom`, `runAdminAction`, `deleteMessage` — the token in `ADMIN_TOKEN_HEADER`. |
-| `types/admin.types.ts` | `AdminRoom`, `AdminPlayer`, `AdminMessage`. |
+| `types/admin.types.ts` | `AdminRoom`, `AdminPlayer` (with `hasVoted`), `AdminMessage`. |
 
 ## Ownership
 
@@ -42,4 +43,4 @@ host's browser, and the room's exit row sends the same `exit` action.
 
 ## Next real work
 
-None planned. The host's messages to the group arrived in phase 09 (`GroupMessages`).
+None planned. Phase 13 added `VoteReminder`.

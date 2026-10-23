@@ -55,6 +55,14 @@ export const adminStrings = {
     sendTo: "שליחת הקוד ל{name} בוואטסאפ",
     message: "היי {name} 👋 הקוד שלך לחדר: {code}\nנכנסים כאן, כותבים {name} ואז את הקוד: {url}",
   },
+  reminder: {
+    title: "מי עוד לא הצביע",
+    count: "{voted} מתוך {total} הצביעו",
+    waiting: "עוד לא הצביעו:",
+    everyone: "כולם הצביעו 🎉 אפשר לסגור את ההצבעה עכשיו, או לחכות שתיסגר לבד.",
+    send: "תזכורת לקבוצה בוואטסאפ",
+    message: "🗳️ עוד לא הצביעו: {names}\nההצבעה פתוחה עד {slot}. מצביעים כאן: {url}",
+  },
   link: {
     title: "קישור הניהול שלך",
     help:
