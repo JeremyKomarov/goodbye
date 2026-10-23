@@ -6,6 +6,8 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
+  // As the steps' box: no scrollbar to narrow the card and rewrap what is in it.
+  scrollbar-width: none;
   padding: var(--space-4);
   border: 1px solid var(--border-subtle);
   border-radius: calc(2 * var(--radius-xl));

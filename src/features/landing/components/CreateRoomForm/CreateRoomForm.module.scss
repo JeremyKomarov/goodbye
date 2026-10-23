@@ -13,6 +13,9 @@
     min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
+    // A scrollbar that comes and goes would narrow the step, rewrap it and resize the card under
+    // the host's eyes; the faded edge already says there is more.
+    scrollbar-width: none;
     // Room for a focused field's ring, which `overflow` would otherwise clip; the steps pad it back.
     margin-inline: calc(-1 * var(--space-1));
 
