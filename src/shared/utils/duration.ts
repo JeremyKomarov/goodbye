@@ -1,5 +1,5 @@
 // Splitting a duration for words. Ported from the original's formatDuration and
-// formatDurationRough; the words themselves are the `room` namespace's `duration`.
+// formatDurationRough; the words themselves are the `time` namespace's `duration`.
 
 export const DURATION_UNITS = { days: "days", hours: "hours", minutes: "minutes" } as const;
 export type DurationUnit = (typeof DURATION_UNITS)[keyof typeof DURATION_UNITS];
@@ -35,4 +35,27 @@ export function roughPart(ms: number): DurationPart | null {
   const hours = Math.round(minutes / 60);
   if (hours < 48) return { unit: DURATION_UNITS.hours, count: hours };
   return { unit: DURATION_UNITS.days, count: Math.round(hours / 24) };
+}
+
+export interface DurationWords {
+  /** One part in words: "5 minutes". */
+  part: (part: DurationPart) => string;
+  /** Two parts joined: "an hour and 5 minutes". */
+  pair: (first: string, second: string) => string;
+  underMinute: string;
+}
+
+/** `exact` and `rough` in words. Read through `useDuration` on screen, directly elsewhere. */
+export function durationWords(words: DurationWords) {
+  return {
+    exact: (ms: number) => {
+      const [first, second] = exactParts(ms).map(words.part);
+      if (!first) return words.underMinute;
+      return second ? words.pair(first, second) : first;
+    },
+    rough: (ms: number) => {
+      const part = roughPart(ms);
+      return part ? words.part(part) : words.underMinute;
+    },
+  };
 }

@@ -231,6 +231,12 @@ import { shareMessagesStringsEn } from "@/shared/components/ShareMessages/ShareM
 import { FINALE_NAMESPACE } from "@/features/room/components/Finale/Finale.keys.const";
 import { finaleStrings } from "@/features/room/components/Finale/Finale.strings";
 import { finaleStringsEn } from "@/features/room/components/Finale/Finale.strings.en";
+import { SITE_NAMESPACE } from "@/shared/strings/site.keys.const";
+import { siteStrings } from "@/shared/strings/site.strings";
+import { siteStringsEn } from "@/shared/strings/site.strings.en";
+import { ROOM_PREVIEW_NAMESPACE } from "@/features/room/strings/roomPreview.keys.const";
+import { roomPreviewStrings } from "@/features/room/strings/roomPreview.strings";
+import { roomPreviewStringsEn } from "@/features/room/strings/roomPreview.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -281,6 +287,8 @@ const he = {
   [EXIT_ACTIONS_NAMESPACE]: exitActionsStrings,
   [SHARE_MESSAGES_NAMESPACE]: shareMessagesStrings,
   [FINALE_NAMESPACE]: finaleStrings,
+  [SITE_NAMESPACE]: siteStrings,
+  [ROOM_PREVIEW_NAMESPACE]: roomPreviewStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -330,6 +338,8 @@ const en: StringsOf<typeof he> = {
   [EXIT_ACTIONS_NAMESPACE]: exitActionsStringsEn,
   [SHARE_MESSAGES_NAMESPACE]: shareMessagesStringsEn,
   [FINALE_NAMESPACE]: finaleStringsEn,
+  [SITE_NAMESPACE]: siteStringsEn,
+  [ROOM_PREVIEW_NAMESPACE]: roomPreviewStringsEn,
 };
 
 export type Messages = typeof he;

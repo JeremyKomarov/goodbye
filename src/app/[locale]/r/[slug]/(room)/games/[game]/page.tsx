@@ -4,6 +4,7 @@ import { FEATURE_KEYS } from "@/core/config/features.const";
 import { GAME_IDS, type GameId } from "@/core/constants/games.const";
 import { GameScreen } from "@/features/games/components/GameScreen";
 import { featurePage } from "@/shared/utils/featurePage";
+import { onEveryRequest } from "@/shared/utils/onEveryRequest";
 
 type GamePageProps = PageProps<"/[locale]/r/[slug]/games/[game]">;
 
@@ -24,4 +25,4 @@ function GamePage(props: GamePageProps) {
   );
 }
 
-export default featurePage(FEATURE_KEYS.games, GamePage);
+export default onEveryRequest(featurePage(FEATURE_KEYS.games, GamePage));

@@ -151,3 +151,27 @@ changes with play.
 > A game's playing pieces — the things you play *with* — are native buttons styled in the game's
 > own folder. Every control around a game (start, next, another round) is still the kit's
 > `Button`, and navigation is a `Link`.
+
+## 11. A link preview is a Route Handler under `/api`, and the room's pages say they are dynamic
+
+**Locked 2026-10-23.**
+
+A shared room link previews as the room's story so far, so the image and the title read the
+database on every request. Next's own `opengraph-image.tsx` cannot do that here. Under the hidden
+`[locale]` segment (`#6`), Next writes the image's URL with the locale in it (`/he/r/…`), and the
+proxy rewrites that to `/he/he/r/…`, a 404. Inside the image route, `next/root-params` is not
+supported, so the locale cannot be read the way every page reads it.
+
+So the previews are two Route Handlers, `API_ENDPOINTS.preview(locale)` and
+`API_ENDPOINTS.rooms.preview(slug, locale)`, which the proxy never touches. The page's metadata
+names them, with the page's own locale in the query, and both draw words from the same place as
+the title (`features/room/utils/roomPreview.ts`).
+
+The room's layout reads the room in `generateMetadata`. With Cache Components, Next refuses that
+unless the page itself declares that it renders per request; a marker in the layout does not count.
+Each page under the room's layout is wrapped in `onEveryRequest`, which renders a `connection()`
+marker inside its own `<Suspense>`, so the rest still prerenders. Caching the metadata for seconds
+was the wrong turn: Next still rejects `params` read in `generateMetadata`.
+
+> A link preview's image is a Route Handler under `/api`, its locale in the query. A page whose
+> layout's metadata reads the database is exported through `onEveryRequest`.

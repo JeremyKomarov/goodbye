@@ -19,6 +19,7 @@ the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`;
 | `API_ENDPOINTS.rooms.reaction` (PUT, DELETE) | Live, bearer. `{ emoji }` from `REACTION_EMOJIS`, one per person per message; `forbidden` for a non-player or another room's message. 204. | `app/api/rooms/[slug]/wall/[messageId]/reaction/route.ts` |
 | `API_ENDPOINTS.rooms.summary` (GET) | Live, no session needed. `ExitSummaryDto` (shared): the voters, every goodbye counted, the most loved one, whether the locked hour was drawn, the lone leader while none is locked. Read by the finale and the host's messages here and on the admin page. | `app/api/rooms/[slug]/summary/route.ts` |
 | `API_ENDPOINTS.rooms.calendar` (GET) | Live, no session needed. The locked hour as an `.ics` file in the reader's language (the locale cookie), with a reminder ten minutes before; a line of text and 404 before the lock. A link the browser follows, never fetched. | `app/api/rooms/[slug]/exit.ics/route.ts` |
+| `API_ENDPOINTS.rooms.preview` (GET) | Live, no session needed. The room's link preview, a PNG, in `?locale=`: the question, the decision or the verdict; a card that says so for an unknown room. Named by the room's metadata (docs/DECISIONS.md #11). | `app/api/rooms/[slug]/og/route.tsx` |
 | `API_ENDPOINTS.me.loginCode` (POST) | Live, bearer. The caller's code for another device, per user, not per room: `{ code, created }`; `{ fresh: true }` replaces it. A new code becomes the user's password, so the browser signs back in with it. | `app/api/me/login-code/route.ts` |
 | `API_ENDPOINTS.rooms.hosts` (POST) | Live, bearer. `{ adminToken }` makes the caller a host device and drops any vote it cast; `forbidden` for a wrong token. Idempotent, 204. | `app/api/rooms/[slug]/hosts/route.ts` |
 
@@ -51,6 +52,7 @@ the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`;
 | `components/RoomSkeleton` | The page's Suspense fallback, shaped like the room. |
 | `components/RoomNotFound` | `app/[locale]/r/[slug]/not-found.tsx` renders it. |
 | `strings/room.strings.ts` | The `room` namespace: `reason` (gendered), `votes`, `people`, `typing` — said by more than one component. |
+| `utils/roomPreview.ts` | `roomPreview(room, locale)` → the title, description and card lines a shared link shows, by status; no React, so the metadata and the preview image read the same. Owns the `roomPreview` namespace (`strings/roomPreview.strings.ts`). |
 | `utils/names.ts` | `sameName` — the database's `norm_name()` comparison. |
 | `hooks/useVote.ts` | `{ userId, slotMs }` (null takes it back), written into the snapshot before the request and rolled back on failure. Invalidates the room. |
 | `api/votes.dto.ts` | `CastVoteInputSchema`. |
@@ -116,5 +118,4 @@ votes are anything with a `slotMs`, so it no longer reads this feature's `Vote`.
 
 ## Next real work
 
-Phase 09 — each room's title and description and its preview image for a shared link; then the
-whole story walked through in two browsers.
+Phase 09's last step: the whole story walked through in two browsers, both locales.

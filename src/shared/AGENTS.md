@@ -88,11 +88,14 @@ use if the wall or leaderboard needs one.
 | `utils/whatsapp.ts` | `whatsappLink(text)` — WhatsApp's share link with the text ready to send. | Every "send on WhatsApp": the landing's invite, the admin's codes and link, the finale's goodbye. |
 | `utils/isolate.ts` | Wraps typed text in Unicode direction isolates. | Every name or group name placed inside a sentence. |
 | `utils/countdown.ts` | `splitCountdown(ms)` → days, hours, minutes, seconds; `pad(n)` → two digits. | Every countdown display, with `useNow`. |
-| `utils/duration.ts` | `exactParts`, `roughPart` — a duration split into units for words. | Through `useDuration`. |
+| `utils/duration.ts` | `exactParts`, `roughPart` — a duration split into units for words; `durationWords(words)` → `exact`, `rough`. | Through `useDuration`; `durationWords` directly where there are no hooks. |
 | `utils/verdict.ts` | `verdict(room)` — on time (±`ON_TIME_MINUTES`), late, early, or left mid-vote. | The room's exit card, the admin's warning before an early exit, the finale. |
 | `utils/records.ts` | `rankRecords(records, game)` best first, `champions(records)`, `beats(game, a, b)`, `placeOf(records, game, userId, score)` → `{ isBest, rank, total }`. | Every record, rank or champion: the games, the board, the finale. Never sort scores by hand — Runaway is timed. |
 | `utils/calendar.ts` | `exitEvent(room, words, url)` — the locked hour as a 15-minute `CalendarEvent`, null before; `googleCalendarUrl(event)`; `icsFile(event)` — RFC 5545, folded at 75 octets, a reminder 10 minutes before. | The room's "add to calendar" and the `.ics` handler. Word the event with the `calendar` namespace. |
 | `utils/celebrate.ts` | `celebrate(CELEBRATIONS.record \| finale)` — confetti in the tokens' colours, loaded on first use; none for reduced motion. Moved from `games` in phase 09. | A new room record; the finale. Never import `canvas-confetti` elsewhere. |
+| `utils/bidi.ts` | `visualRtl(line)` — a Hebrew line in visual order, Latin and digits flipped back; `visualLtr(line)` — an English line with its Hebrew runs reversed. | Only where text is drawn without a browser: the link previews (Satori). |
+| `utils/slotFormat.ts` | `slotFormat(locale, timeZone, slotWords)` — what `useSlotFormat` returns, with no React. | Where there are no hooks: a link preview, the room's metadata. On screen, the hook. |
+| `utils/onEveryRequest.tsx` | `onEveryRequest(Page)` — the page plus a `connection()` marker in its own `<Suspense>` (docs/DECISIONS.md #11). | Every page under a layout whose `generateMetadata` reads the database: the room's sections. |
 | `utils/tally.ts` | `tallyVotes(votes)` by slot, `leadingSlot(tally)` → `Lead` with every tied slot, `wonByDraw(lead, lockedSlot)`. A vote is anything with a `slotMs`. Moved from `room` in phase 09. | The room's heatmap, hero and nav; the server's exit summary. Never count votes by hand. |
 | `utils/slots.ts` | `RoomWindow` → hour slots in the room's timezone (`buildSlotDays`, `allSlots`, `hasSlotAfter`), DST holes as `null`. | The landing schedule step, the create handler, the room's heatmap. Never compute an hour with `Date` arithmetic. |
 
@@ -107,6 +110,7 @@ use if the wall or leaderboard needs one.
 | `api/admin-action.dto.ts` | `ADMIN_ACTIONS`, `AdminActionInputSchema` — what the host can do to their room. | The admin page sends every action; the room sends `exit`. | Never a second action shape for the host. |
 | `strings/games.strings.ts` | The `games` namespace: each game's `title`, a `score` as time or points. | Read by `useGameWords`. | Never word a game's name or score in a feature's strings. |
 | `strings/calendar.strings.ts` | The `calendar` namespace: the event's `title` and `details`, and the handler's `notYet`. | The room's calendar sheet with `useTranslations`, the handler with `createTranslator`. | Never word the event twice. |
+| `strings/site.strings.ts` | The `site` namespace: the site's `name` and `description`, and the preview `card`'s pill, lines and badge. | The root layout's metadata, the site's preview, every room's preview badge. | Never name the site in a feature's strings. |
 | `strings/time.strings.ts` | The `time` namespace: `slot`, `duration`. | Read by the two hooks above. | Never word an hour or a duration in a feature's strings. |
 
 ## Promotion rule

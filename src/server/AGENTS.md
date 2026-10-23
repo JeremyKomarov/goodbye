@@ -13,6 +13,7 @@ rule 01 8`.
 | `auth/admin.ts` | `requireAdmin(request, slug)` → the room, for a request with its admin token in `ADMIN_TOKEN_HEADER`; `forbidden` otherwise. | First line of every host-only handler. |
 | `auth/bearer.ts` | `requireCaller(request)` → `{ userId, accessToken }`, or `unauthorized`; `bearerToken`. | First line of every handler that acts as someone, before the body is read. Pass `accessToken` on to the repo, which writes through `asUser`. |
 | `auth/login-code.ts` | `newLoginCode()` — six characters from `LOGIN_CODE_ALPHABET`. | Made only by `POST /api/me/login-code`. |
+| `og/card.server.tsx` | `renderCard(locale, { pill, lines, badge })` — the 1200×630 link preview in Karantina, each line in visual order; the tokens' colours copied in, since there is no stylesheet. | The two preview handlers (docs/DECISIONS.md #11). |
 | `db/` | Supabase access: the client and one `*.repo.ts` per table group. | The only place `@supabase/supabase-js` is imported on the server. |
 
 

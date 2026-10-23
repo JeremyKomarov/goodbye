@@ -3,8 +3,12 @@ import { notFound } from "next/navigation";
 import localFont from "next/font/local";
 import { locale as rootLocale } from "next/root-params";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
+import { env } from "@/core/config/env";
+import { API_ENDPOINTS, PREVIEW_SIZE } from "@/core/constants/api-endpoints.const";
 import { localeDirection, routing } from "@/core/i18n/routing";
+import { SITE_NAMESPACE, siteKeys } from "@/shared/strings/site.keys.const";
 import "@/core/styles/tokens.scss";
 import { Providers } from "./providers";
 
@@ -27,10 +31,26 @@ const rubik = localFont({
   variable: "--font-rubik",
 });
 
-export const metadata: Metadata = {
-  title: "Goodbye",
-  description: "A party room for leaving a WhatsApp group",
-};
+// The site's name, description and preview image in the reader's language; a room's page puts its
+// own title in front of the name, and its own image.
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await rootLocale();
+  const t = await getTranslations(SITE_NAMESPACE);
+  const name = t(siteKeys.name);
+  const description = t(siteKeys.description);
+  return {
+    metadataBase: new URL(env.siteUrl),
+    title: { default: name, template: `%s | ${name}` },
+    description,
+    openGraph: {
+      title: name,
+      description,
+      siteName: name,
+      images: [{ url: API_ENDPOINTS.preview(locale), ...PREVIEW_SIZE, alt: name }],
+    },
+    twitter: { card: "summary_large_image" },
+  };
+}
 
 export const viewport: Viewport = {
   width: "device-width",

@@ -3,9 +3,9 @@
 The working file. **One step at a time, rewritten as the work moves** — not appended to.
 `npm run guard` fails if this disagrees with the `[~]` step in the phase files.
 
-**Step:** 09.5
+**Step:** 09.6
 **Since:** 2026-10-23
-**State:** the room's metadata by status in both locales; then the site's and the room's preview images (bidi port).
+**State:** confirm the nightly cleanup; walk the whole story in two browsers, both locales; tidy.
 **Blocked by:** —
 
 ---
