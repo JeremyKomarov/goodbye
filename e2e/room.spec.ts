@@ -4,38 +4,11 @@
 // handler, or straight into the tables for one that has already ended — deleted afterwards with
 // everyone who joined them. Like the
 // `*.db.test.ts` files, it skips without the secret key (`.env.local`, loaded by the config), and
-// in CI, which has none (`E2E_NO_DATABASE`).
-import { createClient } from "@supabase/supabase-js";
+// in CI, which has none (`E2E_NO_DATABASE`). The making and deleting are `rooms.ts`'s.
 import { expect, test } from "@playwright/test";
+import { createRoom, DAY_MS, db, deleteRoom, joinRoom, skipWithoutDatabase, TEST_GROUP } from "./rooms";
 
-const SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const DAY_MS = 86_400_000;
-
-test.skip(
-  !SECRET_KEY || !SUPABASE_URL || Boolean(process.env.E2E_NO_DATABASE),
-  "needs the Supabase secret key, as `npm run test:db` does",
-);
-
-const db = () =>
-  createClient(SUPABASE_URL!, SECRET_KEY!, { auth: { persistSession: false } });
-
-/** The room and everyone who joined it: the anonymous users go too, and their login codes with them. */
-async function deleteRoom(slug: string) {
-  const { data: room } = await db()
-    .from("rooms")
-    .select("id")
-    .eq("slug", slug)
-    .single<{ id: string }>();
-  if (!room) return;
-  const { data: players } = await db()
-    .from("players")
-    .select("user_id")
-    .eq("room_id", room.id);
-  await db().from("rooms").delete().eq("id", room.id);
-  for (const { user_id } of players ?? [])
-    await db().auth.admin.deleteUser(user_id);
-}
+skipWithoutDatabase();
 
 async function countVotes(slug: string) {
   const { data: room } = await db()
@@ -54,28 +27,10 @@ test("joins under a name, votes, and is still in after a reload", async ({
   page,
   request,
 }) => {
-  const created = await request.post("/api/rooms", {
-    data: {
-      hostName: "e2e",
-      hostGender: "f",
-      groupName: "e2e — delete me",
-      reason: "quit",
-      timezone: "Asia/Jerusalem",
-      windowStart: new Date(Date.now() + 2 * DAY_MS).toISOString().slice(0, 10),
-      days: 1,
-      dayStartHour: 9,
-      dayEndHour: 22,
-      votingClosesAt: new Date(Date.now() + DAY_MS).toISOString(),
-      locale: "en",
-    },
-  });
-  expect(created.status()).toBe(201);
-  const { slug } = (await created.json()) as { slug: string };
+  const slug = await createRoom(request);
 
   try {
-    await page.goto(`/r/${slug}`);
-    await page.getByRole("textbox", { name: /what's your name/i }).fill("Dana");
-    await page.getByRole("button", { name: /enter/i }).click();
+    await joinRoom(page, slug);
 
     const chip = page
       .locator("[class*=hour-grid] button[aria-pressed]")
@@ -105,7 +60,7 @@ test("plays the goodbyes back once the host has left", async ({ page }) => {
     .insert({
       slug,
       host_name: "e2e",
-      group_name: "e2e — delete me",
+      group_name: TEST_GROUP,
       window_start: day,
       window_end: day,
       day_start_hour: 9,
@@ -134,9 +89,7 @@ test("plays the goodbyes back once the host has left", async ({ page }) => {
       expect(posted.error).toBeNull();
     }
 
-    await page.goto(`/r/${slug}`);
-    await page.getByRole("textbox", { name: /what's your name/i }).fill("Dana");
-    await page.getByRole("button", { name: /enter/i }).click();
+    await joinRoom(page, slug);
     // The finale opens by itself once per exit.
     await page.getByRole("button", { name: "Back to the room" }).click();
 
