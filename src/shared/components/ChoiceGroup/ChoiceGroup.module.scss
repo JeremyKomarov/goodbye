@@ -61,6 +61,11 @@
       &:has(:checked) {
         background: color-mix(in srgb, var(--accent-kraft) 15%, transparent);
         box-shadow: inset 0 0 0 2px var(--accent-kraft);
+
+        // Muted text loses its 4.5:1 on the tinted fill.
+        .choice-group__description {
+          color: var(--text-secondary);
+        }
       }
     }
 

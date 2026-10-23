@@ -95,10 +95,7 @@ a playbook already does it.
 
 ## What is next, in order
 
-1. Phase 02 — the UI kit chosen in `src/shared/AGENTS.md`, with a dev-only catalog.
-2. Phase 03 — data and identity: the migrations on a local Supabase, `server/db/` repos,
-   `server/auth/`, the browser session in `core/supabase/` (docs/DECISIONS.md #2).
-3. Phase 04 — the landing screen and room creation; the first flag turned on.
+Nothing is planned: phases 01–12 are done. New work starts as a phase (`/new-phase`), not ad hoc.
 
 *(Keep this to three. A list of fourteen is a wish list, not an order.)*
 
@@ -107,11 +104,13 @@ a playbook already does it.
 | | State |
 |---|---|
 | App shell | None by design — a single chat column. Every route renders through `featurePage()`. |
+| Hosting | Vercel, deployed from `main` on GitHub; `verify` runs on every push. |
+| End to end | `npm run e2e` (Playwright, `e2e/`): the landing wizard at 360px and 1280px, both languages. Outside `verify`: it needs a browser and the dev server. |
 | Design tokens | WhatsApp dark, `core/styles/tokens.scss` (docs/DECISIONS.md #4). |
 | i18n | Hebrew (RTL) default, English by cookie; hidden `[locale]` segment (docs/DECISIONS.md #6). |
-| Features | `landing`, `room`, `games`, `admin` — declared, all off. |
-| Shared UI kit | Chosen; built in phase 02. |
-| Database | Supabase. Migrations in `supabase/migrations/`, carried over verbatim; repos not written yet (phase 03). |
+| Features | `landing`, `room`, `games`, `admin` — all built and on (`core/config/features.const.ts`). Phases 01–11 done. |
+| Shared UI kit | Built in phase 02; inventoried in `src/shared/AGENTS.md`. |
+| Database | Supabase. Migrations in `supabase/migrations/`; one repo per table in `server/db/`. |
 
 **The reference app** is `github.com/JeremyKomarov/goodbye`. It is the specification for behaviour,
 not structure (docs/DECISIONS.md #1) — port what a screen does, then build it the way this guide says.

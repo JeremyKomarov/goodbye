@@ -53,5 +53,5 @@ tokens' colours. The room cannot import this feature.
 
 ## Next real work
 
-Phase 09 — the finale names each game's champion, and the goodbye message sent to the group
-lists them (`champions` in `shared/utils/records.ts`).
+None planned. Phase 09 put each game's champion in the finale and in the goodbye message
+(`champions` in `shared/utils/records.ts`).

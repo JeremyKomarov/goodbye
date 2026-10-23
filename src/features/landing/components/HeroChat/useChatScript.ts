@@ -1,7 +1,7 @@
 import { useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
-import type { LeaveReason } from "@/features/landing/api/rooms.dto";
+import type { HostGender, LeaveReason } from "@/features/landing/api/rooms.dto";
 import { pad } from "@/shared/utils/countdown";
 import {
   CHAT_SENDERS,
@@ -26,9 +26,10 @@ export interface ShownLine extends ScriptLine {
 /**
  * Plays the group chat for `story`, the way a real one arrives: a pause, someone typing for as long
  * as their line takes, then the line. The first story opens with one of its openings, a new story
- * plays one of its corrections — each picked at random — and then the chat waits.
+ * plays one of its corrections — each picked at random — and then the chat waits. After the first
+ * story, a beat later, the group's vote is announced.
  */
-export function useChatScript(story: LeaveReason) {
+export function useChatScript(story: LeaveReason, hostGender: HostGender) {
   const t = useTranslations(HERO_CHAT_NAMESPACE);
   const still = useReducedMotion();
   const [lines, setLines] = useState<ShownLine[]>([]);
@@ -39,6 +40,11 @@ export function useChatScript(story: LeaveReason) {
   // first line (a fast switch, or strict mode) starts over rather than correcting nothing.
   const told = useRef<LeaveReason | null>(null);
   const nextId = useRef(0);
+  // Read when a line is timed; a ref, so the host changing gender does not restart the chat.
+  const gender = useRef(hostGender);
+  useEffect(() => {
+    gender.current = hostGender;
+  }, [hostGender]);
 
   useEffect(() => {
     const before = told.current;
@@ -71,12 +77,13 @@ export function useChatScript(story: LeaveReason) {
     const play = (queue: readonly ScriptLine[]) => {
       const [line, ...rest] = queue;
       if (!line) {
-        setNoticeAfter((after) => after ?? nextId.current - 1);
+        const last = nextId.current - 1;
+        wait(between(READ_PAUSE_MS), () => setNoticeAfter((after) => after ?? last));
         return;
       }
       const text = t(line.key, {
         not: not ? t(heroChatKeys.not[not]) : "",
-        gender: "m",
+        gender: gender.current,
       });
       const typed = Math.min(
         TYPING_MS.base + text.length * TYPING_MS.perChar,

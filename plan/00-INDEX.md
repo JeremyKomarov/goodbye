@@ -17,6 +17,7 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 09 | Finale & sharing | done | [09-finale.md](09-finale.md) |
 | 10 | Room language | done | [10-room-language.md](10-room-language.md) |
 | 11 | Room themes | done | [11-room-themes.md](11-room-themes.md) |
+| 12 | Polish | done | [12-polish.md](12-polish.md) |
 
 **Now:** — · **Next:** —
 

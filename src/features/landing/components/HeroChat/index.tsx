@@ -19,6 +19,7 @@ import { useChatScript } from "./useChatScript";
  * The landing page's group chat. It plays `story` (`useChatScript`); a new story continues the
  * same chat with a correction. The header previews the names
  * the host is typing into the wizard, and the colleagues speak to the host in their gender.
+ * To a screen reader it is one picture with a label.
  */
 export function HeroChat({
   story,
@@ -33,7 +34,7 @@ export function HeroChat({
 }) {
   const t = useTranslations(HERO_CHAT_NAMESPACE);
   const reduceMotion = useReducedMotion();
-  const { lines, typing, noticeAfter } = useChatScript(story);
+  const { lines, typing, noticeAfter } = useChatScript(story, hostGender);
 
   // Follow the conversation: the newest line scrolls into view as it arrives.
   const scroller = useRef<HTMLDivElement>(null);
@@ -55,11 +56,13 @@ export function HeroChat({
         dana: t(heroChatKeys.senders.dana),
         yossi: t(heroChatKeys.senders.yossi),
         noa: t(heroChatKeys.senders.noa),
+        avi: t(heroChatKeys.senders.avi),
         host: host ? isolate(host) : t(heroChatKeys.me),
       });
 
   return (
-    <div className={heroChatClasses.root}>
+    // A demonstration, not a conversation: one label to a screen reader, not every line and typing.
+    <div className={heroChatClasses.root} role="img" aria-label={t(heroChatKeys.label)}>
       <ChatHeader
         title={groupName.trim() || t(heroChatKeys.group)}
         members={members}
@@ -67,6 +70,7 @@ export function HeroChat({
       <motion.div
         ref={scroller}
         layoutScroll
+        aria-hidden
         className={heroChatClasses.scroller}
       >
         <div className={heroChatClasses.lines}>

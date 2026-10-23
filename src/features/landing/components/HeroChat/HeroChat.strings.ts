@@ -4,7 +4,8 @@
 export const heroChatStrings = {
   group: "צוות מוצר",
   me: "את/ה",
-  members: "{dana}, {yossi}, {noa}, {host} ועוד 36",
+  label: "דוגמה לצ'אט קבוצתי, שמגיב למי שעוזב אותו",
+  members: "{dana}, {yossi}, {noa}, {avi}, {host} ועוד 35",
   typing: "{name} {gender, select, f {מקלידה} other {מקליד}}…",
   system: "הקבוצה הצביעה. יוצאים בעוד",
   senders: {

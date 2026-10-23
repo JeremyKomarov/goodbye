@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useLocale } from "next-intl";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
@@ -64,8 +64,9 @@ export function CreateRoomForm({
 
   // The steps' box is as tall as the tallest step, whichever is showing, so the card never changes
   // size. Only the step showing is in the flow, so a short screen scrolls that one and no further,
-  // and an edge with more past it fades out, so the cut reads as a scroll.
-  useEffect(() => {
+  // and an edge with more past it fades out, so the cut reads as a scroll. Sized before the first
+  // paint, so the card never shows at the height of one step and then jumps to the tallest.
+  useLayoutEffect(() => {
     const box = stepsRef.current;
     if (!box) return;
     const steps = [...box.children] as HTMLElement[];
@@ -73,10 +74,12 @@ export function CreateRoomForm({
       box.toggleAttribute(MORE_ABOVE, box.scrollTop > 1);
       box.toggleAttribute(MORE_BELOW, box.scrollTop + box.clientHeight < box.scrollHeight - 1);
     };
-    const observer = new ResizeObserver(() => {
+    const fit = () => {
       box.style.height = `${Math.max(...steps.map((each) => each.scrollHeight))}px`;
       markEdges();
-    });
+    };
+    fit();
+    const observer = new ResizeObserver(fit);
     [box, ...steps].forEach((each) => observer.observe(each));
     box.addEventListener("scroll", markEdges, { passive: true });
     return () => {

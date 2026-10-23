@@ -17,11 +17,11 @@ enabled. Route: `/`.
 | File | What |
 |---|---|
 | `components/LandingScreen` | The screen: `Intro` partial (language switch, headline), `HeroChat`, `CreateRoomPanel`. Owns the chat preview in `useState`; an unpicked story leaves the chat on the last one told. One viewport tall: on a phone the form comes first, every step fitting without a scroll, and under 700px tall the chat steps aside for it. |
-| `components/HeroChat` | The scripted group chat, played by `useChatScript` the way a real one arrives — a pause, typing as long as the line ("Dana is typing…" in the header), the line. `story` opens with one of three `OPENERS` at random, a new story plays one of three `CORRECTIONS`, then the chat waits. Four colleagues, each story its own mix; lines to the host follow `hostGender`. The header previews `hostName` / `groupName`. Partials: ChatHeader, ChatLine (follow-up bubbles without a tail), TypingDots, ClosingCountdown (decorative). |
+| `components/HeroChat` | The scripted group chat, played by `useChatScript` the way a real one arrives — a pause, typing as long as the line ("Dana is typing…" in the header), the line. `story` opens with one of three `OPENERS` at random, a beat later the group's vote is announced; a new story plays one of three `CORRECTIONS`, then the chat waits. To a screen reader it is one labelled picture (`role="img"`), its lines hidden. Four colleagues, each story its own mix; lines to the host follow `hostGender`. The header previews `hostName` / `groupName`. Partials: ChatHeader, ChatLine (follow-up bubbles without a tail), TypingDots, ClosingCountdown (decorative). |
 | `components/CreateRoomPanel` | The card: a skeleton until the page runs in the browser, then the wizard, then the success card. |
-| `components/CreateRoomForm` | The three-step wizard (`FORM_STEPS`: reason → who → when) on react-hook-form with `CreateRoomInputSchema`. "Next" validates only that step's fields; a server code with a field lands on that field and jumps to its step. On success it keeps the admin token (`saveAdminToken`) and calls `onCreated`. Every step stays mounted and the steps' box is sized in script to the tallest, so the card keeps one size on every step; only the step showing is in the flow, so a short screen scrolls just that one, its cut edge faded. Partials: StepProgress, StepBody, ReasonStep, IdentityStep, ScheduleStep, ServerAlert, FormActions. |
+| `components/CreateRoomForm` | The three-step wizard (`FORM_STEPS`: reason → who → when) on react-hook-form with `CreateRoomInputSchema`. "Next" validates only that step's fields; a server code with a field lands on that field and jumps to its step. On success it keeps the admin token (`saveAdminToken`) and calls `onCreated`. Every step stays mounted and the steps' box is sized in script to the tallest, before the first paint, so the card keeps one size on every step; only the step showing is in the flow, so a short screen scrolls just that one, its cut edge faded. Partials: StepProgress, StepBody, ReasonStep, IdentityStep, ScheduleStep, ServerAlert, FormActions. |
 | `components/CreateSuccess` | The room is open: WhatsApp share with the invite (gendered in Hebrew), the room link, the admin link (`#k=<token>`, `ADMIN_TOKEN_PARAM`) set as a secret, and "enter the room". Partial: LinkRow. |
-| `hooks/useCreateRoom.ts` | The only `useMutation`. Invalidates nothing: no query holds rooms until phase 05. |
+| `hooks/useCreateRoom.ts` | The only `useMutation`. Invalidates nothing: no query holds a room before it exists. |
 | `hooks/useOpenSlotCount.ts` | Hours left to vote on after the close time, for the window in the form. Disables "Create" at 0. |
 | `hooks/useWizardErrors.ts` | `field(name)` and `server`: the wizard's error sentences. |
 | `api/rooms.dto.ts` | `CreateRoomInputSchema` (shared by the wizard and the handler), `CreatedRoomDtoSchema`, `HOST_GENDERS`, `LEAVE_REASONS`, the length limits. |
@@ -39,5 +39,5 @@ Built for this screen and placed in `shared/` because the room and admin screens
 
 ## Next real work
 
-The room screen (phase 05) — "enter the room" and the room link land on its disabled shell until
-then. When it reads the room, `useCreateRoom` can seed that query instead of invalidating nothing.
+None planned. "Enter the room" and the room link open the room (phase 05); `useCreateRoom` still
+invalidates nothing, since no query holds a room before it exists.

@@ -17,6 +17,8 @@ next-env.d.ts
 
 # Test and cache
 coverage/
+test-results/
+playwright-report/
 *.tsbuildinfo
 
 # The Claude Code skill mirror (.claude/skills) is NOT ignored. A symlinked mirror is 17 bytes and

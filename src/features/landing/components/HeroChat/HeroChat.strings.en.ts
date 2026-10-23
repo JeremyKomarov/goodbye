@@ -4,7 +4,8 @@ import type { heroChatStrings } from "./HeroChat.strings";
 export const heroChatStringsEn: StringsOf<typeof heroChatStrings> = {
   group: "Product team",
   me: "you",
-  members: "{dana}, {yossi}, {noa}, {host} and 36 others",
+  label: "An example group chat, reacting to someone leaving it",
+  members: "{dana}, {yossi}, {noa}, {avi}, {host} and 35 others",
   typing: "{name} is typing…",
   system: "The group voted. Leaving in",
   senders: {
