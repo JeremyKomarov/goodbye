@@ -122,3 +122,10 @@
     overflow: hidden;
   }
 }
+
+// A phone held sideways: the messages need the height more. The header's 🎉 still rains.
+@media (max-height: 500px) {
+  .farewell-wall__quick {
+    display: none;
+  }
+}

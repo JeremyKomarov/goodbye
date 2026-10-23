@@ -4,7 +4,7 @@
 who is online and typing, the emoji rain, the status stories; the vote and the wall are routes
 under one room layout, with the tab bar on phones and a chat list on desktop.
 **Depends on:** 05
-**Status:** in progress
+**Status:** done
 
 ## Steps
 `[ ]` not started · `[~]` in flight now (one, and `plan/NOW.md` names it) · `[x]` done, struck through.
@@ -16,7 +16,7 @@ under one room layout, with the tab bar on phones and a chat list on desktop.
 - [x] ~~06.5 — presence, typing and the emoji broadcast; the header's live line, the unread badge (M)~~
 - [x] ~~06.6 — EmojiRain: the 🎉 button, the wall's quick emoji, the door at the chosen hour (S)~~
 - [x] ~~06.7 — status stories: the ring on the header's avatar, the strip, the viewer (M)~~
-- [~] 06.8 — checked in two browsers, both locales, phone and desktop (S)
+- [x] ~~06.8 — checked in two browsers, both locales, phone and desktop (S)~~
 
 ## Done when
 In two browsers in the same room, a message posted in one appears on the other's wall, with its
@@ -43,3 +43,12 @@ English at 360 and 1280; rooms made while checking are deleted afterwards.
   caller's own. The facts were translated for English.
 - The original measured whether the strip fit above the status card; here it shows on phones from
   800px tall, and the header's ring opens the stories on any screen.
+- Checked in Chromium with two browsers at 360, 1280 and 740×360, in Hebrew and English, on the
+  vote and the wall: a goodbye and a reaction crossing live, the unread count and the last
+  goodbye in the other's chat list, "… is typing" in its header and list, two online in both,
+  🎉 and the quick emoji raining on both, the stories in both languages. No overflow, no
+  `MISSING_MESSAGE`, no console errors but the deliberate 429. On a sideways phone the wall's
+  quick emoji are hidden: the messages needed the height.
+- Probe rooms and the users in them were deleted; the project is back to its six rooms. A
+  `test:db` run straight after the browser sweep hung and failed on Supabase's limits — the
+  sweep makes dozens of anonymous users — and passed in full (22) when run again later.
