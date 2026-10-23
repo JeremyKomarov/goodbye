@@ -7,7 +7,7 @@ import {
   STATUS_STORIES_NAMESPACE, statusStoriesKeys,
 } from "@/features/room/components/StatusStories/StatusStories.keys.const";
 import {
-  LONG_PRESS_MS, STORY_GROUPS, STORY_MS, type StoryGroup, type StoryPosition,
+  LONG_PRESS_MS, STORY_MS, type StoryGroup, type StoryPosition,
 } from "@/features/room/content/stories.const";
 import { markSeen } from "@/features/room/utils/storiesSeen";
 import { Button, BUTTON_VARIANTS } from "@/shared/components/Button";
@@ -31,14 +31,22 @@ function factKey(groupId: StoryGroup["id"], fact: string): FactKey {
  * in Hebrew) goes on, the other side goes back, a long press pauses; the arrow keys step too.
  * Watching a group to its end greys its ring.
  */
-export function StoryViewer({ start, onClose }: { start: StoryPosition; onClose: () => void }) {
+export function StoryViewer({
+  groups,
+  start,
+  onClose,
+}: {
+  groups: readonly StoryGroup[];
+  start: StoryPosition;
+  onClose: () => void;
+}) {
   const t = useTranslations(STATUS_STORIES_NAMESPACE);
   const [at, setAt] = useState(start);
   const bar = useRef<HTMLDivElement>(null);
   const elapsed = useRef(0);
   const isPaused = useRef(false);
   const pressedAt = useRef(0);
-  const group = STORY_GROUPS[at.group];
+  const group = groups[at.group];
 
   const go = useCallback((next: StoryPosition) => {
     elapsed.current = 0;
@@ -48,15 +56,15 @@ export function StoryViewer({ start, onClose }: { start: StoryPosition; onClose:
   const forward = useCallback(() => {
     if (at.fact + 1 < group.facts.length) return go({ group: at.group, fact: at.fact + 1 });
     markSeen(group.id);
-    if (at.group + 1 < STORY_GROUPS.length) return go({ group: at.group + 1, fact: 0 });
+    if (at.group + 1 < groups.length) return go({ group: at.group + 1, fact: 0 });
     onClose();
-  }, [at, group, go, onClose]);
+  }, [at, group, groups, go, onClose]);
 
   const back = useCallback(() => {
     if (at.fact > 0) return go({ group: at.group, fact: at.fact - 1 });
     if (at.group > 0)
-      go({ group: at.group - 1, fact: STORY_GROUPS[at.group - 1].facts.length - 1 });
-  }, [at, go]);
+      go({ group: at.group - 1, fact: groups[at.group - 1].facts.length - 1 });
+  }, [at, groups, go]);
 
   // The bar fills on animation frames, written straight to the element, so pausing costs nothing.
   useEffect(() => {
@@ -101,7 +109,9 @@ export function StoryViewer({ start, onClose }: { start: StoryPosition; onClose:
         style={{ "--story-color": group.color } as CSSProperties}
       >
         <StoryBars count={group.facts.length} current={at.fact} barRef={bar} />
-        <StoryGroupNav current={at.group} onPick={(group) => go({ group, fact: 0 })} />
+        <StoryGroupNav
+          groups={groups}
+          current={at.group} onPick={(group) => go({ group, fact: 0 })} />
         <div
           className={storyViewerClasses.stage}
           onClick={onStageClick}

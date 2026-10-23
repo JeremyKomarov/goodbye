@@ -10,6 +10,7 @@ import { SITE_NAMESPACE, siteKeys } from "@/shared/strings/site.keys.const";
 import { TIME_NAMESPACE, timeKeys } from "@/shared/strings/time.keys.const";
 import type { Room } from "@/shared/types/room.types";
 import { durationWords } from "@/shared/utils/duration";
+import { roomTheme } from "@/shared/utils/roomTheme";
 import { slotFormat } from "@/shared/utils/slotFormat";
 import { verdict } from "@/shared/utils/verdict";
 
@@ -94,7 +95,10 @@ export function roomPreview(room: Room | null, locale: Locale): RoomPreview {
   }
   return {
     title: t(roomPreviewKeys.title.voting, words),
-    description: t(roomPreviewKeys.description.voting),
+    description: t(roomPreviewKeys.description.voting, {
+      ...words,
+      theme: roomTheme(room.reason),
+    }),
     card: {
       pill: t(roomPreviewKeys.card.voting.pill),
       lines: [

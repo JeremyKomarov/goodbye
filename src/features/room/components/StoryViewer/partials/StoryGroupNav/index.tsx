@@ -4,16 +4,18 @@ import {
 } from "@/features/room/components/StatusStories/StatusStories.keys.const";
 import { STORY_DISC_SIZES, StoryDisc } from "@/features/room/components/StoryDisc";
 import { storyViewerClasses } from "@/features/room/components/StoryViewer/StoryViewer.classes";
-import { STORY_GROUPS } from "@/features/room/content/stories.const";
+import type { StoryGroup } from "@/features/room/content/stories.const";
 import { useSeenStories } from "@/features/room/hooks/useSeenStories";
 import { Button, BUTTON_VARIANTS } from "@/shared/components/Button";
 import { cn } from "@/shared/utils/cn";
 
 /** Every group, so the header's ring is never a dead end into the first one. */
 export function StoryGroupNav({
+  groups,
   current,
   onPick,
 }: {
+  groups: readonly StoryGroup[];
   current: number;
   onPick: (group: number) => void;
 }) {
@@ -22,7 +24,7 @@ export function StoryGroupNav({
 
   return (
     <nav className={storyViewerClasses.groups} aria-label={t(statusStoriesKeys.all)}>
-      {STORY_GROUPS.map((group, index) => (
+      {groups.map((group, index) => (
         <Button
           key={group.id}
           variant={BUTTON_VARIANTS.bare}

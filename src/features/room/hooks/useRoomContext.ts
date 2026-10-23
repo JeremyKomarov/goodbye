@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { StoryPosition } from "@/features/room/content/stories.const";
+import type { StoryGroup, StoryPosition } from "@/features/room/content/stories.const";
 import type { Player, RoomSnapshot } from "@/features/room/types/room.types";
 import type { Lead } from "@/shared/utils/tally";
 import type { HostExit } from "./useHostExit";
@@ -20,7 +20,9 @@ export interface RoomContextValue {
   live: RoomLive;
   /** "Dana is typing…" for this room, or null. */
   typing: string | null;
-  /** Opens the status stories at a group. */
+  /** The story groups this room shows, its theme's first. */
+  stories: readonly StoryGroup[];
+  /** Opens the status stories at a group of `stories`. */
   openStory: (start: StoryPosition) => void;
   /** The host's exit button, for the browser holding the admin token once the hour is set. */
   hostExit: HostExit | null;

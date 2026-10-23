@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
-import { QUICK_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
+import { THEME_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
 import { MessageList } from "@/features/room/components/FarewellWall/partials/MessageList";
 import { usePostMessage } from "@/features/room/hooks/usePostMessage";
 import { useReact } from "@/features/room/hooks/useReact";
@@ -13,6 +13,7 @@ import { Button, BUTTON_VARIANTS } from "@/shared/components/Button";
 import { Skeleton, SKELETON_SHAPES } from "@/shared/components/Skeleton";
 import { SystemPill } from "@/shared/components/SystemPill";
 import { isolate } from "@/shared/utils/isolate";
+import { roomTheme } from "@/shared/utils/roomTheme";
 import { farewellWallClasses } from "./FarewellWall.classes";
 import { FAREWELL_WALL_NAMESPACE, farewellWallKeys } from "./FarewellWall.keys.const";
 import { Composer } from "./partials/Composer";
@@ -29,10 +30,12 @@ export function FarewellWall() {
   const post = usePostMessage(slug);
   const react = useReact(slug);
   const format = useSlotFormat(room.timezone);
+  const theme = roomTheme(room.reason);
   const intro = (
     <SystemPill className={farewellWallClasses.intro}>
       {t(farewellWallKeys.intro, {
         status: room.status,
+        theme,
         name: isolate(room.hostName),
         gender: room.hostGender,
       })}
@@ -73,7 +76,7 @@ export function FarewellWall() {
       )}
       <Composer onSend={post.mutateAsync} onTyping={live.sendTyping}>
         <div className={farewellWallClasses.quick}>
-          {QUICK_EMOJI.map((emoji) => (
+          {THEME_EMOJI[theme].quick.map((emoji) => (
             <Button
               key={emoji}
               variant={BUTTON_VARIANTS.secondary}

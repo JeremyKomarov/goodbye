@@ -5,7 +5,7 @@ from another device, with their login code), votes on the exit hour in a heatmap
 countdown — to the close, then to the chosen hour — change live with everyone else's. The host's
 browser comes in under the host's name and watches rather than votes. Feature flag: `room`,
 enabled. Routes: the sections of `/r/[slug]` share the `(room)` layout — the vote at `/r/[slug]`,
-the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`; the `games` feature's), the records at `/r/[slug]/board`; an unknown slug renders `RoomNotFound`, at status 200 with `noindex` (`docs/DECISIONS.md #12`). Every route is in the room's language, `rooms.locale`, chosen by `src/proxy.ts` (`docs/DECISIONS.md #13`).
+the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`; the `games` feature's), the records at `/r/[slug]/board`; an unknown slug renders `RoomNotFound`, at status 200 with `noindex` (`docs/DECISIONS.md #12`). Every route is in the room's language, `rooms.locale`, chosen by `src/proxy.ts` (`docs/DECISIONS.md #13`), and wears the room's theme — its reason for leaving: the stories, the join gate's question, the wall's intro, the wait and the exit lines, the emoji and the link's description (`docs/DECISIONS.md #14`).
 
 ## Status
 
@@ -41,7 +41,7 @@ the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`;
 | `components/Welcome` | The hello pill, "the room will remember you" or "welcome back". Keyed by user. |
 | `components/Hero` | The status card, by `room.status`: `VotingHero` (why, time left to vote, who leads or the tie), `LockedHero` (time to the chosen hour, how it was chosen, `ExitRow` filling up — the host's button when `hostExit` is given), `ExitedHero` (the notice and the `verdict`); `actions` sit under the countdown and the exit card. `Countdown` is days in words over `FlipDigits`, spoken in full. Compact on phones, roomy from 64rem. |
 | `components/ExitActions` | Under the countdown and the exit card, in both of the hero's places: "add to calendar" while the hour is ahead (`CalendarSheet`: Google's link, the `.ics` file); for the host, "send to the group" — the shared `ShareMessages` in a sheet — kept after the exit as "the goodbye message"; once the host has left, "watch the ending again". |
-| `components/EmojiRain` | The full-screen shower, fed by `onRain`; four fading drops instead of sixteen for reduced motion. `EmojiRain.const.ts`: `QUICK_EMOJI` (the wall's row), `PARTY_EMOJI` (the header's), `DOOR_EMOJI` (the hour). |
+| `components/EmojiRain` | The full-screen shower, fed by `onRain`; four fading drops instead of sixteen for reduced motion. `EmojiRain.const.ts`: `THEME_EMOJI` — per room theme, `quick` (the wall's row), `party` (the header's), `door` (the hour). |
 | `components/StatusStories` | The story groups as a strip of status rings — in the side column, and above the status card on a phone tall enough for both. Owns the `stories` namespace: every fact, in both languages. |
 | `components/StoryRing` | The header's avatar in a status ring; opens the first group not yet watched. |
 | `components/StoryViewer` | One fact at a time in the kit's `Sheet`, moving on by itself (`STORY_MS`); a tap on the forward side goes on, a long press pauses, the arrow keys and two buttons step. Partials: `StoryBars`, `StoryGroupNav`. |
@@ -70,7 +70,7 @@ the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`;
 | `hooks/useRoomChannel.ts` | The room's live channel: a wall change invalidates `room.wall`, any other `room.snapshot` (settled over 150ms); presence (`online`), `typers` (4s unless renewed), `sendTyping`, `sendEmoji` (here and everywhere), `rain` (here only), `onRain`. Presence and broadcasts are held here, the moment only (docs/DECISIONS.md #8). |
 | `hooks/useDoorAtTheHour.ts` | As the chosen hour arrives on an open screen: 🚪 rains there and the phone buzzes. Each screen has the clock, so nothing is sent. |
 | `hooks/useSeenStories.ts` | The groups this browser has watched to the end (`utils/storiesSeen.ts`, in `STORAGE_KEYS.storiesSeen`). |
-| `content/stories.const.ts` | `STORY_GROUPS` — each group's id, emoji, colour token and fact keys; `STORY_MS`, `LONG_PRESS_MS`. |
+| `content/stories.const.ts` | `THEME_STORY_GROUPS` — per room theme, the groups it shows (its own first: fired, quit or drama; then WhatsApp and group life), each with its id, emoji, colour token and fact keys; `STORY_MS`, `LONG_PRESS_MS`. |
 | `hooks/useTypingLine.ts` | "Dana is typing…" / "3 people are typing…" or null. |
 | `hooks/useTypingSignal.ts` | A draft's keystrokes as typing on and off — renewed every 2s, off after 2.5s idle. |
 | `hooks/usePostMessage.ts` | Posts; invalidates the wall. |
@@ -83,7 +83,7 @@ the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`;
 | `hooks/useAutoFinalize.ts` | When this screen's clock passes the close, asks for the result every 4s until the room is no longer voting. |
 | `utils/voteScale.ts` | `voteStep(count, max)` → shade, `columns(n, min, max)`, `VOTE_STEPS`, `DARK_TEXT_FROM`. |
 | `hooks/useWallUnread.ts` | Goodbyes since you last looked at the wall, not your own; what was there when the room opened counts as read. |
-| `hooks/useRoomContext.ts` | `RoomContext` and `useRoomContext()` — `slug`, `snapshot`, `me`, `isHost`, `leader`, `live`, `typing`, `openStory`, `hostExit`, `replayFinale`, from the shell to its sections. |
+| `hooks/useRoomContext.ts` | `RoomContext` and `useRoomContext()` — `slug`, `snapshot`, `me`, `isHost`, `leader`, `live`, `typing`, `stories`, `openStory`, `hostExit`, `replayFinale`, from the shell to its sections. |
 | `hooks/useRoom.ts` | `useQuery` on `QUERY_KEYS.room.snapshot(slug)` → `RoomSnapshot`, seeded from the page's read. |
 | `hooks/useIdentity.ts` | Who this browser is here: `state` (`IDENTITY_STATES` checking → join → ready), `me`, `isHost`, `returning`, `join`. Joins the host's browser under the host's name by itself, and claims the room for a host who joined unrecorded. |
 | `hooks/useSessionUser.ts` | `useQuery` on `QUERY_KEYS.session.user` — this browser's user id or null. |

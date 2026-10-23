@@ -57,6 +57,49 @@ export const statusStoriesStringsEn: StringsOf<typeof statusStoriesStrings> = {
           "Today she's the most feared woman in fashion.",
       },
     },
+    quit: {
+      title: "Quit, then famous",
+      facts: {
+        f1:
+          "In 1994 Jeff Bezos quit a steady job at the hedge fund D. E. Shaw to sell books " +
+          "online from his garage. That was Amazon.",
+        f2: "Jan Koum and Brian Acton left Yahoo in 2007. Two years later they started WhatsApp.",
+        f3: "In 2013 Pope Benedict XVI resigned, the first pope to do so in nearly 600 years.",
+        f4: "Ash Barty retired from tennis in 2022, aged 25, while ranked world number one.",
+        f5:
+          "In 2021 Americans quit more than 47 million jobs. The year was nicknamed " +
+          "\"the Great Resignation\".",
+        f6:
+          "In Japan there are companies whose whole job is quitting for you: they call your " +
+          "boss so you don't have to.",
+        f7:
+          "In 2023 Jacinda Ardern resigned as New Zealand's prime minister, saying she no " +
+          "longer had \"enough in the tank\".",
+      },
+    },
+    drama: {
+      title: "Dramatic exits",
+      facts: {
+        f1:
+          "In 2010 JetBlue flight attendant Steven Slater quit over the plane's PA, grabbed a " +
+          "beer and slid out down the emergency chute.",
+        f2:
+          "In 2012 Greg Smith resigned from Goldman Sachs in a New York Times op-ed: \"Why I " +
+          "Am Leaving Goldman Sachs\".",
+        f3:
+          "In 2013 Marina Shifrin quit with a video of herself dancing alone in the office at " +
+          "4:30 a.m. to Kanye West's \"Gone\". Millions watched.",
+        f4:
+          "Larry David quit Saturday Night Live in a rage, then came back on Monday as if " +
+          "nothing happened. He later put it in Seinfeld.",
+        f5:
+          "In 2005 Dave Chappelle walked away from a reported $50 million deal with Comedy " +
+          "Central and flew to South Africa.",
+        f6:
+          "In 1853 Herman Melville wrote Bartleby, a clerk who answers every task with \"I " +
+          "would prefer not to\". The first \"I've had enough\".",
+      },
+    },
     groups: {
       title: "Group life",
       facts: {

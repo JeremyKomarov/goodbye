@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ROOM_STATUSES } from "@/core/constants/room.const";
 import { ROOM_NAMESPACE, roomKeys } from "@/features/room/strings/room.keys.const";
 import { isolate } from "@/shared/utils/isolate";
+import { roomTheme } from "@/shared/utils/roomTheme";
 import { joinGateClasses } from "./JoinGate.classes";
 import { JOIN_GATE_NAMESPACE, joinGateKeys } from "./JoinGate.keys.const";
 import type { JoinGateProps } from "./JoinGate.types";
@@ -43,7 +44,12 @@ export function JoinGate({ room, voterCount, isChecking, onJoin, onSignInAs }: J
               <bdi>{room.groupName}</bdi>
             </p>
             <h1 className={joinGateClasses.headline}>
-              {t(joinGateKeys.headline, { status: room.status, name: host, gender })}
+              {t(joinGateKeys.headline, {
+                status: room.status,
+                theme: roomTheme(room.reason),
+                name: host,
+                gender,
+              })}
             </h1>
             <p className={joinGateClasses.lede}>
               {room.reason &&

@@ -5,7 +5,11 @@ export const joinGateStringsEn: StringsOf<typeof joinGateStrings> = {
   label: "Join the room",
   headline:
     "{status, select, " +
-    "voting {When should {name} leave the group?} " +
+    "voting {{theme, select, " +
+    "fired {When does {name} carry the box out of the group?} " +
+    "quit {When does {name} hand the group {gender, select, f {her} other {his}} resignation?} " +
+    "fed_up {When does {name} make the big dramatic exit?} " +
+    "other {When should {name} leave the group?}}} " +
     "locked {{name} is leaving the group} " +
     "other {{name} already left the group}}",
   because: "{name} {reason}.",

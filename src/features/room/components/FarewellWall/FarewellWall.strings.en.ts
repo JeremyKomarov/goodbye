@@ -6,8 +6,15 @@ export const farewellWallStringsEn: StringsOf<typeof farewellWallStrings> = {
   intro:
     "{status, select, " +
     "exited {{name} already left the group, but the wall is still open. Anything else to say?} " +
+    "other {{theme, select, " +
+    "fired {What goes in {name}'s box? A memory, a thank-you, a good word for the next " +
+    "interview. Everyone in the room sees the messages.} " +
+    "quit {Sign {name}'s farewell card: what you'll remember, and what {gender, select, " +
+    "f {she} other {he}} should know before going. Everyone in the room sees the messages.} " +
+    "fed_up {Front-row seats to the drama 🍿 What do you want to tell {name} before the big " +
+    "exit? Everyone in the room sees the messages.} " +
     "other {What would you like to tell {name} before {gender, select, f {she leaves} " +
-    "other {he leaves}}? Everyone in the room sees the messages.}}",
+    "other {he leaves}}? Everyone in the room sees the messages.}}}}",
   empty: "No messages yet. The first one will be yours.",
   jump:
     "{count, plural, " +

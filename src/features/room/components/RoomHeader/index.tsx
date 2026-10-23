@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { ROOM_STATUSES } from "@/core/constants/room.const";
-import { PARTY_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
+import { THEME_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
 import type { Player } from "@/features/room/types/room.types";
 import type { Room } from "@/shared/types/room.types";
 import { Button, BUTTON_VARIANTS } from "@/shared/components/Button";
@@ -13,6 +13,7 @@ import { initialOf } from "@/shared/utils/avatar";
 import { cn } from "@/shared/utils/cn";
 import { pad, splitCountdown } from "@/shared/utils/countdown";
 import { isolate } from "@/shared/utils/isolate";
+import { roomTheme } from "@/shared/utils/roomTheme";
 import { roomHeaderClasses } from "./RoomHeader.classes";
 import { ROOM_HEADER_NAMESPACE, roomHeaderKeys } from "./RoomHeader.keys.const";
 
@@ -100,7 +101,7 @@ export function RoomHeader(props: RoomHeaderProps) {
           title={t(roomHeaderKeys.party)}
           onClick={actions.onParty}
         >
-          {PARTY_EMOJI}
+          {THEME_EMOJI[roomTheme(room.reason)].party}
         </Button>
         {actions.adminHref && (
           <Link

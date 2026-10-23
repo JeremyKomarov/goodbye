@@ -6,7 +6,8 @@ import {
   STATUS_STORIES_NAMESPACE, statusStoriesKeys,
 } from "@/features/room/components/StatusStories/StatusStories.keys.const";
 import { StoryDisc } from "@/features/room/components/StoryDisc";
-import { STORY_GROUPS, type StoryPosition } from "@/features/room/content/stories.const";
+import type { StoryPosition } from "@/features/room/content/stories.const";
+import { useRoomContext } from "@/features/room/hooks/useRoomContext";
 import { useSeenStories } from "@/features/room/hooks/useSeenStories";
 import { Button, BUTTON_VARIANTS } from "@/shared/components/Button";
 
@@ -22,8 +23,9 @@ export function StoryRing({
   children: ReactNode;
 }) {
   const t = useTranslations(STATUS_STORIES_NAMESPACE);
+  const { stories } = useRoomContext();
   const seen = useSeenStories();
-  const next = STORY_GROUPS.findIndex((group) => !seen.includes(group.id));
+  const next = stories.findIndex((group) => !seen.includes(group.id));
 
   return (
     <Button

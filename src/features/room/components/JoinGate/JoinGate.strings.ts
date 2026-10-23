@@ -2,7 +2,11 @@ export const joinGateStrings = {
   label: "כניסה לחדר",
   headline:
     "{status, select, " +
-    "voting {מתי {name} {gender, select, f {צריכה לצאת} other {צריך לצאת}} מהקבוצה?} " +
+    "voting {{theme, select, " +
+    "fired {מתי {name} {gender, select, f {יוצאת} other {יוצא}} מהקבוצה עם הקרטון?} " +
+    "quit {מתי {name} {gender, select, f {מגישה} other {מגיש}} לקבוצה מכתב התפטרות?} " +
+    "fed_up {מתי {name} עושה יציאה דרמטית מהקבוצה?} " +
+    "other {מתי {name} {gender, select, f {צריכה לצאת} other {צריך לצאת}} מהקבוצה?}}} " +
     "locked {{name} {gender, select, f {יוצאת} other {יוצא}} מהקבוצה} " +
     "other {{name} {gender, select, f {כבר יצאה} other {כבר יצא}} מהקבוצה}}",
   because: "{name} {reason}.",

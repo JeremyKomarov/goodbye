@@ -7,6 +7,7 @@ import { verdict } from "@/shared/utils/verdict";
 import { SystemPill } from "@/shared/components/SystemPill";
 import { cn } from "@/shared/utils/cn";
 import { isolate } from "@/shared/utils/isolate";
+import { roomTheme } from "@/shared/utils/roomTheme";
 
 /** The host has left: the notice, and how it went against the hour the group chose. */
 export function ExitedHero({ room, actions }: Pick<HeroProps, "room" | "actions">) {
@@ -17,7 +18,13 @@ export function ExitedHero({ room, actions }: Pick<HeroProps, "room" | "actions"
 
   return (
     <section className={cn(heroClasses.root, heroClasses.exited)} aria-label={t(heroKeys.label)}>
-      <SystemPill>{t(heroKeys.exited.left, { name: isolate(room.hostName), gender })}</SystemPill>
+      <SystemPill>
+        {t(heroKeys.exited.left, {
+          theme: roomTheme(room.reason),
+          name: isolate(room.hostName),
+          gender,
+        })}
+      </SystemPill>
       {outcome && (
         <p className={heroClasses.verdict}>
           {t(heroKeys.exited.verdict, {

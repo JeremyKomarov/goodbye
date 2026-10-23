@@ -6,6 +6,7 @@ import { useSlotFormat } from "@/shared/hooks/useSlotFormat";
 import { ROOM_NAMESPACE, roomKeys } from "@/features/room/strings/room.keys.const";
 import { wonByDraw } from "@/shared/utils/tally";
 import { isolate } from "@/shared/utils/isolate";
+import { roomTheme } from "@/shared/utils/roomTheme";
 import { COUNTDOWN_TONES, Countdown } from "@/features/room/components/Hero/partials/Countdown";
 import { ExitRow } from "@/features/room/components/Hero/partials/ExitRow";
 
@@ -27,7 +28,7 @@ export function LockedHero(props: HeroProps & { lockedSlot: number }) {
   const note = overtime
     ? hostExit
       ? t(heroKeys.locked.hostNow)
-      : t(heroKeys.locked.waiting, { name, gender })
+      : t(heroKeys.locked.waiting, { theme: roomTheme(room.reason), name, gender })
     : wonByDraw(leader, lockedSlot)
       ? t(heroKeys.locked.drawn, { slot, count: leader?.tied.length ?? 0 })
       : leader

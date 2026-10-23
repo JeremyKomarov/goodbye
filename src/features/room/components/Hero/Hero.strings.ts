@@ -20,7 +20,12 @@ export const heroStrings = {
       "{overtime, select, " +
       "true {הגיע הזמן! עברו כבר} " +
       "other {{name} {gender, select, f {יוצאת} other {יוצא}} מהקבוצה בעוד}}",
-    waiting: "עכשיו רק מחכים ש{name} {gender, select, f {תצא} other {יצא}} 👀",
+    waiting:
+      "{theme, select, " +
+      "fired {עכשיו רק מחכים ש{name} {gender, select, f {תארוז} other {יארוז}} את הקרטון 📦} " +
+      "quit {עכשיו רק מחכים ש{name} {gender, select, f {תצדיע ותצא} other {יצדיע ויצא}} 🫡} " +
+      "fed_up {עכשיו רק מחכים ליציאה הדרמטית של {name} 💅} " +
+      "other {עכשיו רק מחכים ש{name} {gender, select, f {תצא} other {יצא}} 👀}}",
     hostNow: "יוצאים מהקבוצה בוואטסאפ, ואז לוחצים כאן 👇",
     drawn: "{slot}. היה תיקו בין {count} שעות, וההגרלה בחרה בזו 🎲",
     decided: "{slot}. ככה החליטה הקבוצה, עם {votes}.",
@@ -37,7 +42,13 @@ export const heroStrings = {
     failed: "לא הצלחנו לסמן את היציאה. נסו שוב",
   },
   exited: {
-    left: "{name} {gender, select, f {יצאה} other {יצא}} מהקבוצה",
+    left:
+      "{theme, select, " +
+      "fired {{name} {gender, select, f {לקחה את הקרטון ויצאה} other {לקח את הקרטון ויצא}} " +
+      "מהקבוצה 📦} " +
+      "quit {{name} {gender, select, f {הצדיעה ויצאה} other {הצדיע ויצא}} מהקבוצה 🫡} " +
+      "fed_up {{name} {gender, select, f {יצאה} other {יצא}} מהקבוצה. בדרמטיות 💅} " +
+      "other {{name} {gender, select, f {יצאה} other {יצא}} מהקבוצה}}",
     verdict:
       "{kind, select, " +
       "on_time {בדיוק בזמן} " +

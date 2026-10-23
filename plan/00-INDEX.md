@@ -16,6 +16,7 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 08 | Games | done | [08-games.md](08-games.md) |
 | 09 | Finale & sharing | done | [09-finale.md](09-finale.md) |
 | 10 | Room language | done | [10-room-language.md](10-room-language.md) |
+| 11 | Room themes | done | [11-room-themes.md](11-room-themes.md) |
 
 **Now:** — · **Next:** —
 

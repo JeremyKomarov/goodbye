@@ -208,3 +208,19 @@ the page.
 
 > A room's pages are in the room's language, chosen by the proxy from `rooms.locale`. Don't put
 > a language switch inside the room, and don't read the locale cookie on a room route.
+
+## 14. A room's words follow its reason for leaving; its colours do not
+
+**Locked 2026-10-23.**
+
+The host's reason — fired, quit, fed up, or none — is the room's theme (`shared/utils/roomTheme.ts`):
+its stories, its question, its wall's intro, its wait and exit lines, its emoji, and its link's
+description. No reason keeps the classic words. The values are the reasons', so a string
+`select`s on a theme exactly as it does on a reason, and a missing branch falls to the classic
+words.
+
+A palette per theme was built and taken out at the owner's request: every room stays WhatsApp
+green, which is the parody (`#4`).
+
+> A theme changes words, stories and emoji — never the tokens. Branch a string on `theme`; don't
+> re-hue a room.

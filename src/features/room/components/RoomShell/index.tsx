@@ -8,7 +8,7 @@ import { ROOM_SECTIONS, roomPath, roomSectionPath } from "@/core/constants/route
 import type { RoomSnapshotDto } from "@/features/room/api/room.dto";
 import { EmojiRain } from "@/features/room/components/EmojiRain";
 import { Finale } from "@/features/room/components/Finale";
-import { PARTY_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
+import { THEME_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
 import { JoinGate } from "@/features/room/components/JoinGate";
 import { MeSheet } from "@/features/room/components/MeSheet";
 import { RoomHeader } from "@/features/room/components/RoomHeader";
@@ -16,7 +16,7 @@ import { ROOM_NAV_VARIANTS, RoomNav } from "@/features/room/components/RoomNav";
 import { StatusStories } from "@/features/room/components/StatusStories";
 import { StoryRing } from "@/features/room/components/StoryRing";
 import { StoryViewer } from "@/features/room/components/StoryViewer";
-import type { StoryPosition } from "@/features/room/content/stories.const";
+import { THEME_STORY_GROUPS, type StoryPosition } from "@/features/room/content/stories.const";
 import { RoomSkeleton } from "@/features/room/components/RoomSkeleton";
 import { RoomStatus } from "@/features/room/components/RoomStatus";
 import { Welcome } from "@/features/room/components/Welcome";
@@ -39,6 +39,7 @@ import { leadingSlot, tallyVotes } from "@/shared/utils/tally";
 import { useNow } from "@/shared/hooks/useNow";
 import { RoomFrameContext } from "@/shared/hooks/useRoomFrame";
 import { initialOf } from "@/shared/utils/avatar";
+import { roomTheme } from "@/shared/utils/roomTheme";
 import { roomShellClasses } from "./RoomShell.classes";
 
 interface RoomShellProps {
@@ -82,13 +83,15 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
   const finale = useFinale(room, isIn);
   if (!snapshot || !room) return <RoomSkeleton />;
   const lastMessage = wall?.messages.at(-1);
+  const theme = roomTheme(room.reason);
+  const stories = THEME_STORY_GROUPS[theme];
   const nav = { snapshot, leader, lastMessage, unread, typing, meId: me?.userId ?? null };
 
   return (
     <MotionConfig reducedMotion="user">
       <RoomContext
         value={{
-          slug, snapshot, me, isHost, leader, live, typing, openStory: setStory, hostExit,
+          slug, snapshot, me, isHost, leader, live, typing, stories, openStory: setStory, hostExit,
           replayFinale: finale.replay,
         }}
       >
@@ -102,7 +105,7 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
             now={isOnVote ? undefined : now}
             onMe={isHost ? undefined : () => setIsMeOpen(true)}
             actions={{
-              onParty: () => live.sendEmoji(PARTY_EMOJI),
+              onParty: () => live.sendEmoji(THEME_EMOJI[theme].party),
               adminHref: identity.adminToken ? roomPath(FEATURE_KEYS.admin, slug) : undefined,
             }}
           />
@@ -124,7 +127,14 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
 
       <EmojiRain subscribe={live.onRain} />
       <AnimatePresence>
-        {story && <StoryViewer key="stories" start={story} onClose={() => setStory(null)} />}
+        {story && (
+          <StoryViewer
+            key="stories"
+            groups={stories}
+            start={story}
+            onClose={() => setStory(null)}
+          />
+        )}
         {finale.isOpen && <Finale key="finale" room={room} onClose={finale.close} />}
       </AnimatePresence>
       <Welcome key={me?.userId} me={me} isReturning={identity.returning} />

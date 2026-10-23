@@ -12,6 +12,7 @@ import { useRecords } from "@/shared/hooks/useRecords";
 import type { Room } from "@/shared/types/room.types";
 import { CELEBRATIONS, celebrate } from "@/shared/utils/celebrate";
 import { isolate } from "@/shared/utils/isolate";
+import { roomTheme } from "@/shared/utils/roomTheme";
 import { champions } from "@/shared/utils/records";
 import { verdict } from "@/shared/utils/verdict";
 import { finaleClasses } from "./Finale.classes";
@@ -40,7 +41,11 @@ export function Finale({ room, onClose }: { room: Room; onClose: () => void }) {
   const { data: records } = useRecords(room.slug);
   const outcome = verdict(room);
   const gender = room.hostGender;
-  const left = tHero(heroKeys.exited.left, { name: isolate(room.hostName), gender });
+  const left = tHero(heroKeys.exited.left, {
+    theme: roomTheme(room.reason),
+    name: isolate(room.hostName),
+    gender,
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => void celebrate(CELEBRATIONS.finale), CONFETTI_DELAY_MS);

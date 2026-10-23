@@ -21,7 +21,12 @@ export const heroStringsEn: StringsOf<typeof heroStrings> = {
       "{overtime, select, " +
       "true {It's time! Overdue by} " +
       "other {{name} leaves the group in}}",
-    waiting: "Now we just wait for {name} to leave 👀",
+    waiting:
+      "{theme, select, " +
+      "fired {Now we just wait for {name} to pack the box 📦} " +
+      "quit {Now we just wait for {name} to salute and go 🫡} " +
+      "fed_up {Now we just wait for {name}'s dramatic exit 💅} " +
+      "other {Now we just wait for {name} to leave 👀}}",
     hostNow: "Leave the group in WhatsApp, then tap here 👇",
     drawn: "{slot}. It was a tie between {count} hours, and the draw picked this one 🎲",
     decided: "{slot}. The group decided, with {votes}.",
@@ -41,7 +46,12 @@ export const heroStringsEn: StringsOf<typeof heroStrings> = {
     failed: "We couldn't mark your exit. Try again",
   },
   exited: {
-    left: "{name} left the group",
+    left:
+      "{theme, select, " +
+      "fired {{name} took the box and left the group 📦} " +
+      "quit {{name} saluted and left the group 🫡} " +
+      "fed_up {{name} left the group. Dramatically 💅} " +
+      "other {{name} left the group}}",
     verdict:
       "{kind, select, " +
       "on_time {Right on time} " +

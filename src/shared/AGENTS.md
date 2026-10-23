@@ -97,6 +97,7 @@ use if the wall or leaderboard needs one.
 | `utils/slotFormat.ts` | `slotFormat(locale, timeZone, slotWords)` — what `useSlotFormat` returns, with no React. | Where there are no hooks: a link preview, the room's metadata. On screen, the hook. |
 | `utils/onEveryRequest.tsx` | `onEveryRequest(Page)` — the page plus a `connection()` marker in its own `<Suspense>` (docs/DECISIONS.md #11). | Every page under a layout whose `generateMetadata` reads the database: the room's sections. |
 | `utils/tally.ts` | `tallyVotes(votes)` by slot, `leadingSlot(tally)` → `Lead` with every tied slot, `wonByDraw(lead, lockedSlot)`. A vote is anything with a `slotMs`. Moved from `room` in phase 09. | The room's heatmap, hero and nav; the server's exit summary. Never count votes by hand. |
+| `utils/roomTheme.ts` | `roomTheme(reason)` → `ROOM_THEMES` classic, fired, quit, fed_up — the reason's values, so a string can `select` on a theme. Added in phase 11. | Every themed string, story or emoji in the room. | Never branch on `room.reason` for a word. |
 | `utils/slots.ts` | `RoomWindow` → hour slots in the room's timezone (`buildSlotDays`, `allSlots`, `hasSlotAfter`), DST holes as `null`. | The landing schedule step, the create handler, the room's heatmap. Never compute an hour with `Date` arithmetic. |
 
 ## Data and words
