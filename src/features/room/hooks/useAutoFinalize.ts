@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { ROOM_STATUSES } from "@/core/constants/room.const";
-import type { Room } from "@/features/room/types/room.types";
+import type { Room } from "@/shared/types/room.types";
 import { useFinalizeRoom } from "./useFinalizeRoom";
 
 // A clock running ahead of the database's asks too early and gets the room back unlocked.

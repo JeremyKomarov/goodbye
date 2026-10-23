@@ -1,5 +1,5 @@
 import type { SaveNameInput } from "@/features/room/api/players.dto";
-import type { Room } from "@/features/room/types/room.types";
+import type { Room } from "@/shared/types/room.types";
 
 export interface JoinGateProps {
   room: Room;

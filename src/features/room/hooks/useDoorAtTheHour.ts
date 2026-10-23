@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { ROOM_STATUSES } from "@/core/constants/room.const";
 import { DOOR_EMOJI } from "@/features/room/components/EmojiRain/EmojiRain.const";
-import type { Room } from "@/features/room/types/room.types";
+import type { Room } from "@/shared/types/room.types";
 
 /**
  * The chosen hour arrives: a door rains on every screen that is open, and phones buzz. Each screen

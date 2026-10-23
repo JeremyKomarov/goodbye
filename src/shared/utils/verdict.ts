@@ -1,4 +1,4 @@
-import type { Room } from "@/features/room/types/room.types";
+import type { Room } from "@/shared/types/room.types";
 
 // How the host's exit compares with the hour the group chose. Ported from the original's
 // core/room-view.ts; the sentence for each kind is the hero's strings.

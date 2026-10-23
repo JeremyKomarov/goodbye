@@ -2,7 +2,7 @@ import { useTranslations } from "next-intl";
 import { heroClasses } from "@/features/room/components/Hero/Hero.classes";
 import { HERO_NAMESPACE, heroKeys } from "@/features/room/components/Hero/Hero.keys.const";
 import type { HeroProps } from "@/features/room/components/Hero/Hero.types";
-import { useSlotFormat } from "@/features/room/hooks/useSlotFormat";
+import { useSlotFormat } from "@/shared/hooks/useSlotFormat";
 import { ROOM_NAMESPACE, roomKeys } from "@/features/room/strings/room.keys.const";
 import { SystemPill } from "@/shared/components/SystemPill";
 import { isolate } from "@/shared/utils/isolate";

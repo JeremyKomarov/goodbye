@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 import { FlipDigits } from "@/features/room/components/FlipDigits";
 import { HERO_NAMESPACE, heroKeys } from "@/features/room/components/Hero/Hero.keys.const";
-import { useDuration } from "@/features/room/hooks/useDuration";
+import { useDuration } from "@/shared/hooks/useDuration";
 import { cn } from "@/shared/utils/cn";
 import { pad, splitCountdown } from "@/shared/utils/countdown";
 import { countdownClasses } from "./Countdown.classes";

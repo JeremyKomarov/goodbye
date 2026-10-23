@@ -44,7 +44,7 @@ the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomN
 | `components/VoteLegend` | The five `--vote-*` shades, fewer → more. Hidden on short screens. |
 | `components/RoomSkeleton` | The page's Suspense fallback, shaped like the room. |
 | `components/RoomNotFound` | `app/[locale]/r/[slug]/not-found.tsx` renders it. |
-| `strings/room.strings.ts` | The `room` namespace: `reason` (gendered), `votes`, `people`, `slot`, `duration` — said by more than one component. |
+| `strings/room.strings.ts` | The `room` namespace: `reason` (gendered), `votes`, `people`, `typing` — said by more than one component. |
 | `utils/names.ts` | `sameName` — the database's `norm_name()` comparison. |
 | `hooks/useVote.ts` | `{ userId, slotMs }` (null takes it back), written into the snapshot before the request and rolled back on failure. Invalidates the room. |
 | `api/votes.dto.ts` | `CastVoteInputSchema`. |
@@ -70,11 +70,7 @@ the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomN
 | `types/wall.types.ts` | `WallMessage`, `ReactionMap`, `Wall`. |
 | `hooks/useFinalizeRoom.ts` | The finalize call. Invalidates the room once it has locked. |
 | `hooks/useAutoFinalize.ts` | When this screen's clock passes the close, asks for the result every 4s until the room is no longer voting. |
-| `hooks/useDuration.ts` | `exact(ms)` ("an hour and 5 minutes"), `rough(ms)` ("33 hours"), from the `room` namespace's `duration`. |
-| `hooks/useSlotFormat.ts` | `day`, `weekday`, `dayMonth`, `time`, `slot` — the room's timezone, the reader's language. Every hour on the room's screens. |
 | `utils/voteScale.ts` | `voteStep(count, max)` → shade, `columns(n, min, max)`, `VOTE_STEPS`, `DARK_TEXT_FROM`. |
-| `utils/duration.ts` | `exactParts`, `roughPart` — a duration split into units for words. |
-| `utils/verdict.ts` | `verdict(room)` — on time (±`ON_TIME_MINUTES`), late, early, or left mid-vote. |
 | `utils/tally.ts` | `tallyVotes`, `leadingSlot` (`Lead` with every tied slot), `wonByDraw`. |
 | `hooks/useWallUnread.ts` | Goodbyes since you last looked at the wall, not your own; what was there when the room opened counts as read. |
 | `hooks/useRoomContext.ts` | `RoomContext` and `useRoomContext()` — `slug`, `snapshot`, `me`, `isHost`, `leader`, `live`, `typing`, `openStory`, from the shell to its sections. |
@@ -86,10 +82,17 @@ the wall at `/r/[slug]/wall` (`roomSectionPath`); an unknown slug renders `RoomN
 | `hooks/useAdminToken.ts` | The admin token for this room from storage; null on the server. |
 | `api/players.dto.ts` | `SaveNameInputSchema` (`MAX_PLAYER_NAME` 24), `ClaimHostInputSchema`. |
 | `api/players.api.ts` | `saveName`, `claimHost` — both send the session's bearer. |
-| `api/room.dto.ts` | `RoomDtoSchema`, `RoomSnapshotDtoSchema` — the wire shape, snake_case. |
-| `api/room.mapper.ts` | `mapRoomDto`, `mapRoomSnapshotDto` — times become epoch milliseconds. |
+| `api/room.dto.ts` | `RoomSnapshotDtoSchema` — the snapshot's wire shape, snake_case, around the shared `RoomDtoSchema`. |
+| `api/room.mapper.ts` | `mapRoomSnapshotDto` — times become epoch milliseconds. |
 | `api/room.api.ts` | `fetchRoom(slug)`. |
-| `types/room.types.ts` | `Room` (a `RoomWindow`, so it builds its own slots), `Player`, `Vote`, `RoomSnapshot`. |
+| `types/room.types.ts` | `Player`, `Vote`, `RoomSnapshot` (around the shared `Room`). |
+
+## What moved to `shared/`
+
+In phase 07, because the admin page shows the same room: the `Room` type, `RoomDtoSchema` and
+`mapRoomDto` (`shared/types`, `shared/api`), `useSlotFormat` and `useDuration` with their words
+(the `time` namespace), and the `duration` and `verdict` utils. Moving them back would make the
+admin feature import this one.
 
 ## Ownership
 

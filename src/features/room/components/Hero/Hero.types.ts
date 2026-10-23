@@ -1,4 +1,4 @@
-import type { Room } from "@/features/room/types/room.types";
+import type { Room } from "@/shared/types/room.types";
 import type { Lead } from "@/features/room/utils/tally";
 
 export interface HeroProps {

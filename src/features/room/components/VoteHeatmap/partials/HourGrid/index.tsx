@@ -7,7 +7,7 @@ import {
 import type {
   SlotMarks, VotingState,
 } from "@/features/room/components/VoteHeatmap/VoteHeatmap.types";
-import type { SlotFormat } from "@/features/room/hooks/useSlotFormat";
+import type { SlotFormat } from "@/shared/hooks/useSlotFormat";
 import { ROOM_NAMESPACE, roomKeys } from "@/features/room/strings/room.keys.const";
 import type { Vote } from "@/features/room/types/room.types";
 import { columns, DARK_TEXT_FROM, voteStep } from "@/features/room/utils/voteScale";

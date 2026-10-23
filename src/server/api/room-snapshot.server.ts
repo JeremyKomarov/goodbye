@@ -1,5 +1,6 @@
 import "server-only";
-import type { RoomDto, RoomSnapshotDto } from "@/features/room/api/room.dto";
+import type { RoomSnapshotDto } from "@/features/room/api/room.dto";
+import type { RoomDto } from "@/shared/api/room.dto";
 import { listHostIds } from "@/server/db/hosts.repo";
 import { listPlayers } from "@/server/db/players.repo";
 import type { RoomRecord } from "@/server/db/rooms.repo";

@@ -4,7 +4,7 @@ import type { Route } from "next";
 import { useTranslations } from "next-intl";
 import { ROOM_STATUSES } from "@/core/constants/room.const";
 import { ROOM_SECTIONS, roomSectionPath } from "@/core/constants/routes.const";
-import { useSlotFormat } from "@/features/room/hooks/useSlotFormat";
+import { useSlotFormat } from "@/shared/hooks/useSlotFormat";
 import type { RoomSnapshot } from "@/features/room/types/room.types";
 import type { WallMessage } from "@/features/room/types/wall.types";
 import { type Lead, wonByDraw } from "@/features/room/utils/tally";

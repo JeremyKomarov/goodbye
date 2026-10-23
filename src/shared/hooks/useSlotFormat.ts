@@ -1,7 +1,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { LOCALES } from "@/core/i18n/routing";
-import { ROOM_NAMESPACE, roomKeys } from "@/features/room/strings/room.keys.const";
+import { TIME_NAMESPACE, timeKeys } from "@/shared/strings/time.keys.const";
 
 /**
  * Dates and hours in the room's timezone, in the reader's language: "יום ה׳ 24.10 ב-14:00",
@@ -9,7 +9,7 @@ import { ROOM_NAMESPACE, roomKeys } from "@/features/room/strings/room.keys.cons
  */
 export function useSlotFormat(timeZone: string) {
   const locale = useLocale();
-  const t = useTranslations(ROOM_NAMESPACE);
+  const t = useTranslations(TIME_NAMESPACE);
 
   return useMemo(() => {
     const format = (options: Intl.DateTimeFormatOptions) =>
@@ -26,7 +26,7 @@ export function useSlotFormat(timeZone: string) {
       weekday: (ms: number) => weekdayTight.format(ms),
       dayMonth: (ms: number) => dayMonth.format(ms),
       time: (ms: number) => time.format(ms),
-      slot: (ms: number) => t(roomKeys.slot, { day: day(ms), time: time.format(ms) }),
+      slot: (ms: number) => t(timeKeys.slot, { day: day(ms), time: time.format(ms) }),
     };
   }, [locale, timeZone, t]);
 }

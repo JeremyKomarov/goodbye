@@ -7,7 +7,7 @@ import { MessageList } from "@/features/room/components/FarewellWall/partials/Me
 import { usePostMessage } from "@/features/room/hooks/usePostMessage";
 import { useReact } from "@/features/room/hooks/useReact";
 import { useRoomContext } from "@/features/room/hooks/useRoomContext";
-import { useSlotFormat } from "@/features/room/hooks/useSlotFormat";
+import { useSlotFormat } from "@/shared/hooks/useSlotFormat";
 import { useWall } from "@/features/room/hooks/useWall";
 import { Button, BUTTON_VARIANTS } from "@/shared/components/Button";
 import { Skeleton, SKELETON_SHAPES } from "@/shared/components/Skeleton";

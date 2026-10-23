@@ -1,6 +1,7 @@
 import { API_ENDPOINTS } from "@/core/constants/api-endpoints.const";
 import { toApiError } from "@/core/api/api-error";
-import { RoomDtoSchema, RoomSnapshotDtoSchema } from "./room.dto";
+import { RoomDtoSchema } from "@/shared/api/room.dto";
+import { RoomSnapshotDtoSchema } from "./room.dto";
 
 export async function fetchRoom(slug: string) {
   const response = await fetch(API_ENDPOINTS.rooms.one(slug), { cache: "no-store" });

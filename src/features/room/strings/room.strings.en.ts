@@ -9,13 +9,5 @@ export const roomStringsEn: StringsOf<typeof roomStrings> = {
     "other {is just fed up}}",
   votes: "{count, plural, =0 {no votes} one {one vote} other {# votes}}",
   people: "{count, plural, one {one person} other {# people}}",
-  slot: "{day} at {time}",
   typing: "{count, plural, one {{name} is typing…} other {# people are typing…}}",
-  duration: {
-    days: "{count, plural, one {a day} other {# days}}",
-    hours: "{count, plural, one {an hour} other {# hours}}",
-    minutes: "{count, plural, one {a minute} other {# minutes}}",
-    pair: "{first} and {second}",
-    underMinute: "less than a minute",
-  },
 };

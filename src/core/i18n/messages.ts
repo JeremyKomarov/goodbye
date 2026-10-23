@@ -156,6 +156,9 @@ import {
 import {
   statusStoriesStringsEn,
 } from "@/features/room/components/StatusStories/StatusStories.strings.en";
+import { TIME_NAMESPACE } from "@/shared/strings/time.keys.const";
+import { timeStrings } from "@/shared/strings/time.strings";
+import { timeStringsEn } from "@/shared/strings/time.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -189,6 +192,7 @@ const he = {
   [FAREWELL_WALL_NAMESPACE]: farewellWallStrings,
   [ROOM_NAV_NAMESPACE]: roomNavStrings,
   [STATUS_STORIES_NAMESPACE]: statusStoriesStrings,
+  [TIME_NAMESPACE]: timeStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -221,6 +225,7 @@ const en: StringsOf<typeof he> = {
   [FAREWELL_WALL_NAMESPACE]: farewellWallStringsEn,
   [ROOM_NAV_NAMESPACE]: roomNavStringsEn,
   [STATUS_STORIES_NAMESPACE]: statusStoriesStringsEn,
+  [TIME_NAMESPACE]: timeStringsEn,
 };
 
 export type Messages = typeof he;
