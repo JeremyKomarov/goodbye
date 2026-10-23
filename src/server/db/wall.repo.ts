@@ -124,3 +124,13 @@ export async function removeReaction(accessToken: string, messageId: number, use
     .eq("user_id", userId);
   if (error) throw failed();
 }
+
+/** Removes a goodbye from the room's wall — the host's call, made with the secret key. */
+export async function deleteWallMessage(roomId: string, messageId: number): Promise<void> {
+  const { error } = await db()
+    .from("wall_messages")
+    .delete()
+    .eq("room_id", roomId)
+    .eq("id", messageId);
+  if (error) throw failed();
+}

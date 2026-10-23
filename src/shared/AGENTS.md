@@ -91,6 +91,7 @@ use if the wall or leaderboard needs one.
 |---|---|---|---|
 | `types/room.types.ts` | `Room` — a room, times as epoch milliseconds; a `RoomWindow`, so it builds its own slots. | Any screen that shows a room. | Never a second room type in a feature. |
 | `api/room.dto.ts`, `api/room.mapper.ts` | `RoomDtoSchema` / `RoomDto` — a room on the wire; `mapRoomDto`. Every handler that answers with a room sends this shape (`server/api/room-snapshot.server.ts`). | A feature's DTO that carries a room nests this schema. | Never restate the room's fields in a feature's DTO. |
+| `api/admin-action.dto.ts` | `ADMIN_ACTIONS`, `AdminActionInputSchema` — what the host can do to their room. | The admin page sends every action; the room sends `exit`. | Never a second action shape for the host. |
 | `strings/time.strings.ts` | The `time` namespace: `slot`, `duration`. | Read by the two hooks above. | Never word an hour or a duration in a feature's strings. |
 
 ## Promotion rule

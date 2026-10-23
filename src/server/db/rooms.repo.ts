@@ -1,7 +1,9 @@
 import "server-only";
 import { customAlphabet } from "nanoid";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
-import type { HostGender, LeaveReason, RoomStatus } from "@/core/constants/room.const";
+import {
+  ROOM_STATUSES, type HostGender, type LeaveReason, type RoomStatus,
+} from "@/core/constants/room.const";
 import { db } from "./client";
 
 // Rooms and their secrets. The table is `public.rooms`; the admin token's hash sits apart in
@@ -151,4 +153,55 @@ export async function finalizeRoom(slug: string): Promise<RoomRecord | null> {
     .maybeSingle<RoomRow>();
   if (error) throw failed();
   return data?.id ? toRecord(data) : null;
+}
+
+/** Locks the room now to the leading hour — admin_lock_room(); a room not voting is unchanged. */
+export async function lockRoomNow(roomId: string): Promise<RoomRecord> {
+  const { data, error } = await db()
+    .rpc("admin_lock_room", { p_room: roomId })
+    .single<RoomRow>();
+  if (error || !data) throw failed();
+  return toRecord(data);
+}
+
+/** Opens the vote again until `votingClosesAt`, forgetting the chosen hour and any exit. */
+export async function reopenRoom(roomId: string, votingClosesAt: string): Promise<RoomRecord> {
+  return updateRoom(roomId, {
+    status: ROOM_STATUSES.voting,
+    voting_closes_at: votingClosesAt,
+    locked_slot: null,
+    exited_at: null,
+  });
+}
+
+/** Marks the host's exit, once: a room already exited keeps its first time, and is returned. */
+export async function markExited(roomId: string): Promise<RoomRecord | null> {
+  const { data, error } = await db()
+    .from("rooms")
+    .update({ status: ROOM_STATUSES.exited, exited_at: new Date().toISOString() })
+    .eq("id", roomId)
+    .neq("status", ROOM_STATUSES.exited)
+    .select("*")
+    .maybeSingle<RoomRow>();
+  if (error) throw failed();
+  return data ? toRecord(data) : null;
+}
+
+/** Takes the exit back: to the countdown if an hour was chosen, otherwise to the vote. */
+export async function undoExit(room: RoomRecord): Promise<RoomRecord> {
+  return updateRoom(room.id, {
+    status: room.lockedSlot ? ROOM_STATUSES.locked : ROOM_STATUSES.voting,
+    exited_at: null,
+  });
+}
+
+async function updateRoom(roomId: string, changes: Partial<RoomRow>): Promise<RoomRecord> {
+  const { data, error } = await db()
+    .from("rooms")
+    .update(changes)
+    .eq("id", roomId)
+    .select("*")
+    .single<RoomRow>();
+  if (error || !data) throw failed();
+  return toRecord(data);
 }

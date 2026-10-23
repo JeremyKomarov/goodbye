@@ -11,8 +11,8 @@ room the red exit row is the host's button; the `admin` flag is on.
 
 - [x] ~~07.1 — promote the room's type, DTO and mapper, slot and duration formatting, the verdict (M)~~
 - [x] ~~07.2 — the admin token check; `GET /api/rooms/[slug]/admin`; the host claim drops their vote (M)~~
-- [~] 07.3 — `PATCH …/admin` (lock, reopen, exit, undo the exit), `DELETE …/admin/messages/[id]` (M)
-- [ ] 07.4 — the admin page: the link's token, the room's state, its actions, forgetting this device (L)
+- [x] ~~07.3 — `PATCH …/admin` (lock, reopen, exit, undo the exit), `DELETE …/admin/messages/[id]` (M)~~
+- [~] 07.4 — the admin page: the link's token, the room's state, its actions, forgetting this device (L)
 - [ ] 07.5 — the admin's wall, the players' codes, the admin link sent to yourself (M)
 - [ ] 07.6 — in the room: the exit row as the host's button, the header's link to the admin page (S)
 - [ ] 07.7 — `enable-feature admin`; checked in two browsers, both locales (M)

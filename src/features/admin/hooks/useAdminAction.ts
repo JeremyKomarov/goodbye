@@ -1,0 +1,18 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { QUERY_KEYS } from "@/core/constants/query-keys.const";
+import { runAdminAction } from "@/features/admin/api/admin.api";
+import type { AdminActionInput } from "@/shared/api/admin-action.dto";
+import { mapRoomDto } from "@/shared/api/room.mapper";
+
+/**
+ * Lock, reopen, exit or take the exit back. Rejects with an `ApiError` — `forbidden`, or a reopen's
+ * `close_time_in_past` / `no_slots_after_close` on `votingClosesAt`. Invalidates the room.
+ */
+export function useAdminAction(slug: string, token: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: AdminActionInput) =>
+      mapRoomDto(await runAdminAction(slug, token, input)),
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.room.all(slug) }),
+  });
+}

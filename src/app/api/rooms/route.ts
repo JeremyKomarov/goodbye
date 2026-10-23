@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { API_ERROR_CODES } from "@/core/api/api-error";
+import { MIN_OPEN_MS } from "@/core/constants/room.const";
 import { CreateRoomInputSchema, type CreatedRoomDto } from "@/features/landing/api/rooms.dto";
 import { apiError, handlingApiErrors } from "@/server/api/error-response.server";
 import { hashToken, newAdminToken } from "@/server/auth/admin-token";
@@ -7,8 +8,6 @@ import { insertRoom } from "@/server/db/rooms.repo";
 import { addDaysToDate, hasSlotAfter } from "@/shared/utils/slots";
 
 const ROUTE = "/api/rooms";
-// Voting has to stay open long enough for the link to reach the group.
-const MIN_OPEN_MS = 60_000;
 
 // Opening a room needs no session: anyone may, and the admin token returned is what makes them
 // its host (docs/DECISIONS.md #2). Row-level security still keeps clients from inserting one.

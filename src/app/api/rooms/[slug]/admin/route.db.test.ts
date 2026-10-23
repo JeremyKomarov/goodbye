@@ -76,4 +76,56 @@ describe.skipIf(!enabled)("GET /api/rooms/[slug]/admin against Supabase", { time
       expect(await response.json()).toEqual({ error: { code: "forbidden" } });
     }
   });
+
+  const act = async (body: unknown) => {
+    const { PATCH } = await import("./route");
+    const request = new Request("http://test", {
+      method: "PATCH",
+      headers: { "content-type": "application/json", "x-admin-token": TOKEN },
+      body: JSON.stringify(body),
+    });
+    const response = await PATCH(request, { params: Promise.resolve({ slug }) });
+    return { status: response.status, body: await response.json() };
+  };
+
+  it("locks, reopens, exits and takes the exit back", async () => {
+    expect((await act({ action: "lock" })).body.status).toBe("locked");
+
+    const past = await act({ action: "reopen", votingClosesAt: new Date().toISOString() });
+    expect(past.status).toBe(422);
+    expect(past.body.error).toEqual({ code: "close_time_in_past", field: "votingClosesAt" });
+    const later = new Date(Date.now() + DAY_MS).toISOString();
+    const reopened = await act({ action: "reopen", votingClosesAt: later });
+    expect(reopened.body).toMatchObject({ status: "voting", locked_slot: null });
+
+    const exited = await act({ action: "exit" });
+    expect(exited.body.status).toBe("exited");
+    const again = await act({ action: "exit" });
+    expect(again.body.exited_at).toBe(exited.body.exited_at);
+    expect((await act({ action: "undo_exit" })).body).toMatchObject({
+      status: "voting",
+      exited_at: null,
+    });
+  });
+
+  it("deletes a goodbye from the wall", async () => {
+    const { db } = await import("@/server/db/client");
+    const { data } = await db()
+      .from("wall_messages")
+      .insert({ room_id: roomId, user_id: userId, display_name: "-", body: "delete me" })
+      .select("id")
+      .single<{ id: number }>();
+    const { DELETE } = await import("./messages/[messageId]/route");
+    const request = new Request("http://test", {
+      method: "DELETE",
+      headers: { "x-admin-token": TOKEN },
+    });
+    const params = Promise.resolve({ slug, messageId: String(data!.id) });
+    expect((await DELETE(request, { params })).status).toBe(204);
+    const { count } = await db()
+      .from("wall_messages")
+      .select("*", { count: "exact", head: true })
+      .eq("room_id", roomId);
+    expect(count).toBe(0);
+  });
 });

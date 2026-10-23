@@ -9,6 +9,9 @@ export const ROOM_STATUSES = { voting: "voting", locked: "locked", exited: "exit
 export const REACTION_EMOJIS = ["❤️", "😂", "😢", "🫡", "👏", "🔥"] as const;
 
 export type ReactionEmoji = (typeof REACTION_EMOJIS)[number];
+/** Voting stays open at least this long — for the link to reach the group, or after a reopening. */
+export const MIN_OPEN_MS = 60_000;
+
 export type HostGender = (typeof HOST_GENDERS)[keyof typeof HOST_GENDERS];
 export type LeaveReason = (typeof LEAVE_REASONS)[keyof typeof LEAVE_REASONS];
 export type RoomStatus = (typeof ROOM_STATUSES)[keyof typeof ROOM_STATUSES];
