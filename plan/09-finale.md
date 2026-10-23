@@ -38,10 +38,9 @@ made while checking are deleted afterwards.
   `[locale]` segment, and a layout that reads the room in its metadata needs each page to say it
   renders per request (docs/DECISIONS.md #11). Satori has no bidi: a Hebrew card is reversed into
   visual order, and an English card's Hebrew names too.
-- The nightly cleanup: the migrations schedule `cleanup-old-rooms` (03:17 daily) with pg_cron, but
-  its row could not be read from here — no Supabase CLI or `psql`, and the API does not expose the
-  `cron` schema. To confirm it, run `select jobname, schedule, active from cron.job;` in the
-  Supabase SQL editor. The oldest room is 8 days old, so the job has had nothing to remove yet.
+- The nightly cleanup: the migrations schedule `cleanup-old-rooms` (03:17 daily) with pg_cron.
+  The API does not expose the `cron` schema, so the owner confirmed it in the Supabase SQL editor
+  (`select jobname, schedule, active from cron.job;`): the job exists.
 - Checked in fresh browsers: the host (en 1280) opened a room on the landing, A (en 360) and B
   (he 1280) joined and voted, the host closed voting on the admin page; both saw "add to calendar"
   live and the `.ics` opened at the hour; the host's sheet held the real numbers and champion; the
