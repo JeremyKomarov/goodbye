@@ -1,8 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AnimatePresence } from "motion/react";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useLocale } from "next-intl";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
@@ -52,8 +51,12 @@ export function CreateRoomForm({
   const createRoom = useCreateRoom();
   const [step, setStep] = useState(0);
   const isLast = step === FORM_STEPS.length - 1;
-  const { key } = FORM_STEPS[step];
-  const Body = STEP_BODIES[key];
+  const stepsRef = useRef<HTMLDivElement>(null);
+
+  // A short screen scrolls the steps; each one starts at its title.
+  useEffect(() => {
+    stepsRef.current?.scrollTo({ top: 0 });
+  }, [step]);
 
   useEffect(
     () =>
@@ -92,11 +95,17 @@ export function CreateRoomForm({
     <FormProvider {...form}>
       <form className={createRoomFormClasses.root} onSubmit={submit} noValidate>
         <StepProgress step={step} total={FORM_STEPS.length} />
-        <AnimatePresence mode="wait" initial={false}>
-          <StepBody key={key} stepKey={key}>
-            <Body />
-          </StepBody>
-        </AnimatePresence>
+        {/* Every step is mounted in the same cell, so the card is always the tallest one's size. */}
+        <div ref={stepsRef} className={createRoomFormClasses.steps}>
+          {FORM_STEPS.map(({ key }, at) => {
+            const Body = STEP_BODIES[key];
+            return (
+              <StepBody key={key} stepKey={key} offset={at - step}>
+                <Body />
+              </StepBody>
+            );
+          })}
+        </div>
         <ServerAlert />
         <FormActions
           isFirst={step === 0}

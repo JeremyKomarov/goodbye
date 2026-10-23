@@ -1,16 +1,19 @@
 .step-body {
   display: flex;
   flex-direction: column;
+  grid-area: 1 / 1;
   gap: var(--space-4);
-  flex: 0 1 auto;
   min-width: 0;
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  // Room for a focused field's ring, which `overflow` would otherwise clip.
-  margin-inline: calc(-1 * var(--space-1));
-  padding: var(--space-5) var(--space-1) var(--space-1);
+  margin: 0;
+  padding: 0;
   border: 0;
+  // Stays visible while it fades out, then leaves the accessibility tree and the tab order.
+  transition: visibility 0s;
+
+  &--hidden {
+    visibility: hidden;
+    transition-delay: 0.18s;
+  }
 
   // A legend will not lay out as a flex child; `contents` lets its two lines join the column.
   &__legend {
@@ -35,7 +38,6 @@
 @media (max-height: 860px) {
   .step-body {
     gap: var(--space-3);
-    padding-block-start: var(--space-4);
   }
 
   .step-body__title {
@@ -44,10 +46,6 @@
 }
 
 @media (max-height: 500px) {
-  .step-body {
-    padding-block-start: var(--space-3);
-  }
-
   .step-body__title {
     font-size: var(--text-3xl);
   }
