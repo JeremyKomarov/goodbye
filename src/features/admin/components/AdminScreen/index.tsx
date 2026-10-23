@@ -9,6 +9,7 @@ import { ADMIN_TOKEN_PARAM, roomPath } from "@/core/constants/routes.const";
 import { AdminControls } from "@/features/admin/components/AdminControls";
 import { AdminLink } from "@/features/admin/components/AdminLink";
 import { AdminWall } from "@/features/admin/components/AdminWall";
+import { GroupMessages } from "@/features/admin/components/GroupMessages";
 import { PlayerCodes } from "@/features/admin/components/PlayerCodes";
 import { useAdminAction } from "@/features/admin/hooks/useAdminAction";
 import { useAdminRoom } from "@/features/admin/hooks/useAdminRoom";
@@ -58,6 +59,7 @@ export function AdminScreen({ slug }: { slug: string }) {
       <div className={adminScreenClasses.grid}>
         <div className={adminScreenClasses.column}>
           <AdminControls room={admin.data.room} onAct={action.mutateAsync} />
+          {origin && <GroupMessages room={admin.data.room} roomUrl={`${origin}${roomHref}`} />}
         </div>
         <div className={adminScreenClasses.column}>
           <AdminWall

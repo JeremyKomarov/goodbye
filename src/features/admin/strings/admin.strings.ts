@@ -63,6 +63,10 @@ export const adminStrings = {
     send: "שליחה לעצמי בוואטסאפ",
     message: "קישור הניהול שלי לחדר של {group} (לא לשלוח לקבוצה): {url}",
   },
+  share: {
+    title: "שליחה לקבוצה",
+    exited: "הודעת הפרידה",
+  },
   errors: {
     close_time_in_past: "זמן הסגירה צריך להיות בעתיד",
     no_slots_after_close: "אין שעות להצבעה אחרי הזמן הזה",

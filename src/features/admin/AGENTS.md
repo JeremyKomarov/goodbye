@@ -1,7 +1,8 @@
 # `admin`
 
 The host's page, opened from the admin link: prove the admin token, then close or reopen voting,
-press "I left the group" (or undo it), delete wall messages, and see every player's login code.
+press "I left the group" (or undo it), delete wall messages, see every player's login code, and
+send the group the decision and the goodbye.
 Feature flag: `admin`, enabled. Route: `/r/[slug]/admin`; the room's header links here for the
 host's browser, and the room's exit row sends the same `exit` action.
 
@@ -20,6 +21,7 @@ host's browser, and the room's exit row sends the same `exit` action.
 | `components/AdminScreen` | The page (`app/[locale]/r/[slug]/admin/page.tsx` reads the slug inside `<Suspense>`): the heading, the private-page warning, and the panels — or "this admin link doesn't work" for no token or a wrong one. |
 | `components/AdminControls` | The room's state; "I left the group" (warning first if early or mid-vote), close the vote now, move the close or reopen (`ReopenForm`, the handler's codes on its field), undo the exit; forget admin on this device. Every action asks first. |
 | `components/AdminWall` | The newest goodbyes, each with Delete (asks first); Refresh. |
+| `components/GroupMessages` | The host's messages to the group — the shared `ShareMessages`, the same as the room's sheet — under the controls. |
 | `components/PlayerCodes` | Every player but the host with their login code: copy it, or send it on WhatsApp with the room's link. |
 | `components/AdminLink` | The admin link itself, to copy or send to yourself — the way back from another device. |
 | `hooks/useLinkToken.ts` | The token from the link's `#k=` — kept in this browser and taken out of the address bar — or the one kept before. |
@@ -40,5 +42,4 @@ host's browser, and the room's exit row sends the same `exit` action.
 
 ## Next real work
 
-Phase 09 — the "send to the group" messages (the goodbye with the room's numbers) belong on this
-page too, with the rest of sharing.
+None planned. The host's messages to the group arrived in phase 09 (`GroupMessages`).

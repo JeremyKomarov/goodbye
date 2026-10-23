@@ -1,0 +1,14 @@
+// The host's messages to the group, as a panel of the admin page.
+.group-messages {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  background: var(--surface-card);
+
+  &__title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+}

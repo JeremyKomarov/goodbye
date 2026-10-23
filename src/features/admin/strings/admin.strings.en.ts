@@ -70,6 +70,10 @@ export const adminStringsEn: StringsOf<typeof adminStrings> = {
     send: "Send it to myself on WhatsApp",
     message: "My admin link for the {group} room (don't send it to the group): {url}",
   },
+  share: {
+    title: "Send to the group",
+    exited: "The goodbye message",
+  },
   errors: {
     close_time_in_past: "The closing time has to be in the future",
     no_slots_after_close: "There are no hours to vote on after that time",

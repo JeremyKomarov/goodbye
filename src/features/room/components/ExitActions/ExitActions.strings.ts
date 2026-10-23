@@ -1,6 +1,10 @@
 // The actions under the countdown and the exit card: the calendar for everyone while the hour is
-// ahead.
+// ahead, and the host's messages to the group — the decision and the goodbye, then the goodbye.
 export const exitActionsStrings = {
+  share: {
+    locked: "שליחה לקבוצה",
+    exited: "הודעת הפרידה",
+  },
   calendar: {
     open: "הוספה ליומן",
     title: "הוספה ליומן",

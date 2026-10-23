@@ -223,6 +223,11 @@ import { exitActionsStrings } from "@/features/room/components/ExitActions/ExitA
 import {
   exitActionsStringsEn,
 } from "@/features/room/components/ExitActions/ExitActions.strings.en";
+import {
+  SHARE_MESSAGES_NAMESPACE,
+} from "@/shared/components/ShareMessages/ShareMessages.keys.const";
+import { shareMessagesStrings } from "@/shared/components/ShareMessages/ShareMessages.strings";
+import { shareMessagesStringsEn } from "@/shared/components/ShareMessages/ShareMessages.strings.en";
 import type { Locale } from "./routing";
 import type { StringsOf } from "./strings.types";
 
@@ -271,6 +276,7 @@ const he = {
   [BOARD_NAMESPACE]: boardStrings,
   [CALENDAR_NAMESPACE]: calendarStrings,
   [EXIT_ACTIONS_NAMESPACE]: exitActionsStrings,
+  [SHARE_MESSAGES_NAMESPACE]: shareMessagesStrings,
 };
 
 const en: StringsOf<typeof he> = {
@@ -318,6 +324,7 @@ const en: StringsOf<typeof he> = {
   [BOARD_NAMESPACE]: boardStringsEn,
   [CALENDAR_NAMESPACE]: calendarStringsEn,
   [EXIT_ACTIONS_NAMESPACE]: exitActionsStringsEn,
+  [SHARE_MESSAGES_NAMESPACE]: shareMessagesStringsEn,
 };
 
 export type Messages = typeof he;

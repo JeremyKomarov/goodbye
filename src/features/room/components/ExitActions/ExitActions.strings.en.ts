@@ -2,6 +2,10 @@ import type { StringsOf } from "@/core/i18n/strings.types";
 import type { exitActionsStrings } from "./ExitActions.strings";
 
 export const exitActionsStringsEn: StringsOf<typeof exitActionsStrings> = {
+  share: {
+    locked: "Send to the group",
+    exited: "The goodbye message",
+  },
   calendar: {
     open: "Add to calendar",
     title: "Add to calendar",
