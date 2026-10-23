@@ -3,8 +3,8 @@
 // Every one is "e2e — delete me", so `sweep.ts` catches any a killed run leaves behind.
 import { createClient } from "@supabase/supabase-js";
 import { expect, test, type APIRequestContext, type Page } from "@playwright/test";
-import { LOGIN_CODE_ALPHABET, LOGIN_CODE_LENGTH, loginEmail } from "../src/core/constants/login.const";
-import { STORAGE_KEYS } from "../src/core/constants/storage-keys.const";
+import { LOGIN_CODE_ALPHABET, LOGIN_CODE_LENGTH, loginEmail } from "@/core/constants/login.const";
+import { STORAGE_KEYS } from "@/core/constants/storage-keys.const";
 
 const SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
