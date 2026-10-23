@@ -175,3 +175,15 @@ was the wrong turn: Next still rejects `params` read in `generateMetadata`.
 
 > A link preview's image is a Route Handler under `/api`, its locale in the query. A page whose
 > layout's metadata reads the database is exported through `onEveryRequest`.
+
+## 12. An unknown room answers 200 with `noindex`, not a 404 status
+
+The room is read inside the layout's `<Suspense>`, so the shell has streamed, with its 200, before
+anyone knows the slug is unknown; the not-found page then streams in and Next adds
+`<meta name="robots" content="noindex">`, which crawlers treat as a 404. Calling `notFound()` in
+`generateMetadata` instead fails: Next 16.4 throws "did not produce a static shell". The other
+way to a real 404 is a database read in the proxy on every room request, navigation between tabs
+included — a query per click to change a status no person sees.
+
+> An unknown room is the not-found page with `noindex`, at status 200. Don't move the room's read
+> out of `<Suspense>` or into the proxy to change that.

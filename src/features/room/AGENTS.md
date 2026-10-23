@@ -5,7 +5,7 @@ from another device, with their login code), votes on the exit hour in a heatmap
 countdown — to the close, then to the chosen hour — change live with everyone else's. The host's
 browser comes in under the host's name and watches rather than votes. Feature flag: `room`,
 enabled. Routes: the sections of `/r/[slug]` share the `(room)` layout — the vote at `/r/[slug]`,
-the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`; the `games` feature's), the records at `/r/[slug]/board`; an unknown slug renders `RoomNotFound`.
+the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`; the `games` feature's), the records at `/r/[slug]/board`; an unknown slug renders `RoomNotFound`, at status 200 with `noindex` (`docs/DECISIONS.md #12`).
 
 ## Status
 
