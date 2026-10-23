@@ -72,8 +72,12 @@
     max-height: 100%;
   }
 
+  // The chat spans both rows, and a grid sizes its rows from what spans them: without `contain`,
+  // every line the chat adds would grow the rows and push the headline and the form down. Its
+  // height comes from the rows the other two set, and its lines scroll inside it.
   .landing-screen__chat {
     display: block;
+    contain: size;
     grid-area: 1 / 2 / span 2;
     align-self: center;
     height: min(42rem, 100%);
