@@ -15,9 +15,6 @@ export const ROOM_TABLES = {
   scores: "scores",
 } as const;
 
-// A deleted row carries only its key, so these deletions can't be filtered by room: any one
-// anywhere is reported, and the read that follows is what tells.
-const UNFILTERED_DELETES = [ROOM_TABLES.votes, ROOM_TABLES.wallMessages, ROOM_TABLES.wallReactions];
 export type RoomTable = (typeof ROOM_TABLES)[keyof typeof ROOM_TABLES];
 
 // supabase.channel() hands back a channel with the same topic until its unsubscribe finishes, so a
@@ -48,7 +45,11 @@ export interface RoomChannel {
   unsubscribe: () => void;
 }
 
-const EVENTS = { typing: "typing", emoji: "emoji" } as const;
+// `deleted` is the database's: a deleted row carries only its key, so Realtime can't filter it by
+// room, and a trigger broadcasts it on the room's own topic instead
+// (supabase/migrations/…_room_delete_broadcast.sql).
+const EVENTS = { typing: "typing", emoji: "emoji", deleted: "deleted" } as const;
+const TABLES = new Set<string>(Object.values(ROOM_TABLES));
 
 /**
  * Joins one room's channel: table changes (which the caller turns into invalidations), presence,
@@ -74,10 +75,6 @@ export function joinRoomChannel(roomId: string, handlers: RoomChannelHandlers): 
         handlers.onChange(table),
       );
     }
-    for (const table of UNFILTERED_DELETES)
-      next.on("postgres_changes", { event: "DELETE", schema: "public", table }, () =>
-        handlers.onChange(table),
-      );
     next
       .on("presence", { event: "sync" }, () => {
         const peers = new Map<string, RoomPeer>();
@@ -92,6 +89,10 @@ export function joinRoomChannel(roomId: string, handlers: RoomChannelHandlers): 
       .on("broadcast", { event: EVENTS.emoji }, ({ payload }) => {
         const { emoji } = payload as { emoji?: string };
         if (emoji) handlers.onEmoji(emoji);
+      })
+      .on("broadcast", { event: EVENTS.deleted }, ({ payload }) => {
+        const { table } = payload as { table?: string };
+        if (table && TABLES.has(table)) handlers.onChange(table as RoomTable);
       });
     channel = next.subscribe((status) => {
       isJoined = status === "SUBSCRIBED";

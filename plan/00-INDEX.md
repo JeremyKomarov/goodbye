@@ -21,8 +21,9 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 13 | Who hasn't voted | done | [13-vote-reminder.md](13-vote-reminder.md) |
 | 14 | The host's page, live | done | [14-live-admin.md](14-live-admin.md) |
 | 15 | The host's page and the room, tested end to end | done | [15-admin-e2e.md](15-admin-e2e.md) |
+| 16 | A deletion reaches its own room only | in progress | [16-room-deletes.md](16-room-deletes.md) |
 
-**Now:** — · **Next:** —
+**Now:** 16 · **Next:** —
 
 The step inside that phase, and how it is going, live in [`NOW.md`](NOW.md) — this line stays
 phase-level. `guard` fails if the two disagree.

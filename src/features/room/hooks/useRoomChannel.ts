@@ -7,7 +7,7 @@ import {
 import type { Player } from "@/features/room/types/room.types";
 import { useNow } from "@/shared/hooks/useNow";
 
-// A burst of changes (a vote moved: a delete and an insert) is read once.
+// A burst of changes (a vote moved and a goodbye sent together, a reconnect) is read once.
 const SETTLE_MS = 150;
 // A typing signal lasts this long unless it is renewed; a sender renews it every 2s.
 const TYPING_TTL_MS = 4000;

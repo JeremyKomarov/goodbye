@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { QUERY_KEYS } from "@/core/constants/query-keys.const";
 import { joinRoomChannel, ROOM_TABLES } from "@/core/supabase/realtime";
 
-// A burst of changes (a vote moved: a delete and an insert) is read once.
+// A burst of changes (a vote moved and a goodbye sent together, a reconnect) is read once.
 const SETTLE_MS = 150;
 
 const ignore = () => {};
