@@ -1,20 +1,14 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
-// Joining against the real project (`npm run test:db`): two anonymous users and a host, through
+// Joining against the real project (`npm run test:db`): two players and a host, through
 // the handlers, with the database's own name rules. The room and the users are deleted afterwards.
 vi.mock("server-only", () => ({}));
 const enabled = Boolean(process.env.SUPABASE_SECRET_KEY);
 const DAY_MS = 86_400_000;
 
-async function anonymousToken() {
-  const { createClient } = await import("@supabase/supabase-js");
-  const { env } = await import("@/core/config/env");
-  const client = createClient(env.supabaseUrl, env.supabasePublishableKey, {
-    auth: { persistSession: false },
-  });
-  const { data } = await client.auth.signInAnonymously();
-  return { token: data.session!.access_token, userId: data.user!.id };
-}
+// A player's session, made with the secret key: a test has no captcha token to sign in with
+// (server/db/test-sessions.ts).
+const newPlayer = async () => (await import("@/server/db/test-sessions")).testSession();
 
 const call = (url: string, method: string, token: string, body: unknown) =>
   new Request(url, {
@@ -51,7 +45,7 @@ describe.skipIf(!enabled)("joining a room against Supabase", { timeout: 20_000 }
     );
     slug = room.slug;
     roomId = room.id;
-    for (let i = 0; i < 3; i++) users.push(await anonymousToken());
+    for (let i = 0; i < 3; i++) users.push(await newPlayer());
   });
 
   afterAll(async () => {

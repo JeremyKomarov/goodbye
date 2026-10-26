@@ -6,15 +6,9 @@ vi.mock("server-only", () => ({}));
 const enabled = Boolean(process.env.SUPABASE_SECRET_KEY);
 const DAY_MS = 86_400_000;
 
-async function anonymous() {
-  const { createClient } = await import("@supabase/supabase-js");
-  const { env } = await import("@/core/config/env");
-  const client = createClient(env.supabaseUrl, env.supabasePublishableKey, {
-    auth: { persistSession: false },
-  });
-  const { data } = await client.auth.signInAnonymously();
-  return { token: data.session!.access_token, userId: data.user!.id };
-}
+// A player's session, made with the secret key: a test has no captcha token to sign in with
+// (server/db/test-sessions.ts).
+const newPlayer = async () => (await import("@/server/db/test-sessions")).testSession();
 
 const request = (url: string, method: string, token: string, body?: unknown) =>
   new Request(url, {
@@ -60,7 +54,7 @@ describe.skipIf(!enabled)("voting against Supabase", { timeout: 20_000 }, () => 
     closed = (await makeRoom(Date.now() - 60_000)).slug;
     const { allSlots } = await import("@/shared/utils/slots");
     firstSlot = allSlots(room)[0].ms;
-    users.push(await anonymous(), await anonymous());
+    users.push(await newPlayer(), await newPlayer());
 
     const { savePlayerName } = await import("@/server/db/players.repo");
     const { addHost } = await import("@/server/db/hosts.repo");

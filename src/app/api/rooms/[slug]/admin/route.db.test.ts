@@ -38,14 +38,8 @@ describe.skipIf(!enabled)("the host's page against Supabase", { timeout: 20_000 
     roomId = room.id;
     const { allSlots } = await import("@/shared/utils/slots");
     firstSlot = new Date(allSlots(room)[0].ms).toISOString();
-    const { createClient } = await import("@supabase/supabase-js");
-    const { env } = await import("@/core/config/env");
-    const browser = createClient(env.supabaseUrl, env.supabasePublishableKey, {
-      auth: { persistSession: false },
-    });
-    const { data } = await browser.auth.signInAnonymously();
-    userId = data.user!.id;
-    accessToken = data.session!.access_token;
+    const { testSession } = await import("@/server/db/test-sessions");
+    ({ userId, token: accessToken } = await testSession());
     const { savePlayerName } = await import("@/server/db/players.repo");
     const { saveLoginCode } = await import("@/server/db/login-codes.repo");
     await savePlayerName(accessToken, roomId, userId, "Player");

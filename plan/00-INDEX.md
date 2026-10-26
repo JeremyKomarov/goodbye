@@ -34,9 +34,9 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 26 | No Sentry | done | [26-no-sentry.md](26-no-sentry.md) |
 | 27 | A new login code never strands a browser | done | [27-login-code-resign.md](27-login-code-resign.md) |
 | 28 | A script can't flood a room, or the database | done | [28-abuse-hardening.md](28-abuse-hardening.md) |
-| 29 | A sign-in needs a passed captcha | not started | [29-sign-in-captcha.md](29-sign-in-captcha.md) |
+| 29 | A sign-in needs a passed captcha | in progress | [29-sign-in-captcha.md](29-sign-in-captcha.md) |
 
-**Now:** — · **Next:** 29
+**Now:** 29 · **Next:** —
 
 The step inside that phase, and how it is going, live in [`NOW.md`](NOW.md) — this line stays
 phase-level. `guard` fails if the two disagree.

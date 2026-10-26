@@ -1,11 +1,12 @@
 import { afterAll, describe, expect, it, vi } from "vitest";
 
-// Against the real project (`npm run test:db`): anonymous sign-in, as the browser does it, then the
-// server's check of the token. The user is deleted afterwards.
+// Against the real project (`npm run test:db`): a player's session (./test-sessions.ts — a test has
+// no captcha token for the browser's own sign-in), then the server's check of the token. The user
+// is deleted afterwards.
 vi.mock("server-only", () => ({}));
 const enabled = Boolean(process.env.SUPABASE_SECRET_KEY);
 
-describe.skipIf(!enabled)("anonymous sessions against Supabase", () => {
+describe.skipIf(!enabled)("players' sessions against Supabase", () => {
   let userId: string | undefined;
 
   afterAll(async () => {
@@ -13,18 +14,13 @@ describe.skipIf(!enabled)("anonymous sessions against Supabase", () => {
     if (userId) await db().auth.admin.deleteUser(userId);
   });
 
-  it("accepts an anonymous user's token and rejects a made-up one", async () => {
-    const { createClient } = await import("@supabase/supabase-js");
-    const { env } = await import("@/core/config/env");
-    const browser = createClient(env.supabaseUrl, env.supabasePublishableKey, {
-      auth: { persistSession: false },
-    });
-    const { data, error } = await browser.auth.signInAnonymously();
-    expect(error).toBeNull();
-    userId = data.user?.id;
+  it("accepts a player's token and rejects a made-up one", async () => {
+    const { testSession } = await import("./test-sessions");
+    const session = await testSession();
+    userId = session.userId;
 
     const { userIdForAccessToken } = await import("./users.repo");
-    expect(await userIdForAccessToken(data.session!.access_token)).toBe(userId);
+    expect(await userIdForAccessToken(session.token)).toBe(userId);
     expect(await userIdForAccessToken("not-a-token")).toBeNull();
   });
 });

@@ -22,6 +22,7 @@ an interrupted run left is swept, an hour on, before the next run (`e2e/sweep.ts
 | `players.repo.ts` | `listPlayers(roomId)` — `PlayerRecord`s, oldest first; `isPlayer(roomId, userId)`. `savePlayerName(token, …)` — join or rename, as the caller; `name_taken` from the trigger. | Same. |
 | `hosts.repo.ts` | `listHostIds(roomId)` — the host's user ids. `addHost` — idempotent. | Same. Only the server writes this table, after `tokenMatches`. |
 | `rate-limits.repo.ts` | `hitRateLimit(key, windowSeconds, max)` — the `hit_rate_limit()` RPC: one hit, true while within `max`; `public.rate_limits` is readable by no client role. | `server/api/rate-limit.server.ts` alone. |
+| `test-sessions.ts` | `testSession()` — a new user and a session, through a one-time sign-in link; `sessionFor(userId)` — another one for the same user; `captchaIsOn()`. | The `*.db.test.ts` files alone: a test has no captcha token for the browser's own sign-in. |
 | `votes.repo.ts` | `listVotes(roomId)` — `VoteRecord`s. `saveVote(token, …)` / `withdrawVote(token, …)` as the caller; a policy refusal (the host, a non-player) is `forbidden`. `deleteVoteOf` — the host's, when they claim the room. | Same. |
 
 ## Keep this file current

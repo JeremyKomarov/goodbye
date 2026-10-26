@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, it, vi } from "vitest";
 
-// Login codes against the real project (`npm run test:db`): an anonymous user asks for a code,
-// signs in with it as another device would, and replaces it. The user is deleted afterwards.
+// Login codes against the real project (`npm run test:db`): a player asks for a code, signs in
+// with it as another device would (while captcha is off), and replaces it. The user is deleted afterwards.
 vi.mock("server-only", () => ({}));
 const enabled = Boolean(process.env.SUPABASE_SECRET_KEY);
 
@@ -33,21 +33,25 @@ describe.skipIf(!enabled)("POST /api/me/login-code against Supabase", { timeout:
 
   it("makes a code once, signs in with it elsewhere, and replaces it on request", async () => {
     const { loginEmail } = await import("@/core/constants/login.const");
-    const first = await browser();
-    const { data } = await first.auth.signInAnonymously();
-    userId = data.user!.id;
+    const { captchaIsOn, sessionFor, testSession } = await import("@/server/db/test-sessions");
+    const first = await testSession();
+    userId = first.userId;
 
-    const made = await ask(data.session!.access_token);
+    const made = await ask(first.token);
     expect(made).toMatchObject({ created: true });
     expect(made.code).toMatch(/^[2-9A-HJKMNP-Z]{6}$/);
 
-    const other = await browser();
-    const signedIn = await other.auth.signInWithPassword({
-      email: loginEmail(userId),
-      password: made.code,
-    });
-    expect(signedIn.data.user?.id).toBe(userId);
-    const token = signedIn.data.session!.access_token;
+    // Signing in with the code needs a captcha token once captcha is on, which a test hasn't got:
+    // then the code is checked as far as the server's own answers, from a second session of theirs.
+    let token = (await sessionFor(userId)).token;
+    if (!(await captchaIsOn())) {
+      const signedIn = await (await browser()).auth.signInWithPassword({
+        email: loginEmail(userId),
+        password: made.code,
+      });
+      expect(signedIn.data.user?.id).toBe(userId);
+      token = signedIn.data.session!.access_token;
+    }
 
     expect(await ask(token)).toEqual({ code: made.code, created: false });
     const fresh = await ask(token, true);

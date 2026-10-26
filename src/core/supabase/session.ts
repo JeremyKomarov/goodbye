@@ -91,11 +91,13 @@ export function restoreSession(
 }
 
 const TOO_MANY_REQUESTS = 429;
+// Supabase Auth's code for a sign-in whose captcha token it refused.
+const CAPTCHA_FAILED = "captcha_failed";
 
 /**
  * Signs this browser in as `userId` with their login code — the other device's player, or this
- * one again after a new code signed every session out. Throws `wrong_login_code` or
- * `too_many_attempts`.
+ * one again after a new code signed every session out. Throws `wrong_login_code`,
+ * `too_many_attempts`, or `unauthorized` when the captcha is refused.
  */
 export async function signInWithCode(
   userId: string,
@@ -104,9 +106,13 @@ export async function signInWithCode(
   const { error } = await browserSupabase().auth.signInWithPassword({
     email: loginEmail(userId),
     password: normalizeLoginCode(code),
+    // The captcha covers every sign-in, this one too. The widget speaks the page's language.
+    options: { captchaToken: await captchaToken(globalThis.document?.documentElement.lang ?? "") },
   });
   if (!error) return;
-  throw error.status === TOO_MANY_REQUESTS
-    ? new ApiError(API_ERROR_CODES.too_many_attempts, TOO_MANY_REQUESTS)
-    : new ApiError(API_ERROR_CODES.wrong_login_code, 401);
+  if (error.status === TOO_MANY_REQUESTS)
+    throw new ApiError(API_ERROR_CODES.too_many_attempts, TOO_MANY_REQUESTS);
+  // A refused captcha says nothing about the code, so it isn't reported as a wrong one.
+  if (error.code === CAPTCHA_FAILED) throw new ApiError(API_ERROR_CODES.unauthorized, 401);
+  throw new ApiError(API_ERROR_CODES.wrong_login_code, 401);
 }
