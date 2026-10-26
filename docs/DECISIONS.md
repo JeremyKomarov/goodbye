@@ -224,3 +224,28 @@ green, which is the parody (`#4`).
 
 > A theme changes words, stories and emoji — never the tokens. Branch a string on `theme`; don't
 > re-hue a room.
+
+## 15. A write route is rate-limited in Postgres, by one atomic function, not a second service
+
+**Locked 2026-10-26.**
+
+The write routes count callers in the database the app already has: a `public.rate_limits` table
+(a key, a fixed window's start, a count) that no client role can read or write, and one
+`security definer` function, `hit_rate_limit(key, window_seconds, max)`, that takes the hit and
+answers whether it is within budget in a single upsert — so two requests at once can't both slip
+under. It is called through `db()` from one repo in `server/db/` (`01 §8`, `#10`), and the
+nightly `pg_cron` cleanup clears the windows that have passed.
+
+Upstash was the alternative: faster, and built for this. It was turned down because it is a
+second service with its own keys, account and outage, for a party app whose writes are a handful
+a minute; one round-trip to Supabase is the cost every write route already pays. If the database
+ever becomes the bottleneck, the limiter is one repo to swap.
+
+The key is the caller's session (`auth.uid()`) on every route that has one, and the IP — Vercel's
+`x-forwarded-for`, first entry — on `POST /api/rooms`, which has none. A limiter that cannot
+reach the database fails the request with `upstream_failed`, as every other read does; it does
+not wave the write through.
+
+> Rate-limit a write route through the one `server/db/` repo over `hit_rate_limit`. Don't add a
+> second store, keep a count in memory (a Vercel function has no shared memory), or let a failed
+> limiter pass the write.
