@@ -28,9 +28,9 @@ the wall, so it lands in 28.3 with the route, not in 28.2. `hit_rate_limit()` is
 a sent one, which is how the tests and e2e each get their own room budget. Hosted anywhere that
 passes the header through, the IP limit could be dodged. A reaction refused for its rate is undone
 by the picker with no sentence, as any other failed reaction is.
-On 2026-10-26 the room budget's 429 was checked live (`rooms/route.db.test.ts`); the wall's was
-not, since Supabase's own anonymous sign-in limit (30/hour/IP) was spent by repeated runs — it runs
-with the next `test:db`. That limit is a reason 28.4's test keys matter for `test:db` too.
+On 2026-10-26 the room budget's 429 was checked live (`rooms/route.db.test.ts`); the wall's waited for
+Supabase's own anonymous sign-in limit (30/hour/IP), spent by repeated runs, and passed live later
+that morning, given 60 seconds for its 31 requests. That limit is a reason 28.4's test keys matter for `test:db` too.
 The captcha (28.4, 28.5) moved to phase 29 on 2026-10-26, at the owner's choice: Supabase's
 captcha covers every sign-in, the login code's too, and the one project is production, so test keys
 would switch the protection off and real ones leave `test:db` unable to sign in. 28.6 keeps its

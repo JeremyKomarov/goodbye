@@ -76,7 +76,8 @@ describe.skipIf(!enabled)("the wall against Supabase", { timeout: 20_000 }, () =
     expect(await again.json()).toEqual({ error: { code: "too_fast" } });
   });
 
-  it("refuses a 31st post within ten minutes, before reading the body", async () => {
+  // 31 requests in a row, each checked with Supabase Auth: longer than the suite's 20 seconds.
+  it("refuses a 31st post within ten minutes, before reading the body", { timeout: 60_000 }, async () => {
     const { POST } = await import("./route");
     const { RATE_BUDGETS } = await import("@/server/api/rate-limit.server");
     const spam = () =>
