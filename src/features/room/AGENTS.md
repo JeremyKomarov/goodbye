@@ -59,8 +59,8 @@ the wall at `/r/[slug]/wall`, the games at `/r/[slug]/games` (`roomSectionPath`;
 | `hooks/useVote.ts` | `{ userId, slotMs }` (null takes it back), written into the snapshot before the request and rolled back on failure. Invalidates the room. |
 | `api/votes.dto.ts` | `CastVoteInputSchema`. |
 | `api/votes.api.ts` | `castVote`, `withdrawVote`. |
-| `hooks/useLoginCode.ts` | Fetches the code (`fresh` for a new one), signs back in when it is new, keeps it on the device. |
-| `hooks/useEnsureLoginCode.ts` | Every player but the host gets a code as they come in, so the host can send it later. Returns `useLoginCode`'s mutation. |
+| `hooks/useLoginCode.ts` | Fetches the code (`fresh` for a new one), keeps it on the device, then signs back in when it is new (`keepAndSignIn`, in that order, so a page closed in between can still sign in). |
+| `hooks/useEnsureLoginCode.ts` | Every player but the host gets a code as they come in, so the host can send it later; a player who has one is signed back in with it if a new code left this browser signed out (`restoreSession`). Returns `useLoginCode`'s mutation. |
 | `hooks/useSignInAs.ts` | Comes in as the player with a name, with their code (`not_found` for an unknown name). Invalidates the session user. |
 | `hooks/useSwitchUser.ts` | "Not you?": signs this browser out locally. Invalidates the session user. |
 | `hooks/useRename.ts` | `saveName` for a player already in. Invalidates the room. |

@@ -95,6 +95,7 @@ export async function seatPlayer(page: Page, slug: string, name = "Dana") {
     ([key, session]) => localStorage.getItem(key) ?? localStorage.setItem(key, session),
     [STORAGE_KEYS.supabaseAuth, JSON.stringify(signedIn.session)] as const,
   );
+  return { userId, code };
 }
 
 /** The room and everyone who joined it: the anonymous users go too, and their login codes with them. */

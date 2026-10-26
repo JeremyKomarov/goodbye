@@ -1,3 +1,4 @@
+import { isAuthSessionMissingError } from "@supabase/supabase-js";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
 import { loginEmail, normalizeLoginCode } from "@/core/constants/login.const";
 import { captchaToken } from "./captcha";
@@ -20,7 +21,8 @@ export async function ensureSession(language: string): Promise<string> {
   const { data: signedIn, error } = await auth.signInAnonymously({
     options: { captchaToken: await captchaToken(language) },
   });
-  if (error || !signedIn.user) throw new ApiError(API_ERROR_CODES.unauthorized, 401);
+  if (error || !signedIn.user)
+    throw new ApiError(API_ERROR_CODES.unauthorized, 401);
   return signedIn.user.id;
 }
 
@@ -60,6 +62,34 @@ export async function signOutHere(): Promise<void> {
   await browserSupabase().auth.signOut({ scope: "local" });
 }
 
+let restoring: Promise<boolean> | null = null;
+
+/**
+ * Signs this browser back in with the player's kept code when Supabase Auth no longer knows its
+ * session — a page closed in the moment a new code signed every session out, before it signed
+ * back in. Asked once a page load; other requests wait meanwhile (`holdingSession`). `codeFor` is
+ * the code this device keeps for a user, if any: without one there is nothing to sign in with.
+ * Resolves true when it signed in again.
+ */
+export function restoreSession(
+  codeFor: (userId: string) => string | null,
+): Promise<boolean> {
+  restoring ??= holdingSession(async () => {
+    const auth = browserSupabase().auth;
+    const { data } = await auth.getSession();
+    const userId = data.session?.user.id;
+    const code = userId ? codeFor(userId) : null;
+    if (!userId || !code) return false;
+    const { error } = await auth.getUser();
+    // Supabase Auth's `session_not_found`, which the client also clears from storage. Anything
+    // else — no network, a server error — says nothing about the session, so it is left alone.
+    if (!isAuthSessionMissingError(error)) return false;
+    await signInWithCode(userId, code);
+    return true;
+  }).catch(() => false);
+  return restoring;
+}
+
 const TOO_MANY_REQUESTS = 429;
 
 /**
@@ -67,7 +97,10 @@ const TOO_MANY_REQUESTS = 429;
  * one again after a new code signed every session out. Throws `wrong_login_code` or
  * `too_many_attempts`.
  */
-export async function signInWithCode(userId: string, code: string): Promise<void> {
+export async function signInWithCode(
+  userId: string,
+  code: string,
+): Promise<void> {
   const { error } = await browserSupabase().auth.signInWithPassword({
     email: loginEmail(userId),
     password: normalizeLoginCode(code),

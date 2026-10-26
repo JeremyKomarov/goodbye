@@ -32,9 +32,9 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 24 | The features' logic, tested | done | [24-feature-tests.md](24-feature-tests.md) |
 | 25 | A deletion reaching its own room, checked live | not started | [25-room-deletes-live.md](25-room-deletes-live.md) |
 | 26 | No Sentry | done | [26-no-sentry.md](26-no-sentry.md) |
-| 27 | A new login code never strands a browser | not started | [27-login-code-resign.md](27-login-code-resign.md) |
+| 27 | A new login code never strands a browser | done | [27-login-code-resign.md](27-login-code-resign.md) |
 
-**Now:** — · **Next:** 27
+**Now:** — · **Next:** 25
 
 The step inside that phase, and how it is going, live in [`NOW.md`](NOW.md) — this line stays
 phase-level. `guard` fails if the two disagree.

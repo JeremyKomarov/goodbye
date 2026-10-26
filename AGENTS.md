@@ -95,7 +95,7 @@ a playbook already does it.
 
 ## What is next, in order
 
-Phases 01–24 and 26 are done. New work starts as a phase (`/new-phase`), not ad hoc.
+Phases 01–24, 26 and 27 are done. New work starts as a phase (`/new-phase`), not ad hoc.
 
 1. **25 — the deletion broadcast, checked live.** Waits on the owner applying
    `20261024000000_room_delete_broadcast.sql` in the SQL Editor; push nothing past phase 16 before.
@@ -108,7 +108,7 @@ Phases 01–24 and 26 are done. New work starts as a phase (`/new-phase`), not a
 |---|---|
 | App shell | None by design — a single chat column. Every route renders through `featurePage()`. |
 | Hosting | Vercel, deployed from `main` on GitHub; `verify` runs on every push. |
-| End to end | `npm run e2e` (Playwright, `e2e/`) at 360px and 1280px: the landing wizard in both languages; the host's page against a stubbed answer, and an unknown room's link; a visitor joining and voting in a throwaway room, and the goodbyes replayed in an ended one; a page that throws (`/dev/error`) showing the error screen in both languages; each game played to a kept score by a player seated in a throwaway room; the manifest and its icons; which writes to the database and deletes it after (skips without the secret key). Each run first sweeps test rooms an earlier, killed run left (`e2e/sweep.ts`, also before `test:db`). Outside `verify`: it needs a browser and the dev server. CI runs it as its own job with no secret key, so nothing is written there. |
+| End to end | `npm run e2e` (Playwright, `e2e/`) at 360px and 1280px: the landing wizard in both languages; the host's page against a stubbed answer, and an unknown room's link; a visitor joining and voting in a throwaway room, a browser a new login code signed out signing back in on reload, and the goodbyes replayed in an ended one; a page that throws (`/dev/error`) showing the error screen in both languages; each game played to a kept score by a player seated in a throwaway room; the manifest and its icons; which writes to the database and deletes it after (skips without the secret key). Each run first sweeps test rooms an earlier, killed run left (`e2e/sweep.ts`, also before `test:db`). Outside `verify`: it needs a browser and the dev server. CI runs it as its own job with no secret key, so nothing is written there. |
 | Errors | A crash shows `ErrorScreen` in the page's language. No outside error service (phase 26): an error is in Vercel's logs, or the browser's console. |
 | Design tokens | WhatsApp dark, `core/styles/tokens.scss` (docs/DECISIONS.md #4). |
 | i18n | Hebrew (RTL) default, English by cookie; hidden `[locale]` segment (docs/DECISIONS.md #6). |

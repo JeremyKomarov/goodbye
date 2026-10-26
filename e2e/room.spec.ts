@@ -6,6 +6,7 @@
 // `*.db.test.ts` files, it skips without the secret key (`.env.local`, loaded by the config), and
 // in CI, which has none (`E2E_NO_DATABASE`). The making, seating and deleting are `rooms.ts`'s.
 import { expect, test } from "@playwright/test";
+import { STORAGE_KEYS } from "@/core/constants/storage-keys.const";
 import {
   createRoom, DAY_MS, db, deleteRoom, joinRoom, seatPlayer, skipWithoutDatabase, TEST_GROUP,
 } from "./rooms";
@@ -49,6 +50,49 @@ test("joins under a name, votes, and is still in after a reload", async ({
     await expect(
       page.locator("[class*=hour-grid] button[aria-pressed=true]"),
     ).toHaveCount(1);
+  } finally {
+    await deleteRoom(slug);
+  }
+});
+
+test("signs back in on its next load when a new code signed it out in passing", async ({
+  page,
+  request,
+}) => {
+  const slug = await createRoom(request);
+
+  try {
+    const { userId, code } = await seatPlayer(page, slug);
+    await page.goto(`/r/${slug}`);
+    const chip = page.locator("[class*=hour-grid] button[aria-pressed]").first();
+    await expect(chip).toBeEnabled({ timeout: 15_000 });
+    await expect
+      .poll(() => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.loginCode(userId)))
+      .toBe(code);
+
+    // The moment the page was closed in: the server has made a new code, which signed every
+    // session out, and the device has kept it — but never signed back in with it.
+    const fresh = code.split("").reverse().join("");
+    await db().auth.admin.updateUserById(userId, { password: fresh });
+    await db().from("login_codes").update({ code: fresh }).eq("user_id", userId);
+    await page.evaluate(
+      ([key, value]) => localStorage.setItem(key, value),
+      [STORAGE_KEYS.loginCode(userId), fresh] as const,
+    );
+
+    const refused: string[] = [];
+    page.on("response", (r) => {
+      if (r.status() === 401) refused.push(r.url());
+    });
+    await page.reload();
+    await expect(chip).toBeEnabled({ timeout: 15_000 });
+    const voted = page.waitForResponse(
+      (r) => r.url().includes(`/rooms/${slug}/vote`) && r.request().method() === "PUT",
+    );
+    await chip.click();
+    expect((await voted).status()).toBe(204);
+    await expect.poll(() => countVotes(slug), { timeout: 10_000 }).toBe(1);
+    expect(refused).toEqual([]);
   } finally {
     await deleteRoom(slug);
   }
