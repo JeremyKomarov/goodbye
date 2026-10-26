@@ -1,13 +1,15 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
-import { env } from "./src/core/config/env";
 
 const withNextIntl = createNextIntlPlugin("./src/core/i18n/request.ts");
 
 const isDev = process.env.NODE_ENV === "development";
 // Data goes through our Route Handlers, but the browser keeps Supabase's auth and Realtime
-// (docs/DECISIONS.md #2): https for the one, wss for the other.
-const supabase = new URL(env.supabaseUrl).origin;
+// (docs/DECISIONS.md #2): https for the one, wss for the other. Read here, not through
+// core/config/env.ts, which throws on any missing value: `next typegen` and `lint` load this file
+// with no environment (CI's verify job). The app's own boot still fails loudly without it.
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabase = supabaseUrl ? new URL(supabaseUrl).origin : "";
 const realtime = supabase.replace(/^https:/, "wss:");
 // The sign-in captcha's script and frame, when its site key is set (core/supabase/captcha.ts).
 const turnstile = "https://challenges.cloudflare.com";
@@ -20,7 +22,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
-  `connect-src 'self' ${supabase} ${realtime}`,
+  `connect-src 'self'${supabase && ` ${supabase} ${realtime}`}`,
   `frame-src ${turnstile}`,
   "object-src 'none'",
   "base-uri 'self'",

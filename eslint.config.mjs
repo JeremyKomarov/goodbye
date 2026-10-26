@@ -194,4 +194,10 @@ export default [
     files: ["src/core/config/env.ts"],
     rules: { "no-restricted-syntax": "off" },
   },
+  // The CSP names Supabase's origin, and this file is loaded where no environment is set
+  // (`next typegen` in CI), so it can't import env.ts, which throws there (docs/DECISIONS.md #16).
+  {
+    files: ["next.config.ts"],
+    rules: { "no-restricted-syntax": "off" },
+  },
 ];
