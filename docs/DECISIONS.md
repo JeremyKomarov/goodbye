@@ -257,8 +257,7 @@ not wave the write through.
 Every response carries a Content-Security-Policy, `frame-ancestors 'none'` (and `X-Frame-Options:
 DENY`), `Referrer-Policy: no-referrer`, `nosniff` and a `Permissions-Policy` that turns off what the
 app never asks for. The policy holds scripts, styles, fonts and images to this origin, lets the
-browser reach only Supabase (https for auth, wss for Realtime), and lets in Cloudflare's captcha
-script and frame for the sign-in check (`core/supabase/captcha.ts`).
+browser reach only Supabase (https for auth, wss for Realtime), and frames nothing.
 
 A nonce-based policy was the stricter alternative and was turned down: a nonce is made per
 request, and Cache Components prerender a static shell that can't carry one — Next's own guide
@@ -269,3 +268,16 @@ first line against XSS; this is the second.
 
 > Add an origin to the CSP in `next.config.ts` when the browser must reach it — never loosen
 > `default-src`, and don't add a nonce without giving up Cache Components first.
+
+## 17. No captcha on sign-in
+
+**Locked 2026-10-26.**
+
+The Turnstile check before anonymous sign-in, ported from the original and off for want of a key,
+is gone: the widget (`core/supabase/captcha.ts`), its site key and its place in the CSP. Abuse is
+held by the write routes' budgets (#15) and Supabase's own limit of 30 anonymous sign-ins an hour
+from one address. With one Supabase project, which is production, a captcha would also leave the
+tests unable to sign in.
+
+> Don't add a captcha back without a second Supabase project to test against. Tests make their
+> sessions with the secret key (`server/db/test-sessions.ts`), not by signing in.

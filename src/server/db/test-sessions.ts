@@ -4,11 +4,11 @@ import { env } from "@/core/config/env";
 import { loginEmail } from "@/core/constants/login.const";
 import { db } from "./client";
 
-// Sessions for the `*.db.test.ts` files. Every sign-in a browser makes needs a captcha token once
-// captcha is on in Supabase Auth, and a test has none. Redeeming a one-time sign-in link does not,
-// so a test user is made with the secret key and signed in with a link it never sees. A test
-// deletes its users afterwards; one a killed run left is swept with the anonymous ones
-// (`…@players.invalid`, supabase/migrations/…_host_devices_and_login_codes.sql).
+// Sessions for the `*.db.test.ts` files. An anonymous sign-in is the scarce kind — Supabase allows
+// an address 30 an hour, and a run makes a dozen — so a test user is made with the secret key and
+// signed in with a one-time link it never sees. A test deletes its users afterwards; one a killed
+// run left is swept with the anonymous ones (`…@players.invalid`,
+// supabase/migrations/…_host_devices_and_login_codes.sql).
 
 export interface TestSession {
   userId: string;
@@ -38,8 +38,8 @@ export async function testSession(): Promise<TestSession> {
   return sessionFor(userId);
 }
 
-/** Another session for a user `testSession` made — the same player on a second device. */
-export async function sessionFor(userId: string): Promise<TestSession> {
+/** A session for a user `testSession` made, through a one-time sign-in link. */
+async function sessionFor(userId: string): Promise<TestSession> {
   const email = loginEmail(userId);
   const link = await db().auth.admin.generateLink({ type: "magiclink", email });
   if (link.error) throw link.error;
@@ -50,20 +50,4 @@ export async function sessionFor(userId: string): Promise<TestSession> {
   if (error || !data.session)
     throw error ?? new Error("no session from the sign-in link");
   return { userId, token: data.session.access_token };
-}
-
-let captcha: Promise<boolean> | undefined;
-
-/**
- * Whether Supabase Auth asks every sign-in for a captcha. Asked once, with a sign-in for an
- * address nobody has: refused for the captcha, or else for the address. Nothing is made.
- */
-export function captchaIsOn(): Promise<boolean> {
-  captcha ??= browser()
-    .auth.signInWithPassword({
-      email: loginEmail(crypto.randomUUID()),
-      password: "not-a-code",
-    })
-    .then(({ error }) => error?.code === "captcha_failed");
-  return captcha;
 }

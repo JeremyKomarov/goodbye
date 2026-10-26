@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useLocale } from "next-intl";
 import { QUERY_KEYS } from "@/core/constants/query-keys.const";
 import { ensureSession } from "@/core/supabase/session";
 import { claimHost, saveName } from "@/features/room/api/players.api";
@@ -14,10 +13,9 @@ import { loadAdminToken } from "@/shared/utils/adminTokens";
  */
 export function useJoinRoom(slug: string) {
   const queryClient = useQueryClient();
-  const locale = useLocale();
   return useMutation({
     mutationFn: async (input: SaveNameInput) => {
-      await ensureSession(locale);
+      await ensureSession();
       const adminToken = loadAdminToken(slug);
       if (adminToken) await claimHost(slug, { adminToken }).catch(() => undefined);
       await saveName(slug, input);

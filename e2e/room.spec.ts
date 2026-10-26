@@ -8,8 +8,7 @@
 import { expect, test } from "./test";
 import { STORAGE_KEYS } from "@/core/constants/storage-keys.const";
 import {
-  createRoom, DAY_MS, db, deleteRoom, joinRoom, seatPlayer, skipWhileCaptchaIsOn, skipWithoutDatabase,
-  TEST_GROUP,
+  createRoom, DAY_MS, db, deleteRoom, joinRoom, seatPlayer, skipWithoutDatabase, TEST_GROUP,
 } from "./rooms";
 
 skipWithoutDatabase();
@@ -31,7 +30,6 @@ test("joins under a name, votes, and is still in after a reload", async ({
   page,
   request,
 }) => {
-  skipWhileCaptchaIsOn();
   const slug = await createRoom(request);
 
   try {
@@ -61,7 +59,6 @@ test("signs back in on its next load when a new code signed it out in passing", 
   page,
   request,
 }) => {
-  skipWhileCaptchaIsOn();
   const slug = await createRoom(request);
 
   try {

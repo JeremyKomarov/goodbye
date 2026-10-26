@@ -11,19 +11,17 @@ const isDev = process.env.NODE_ENV === "development";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabase = supabaseUrl ? new URL(supabaseUrl).origin : "";
 const realtime = supabase.replace(/^https:/, "wss:");
-// The sign-in captcha's script and frame, when its site key is set (core/supabase/captcha.ts).
-const turnstile = "https://challenges.cloudflare.com";
 
 // No nonces: Cache Components prerender a static shell, which can't carry one, so inline scripts
 // are allowed and everything else is held to this origin (docs/DECISIONS.md #16).
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' ${turnstile}${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
   `connect-src 'self'${supabase && ` ${supabase} ${realtime}`}`,
-  `frame-src ${turnstile}`,
+  "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

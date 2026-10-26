@@ -7,7 +7,7 @@ vi.mock("server-only", () => ({}));
 const enabled = Boolean(process.env.SUPABASE_SECRET_KEY);
 const DAY_MS = 86_400_000;
 
-// A player's session, made with the secret key: a test has no captcha token to sign in with
+// A player's session, made with the secret key rather than spending an anonymous sign-in
 // (server/db/test-sessions.ts).
 const newPlayer = async () => (await import("@/server/db/test-sessions")).testSession();
 

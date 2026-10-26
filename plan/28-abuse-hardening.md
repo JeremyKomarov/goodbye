@@ -31,7 +31,7 @@ by the picker with no sentence, as any other failed reaction is.
 On 2026-10-26 the room budget's 429 was checked live (`rooms/route.db.test.ts`); the wall's waited for
 Supabase's own anonymous sign-in limit (30/hour/IP), spent by repeated runs, and passed live later
 that morning, given 60 seconds for its 31 requests. That limit is a reason 28.4's test keys matter for `test:db` too.
-The captcha (28.4, 28.5) moved to phase 29 on 2026-10-26, at the owner's choice: Supabase's
+The captcha (28.4, 28.5) moved to phase 29, and was later dropped (docs/DECISIONS.md #17), on 2026-10-26, at the owner's choice: Supabase's
 captcha covers every sign-in, the login code's too, and the one project is production, so test keys
 would switch the protection off and real ones leave `test:db` unable to sign in. 28.6 keeps its
 number.

@@ -9,7 +9,6 @@ const auth = {
   signInWithPassword: vi.fn(),
 };
 vi.mock("./client", () => ({ browserSupabase: () => ({ auth }) }));
-vi.mock("./captcha", () => ({ captchaToken: async () => "captcha-token" }));
 
 const USER = "11111111-1111-1111-1111-111111111111";
 const signedIn = { data: { session: { user: { id: USER }, access_token: "old" } } };
@@ -81,27 +80,5 @@ describe("restoreSession", () => {
     signIn();
     await restored;
     await expect(headers).resolves.toEqual({ authorization: "Bearer new" });
-  });
-});
-
-describe("signInWithCode", () => {
-  it("sends the captcha's token with the code", async () => {
-    const { signInWithCode } = await load();
-    await signInWithCode(USER, "abcd2345");
-    expect(auth.signInWithPassword).toHaveBeenCalledWith(
-      expect.objectContaining({ options: { captchaToken: "captcha-token" } }),
-    );
-  });
-
-  it("tells a refused captcha from a wrong code", async () => {
-    const { signInWithCode } = await load();
-    const refuse = (code: string, status: number) =>
-      auth.signInWithPassword.mockResolvedValueOnce({ error: new AuthApiError("no", status, code) });
-    refuse("captcha_failed", 400);
-    await expect(signInWithCode(USER, "abcd2345")).rejects.toMatchObject({ code: "unauthorized" });
-    refuse("invalid_credentials", 400);
-    await expect(signInWithCode(USER, "abcd2345")).rejects.toMatchObject({
-      code: "wrong_login_code",
-    });
   });
 });

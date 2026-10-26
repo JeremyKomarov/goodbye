@@ -12,17 +12,6 @@ const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 export const DAY_MS = 86_400_000;
 export const TEST_GROUP = "e2e — delete me";
 
-/**
- * Skips a test whose browser signs in for itself — through the join gate, or with a login code —
- * while captcha is on: a real Turnstile key won't hand an automated browser a token.
- */
-export function skipWhileCaptchaIsOn() {
-  test.skip(
-    Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY),
-    "the browser signs in itself, which needs a captcha a test can't pass",
-  );
-}
-
 /** Skips the spec without the secret key (`.env.local`), and in CI, which has none. */
 export function skipWithoutDatabase() {
   test.skip(
@@ -72,8 +61,8 @@ export async function joinRoom(page: Page, slug: string, name = "Dana") {
 /**
  * A player already in the room, signed in on `page` before it loads — for a spec about what comes
  * after joining. The join gate itself is `room.spec.ts`'s: an anonymous sign-in is the scarce kind
- * (Supabase allows an address 30 an hour) and needs a captcha once it is on, so this one is a
- * user with a login code, signed in through a one-time link. The code
+ * (Supabase allows an address 30 an hour), so this one is a user with a login code, signed in
+ * through a one-time link. The code
  * is stored up front: the room makes one for a player who has none, and making one signs out every
  * session — this one too.
  */
@@ -99,8 +88,7 @@ export async function seatPlayer(page: Page, slug: string, name = "Dana") {
   const coded = await db().from("login_codes").insert({ user_id: userId, code });
   expect(coded.error).toBeNull();
 
-  // Through a one-time sign-in link, not the code: every sign-in a browser makes needs a captcha
-  // token once captcha is on, and redeeming a link does not (src/server/db/test-sessions.ts).
+  // Through a one-time sign-in link, as the db tests do (src/server/db/test-sessions.ts).
   const link = await db().auth.admin.generateLink({ type: "magiclink", email: loginEmail(userId) });
   expect(link.error).toBeNull();
   const visitor = createClient(SUPABASE_URL!, PUBLISHABLE_KEY!, { auth: { persistSession: false } });

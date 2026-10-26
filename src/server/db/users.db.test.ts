@@ -1,8 +1,7 @@
 import { afterAll, describe, expect, it, vi } from "vitest";
 
-// Against the real project (`npm run test:db`): a player's session (./test-sessions.ts — a test has
-// no captcha token for the browser's own sign-in), then the server's check of the token. The user
-// is deleted afterwards.
+// Against the real project (`npm run test:db`): a player's session (./test-sessions.ts), then the
+// server's check of the token. The user is deleted afterwards.
 vi.mock("server-only", () => ({}));
 const enabled = Boolean(process.env.SUPABASE_SECRET_KEY);
 

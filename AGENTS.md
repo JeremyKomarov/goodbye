@@ -95,9 +95,9 @@ a playbook already does it.
 
 ## What is next, in order
 
-Phases 01–28 are done. New work starts as a phase (`/new-phase`), not ad hoc.
+Phases 01–29 are done. New work starts as a phase (`/new-phase`), not ad hoc.
 
-1. Phase 29 — a captcha on sign-in, on production; the tests get their sessions through a one-time link.
+Nothing is queued.
 
 _(Keep this to three. A list of fourteen is a wish list, not an order.)_
 
