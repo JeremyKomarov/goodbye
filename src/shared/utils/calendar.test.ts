@@ -23,7 +23,9 @@ describe("exitEvent", () => {
 describe("googleCalendarUrl", () => {
   it("passes the times in UTC", () => {
     const link = new URL(googleCalendarUrl(event));
-    expect(link.searchParams.get("dates")).toBe("20261110T160000Z/20261110T161500Z");
+    expect(link.searchParams.get("dates")).toBe(
+      "20261110T160000Z/20261110T161500Z",
+    );
   });
 });
 
@@ -42,5 +44,14 @@ describe("icsFile", () => {
       expect(encoder.encode(line).length).toBeLessThanOrEqual(75);
     // Unfolding gives back the escaped description.
     expect(ics.replace(/\r\n /g, "")).toContain(`DESCRIPTION:${words.details}`);
+  });
+
+  it("escapes what RFC 5545 reserves in text: backslash, semicolon, comma, newline", () => {
+    const typed = { ...event, title: "Dan; Ruth, \\o/\nbye" };
+    const unfolded = icsFile(typed, Date.parse("2026-11-01T00:00:00Z")).replace(
+      /\r\n /g,
+      "",
+    );
+    expect(unfolded).toContain("SUMMARY:Dan\\; Ruth\\, \\\\o/\\nbye\r\n");
   });
 });
