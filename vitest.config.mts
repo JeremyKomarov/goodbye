@@ -20,5 +20,8 @@ export default defineConfig({
     passWithNoTests: true,
     include: ["src/**/*.test.ts"],
     exclude: ["node_modules/**", ".next/**"],
+    // Sweeps test rooms a killed run left. It does nothing without the secret key, so only
+    // `npm run test:db`, which loads .env.local, ever writes (e2e/sweep.ts).
+    globalSetup: ["e2e/sweep.ts"],
   },
 });
