@@ -29,6 +29,7 @@ export const farewellWallStringsEn: StringsOf<typeof farewellWallStrings> = {
   errors: {
     too_fast: "Please wait a few seconds before sending another message",
     forbidden: "Only people in the room can write on the wall",
+    rate_limited: "That's a lot of messages at once. You can send more in a few minutes",
     failed: "We couldn't send that. Try again",
   },
 };

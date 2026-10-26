@@ -8,7 +8,7 @@ rule 01 8`.
 |---|---|---|
 | `api/error-response.server.ts` | `apiError(code, { route })`, `handlingApiErrors(route, fn)`. | Every Route Handler is wrapped; a failure is a code from `core/api`. |
 | `api/exit-summary.server.ts` | `exitSummary(room)` — the votes counted and tallied, every goodbye counted, the most reacted one (the earliest of a tie), as `ExitSummaryDto`. | The summary handler. |
-| `api/rate-limit.server.ts` | `requireWithinLimit(budget, who)` — one hit on a `RateBudget` (`name`, `windowSeconds`, `max`), `rate_limited` once it is spent; `callerIp(request)` — the first `x-forwarded-for` entry. | Every write route, after `requireCaller` (keyed by `userId`) or, with no session, by `callerIp` (docs/DECISIONS.md #15). A failed count fails the write. |
+| `api/rate-limit.server.ts` | `RATE_BUDGETS` — each write route's budget; `requireWithinLimit(budget, who)` — one hit on a `RateBudget` (`name`, `windowSeconds`, `max`), `rate_limited` once it is spent; `callerIp(request)` — the first `x-forwarded-for` entry. | Every write route, after `requireCaller` (keyed by `userId`) or, with no session, by `callerIp` (docs/DECISIONS.md #15). A failed count fails the write. |
 | `api/room-snapshot.server.ts` | `roomSnapshot(room)` — the room and its players, hosts and votes as `RoomSnapshotDto`; `toRoomDto`. | Every handler that answers with the room builds it here. |
 | `auth/admin-token.ts` | `newAdminToken`, `hashToken`, `tokenMatches` (constant-time). | Only the hash is stored; the token itself is shown once, to the host. |
 | `auth/admin.ts` | `requireAdmin(request, slug)` → the room, for a request with its admin token in `ADMIN_TOKEN_HEADER`; `forbidden` otherwise. | First line of every host-only handler. |

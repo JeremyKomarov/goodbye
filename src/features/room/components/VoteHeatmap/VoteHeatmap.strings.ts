@@ -26,6 +26,7 @@ export const voteHeatmapStrings = {
   errors: {
     voting_closed: "ההצבעה כבר נסגרה",
     forbidden: "רק מי שבחדר מצביע, ומי שיוצא לא מצביע",
+    rate_limited: "הרבה שינויים בקול בבת אחת. נסו שוב בעוד דקה",
     failed: "לא הצלחנו לשמור את הקול. נסו שוב",
   },
 };

@@ -17,11 +17,13 @@ import { ICON_NAMES } from "@/shared/components/Icon";
 
 // The count of what is left appears this close to the limit.
 const COUNT_FROM = 30;
-const SEND_ERRORS = [API_ERROR_CODES.too_fast, API_ERROR_CODES.forbidden] as const;
+const SEND_ERRORS = [
+  API_ERROR_CODES.too_fast, API_ERROR_CODES.rate_limited, API_ERROR_CODES.forbidden,
+] as const;
 type SendError = (typeof SEND_ERRORS)[number] | "failed";
 
 interface ComposerProps {
-  /** Rejects with an `ApiError` — `too_fast`, `forbidden`. */
+  /** Rejects with an `ApiError` — `too_fast`, `rate_limited`, `forbidden`. */
   onSend: (input: PostMessageInput) => Promise<unknown>;
   /** "Is typing" on (true) and off, for everyone else's screen. */
   onTyping: (isTyping: boolean) => void;

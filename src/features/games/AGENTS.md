@@ -12,7 +12,7 @@ the room inside its `(room)` layout; they read the room through `useRoomFrame` (
 | Endpoint | Status | Source |
 |---|---|---|
 | `API_ENDPOINTS.rooms.scores` (GET) | Live, no session needed. `RecordsDto`: each player's best per game, under their player name, unordered. Read through the shared `useRecords`. | `app/api/rooms/[slug]/scores/route.ts` |
-| `API_ENDPOINTS.rooms.scores` (POST) | Live, bearer. `SubmitScoreInputSchema` — `invalid_input` on `score` outside the game's range; `forbidden` for a non-player; `games_closed` once the host has left. 204. | `app/api/rooms/[slug]/scores/route.ts` |
+| `API_ENDPOINTS.rooms.scores` (POST) | Live, bearer. `SubmitScoreInputSchema` — `invalid_input` on `score` outside the game's range; `forbidden` for a non-player; `games_closed` once the host has left. 204. Twenty a minute, `rate_limited`, read out on the result card. | `app/api/rooms/[slug]/scores/route.ts` |
 
 ## Inventory
 

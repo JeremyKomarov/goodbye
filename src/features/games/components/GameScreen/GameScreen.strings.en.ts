@@ -12,6 +12,7 @@ export const gameScreenStringsEn: StringsOf<typeof gameScreenStrings> = {
     again: "Another round",
     all: "All games",
     closed: "The games have closed, so this score wasn't kept",
+    rateLimited: "A lot of rounds in one minute, so this score wasn't kept. Try again in a moment",
     failed: "Couldn't save the score",
   },
 };

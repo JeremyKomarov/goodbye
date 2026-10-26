@@ -27,6 +27,7 @@ export const voteHeatmapStringsEn: StringsOf<typeof voteHeatmapStrings> = {
   errors: {
     voting_closed: "Voting has already closed",
     forbidden: "Only people in the room vote, and the one leaving doesn't",
+    rate_limited: "That's a lot of vote changes at once. Try again in a minute",
     failed: "We couldn't save your vote. Try again",
   },
 };

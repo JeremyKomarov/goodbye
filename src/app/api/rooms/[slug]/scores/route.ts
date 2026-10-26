@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { API_ERROR_CODES } from "@/core/api/api-error";
 import { type RecordsDto, SubmitScoreInputSchema } from "@/shared/api/records.dto";
 import { apiError, handlingApiErrors } from "@/server/api/error-response.server";
+import { RATE_BUDGETS, requireWithinLimit } from "@/server/api/rate-limit.server";
 import { requireCaller } from "@/server/auth/bearer";
 import { isPlayer } from "@/server/db/players.repo";
 import { findRoomBySlug } from "@/server/db/rooms.repo";
@@ -28,9 +29,11 @@ export const GET = handlingApiErrors(ROUTE, async (_request: Request, { params }
 });
 
 // A finished game's score. Players only (`forbidden`); a score its game can't make is
-// `invalid_input`; once the host has left, the records are final (`games_closed`).
+// `invalid_input`; once the host has left, the records are final (`games_closed`). Twenty a
+// minute (`rate_limited`).
 export const POST = handlingApiErrors(ROUTE, async (request: Request, { params }: Context) => {
   const caller = await requireCaller(request);
+  await requireWithinLimit(RATE_BUDGETS.score, caller.userId);
   const parsed = SubmitScoreInputSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success)
     return apiError(API_ERROR_CODES.invalid_input, { route: ROUTE, field: "score" });

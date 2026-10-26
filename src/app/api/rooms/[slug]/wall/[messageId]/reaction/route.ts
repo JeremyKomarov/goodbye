@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
 import { ReactInputSchema } from "@/features/room/api/wall.dto";
 import { apiError, handlingApiErrors } from "@/server/api/error-response.server";
+import { RATE_BUDGETS, requireWithinLimit } from "@/server/api/rate-limit.server";
 import { requireCaller } from "@/server/auth/bearer";
 import { findRoomBySlug } from "@/server/db/rooms.repo";
 import { removeReaction, saveReaction } from "@/server/db/wall.repo";
@@ -19,9 +20,11 @@ async function target(params: Context["params"]) {
 }
 
 // React to a wall message, or change your reaction — like WhatsApp, one per person. The database
-// checks the message is this room's and the caller a player in it (`forbidden`).
+// checks the message is this room's and the caller a player in it (`forbidden`). Reacting and
+// taking it back share 60 a minute (`rate_limited`).
 export const PUT = handlingApiErrors(ROUTE, async (request: Request, { params }: Context) => {
   const caller = await requireCaller(request);
+  await requireWithinLimit(RATE_BUDGETS.reaction, caller.userId);
   const parsed = ReactInputSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success)
     return apiError(API_ERROR_CODES.invalid_input, { route: ROUTE, field: "emoji" });
@@ -39,6 +42,7 @@ export const PUT = handlingApiErrors(ROUTE, async (request: Request, { params }:
 // Take your reaction back.
 export const DELETE = handlingApiErrors(ROUTE, async (request: Request, { params }: Context) => {
   const caller = await requireCaller(request);
+  await requireWithinLimit(RATE_BUDGETS.reaction, caller.userId);
   const { messageId } = await target(params);
   await removeReaction(caller.accessToken, messageId, caller.userId);
   return new NextResponse(null, { status: 204 });

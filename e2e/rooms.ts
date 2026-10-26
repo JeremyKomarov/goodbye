@@ -25,7 +25,10 @@ export const db = () =>
 
 /** A room open for voting, made as a host would, in English; its slug. */
 export async function createRoom(request: APIRequestContext) {
+  // Its own made-up IP: the dev server keeps a sent `x-forwarded-for` (Vercel replaces it), so
+  // runs within the hour don't spend one room budget (docs/DECISIONS.md #15).
   const created = await request.post("/api/rooms", {
+    headers: { "x-forwarded-for": `e2e-${crypto.randomUUID()}` },
     data: {
       hostName: "e2e",
       hostGender: "f",

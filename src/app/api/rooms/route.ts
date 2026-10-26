@@ -3,6 +3,7 @@ import { API_ERROR_CODES } from "@/core/api/api-error";
 import { MIN_OPEN_MS } from "@/core/constants/room.const";
 import { CreateRoomInputSchema, type CreatedRoomDto } from "@/features/landing/api/rooms.dto";
 import { apiError, handlingApiErrors } from "@/server/api/error-response.server";
+import { callerIp, RATE_BUDGETS, requireWithinLimit } from "@/server/api/rate-limit.server";
 import { hashToken, newAdminToken } from "@/server/auth/admin-token";
 import { insertRoom } from "@/server/db/rooms.repo";
 import { addDaysToDate, hasSlotAfter } from "@/shared/utils/slots";
@@ -11,7 +12,9 @@ const ROUTE = "/api/rooms";
 
 // Opening a room needs no session: anyone may, and the admin token returned is what makes them
 // its host (docs/DECISIONS.md #2). Row-level security still keeps clients from inserting one.
+// Five an hour from one IP (`rate_limited`, docs/DECISIONS.md #15).
 export const POST = handlingApiErrors(ROUTE, async (request: Request) => {
+  await requireWithinLimit(RATE_BUDGETS.createRoom, callerIp(request));
   const parsed = CreateRoomInputSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
     const field = parsed.error.issues[0]?.path.join(".") || undefined;

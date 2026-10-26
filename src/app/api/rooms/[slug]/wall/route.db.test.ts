@@ -49,7 +49,7 @@ describe.skipIf(!enabled)("the wall against Supabase", { timeout: 20_000 }, () =
     );
     slug = room.slug;
     roomId = room.id;
-    users.push(await anonymous(), await anonymous());
+    users.push(await anonymous(), await anonymous(), await anonymous());
     const { savePlayerName } = await import("@/server/db/players.repo");
     await savePlayerName(users[0].token, roomId, users[0].userId, "Poster");
   });
@@ -74,6 +74,21 @@ describe.skipIf(!enabled)("the wall against Supabase", { timeout: 20_000 }, () =
     const again = await post(users[0], "and again");
     expect(again.status).toBe(429);
     expect(await again.json()).toEqual({ error: { code: "too_fast" } });
+  });
+
+  it("refuses a 31st post within ten minutes, before reading the body", async () => {
+    const { POST } = await import("./route");
+    const { RATE_BUDGETS } = await import("@/server/api/rate-limit.server");
+    const spam = () =>
+      POST(new Request(`http://test/api/rooms/${slug}/wall`, {
+        method: "POST", headers: { authorization: `Bearer ${users[2].token}` }, body: "{",
+      }), { params: Promise.resolve({ slug }) });
+    // users[2] spends only this budget: posts that fail on the body still count, and write nothing.
+    for (let attempt = 0; attempt < RATE_BUDGETS.wallPost.max; attempt++)
+      expect((await spam()).status).toBe(400);
+    const limited = await spam();
+    expect(limited.status).toBe(429);
+    expect(await limited.json()).toEqual({ error: { code: "rate_limited" } });
   });
 
   it("refuses someone who never joined", async () => {

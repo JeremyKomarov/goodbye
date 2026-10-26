@@ -18,6 +18,10 @@ import { voteHeatmapClasses } from "./VoteHeatmap.classes";
 import { VOTE_HEATMAP_NAMESPACE, voteHeatmapKeys } from "./VoteHeatmap.keys.const";
 import type { SlotMarks, VoteErrorCode, VotingState } from "./VoteHeatmap.types";
 
+const VOTE_ERRORS = [
+  API_ERROR_CODES.voting_closed, API_ERROR_CODES.rate_limited, API_ERROR_CODES.forbidden,
+] as const;
+
 interface VoteHeatmapProps {
   snapshot: RoomSnapshot;
   now: number;
@@ -61,8 +65,8 @@ export function VoteHeatmap({ snapshot, now, me, canVote, onVote }: VoteHeatmapP
       await onVote(mine === ms ? null : ms);
     } catch (failure) {
       const code = failure instanceof ApiError ? failure.code : null;
-      const known = code === API_ERROR_CODES.voting_closed || code === API_ERROR_CODES.forbidden;
-      setError(known ? code : "failed");
+      const known = VOTE_ERRORS.find((candidate) => candidate === code);
+      setError(known ?? "failed");
     }
   }
 

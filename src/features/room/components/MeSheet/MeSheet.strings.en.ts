@@ -29,5 +29,6 @@ export const meSheetStringsEn: StringsOf<typeof meSheetStrings> = {
     name_taken: "That name is taken in the room. Maybe add a letter of your surname?",
     failed: "We couldn't change your name. Try again",
     code: "We couldn't make a code. Try again",
+    codeLimited: "A lot of codes were made in the last hour. Try again later",
   },
 };

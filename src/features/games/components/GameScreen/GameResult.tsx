@@ -34,7 +34,13 @@ export function GameResult(props: GameResultProps) {
   const { game, result, error, isClosed, hubHref, onAgain } = props;
   const t = useTranslations(GAME_SCREEN_NAMESPACE);
   const words = useGameWords();
-  const isRefused = error instanceof ApiError && error.code === API_ERROR_CODES.games_closed;
+  const code = error instanceof ApiError ? error.code : null;
+  const isRefused = code === API_ERROR_CODES.games_closed;
+  const failure = isRefused
+    ? gameScreenKeys.result.closed
+    : code === API_ERROR_CODES.rate_limited
+      ? gameScreenKeys.result.rateLimited
+      : gameScreenKeys.result.failed;
   const verdict =
     result.isBest && result.rank === 1
       ? gameScreenKeys.result.roomRecord
@@ -58,7 +64,7 @@ export function GameResult(props: GameResultProps) {
       </p>
       {error && (
         <p className={gameScreenClasses.error} role="alert">
-          {t(isRefused ? gameScreenKeys.result.closed : gameScreenKeys.result.failed)}
+          {t(failure)}
         </p>
       )}
       <div className={gameScreenClasses.actions}>

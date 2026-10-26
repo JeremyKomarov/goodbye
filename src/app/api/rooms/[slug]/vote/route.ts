@@ -3,6 +3,7 @@ import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
 import { ROOM_STATUSES } from "@/core/constants/room.const";
 import { CastVoteInputSchema } from "@/features/room/api/votes.dto";
 import { apiError, handlingApiErrors } from "@/server/api/error-response.server";
+import { RATE_BUDGETS, requireWithinLimit } from "@/server/api/rate-limit.server";
 import { requireCaller } from "@/server/auth/bearer";
 import { findRoomBySlug, type RoomRecord } from "@/server/db/rooms.repo";
 import { saveVote, withdrawVote } from "@/server/db/votes.repo";
@@ -22,9 +23,11 @@ async function openRoom(slug: string): Promise<RoomRecord> {
 }
 
 // Cast or move your vote. The hour must be one of the room's, on or after voting closes; the
-// database then checks you are a player and not the host (`forbidden`).
+// database then checks you are a player and not the host (`forbidden`). Casting and taking it
+// back share 60 a minute (`rate_limited`).
 export const PUT = handlingApiErrors(ROUTE, async (request: Request, { params }: Context) => {
   const caller = await requireCaller(request);
+  await requireWithinLimit(RATE_BUDGETS.vote, caller.userId);
   const parsed = CastVoteInputSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success)
     return apiError(API_ERROR_CODES.invalid_input, { route: ROUTE, field: "slotStart" });
@@ -42,6 +45,7 @@ export const PUT = handlingApiErrors(ROUTE, async (request: Request, { params }:
 // Take your vote back, while voting is still open.
 export const DELETE = handlingApiErrors(ROUTE, async (request: Request, { params }: Context) => {
   const caller = await requireCaller(request);
+  await requireWithinLimit(RATE_BUDGETS.vote, caller.userId);
   const room = await openRoom((await params).slug);
   await withdrawVote(caller.accessToken, room.id, caller.userId);
   return new NextResponse(null, { status: 204 });

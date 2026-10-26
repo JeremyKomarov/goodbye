@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
 import { meSheetClasses } from "@/features/room/components/MeSheet/MeSheet.classes";
 import {
   ME_SHEET_NAMESPACE, meSheetKeys,
@@ -20,16 +21,17 @@ export function DeviceCode({ me, onLoginCode }: DeviceCodeProps) {
   const t = useTranslations(ME_SHEET_NAMESPACE);
   const [code, setCode] = useState(() => loadLoginCode(me.userId));
   const [isPending, setIsPending] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<"code" | "codeLimited" | null>(null);
 
   async function show(fresh: boolean) {
     if (fresh && !window.confirm(t(meSheetKeys.device.confirmFresh))) return;
     setIsPending(true);
-    setFailed(false);
+    setFailed(null);
     try {
       setCode(await onLoginCode(fresh));
-    } catch {
-      setFailed(true);
+    } catch (error) {
+      const isLimited = error instanceof ApiError && error.code === API_ERROR_CODES.rate_limited;
+      setFailed(isLimited ? "codeLimited" : "code");
     } finally {
       setIsPending(false);
     }
@@ -60,7 +62,7 @@ export function DeviceCode({ me, onLoginCode }: DeviceCodeProps) {
       )}
       {failed && (
         <p role="alert" className={meSheetClasses.alert}>
-          {t(meSheetKeys.errors.code)}
+          {t(meSheetKeys.errors[failed])}
         </p>
       )}
     </section>

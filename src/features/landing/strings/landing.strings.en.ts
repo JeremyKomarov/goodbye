@@ -25,6 +25,7 @@ export const landingStringsEn: StringsOf<typeof landingStrings> = {
     no_slots_after_close:
       "No hours are left to vote on after voting closes. Add days or close voting earlier",
     invalid_input: "Something in the form isn't right",
+    rate_limited: "A lot of rooms were opened from here in the last hour. Try again in an hour",
     failed: "We couldn't open the room. Try again",
   },
 };

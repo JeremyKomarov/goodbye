@@ -11,8 +11,8 @@ captcha, and every page is served with security headers. None of these is true n
 
 - [x] ~~28.1 — choose the limiter's store (a Postgres counter table in `server/db/`, or Upstash) and record it in `docs/DECISIONS.md` (S)~~
 - [x] ~~28.2 — add a `rate_limited` error code (429) with its sentence in both languages, and a server-side limiter keyed by IP for `POST /api/rooms` and by session for the other write routes (M)~~
-- [~] 28.3 — apply it to `POST /api/rooms`, the wall, reactions, votes, scores and the login code, each with its own budget, and test a caller over budget getting 429 (M)
-- [ ] 28.4 — put Turnstile in front of `signInAnonymously` (`core/supabase/session.ts`), with the captcha token passed through, and turn on `[auth.captcha]` in `supabase/config.toml` and the hosted project (M)
+- [x] ~~28.3 — apply it to `POST /api/rooms`, the wall, reactions, votes, scores and the login code, each with its own budget, and test a caller over budget getting 429 (M)~~
+- [~] 28.4 — put Turnstile in front of `signInAnonymously` (`core/supabase/session.ts`), with the captcha token passed through, and turn on `[auth.captcha]` in `supabase/config.toml` and the hosted project (M)
 - [ ] 28.5 — make sure the e2e runs and `test:db` still sign in, with Turnstile's test keys (S)
 - [ ] 28.6 — serve a CSP, `frame-ancestors 'none'`, `Referrer-Policy: no-referrer`, `X-Content-Type-Options` and `Permissions-Policy` from `next.config.ts`, allowing Supabase, Realtime and Turnstile, and check the console is clean at 360px and 1280px (M)
 
@@ -27,3 +27,10 @@ The sentence for `rate_limited` lives with each screen that reads it out, as `to
 the wall, so it lands in 28.3 with the route, not in 28.2. `hit_rate_limit()` is checked live in
 `rate-limits.db.test.ts`. `test:db`'s `--globalSetup` flag, gone in Vitest 5, moved into
 `vitest.config.mts`; the sweep still does nothing without the secret key.
+`callerIp` trusts `x-forwarded-for` because Vercel replaces it with the real IP; `next dev` keeps
+a sent one, which is how the tests and e2e each get their own room budget. Hosted anywhere that
+passes the header through, the IP limit could be dodged. A reaction refused for its rate is undone
+by the picker with no sentence, as any other failed reaction is.
+On 2026-10-26 the room budget's 429 was checked live (`rooms/route.db.test.ts`); the wall's was
+not, since Supabase's own anonymous sign-in limit (30/hour/IP) was spent by repeated runs — it runs
+with the next `test:db`. That limit is a reason 28.4's test keys matter for `test:db` too.

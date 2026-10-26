@@ -13,6 +13,19 @@ export interface RateBudget {
   max: number;
 }
 
+const MINUTE = 60;
+const HOUR = 3600;
+
+/** Each write route's budget. Opening a room is by IP; everything else is by session. */
+export const RATE_BUDGETS = {
+  createRoom: { name: "create-room", windowSeconds: HOUR, max: 5 },
+  wallPost: { name: "wall-post", windowSeconds: 10 * MINUTE, max: 30 },
+  reaction: { name: "reaction", windowSeconds: MINUTE, max: 60 },
+  vote: { name: "vote", windowSeconds: MINUTE, max: 60 },
+  score: { name: "score", windowSeconds: MINUTE, max: 20 },
+  loginCode: { name: "login-code", windowSeconds: HOUR, max: 5 },
+} as const satisfies Record<string, RateBudget>;
+
 /** The caller's IP as Vercel saw it: the first entry of `x-forwarded-for`. */
 export function callerIp(request: Request): string {
   const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();

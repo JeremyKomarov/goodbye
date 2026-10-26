@@ -23,11 +23,14 @@ const input = (overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 });
 
-const post = async (body: unknown) => {
+// Each run is its own caller to the limiter, so runs within the hour don't spend one budget.
+const RUN_IP = `test-${crypto.randomUUID()}`;
+
+const post = async (body: unknown, ip = RUN_IP) => {
   const { POST } = await import("./route");
   const request = new Request("http://test/api/rooms", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", "x-forwarded-for": ip },
     body: JSON.stringify(body),
   });
   return POST(request);
@@ -69,5 +72,14 @@ describe.skipIf(!enabled)("POST /api/rooms against Supabase", () => {
     expect(await response.json()).toEqual({
       error: { code: "no_slots_after_close", field: "votingClosesAt" },
     });
+  });
+
+  it("refuses a sixth room from one IP within the hour, before reading the body", async () => {
+    const ip = `test-${crypto.randomUUID()}`;
+    // Refused bodies still count, and write nothing to clean up.
+    for (let attempt = 0; attempt < 5; attempt++) expect((await post(null, ip)).status).toBe(400);
+    const limited = await post(input(), ip);
+    expect(limited.status).toBe(429);
+    expect(await limited.json()).toEqual({ error: { code: "rate_limited" } });
   });
 });

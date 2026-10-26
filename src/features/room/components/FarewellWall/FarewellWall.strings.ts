@@ -28,6 +28,7 @@ export const farewellWallStrings = {
   errors: {
     too_fast: "רגע, לאט. אפשר לשלוח הודעה כל כמה שניות",
     forbidden: "רק מי שבחדר כותב על הקיר",
+    rate_limited: "הרבה הודעות בבת אחת. אפשר להמשיך בעוד כמה דקות",
     failed: "לא הצלחנו לשלוח. נסו שוב",
   },
 };
