@@ -1,6 +1,6 @@
 // What "Add to Home Screen" gets: the manifest the page links, in the reader's language, and icons
 // that are really there. Writes nothing.
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 
 const NAMES = { en: "Exit group", he: "יציאה מהקבוצה" };
 

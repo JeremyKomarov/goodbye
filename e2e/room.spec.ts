@@ -5,7 +5,7 @@
 // everyone who joined them. Like the
 // `*.db.test.ts` files, it skips without the secret key (`.env.local`, loaded by the config), and
 // in CI, which has none (`E2E_NO_DATABASE`). The making, seating and deleting are `rooms.ts`'s.
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 import { STORAGE_KEYS } from "@/core/constants/storage-keys.const";
 import {
   createRoom, DAY_MS, db, deleteRoom, joinRoom, seatPlayer, skipWithoutDatabase, TEST_GROUP,

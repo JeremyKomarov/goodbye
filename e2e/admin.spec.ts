@@ -1,7 +1,7 @@
 // The host's page at a phone's and a laptop's size, against a stubbed admin answer: no room is
 // written. The room's live channel still connects (to a room id no one has), and its first change
 // re-reads the stub — which is how the "live" case moves without a reload.
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./test";
 
 const SLUG = "e2e00000";
 const TOKEN = "a-token-of-at-least-twenty-characters";

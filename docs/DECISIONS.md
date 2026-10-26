@@ -249,3 +249,23 @@ not wave the write through.
 > Rate-limit a write route through the one `server/db/` repo over `hit_rate_limit`. Don't add a
 > second store, keep a count in memory (a Vercel function has no shared memory), or let a failed
 > limiter pass the write.
+
+## 16. The CSP is static, from `next.config.ts`, with inline scripts allowed
+
+**Locked 2026-10-26.**
+
+Every response carries a Content-Security-Policy, `frame-ancestors 'none'` (and `X-Frame-Options:
+DENY`), `Referrer-Policy: no-referrer`, `nosniff` and a `Permissions-Policy` that turns off what the
+app never asks for. The policy holds scripts, styles, fonts and images to this origin, lets the
+browser reach only Supabase (https for auth, wss for Realtime), and lets in Cloudflare's captcha
+script and frame for the sign-in check (`core/supabase/captcha.ts`).
+
+A nonce-based policy was the stricter alternative and was turned down: a nonce is made per
+request, and Cache Components prerender a static shell that can't carry one — Next's own guide
+says partial prerendering and nonces don't mix. So `script-src` allows `'unsafe-inline'`, which
+Next's hydration scripts need. What the policy still does is stop any script, frame or connection
+to an origin not named in it, and stop the app being framed. React escaping user text stays the
+first line against XSS; this is the second.
+
+> Add an origin to the CSP in `next.config.ts` when the browser must reach it — never loosen
+> `default-src`, and don't add a nonce without giving up Cache Components first.

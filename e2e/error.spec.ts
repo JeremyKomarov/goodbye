@@ -1,6 +1,6 @@
 // A page that throws shows the app's own error screen, in the reader's language, with a way to try
 // again and a way home — not Next's default. `/dev/error` throws on purpose (development only).
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 
 const SAYS = {
   en: { title: "Something went wrong", retry: "Try again", home: "Go to the home page" },

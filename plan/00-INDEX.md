@@ -33,9 +33,10 @@ The table of contents. **Status only — never content.** Every detail lives in 
 | 25 | A deletion reaching its own room, checked live | done | [25-room-deletes-live.md](25-room-deletes-live.md) |
 | 26 | No Sentry | done | [26-no-sentry.md](26-no-sentry.md) |
 | 27 | A new login code never strands a browser | done | [27-login-code-resign.md](27-login-code-resign.md) |
-| 28 | A script can't flood a room, or the database | in progress | [28-abuse-hardening.md](28-abuse-hardening.md) |
+| 28 | A script can't flood a room, or the database | done | [28-abuse-hardening.md](28-abuse-hardening.md) |
+| 29 | A sign-in needs a passed captcha | not started | [29-sign-in-captcha.md](29-sign-in-captcha.md) |
 
-**Now:** 28 · **Next:** —
+**Now:** — · **Next:** 29
 
 The step inside that phase, and how it is going, live in [`NOW.md`](NOW.md) — this line stays
 phase-level. `guard` fails if the two disagree.

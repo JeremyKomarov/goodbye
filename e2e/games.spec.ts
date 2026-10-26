@@ -1,7 +1,7 @@
 // Each game played to its end in a real room, and its score kept: the POST answers 204 and the
 // result says so. Played fast, not well — a skip or the first option is enough to finish a round.
 // Writes a throwaway room (`rooms.ts`), so it skips without the secret key, and in CI.
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./test";
 import { createRoom, deleteRoom, seatPlayer, skipWithoutDatabase } from "./rooms";
 
 skipWithoutDatabase();

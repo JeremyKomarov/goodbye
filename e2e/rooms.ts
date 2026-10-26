@@ -2,7 +2,7 @@
 // straight into the tables), joined as a visitor, and deleted after with everyone who joined.
 // Every one is "e2e — delete me", so `sweep.ts` catches any a killed run leaves behind.
 import { createClient } from "@supabase/supabase-js";
-import { expect, test, type APIRequestContext, type Page } from "@playwright/test";
+import { expect, test, type APIRequestContext, type Page } from "./test";
 import { LOGIN_CODE_ALPHABET, LOGIN_CODE_LENGTH, loginEmail } from "@/core/constants/login.const";
 import { STORAGE_KEYS } from "@/core/constants/storage-keys.const";
 

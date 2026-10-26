@@ -1,7 +1,7 @@
 // The landing journey at a phone's and a laptop's size, in both languages: every wizard step fits
 // the card without a scroll, the card keeps one size, and the page never scrolls either way. It
 // stops before "Create", so it writes no room.
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./test";
 
 const LOCALES = ["he", "en"] as const;
 
