@@ -1,8 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef } from "react";
 import type { HostGender, LeaveReason } from "@/features/landing/api/rooms.dto";
 import { SystemPill } from "@/shared/components/SystemPill";
 import { isolate } from "@/shared/utils/isolate";
@@ -33,18 +32,7 @@ export function HeroChat({
   groupName: string;
 }) {
   const t = useTranslations(HERO_CHAT_NAMESPACE);
-  const reduceMotion = useReducedMotion();
   const { lines, typing, noticeAfter } = useChatScript(story, hostGender);
-
-  // Follow the conversation: the newest line scrolls into view as it arrives.
-  const scroller = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const element = scroller.current;
-    element?.scrollTo({
-      top: element.scrollHeight,
-      behavior: reduceMotion ? "auto" : "smooth",
-    });
-  }, [lines, typing, noticeAfter, reduceMotion]);
 
   const host = hostName.trim();
   const members = typing
@@ -67,12 +55,7 @@ export function HeroChat({
         title={groupName.trim() || t(heroChatKeys.group)}
         members={members}
       />
-      <motion.div
-        ref={scroller}
-        layoutScroll
-        aria-hidden
-        className={heroChatClasses.scroller}
-      >
+      <div aria-hidden className={heroChatClasses.scroller}>
         <div className={heroChatClasses.lines}>
           <AnimatePresence initial={false}>
             {lines.flatMap((line, index) => {
@@ -111,10 +94,12 @@ export function HeroChat({
                 </motion.div>,
               ];
             })}
-            {typing && <TypingDots key="typing" />}
           </AnimatePresence>
+          {/* Outside the presence: it leaves the moment the line it stood for arrives, so the
+              chat never holds both and shrinks back after. */}
+          {typing && <TypingDots />}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
