@@ -143,6 +143,21 @@
   }
 }
 
+// Reduced motion stops the turn (tokens.scss), which would leave a still ring where the label was,
+// reading as an icon rather than as work going on. It breathes instead: no movement, only its
+// opacity, so "still busy" stays visible. `!important` to outrank the global rule, which has it too.
+@media (prefers-reduced-motion: reduce) {
+  .button__spinner {
+    animation: button-breathe 1.4s var(--ease-standard) infinite !important;
+  }
+}
+
+@keyframes button-breathe {
+  50% {
+    opacity: 0.35;
+  }
+}
+
 @media (pointer: coarse) {
   .button--sm,
   .button--md {

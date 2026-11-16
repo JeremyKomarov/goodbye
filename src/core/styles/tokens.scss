@@ -296,7 +296,8 @@ a {
 // -------------------------------------------------------------- reduced motion
 // Motion drops to near-zero rather than vanishing outright — a 1ms transition still fires its
 // `transitionend` handler; `none` can silently strand a component that relies on one to update
-// state (02-COMPONENTS.md §7).
+// state (02-COMPONENTS.md §7). A component whose motion is only a fade, saying it is busy, puts its
+// animation back with `!important` (Button's spinner, Skeleton).
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

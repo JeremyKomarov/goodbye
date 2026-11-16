@@ -28,3 +28,11 @@
     opacity: 0.5;
   }
 }
+
+// The pulse is opacity alone, which reduced motion keeps: the global rule (tokens.scss) would stop
+// it, leaving a grey block that does not say it is loading. `!important` to outrank that rule.
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: skeleton-pulse 1.4s var(--ease-standard) infinite !important;
+  }
+}
