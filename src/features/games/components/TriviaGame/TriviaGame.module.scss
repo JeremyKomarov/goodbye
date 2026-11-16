@@ -53,7 +53,7 @@
     background: var(--positive-strong);
     transform: translateX(calc((var(--left, 1) - 1) * 100%));
     transition:
-      transform 250ms linear,
+      transform 250ms linear, // one tick of `useNow`, so each step lands as the next begins
       background-color var(--duration-normal) var(--ease-standard);
 
     &:dir(rtl) {

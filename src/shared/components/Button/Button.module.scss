@@ -48,7 +48,7 @@
     border: 2px solid currentColor;
     border-inline-end-color: transparent;
     border-radius: var(--radius-pill);
-    animation: button-spin 700ms linear infinite;
+    animation: button-spin 700ms linear infinite; // a turn, not a transition: no duration token fits
   }
 
   &__loading-text {
