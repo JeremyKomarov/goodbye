@@ -51,6 +51,10 @@ export function useCatchRound(
     if (!isPlaying) return;
     const s = sim.current;
     let raf = 0;
+    // Read once and on resize, not each frame: a read after the last frame's render forces layout.
+    let height = arena.current?.clientHeight ?? 460;
+    const observer = new ResizeObserver(([entry]) => (height = (entry.target as HTMLElement).clientHeight));
+    if (arena.current) observer.observe(arena.current);
     let last = performance.now();
     const startedAt = last;
     let spawn = 0;
@@ -66,7 +70,6 @@ export function useCatchRound(
         return;
       }
       const progress = elapsed / CATCH_SECONDS;
-      const height = arena.current?.clientHeight ?? 460;
       spawn += dt * 1000;
       const interval = 640 - 380 * progress;
       while (spawn > interval) {
@@ -88,7 +91,10 @@ export function useCatchRound(
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
   }, [isPlaying, arena]);
 
   function start() {

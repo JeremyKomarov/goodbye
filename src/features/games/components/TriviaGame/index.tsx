@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
+import type { CSSProperties } from "react";
 import { GAME_IDS } from "@/core/constants/games.const";
 import {
   ANSWERS, type OptionId, TRIVIA_ROUND, TRIVIA_SECONDS,
@@ -60,10 +61,9 @@ export function TriviaGame({ onFinish }: GameProps) {
         <span className={triviaGameClasses.score}>{words.score(GAME_IDS.trivia, round.score)}</span>
       </div>
       <div className={triviaGameClasses.clock} title={t(triviaGameKeys.timeLeft)} aria-hidden>
-        <motion.div
+        <div
           className={cn(triviaGameClasses.fill, left < HURRY_MS && triviaGameClasses.hurry)}
-          animate={{ width: `${(left / (TRIVIA_SECONDS * 1000)) * 100}%` }}
-          transition={{ ease: "linear", duration: 0.25 }}
+          style={{ "--left": left / (TRIVIA_SECONDS * 1000) } as CSSProperties}
         />
       </div>
       <div className={triviaGameClasses.body}>

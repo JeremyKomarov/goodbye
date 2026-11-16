@@ -17,13 +17,6 @@
     height: auto;
     pointer-events: none;
     user-select: none;
-
-    // An honest picture pulls back to frame the whole thing once revealed.
-    &--zooming {
-      transition: left 700ms, top 700ms, width 700ms;
-      transition-delay: 500ms;
-      transition-timing-function: cubic-bezier(0.6, 0, 0.4, 1);
-    }
   }
 
   &__curtain {
@@ -47,8 +40,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .picture-stage__icon--zooming {
-    transition: none;
-  }
-}
