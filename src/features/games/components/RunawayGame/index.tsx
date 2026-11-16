@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { useLocale, useTranslations } from "next-intl";
-import { type PointerEvent, useRef, useState } from "react";
+import { type KeyboardEvent, type MouseEvent, type PointerEvent, useRef, useState } from "react";
 import { SCORE_RANGES } from "@/core/constants/games.const";
 import type { GameProps } from "@/features/games/types/games.types";
 import { BUTTON_SIZES, BUTTON_VARIANTS, Button } from "@/shared/components/Button";
@@ -17,6 +17,12 @@ const TRIES = 12;
 const TIRING_MS = 45;
 // The button's half size, so the whole of it stays inside the arena.
 const HALF = { x: 100, y: 48 };
+// Each dodge shrinks it by this much, down to the smallest it gets.
+const SHRINK = 0.035;
+const MIN_SCALE = 0.55;
+// A keyboard can't chase it, so a key press always makes it dodge, until it is as small as it gets:
+// the press after that catches it. Still timed, so the score means the same thing.
+const TIRED_AFTER = Math.ceil((1 - MIN_SCALE) / SHRINK);
 
 type Point = { x: number; y: number };
 
@@ -32,7 +38,7 @@ export function RunawayGame({ onFinish }: GameProps) {
   const lastDodge = useRef(0);
   const startPerf = useRef(0);
   const now = useNow();
-  const scale = Math.max(0.55, 1 - dodges * 0.035);
+  const scale = Math.max(MIN_SCALE, 1 - dodges * SHRINK);
 
   function start() {
     lastDodge.current = 0;
@@ -81,14 +87,31 @@ export function RunawayGame({ onFinish }: GameProps) {
     if (Math.hypot(p.x - pos.x, p.y - pos.y) < 70 + 50 * scale && canDodge()) dodge(p);
   }
 
-  function onPress(event: PointerEvent) {
-    event.preventDefault();
-    if (!isPlaying) return;
-    if (canDodge()) return dodge(relative(event));
+  function caught() {
     setIsPlaying(false);
     navigator.vibrate?.([20, 30, 60]);
     const ms = Math.round(performance.now() - startPerf.current);
     onFinish(Math.min(SCORE_RANGES.runaway.max, Math.max(SCORE_RANGES.runaway.min, ms)));
+  }
+
+  function onPress(event: PointerEvent) {
+    event.preventDefault();
+    if (!isPlaying) return;
+    if (canDodge()) return dodge(relative(event));
+    caught();
+  }
+
+  // A click with no pointer behind it (detail 0) is Enter or Space; a pointer's press was counted on
+  // its way down, so its click is ignored here. It dodges away from where it stands.
+  function onKeyPress(event: MouseEvent) {
+    if (event.detail !== 0 || !isPlaying) return;
+    if (dodges < TIRED_AFTER) return dodge(pos);
+    caught();
+  }
+
+  // A held Enter repeats its click; only a fresh press counts.
+  function onKeyDown(event: KeyboardEvent) {
+    if (event.repeat) event.preventDefault();
   }
 
   const elapsed = isPlaying && now ? Math.max(0, now - startedAt) : 0;
@@ -113,6 +136,10 @@ export function RunawayGame({ onFinish }: GameProps) {
             type="button"
             className={runawayGameClasses.exit}
             onPointerDown={onPress}
+            onClick={onKeyPress}
+            onKeyDown={onKeyDown}
+            // The start button it replaces is gone, so focus comes here rather than to the page.
+            autoFocus
             animate={{ x: pos.x, y: pos.y, scale }}
             // Nearly bounce-free so a long jump doesn't overshoot the arena; quicker as it tires.
             transition={{

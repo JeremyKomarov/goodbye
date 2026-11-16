@@ -68,6 +68,21 @@ test("Runaway: caught, timed and kept", async () => {
   await resultShown(page);
 });
 
+test("Runaway: caught from the keyboard, in its own count of presses", async () => {
+  await page.goto(`/r/${slug}/games/runaway`);
+  await page.getByRole("button", { name: "Start" }).focus();
+  await page.keyboard.press("Enter");
+  // Focus moves to the button it chases; each Enter makes it dodge until it is as small as it
+  // gets (13 dodges), and the 14th catches it.
+  const exit = page.locator("[class*=runaway-game__exit]");
+  await expect(exit).toBeFocused();
+  const sent = scoreSent(page);
+  for (let i = 0; i < 14; i++) await page.keyboard.press("Enter");
+  expect(await sent).toBe(204);
+  // Slower than the touch round above, so no record: only the result.
+  await expect(page.getByRole("button", { name: "Another round" })).toBeVisible();
+});
+
 test("Trivia: ten questions answered and kept", async () => {
   await page.goto(`/r/${slug}/games/trivia`);
   await page.getByRole("button", { name: "Start" }).click();
@@ -99,10 +114,18 @@ test("Picture: six pictures skipped and kept", async () => {
   await resultShown(page);
 });
 
-test("Catch: a round run out and kept", async () => {
+test("Catch: a round played from the keyboard, run out and kept", async () => {
   test.setTimeout(CATCH_MS + 60_000);
   await page.goto(`/r/${slug}/games/catch`);
-  await page.getByRole("button", { name: "Start" }).click();
-  expect(await scoreSent(page)).toBe(204);
+  // Started and played from the keyboard: Tab reaches a falling notice, Enter pops it.
+  await page.getByRole("button", { name: "Start" }).focus();
+  await page.keyboard.press("Enter");
+  const sent = scoreSent(page);
+  await expect(page.locator("[class*=catch-game__notice]").first()).toBeVisible();
+  await page.keyboard.press("Tab");
+  await expect(page.locator("[class*=catch-game__notice]:focus")).toHaveCount(1);
+  await page.keyboard.press("Enter");
+  await expect(page.locator("[class*=catch-game__points]").first()).toBeVisible();
+  expect(await sent).toBe(204);
   await resultShown(page);
 });
