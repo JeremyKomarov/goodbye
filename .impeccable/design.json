@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-16T00:00:00Z",
+  "title": "Design System: Goodbye",
+  "extensions": {
+    "colorMeta": {
+      "whatsapp-green": { "role": "primary", "displayName": "WhatsApp Green", "canonical": "#25d366", "tonalRamp": ["#022a22", "#024034", "#005c4b", "#1daa52", "#25d366", "#3bdb76", "#8eefb2", "#e7fcef"] },
+      "green-bright": { "role": "primary", "displayName": "Green Bright", "canonical": "#3bdb76" },
+      "teal-signal": { "role": "primary", "displayName": "Teal Signal", "canonical": "#00a884" },
+      "outgoing-green": { "role": "primary", "displayName": "Outgoing Green", "canonical": "#005c4b" },
+      "deep-green": { "role": "primary", "displayName": "Deep Green", "canonical": "#024034" },
+      "kraft-paper": { "role": "secondary", "displayName": "Kraft Paper", "canonical": "#c9a46a", "tonalRamp": ["oklch(0.25 0.03 80)", "oklch(0.35 0.05 80)", "oklch(0.47 0.07 80)", "oklch(0.58 0.08 80)", "oklch(0.73 0.09 80)", "oklch(0.82 0.07 80)", "oklch(0.9 0.04 80)", "oklch(0.96 0.02 80)"] },
+      "system-pill-yellow": { "role": "secondary", "displayName": "System Pill Yellow", "canonical": "#ffd279" },
+      "exit-red": { "role": "tertiary", "displayName": "Exit Red", "canonical": "#f15c6d" },
+      "critical-strong": { "role": "tertiary", "displayName": "Critical Strong", "canonical": "#e8364b" },
+      "read-tick-blue": { "role": "tertiary", "displayName": "Read Tick Blue", "canonical": "#53bdeb" },
+      "warning-strong": { "role": "tertiary", "displayName": "Warning Amber", "canonical": "#f0b43c" },
+      "vote-1": { "role": "tertiary", "displayName": "Vote 1", "canonical": "oklch(0.36 0.06 168)", "tonalRamp": ["oklch(0.36 0.06 168)", "oklch(0.45 0.09 166)", "oklch(0.54 0.12 164)", "oklch(0.63 0.14 162)", "oklch(0.72 0.16 160)"] },
+      "vote-3": { "role": "tertiary", "displayName": "Vote 3", "canonical": "oklch(0.54 0.12 164)" },
+      "vote-5": { "role": "tertiary", "displayName": "Vote 5", "canonical": "oklch(0.72 0.16 160)" },
+      "chat-night": { "role": "neutral", "displayName": "Chat Night", "canonical": "#0b141a", "tonalRamp": ["#0b141a", "#111b21", "#202c33", "#2a3942", "#667781", "#8696a0", "#aebac1", "#e9edef"] },
+      "panel-slate": { "role": "neutral", "displayName": "Panel Slate", "canonical": "#111b21" },
+      "bubble-slate": { "role": "neutral", "displayName": "Bubble Slate", "canonical": "#202c33" },
+      "hairline-slate": { "role": "neutral", "displayName": "Hairline Slate", "canonical": "#2a3942" },
+      "strong-hairline": { "role": "neutral", "displayName": "Strong Hairline", "canonical": "#667781" },
+      "muted-grey": { "role": "neutral", "displayName": "Muted Grey", "canonical": "#8696a0" },
+      "secondary-grey": { "role": "neutral", "displayName": "Secondary Grey", "canonical": "#aebac1" },
+      "body-white": { "role": "neutral", "displayName": "Body White", "canonical": "#e9edef" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display (Karantina)", "purpose": "Landing headline, room hero verdict, finale, flip digits, story text. Sized min(5.5rem, 22vw, 8.5dvh); English min(4.25rem, 15vw, 8.5dvh)." },
+      "headline": { "displayName": "Headline", "purpose": "Page titles." },
+      "title": { "displayName": "Title", "purpose": "Sheet and card titles, emphasised body." },
+      "body": { "displayName": "Body", "purpose": "Messages and prose; never under 16px on a control." },
+      "label": { "displayName": "Label", "purpose": "Field labels, system pills, segment options." },
+      "meta": { "displayName": "Meta", "purpose": "Timestamps, tab labels, badges, helper and error text." },
+      "code": { "displayName": "Code", "purpose": "Login codes only." }
+    },
+    "shadows": [
+      { "name": "shadow-xs", "value": "0 1px 2px 0 rgb(0 0 0 / 0.3)", "purpose": "Hairline lift under bubbles and system pills." },
+      { "name": "shadow-sm", "value": "0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.3)", "purpose": "Rare small lift." },
+      { "name": "shadow-md", "value": "0 4px 12px -2px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.3)", "purpose": "Sheets and popovers only." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Default state transitions." },
+      { "name": "ease-emphasized", "value": "cubic-bezier(0.2, 0, 0, 1)", "purpose": "Entrances." },
+      { "name": "duration-fast", "value": "120ms", "purpose": "Hover, press, colour changes." },
+      { "name": "duration-normal", "value": "200ms", "purpose": "Tab glyph fill, small transitions." },
+      { "name": "duration-slow", "value": "320ms", "purpose": "Larger moves; the choice wiggle runs 1.5x this." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "40rem" },
+      { "name": "sheet", "value": "42rem" },
+      { "name": "lg", "value": "64rem" },
+      { "name": "short", "value": "max-height: 700px" },
+      { "name": "landscape-phone", "value": "max-height: 500px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one main action on a screen: WhatsApp Green pill, dark text.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Create voting room 🗳️</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding-inline: 20px; border: 1px solid transparent; border-radius: 999px; font-family: Rubik, system-ui, sans-serif; font-size: 1rem; font-weight: 600; line-height: 1.2; cursor: pointer; transition: background-color 120ms cubic-bezier(0.4,0,0.2,1), border-color 120ms cubic-bezier(0.4,0,0.2,1), transform 120ms cubic-bezier(0.4,0,0.2,1); } .ds-btn:active { transform: scale(0.97); } .ds-btn:focus-visible { outline: 2px solid #ffd279; outline-offset: 2px; } .ds-btn-primary { background: #25d366; color: #0b141a; } .ds-btn-primary:hover { background: #3bdb76; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "A second action beside the primary.",
+      "html": "<button class=\"ds-btn2\">Back</button>",
+      "css": ".ds-btn2 { display: inline-flex; align-items: center; min-height: 40px; padding-inline: 20px; border: 1px solid #2a3942; border-radius: 999px; background: #202c33; color: #e9edef; font-family: Rubik, system-ui, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: border-color 120ms cubic-bezier(0.4,0,0.2,1), transform 120ms; } .ds-btn2:hover { border-color: #667781; } .ds-btn2:active { transform: scale(0.97); } .ds-btn2:focus-visible { outline: 2px solid #ffd279; outline-offset: 2px; }"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Exit-group style destructive action.",
+      "html": "<button class=\"ds-btn-danger\">I left the group</button>",
+      "css": ".ds-btn-danger { display: inline-flex; align-items: center; min-height: 40px; padding-inline: 20px; border: 1px solid #6b2530; border-radius: 999px; background: #2e161a; color: #f15c6d; font-family: Rubik, system-ui, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: border-color 120ms, transform 120ms; } .ds-btn-danger:hover { border-color: #e8364b; } .ds-btn-danger:active { transform: scale(0.97); } .ds-btn-danger:focus-visible { outline: 2px solid #ffd279; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Label above, Bubble Slate control, green border on focus.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Group name</span><input class=\"ds-field-control\" placeholder=\"The office\"></label>",
+      "css": ".ds-field { display: grid; gap: 4px; font-family: Rubik, system-ui, sans-serif; } .ds-field-label { color: #aebac1; font-size: 0.875rem; font-weight: 500; } .ds-field-control { min-height: 40px; padding: 8px 12px; border: 1px solid #2a3942; border-radius: 8px; background: #202c33; color: #e9edef; font: inherit; font-size: 1rem; transition: border-color 120ms; } .ds-field-control::placeholder { color: #8696a0; } .ds-field-control:focus-visible { outline: 2px solid #ffd279; outline-offset: 0; border-color: #25d366; }"
+    },
+    {
+      "name": "Chat Bubbles",
+      "kind": "custom",
+      "refersTo": "bubble-in",
+      "description": "Incoming and outgoing messages with tails.",
+      "html": "<div class=\"ds-chat\"><div class=\"ds-bubble ds-bubble-in\">Wait, you're leaving?? 😢<span class=\"ds-meta\">09:41</span></div><div class=\"ds-bubble ds-bubble-out\">Vote on the hour 🗳️<span class=\"ds-meta\">09:42 ✓✓</span></div></div>",
+      "css": ".ds-chat { display: flex; flex-direction: column; gap: 6px; padding: 16px; background: #0b141a; font-family: Rubik, system-ui, sans-serif; color: #e9edef; } .ds-bubble { position: relative; width: fit-content; max-width: 85%; padding: 8px 12px; border-radius: 12px; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.3); } .ds-bubble::before { content: ''; position: absolute; top: 0; width: 8px; height: 12.8px; } .ds-bubble-in { background: #202c33; border-start-start-radius: 0; } .ds-bubble-in::before { inset-inline-start: -8px; background: #202c33; clip-path: polygon(0 0, 100% 0, 100% 100%); } .ds-bubble-out { align-self: flex-end; background: #005c4b; border-start-end-radius: 0; } .ds-bubble-out::before { inset-inline-end: -8px; background: #005c4b; clip-path: polygon(0 0, 100% 0, 0 100%); } .ds-meta { display: block; margin-top: 4px; text-align: end; color: #8696a0; font-size: 0.75rem; line-height: 1; }"
+    },
+    {
+      "name": "System Pill",
+      "kind": "chip",
+      "refersTo": "system-pill",
+      "description": "WhatsApp's centred notice.",
+      "html": "<div class=\"ds-pill\">Dana joined the room</div>",
+      "css": ".ds-pill { width: fit-content; margin-inline: auto; padding: 4px 12px; border-radius: 8px; background: #202c33; color: #ffd279; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.3); font-family: Rubik, system-ui, sans-serif; font-size: 0.875rem; line-height: 1.4; text-align: center; }"
+    },
+    {
+      "name": "Choice Card",
+      "kind": "chip",
+      "refersTo": "choice-card",
+      "description": "A radio drawn as a card; picked gets the kraft ring and tick.",
+      "html": "<div class=\"ds-choices\"><label class=\"ds-choice ds-choice-on\"><span class=\"ds-lead\">🫡</span><span class=\"ds-txt\"><b>I quit</b><small>On my own terms</small></span><span class=\"ds-mark\">✓</span></label><label class=\"ds-choice\"><span class=\"ds-lead\">📦</span><span class=\"ds-txt\"><b>I was fired</b><small>Box already packed</small></span><span class=\"ds-mark\"></span></label></div>",
+      "css": ".ds-choices { display: grid; gap: 8px; font-family: Rubik, system-ui, sans-serif; color: #e9edef; } .ds-choice { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 16px; background: #202c33; box-shadow: inset 0 0 0 2px transparent; cursor: pointer; transition: background-color 120ms, box-shadow 120ms; } .ds-choice:hover { background: #2a3942; } .ds-choice-on, .ds-choice-on:hover { background: color-mix(in srgb, #c9a46a 15%, transparent); box-shadow: inset 0 0 0 2px #c9a46a; } .ds-lead { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 999px; background: rgb(11 20 26 / 0.6); font-size: 1.375rem; } .ds-txt { flex: 1; display: grid; } .ds-txt b { font-weight: 600; } .ds-txt small { color: #8696a0; font-size: 0.875rem; } .ds-choice-on small { color: #aebac1; } .ds-mark { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 999px; box-shadow: inset 0 0 0 1px #2a3942; color: #0b141a; } .ds-choice-on .ds-mark { background: #c9a46a; box-shadow: none; }"
+    },
+    {
+      "name": "Tab Bar",
+      "kind": "nav",
+      "refersTo": "tab-bar",
+      "description": "The room's sticky bottom bar on phones.",
+      "html": "<nav class=\"ds-tabs\"><a class=\"ds-tab ds-tab-on\"><span class=\"ds-glyph\">🗳️</span>Vote</a><a class=\"ds-tab\"><span class=\"ds-glyph\">🎮<span class=\"ds-badge\">2</span></span>Games</a><a class=\"ds-tab\"><span class=\"ds-glyph\">💬</span>Wall</a><a class=\"ds-tab\"><span class=\"ds-glyph\">🏆</span>Records</a></nav>",
+      "css": ".ds-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border-top: 1px solid #2a3942; background: #111b21; font-family: Rubik, system-ui, sans-serif; } .ds-tab { display: grid; justify-items: center; gap: 4px; min-height: 56px; padding: 8px 4px; color: #8696a0; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: color 120ms; } .ds-tab:hover { color: #aebac1; } .ds-tab-on, .ds-tab-on:hover { color: #e9edef; } .ds-glyph { position: relative; display: grid; place-items: center; width: 56px; height: 32px; border-radius: 999px; transition: background-color 200ms; } .ds-tab-on .ds-glyph { background: #024034; } .ds-badge { position: absolute; top: 0; inset-inline-end: 8px; min-width: 1.15rem; padding: 0 4px; border-radius: 999px; background: #25d366; color: #0b141a; font-size: 0.75rem; font-weight: 700; line-height: 1.15rem; text-align: center; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Last Group Chat",
+    "overview": "Goodbye is a WhatsApp group, played straight. The page is the chat's night background with its doodle wallpaper; messages are bubbles with tails; notices are the small yellow system pills; the navigation is the bottom bar of a phone app. The parody works through fidelity: a visitor who arrives from a WhatsApp link should feel they never left the app, and then notice the joke.\n\nThe system breaks out of WhatsApp only at the big moments. Karantina, a tall condensed poster face, carries the headlines, the countdown's flip digits and the finale; kraft-paper gold marks what the visitor picked and the finale's paper. Everything between those moments stays quiet, dense and familiar, a single chat column no wider than a phone.\n\nIt is dark only and Hebrew first. Every edge is logical, so the whole layout mirrors for RTL, and bubble tails flip with it.",
+    "keyCharacteristics": [
+      "WhatsApp dark mode, re-created on purpose: green brand, slate greys, doodle wallpaper.",
+      "One chat column, `640px` at most, on every screen.",
+      "Tonal depth: page, panel, bubble, each a step lighter.",
+      "Karantina for the moments, Rubik for everything else.",
+      "Kraft gold is the wink: picks, progress and the finale."
+    ],
+    "rules": [
+      { "name": "The Status Means Something Rule", "body": "Positive, warning, critical and info colours appear only where they mean that status. A red used for decoration makes the real \"exit\" stop registering.", "section": "colors" },
+      { "name": "The Ramp-Only Rule", "body": "No hex outside `tokens.scss`; `npm run guard` fails the build on one. Every surface and semantic colour is built from the ramps.", "section": "colors" },
+      { "name": "The Same Colours for Every Story Rule", "body": "A room's reason for leaving changes its words, never its colours (`docs/DECISIONS.md #14`).", "section": "colors" },
+      { "name": "The Poster Only Rule", "body": "Karantina appears only at display size, for a moment worth announcing. Never for body, labels or buttons.", "section": "typography" },
+      { "name": "The Lighter Means Closer Rule", "body": "Raise a surface by moving it one neutral step lighter, not by adding a bigger shadow.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** reach for WhatsApp's own pattern first (bubble, system pill, tab bar, sheet).",
+      "**Do** use logical properties everywhere, so RTL and LTR both hold.",
+      "**Do** keep Karantina for moments: headlines, the countdown, the finale.",
+      "**Do** mark the visitor's picks with kraft gold.",
+      "**Do** put WhatsApp Green behind dark text (`chat-night`), never white.",
+      "**Do** give every control the yellow focus ring, or a shape-fitted variant of it."
+    ],
+    "donts": [
+      "**Don't** add a light theme; the app is dark only (`docs/DECISIONS.md #4`).",
+      "**Don't** write a colour literal outside `src/core/styles/tokens.scss`.",
+      "**Don't** widen the column past `640px` or add an app shell.",
+      "**Don't** use status colours as decoration.",
+      "**Don't** recolour a room by its reason for leaving.",
+      "**Don't** draw icons by hand or import a second icon set; use `lucide-react` through `shared/components/Icon`."
+    ]
+  }
+}
