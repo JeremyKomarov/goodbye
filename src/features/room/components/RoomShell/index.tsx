@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, MotionConfig } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useMemo, useState, type ReactNode } from "react";
 import { FEATURE_KEYS } from "@/core/config/features.const";
@@ -88,7 +88,7 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
   const nav = { snapshot, leader, lastMessage, unread, typing, meId: me?.userId ?? null };
 
   return (
-    <MotionConfig reducedMotion="user">
+    <>
       <RoomContext
         value={{
           slug, snapshot, me, isHost, leader, live, typing, stories, openStory: setStory, hostExit,
@@ -160,6 +160,6 @@ export function RoomShell({ slug, initial, children }: RoomShellProps) {
           />
         )}
       </AnimatePresence>
-    </MotionConfig>
+    </>
   );
 }

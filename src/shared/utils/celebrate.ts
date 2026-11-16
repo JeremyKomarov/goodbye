@@ -9,8 +9,16 @@ export type Celebration = (typeof CELEBRATIONS)[keyof typeof CELEBRATIONS];
 // The finale's side bursts follow the first one, a beat apart.
 const SIDE_DELAYS_MS = [350, 550];
 
+// canvas-confetti's default instance draws in a web worker made from a `blob:` URL, which the CSP
+// refuses (no `worker-src`, docs/DECISIONS.md #16). One instance of our own draws on the page.
+let cannon: import("canvas-confetti").CreateTypes | undefined;
+
 export async function celebrate(kind: Celebration = CELEBRATIONS.record) {
-  const { default: confetti } = await import("canvas-confetti");
+  if (!cannon) {
+    const { create } = await import("canvas-confetti");
+    cannon = create(undefined, { resize: true, useWorker: false });
+  }
+  const confetti = cannon;
   const style = getComputedStyle(document.documentElement);
   const colors = COLOUR_TOKENS.map((token) => style.getPropertyValue(token).trim());
   const fire = (options: Parameters<typeof confetti>[0]) =>
