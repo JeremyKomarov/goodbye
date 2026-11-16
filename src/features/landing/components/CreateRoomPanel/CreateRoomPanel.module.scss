@@ -13,6 +13,11 @@
   border-radius: calc(2 * var(--radius-xl));
   background: var(--surface-card);
   box-shadow: var(--shadow-md);
+  // The placeholder stands in until the page runs in the browser, as tall as the form's first step
+  // will be, so the card does not jump when the form replaces it (it was 27rem: 39–64px of layout
+  // shift on a phone). Measured, per the breakpoints StepBody steps down at; where the screen is too
+  // short for either, both are capped alike. `e2e/landing.spec.ts` fails if they part.
+  --placeholder-height: 23rem;
 
   &__heading {
     margin-block-end: var(--space-4);
@@ -38,5 +43,36 @@
 @media (max-height: 700px) {
   .create-room-panel {
     padding: var(--space-3) var(--space-4);
+  }
+}
+
+// After the padding steps above, so these read as one list with the form's own breakpoints.
+@media (max-height: 700px) {
+  .create-room-panel {
+    --placeholder-height: 20.5625rem;
+  }
+}
+
+@media (max-height: 500px) {
+  .create-room-panel {
+    --placeholder-height: 20.8125rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .create-room-panel {
+    --placeholder-height: 27.25rem;
+  }
+}
+
+@media (min-width: 64rem) and (max-height: 860px) {
+  .create-room-panel {
+    --placeholder-height: 25.8125rem;
+  }
+}
+
+@media (min-width: 64rem) and (max-height: 700px) {
+  .create-room-panel {
+    --placeholder-height: 22.375rem;
   }
 }

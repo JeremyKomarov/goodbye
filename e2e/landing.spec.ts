@@ -68,3 +68,22 @@ for (const locale of LOCALES) {
     }
   });
 }
+
+// Until the page runs in the browser, a placeholder holds the form's place. It is as tall as the
+// first step will be (CreateRoomPanel's `--placeholder-height`), so neither the card nor the chat
+// above it jumps when the form arrives.
+test("the placeholder is as tall as the form that replaces it", async ({ browser }, testInfo) => {
+  const { viewport, baseURL } = testInfo.project.use;
+  const cardHeight = async (javaScriptEnabled: boolean) => {
+    const context = await browser.newContext({ viewport, baseURL, javaScriptEnabled });
+    const page = await context.newPage();
+    await page.goto("/");
+    if (javaScriptEnabled) await page.locator("[class*=create-room-form__steps]").waitFor();
+    const height = await page
+      .locator("[class*=create-room-panel]")
+      .evaluate((panel) => panel.getBoundingClientRect().height);
+    await context.close();
+    return height;
+  };
+  expect(Math.abs((await cardHeight(false)) - (await cardHeight(true)))).toBeLessThanOrEqual(1);
+});

@@ -31,7 +31,7 @@ export function CreateRoomPanel({ onPreview }: { onPreview: (preview: ChatPrevie
       ) : isBrowser ? (
         <CreateRoomForm onCreated={setOpened} onPreview={onPreview} />
       ) : (
-        <Skeleton shape={SKELETON_SHAPES.block} height="27rem" />
+        <Skeleton shape={SKELETON_SHAPES.block} height="var(--placeholder-height)" />
       )}
     </section>
   );
