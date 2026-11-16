@@ -128,10 +128,12 @@
   --sender-green: #25d366;
   --sender-coral: #ff8a8c;
   // The heatmap: one hue, brighter with more votes. From step 4 on the chip needs dark text.
-  --vote-1: oklch(0.36 0.06 168);
-  --vote-2: oklch(0.45 0.09 166);
-  --vote-3: oklch(0.54 0.12 164);
-  --vote-4: oklch(0.63 0.14 162);
+  // Steps 1–3 carry white text at 4.5:1 or more (step 3: 4.7), 4–5 dark text (step 4: 5.5); the
+  // wider jump from 3 to 4 is where the text flips. At 0.54, step 3 read 4.0:1 either way.
+  --vote-1: oklch(0.34 0.06 168);
+  --vote-2: oklch(0.42 0.09 166);
+  --vote-3: oklch(0.5 0.12 164);
+  --vote-4: oklch(0.62 0.14 162);
   --vote-5: oklch(0.72 0.16 160);
 
   // ------------------------------------------------------------------ typography

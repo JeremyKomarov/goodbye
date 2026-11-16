@@ -21,8 +21,8 @@ colors:
   critical-strong: "#e8364b"
   read-tick-blue: "#53bdeb"
   warning-strong: "#f0b43c"
-  vote-1: "oklch(0.36 0.06 168)"
-  vote-3: "oklch(0.54 0.12 164)"
+  vote-1: "oklch(0.34 0.06 168)"
+  vote-3: "oklch(0.5 0.12 164)"
   vote-5: "oklch(0.72 0.16 160)"
 typography:
   display:
