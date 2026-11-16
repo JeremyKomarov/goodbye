@@ -9,7 +9,6 @@ export const scheduleStepStringsEn: StringsOf<typeof scheduleStepStrings> = {
   dayStartHour: "From",
   dayEndHour: "Until",
   votingClosesAt: "Voting closes at",
-  openSlots:
-    "🗳️ {count, plural, one {# hour} other {# hours}} to choose from (after voting closes)",
-  noOpenSlots: "No hours are left after voting closes. Add days or close voting earlier.",
+  closesSummary: "Voting closes {when}",
+  changeClose: "Change",
 };

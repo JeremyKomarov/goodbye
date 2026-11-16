@@ -12,6 +12,10 @@ export const landingStrings = {
     next: "הבא",
     skip: "דילוג",
     create: "פתיחת חדר הצבעה 🗳️",
+    // Above "Create" on the last step, so what the window leaves to vote on is always in sight.
+    openSlots:
+      "{count, plural, one {🗳️ לקבוצה תהיה רק שעה אחת לבחירה} other {🗳️ הקבוצה תבחר בין # שעות}}",
+    noOpenSlots: "אין שעות לבחירה אחרי סגירת ההצבעה. כדאי להוסיף ימים או לסגור מוקדם יותר.",
   },
   fields: {
     hostName: "צריך שם, עד 30 תווים",

@@ -12,6 +12,9 @@ export const landingStringsEn: StringsOf<typeof landingStrings> = {
     next: "Next",
     skip: "Skip",
     create: "Create voting room 🗳️",
+    openSlots:
+      "{count, plural, one {🗳️ The group gets just one hour to pick} other {🗳️ The group picks from # hours}}",
+    noOpenSlots: "No hours are left after voting closes. Add days or close voting earlier.",
   },
   fields: {
     hostName: "Your name is needed, up to 30 characters",

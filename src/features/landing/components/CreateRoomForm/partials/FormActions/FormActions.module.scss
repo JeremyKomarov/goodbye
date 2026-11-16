@@ -1,8 +1,35 @@
 .form-actions {
-  display: flex;
+  display: grid;
   flex-shrink: 0;
   gap: var(--space-2);
   margin-block-start: var(--space-3);
+
+  &__slots {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+
+    &--none {
+      color: var(--critical-text);
+    }
+
+    // Before the last step: gone on a phone, where the card is the step's height anyway.
+    &--ahead {
+      display: none;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    gap: var(--space-2);
+  }
+}
+
+// On a laptop the card keeps one size on every step, so the line holds its room before it shows.
+@media (min-width: 64rem) {
+  .form-actions__slots--ahead {
+    display: block;
+    visibility: hidden;
+  }
 }
 
 @media (min-width: 64rem) and (min-height: 701px) {

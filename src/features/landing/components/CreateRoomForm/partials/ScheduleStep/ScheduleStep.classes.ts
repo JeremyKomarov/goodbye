@@ -9,6 +9,5 @@ export const scheduleStepClasses = classMap("ScheduleStep", {
   stepperLabel: styles["schedule-step__stepper-label"],
   stepperControls: styles["schedule-step__stepper-controls"],
   stepperValue: styles["schedule-step__stepper-value"],
-  slots: styles["schedule-step__slots"],
-  noSlots: styles["schedule-step__slots--none"],
+  closes: styles["schedule-step__closes"],
 });

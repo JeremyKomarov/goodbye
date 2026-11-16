@@ -1,19 +1,24 @@
 import { useTranslations } from "next-intl";
-import { useId } from "react";
-import { useController, useFormContext } from "react-hook-form";
+import { useEffect, useId, useRef, useState } from "react";
+import { useController, useFormContext, useWatch } from "react-hook-form";
 import { MAX_WINDOW_DAYS, type CreateRoomInput } from "@/features/landing/api/rooms.dto";
-import { useOpenSlotCount } from "@/features/landing/hooks/useOpenSlotCount";
 import { useWizardErrors } from "@/features/landing/hooks/useWizardErrors";
 import { Button, BUTTON_VARIANTS } from "@/shared/components/Button";
 import { Field } from "@/shared/components/Field";
 import { ICON_NAMES } from "@/shared/components/Icon";
+import { useSlotFormat } from "@/shared/hooks/useSlotFormat";
 import { cn } from "@/shared/utils/cn";
 import { fromLocalDateTimeInput, toLocalDateTimeInput } from "@/shared/utils/localDateTime";
 import { scheduleStepClasses } from "./ScheduleStep.classes";
 import { END_HOURS, hourLabel, START_HOURS } from "./ScheduleStep.const";
 import { SCHEDULE_STEP_NAMESPACE, scheduleStepKeys } from "./ScheduleStep.keys.const";
 
-/** The window the group votes in — days and hours of the day — and when voting closes. */
+/**
+ * The window the group votes in — days and hours of the day — and when voting closes. The close
+ * comes set (a few hours from now) and reads as one line; "change" opens its field, and so does an
+ * error on it, from the schema or the server. How many hours the window leaves to vote on is said
+ * above "Create" (FormActions), where it stays in sight however the step scrolls.
+ */
 export function ScheduleStep() {
   const t = useTranslations(SCHEDULE_STEP_NAMESPACE);
   const { register } = useFormContext<CreateRoomInput>();
@@ -22,8 +27,18 @@ export function ScheduleStep() {
     field: { ref: closesAtRef, value: closesAt, onChange: setClosesAt, onBlur, name },
   } = useController<CreateRoomInput, "votingClosesAt">({ name: "votingClosesAt" });
   const errors = useWizardErrors();
-  const openSlots = useOpenSlotCount();
+  const closeError = errors.field("votingClosesAt");
+  const timezone = useWatch<CreateRoomInput, "timezone">({ name: "timezone" });
+  const format = useSlotFormat(timezone);
+  const [isEditingClose, setEditingClose] = useState(false);
+  const isCloseOpen = isEditingClose || closeError !== undefined;
+  const closeField = useRef<HTMLInputElement | null>(null);
   const daysLabel = useId();
+
+  // Opened by "change": the field takes the focus the button had.
+  useEffect(() => {
+    if (isEditingClose) closeField.current?.focus();
+  }, [isEditingClose]);
 
   return (
     <>
@@ -60,49 +75,54 @@ export function ScheduleStep() {
         </div>
       </div>
 
-      <div className={scheduleStepClasses.row}>
-        <div className={scheduleStepClasses.hours}>
-          <Field
-            as="select"
-            label={t(scheduleStepKeys.dayStartHour)}
-            {...register("dayStartHour", { valueAsNumber: true })}
-          >
-            {START_HOURS.map((hour) => (
-              <option key={hour} value={hour}>
-                {hourLabel(hour)}
-              </option>
-            ))}
-          </Field>
-          <Field
-            as="select"
-            label={t(scheduleStepKeys.dayEndHour)}
-            error={errors.field("dayEndHour")}
-            {...register("dayEndHour", { valueAsNumber: true })}
-          >
-            {END_HOURS.map((hour) => (
-              <option key={hour} value={hour}>
-                {hourLabel(hour)}
-              </option>
-            ))}
-          </Field>
-        </div>
+      <div className={scheduleStepClasses.hours}>
+        <Field
+          as="select"
+          label={t(scheduleStepKeys.dayStartHour)}
+          {...register("dayStartHour", { valueAsNumber: true })}
+        >
+          {START_HOURS.map((hour) => (
+            <option key={hour} value={hour}>
+              {hourLabel(hour)}
+            </option>
+          ))}
+        </Field>
+        <Field
+          as="select"
+          label={t(scheduleStepKeys.dayEndHour)}
+          error={errors.field("dayEndHour")}
+          {...register("dayEndHour", { valueAsNumber: true })}
+        >
+          {END_HOURS.map((hour) => (
+            <option key={hour} value={hour}>
+              {hourLabel(hour)}
+            </option>
+          ))}
+        </Field>
+      </div>
+
+      {isCloseOpen ? (
         <Field
           type="datetime-local"
           label={t(scheduleStepKeys.votingClosesAt)}
-          error={errors.field("votingClosesAt")}
+          error={closeError}
           name={name}
-          ref={closesAtRef}
+          ref={(element: HTMLInputElement | null) => {
+            closeField.current = element;
+            closesAtRef(element);
+          }}
           value={closesAt ? toLocalDateTimeInput(Date.parse(closesAt)) : ""}
           onChange={(event) => setClosesAt(fromLocalDateTimeInput(event.target.value))}
           onBlur={onBlur}
         />
-      </div>
-
-      <p className={cn(scheduleStepClasses.slots, openSlots === 0 && scheduleStepClasses.noSlots)}>
-        {openSlots > 0
-          ? t(scheduleStepKeys.openSlots, { count: openSlots })
-          : t(scheduleStepKeys.noOpenSlots)}
-      </p>
+      ) : (
+        <p className={scheduleStepClasses.closes}>
+          {t(scheduleStepKeys.closesSummary, { when: format.slot(Date.parse(closesAt)) })}{" "}
+          <Button variant={BUTTON_VARIANTS.link} onClick={() => setEditingClose(true)}>
+            {t(scheduleStepKeys.changeClose)}
+          </Button>
+        </p>
+      )}
     </>
   );
 }

@@ -6,7 +6,7 @@ export const scheduleStepStrings = {
   dayStartHour: "משעה",
   dayEndHour: "עד שעה",
   votingClosesAt: "ההצבעה נסגרת ב־",
-  openSlots:
-    "🗳️ {count, plural, one {תהיה שעה אחת} other {יהיו # שעות}} לבחירה (רק אחרי שההצבעה נסגרת)",
-  noOpenSlots: "אין שעות לבחירה אחרי סגירת ההצבעה. כדאי להוסיף ימים או לסגור מוקדם יותר.",
+  // The close is set for the host; this line says when, and "שינוי" opens the field.
+  closesSummary: "ההצבעה נסגרת {when}",
+  changeClose: "שינוי",
 };

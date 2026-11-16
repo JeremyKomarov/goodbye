@@ -3,9 +3,9 @@
     display: grid;
     gap: var(--space-3);
 
-    // The day and the stepper fit side by side on any phone; the hours and the close wait for room.
+    // The day and the stepper side by side once a date field fits beside it.
     &--pair {
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 
@@ -31,29 +31,38 @@
   &__stepper-controls {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--space-1);
   }
 
   &__stepper-value {
-    min-width: var(--space-6);
+    min-width: var(--space-5);
     font-size: var(--text-xl);
     font-variant-numeric: tabular-nums;
     font-weight: 600;
     text-align: center;
   }
 
-  &__slots {
-    color: var(--text-muted);
+  // The close, set for the host, as one line; "change" opens its field.
+  &__closes {
+    color: var(--text-secondary);
     font-size: var(--text-sm);
-
-    &--none {
-      color: var(--critical-text);
-    }
   }
 }
 
-@media (min-width: 40rem) {
-  .schedule-step__row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+// Too narrow for the date beside the stepper: the stepper takes its own line, its label at the
+// start and its buttons at the end, so it costs one control's height, not a label's and a control's.
+@container wizard-step (max-width: 17.99rem) {
+  .schedule-step__stepper {
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+// The date gets every pixel the stepper leaves: a date field will not shrink below its digits.
+@container wizard-step (min-width: 18rem) {
+  .schedule-step__row--pair {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--space-2);
   }
 }
