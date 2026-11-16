@@ -17,6 +17,7 @@ import { VoteDetail } from "./partials/VoteDetail";
 import { voteHeatmapClasses } from "./VoteHeatmap.classes";
 import { VOTE_HEATMAP_NAMESPACE, voteHeatmapKeys } from "./VoteHeatmap.keys.const";
 import type { SlotMarks, VoteErrorCode, VotingState } from "./VoteHeatmap.types";
+import { cn } from "@/shared/utils/cn";
 
 const VOTE_ERRORS = [
   API_ERROR_CODES.voting_closed, API_ERROR_CODES.rate_limited, API_ERROR_CODES.forbidden,
@@ -107,7 +108,9 @@ export function VoteHeatmap({ snapshot, now, me, canVote, onVote }: VoteHeatmapP
         <h2 id={titleId} className={voteHeatmapClasses.title}>
           {t(voteHeatmapKeys.title, { isOpen: String(isOpen) })}
         </h2>
-        <span className={voteHeatmapClasses.hint}>{hint}</span>
+        <span className={cn(voteHeatmapClasses.hint, days.length === 1 && voteHeatmapClasses.date)}>
+          {hint}
+        </span>
       </div>
       {days.length > 1 && (
         <DayStrip

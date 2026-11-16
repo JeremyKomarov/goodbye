@@ -6,4 +6,5 @@ export const voteHeatmapClasses = classMap("VoteHeatmap", {
   head: styles["vote-heatmap__head"],
   title: styles["vote-heatmap__title"],
   hint: styles["vote-heatmap__hint"],
+  date: styles["vote-heatmap__hint--date"],
 });

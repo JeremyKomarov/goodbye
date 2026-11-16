@@ -30,6 +30,12 @@
     font-size: var(--text-xs);
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    // A one-day room's only date: short, and said nowhere else in the card, so it keeps its width
+    // and the title wraps instead. The longer hints of a many-day room still give way.
+    &--date {
+      flex-shrink: 0;
+    }
   }
 }
 
