@@ -8,6 +8,7 @@ import type { ReactNode } from "react";
 import { env } from "@/core/config/env";
 import { API_ENDPOINTS, PREVIEW_SIZE } from "@/core/constants/api-endpoints.const";
 import { localeDirection, routing } from "@/core/i18n/routing";
+import { TOKEN_VALUES } from "@/core/styles/token-values.const";
 import { SITE_NAMESPACE, siteKeys } from "@/shared/strings/site.keys.const";
 import "@/core/styles/tokens.scss";
 import { Providers } from "./providers";
@@ -55,7 +56,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0b141a",
+  themeColor: TOKEN_VALUES["neutral-950"],
   viewportFit: "cover",
   // Android: shrink the layout when the keyboard opens so the composer stays visible.
   interactiveWidget: "resizes-content",

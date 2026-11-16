@@ -3,12 +3,13 @@ import { cookies } from "next/headers";
 import { createTranslator } from "next-intl";
 import { messages } from "@/core/i18n/messages";
 import { LOCALE_COOKIE, localeDirection, resolveLocale } from "@/core/i18n/routing";
+import { TOKEN_VALUES } from "@/core/styles/token-values.const";
 import { SITE_NAMESPACE, siteKeys } from "@/shared/strings/site.keys.const";
 
 // What "Add to Home Screen" installs: the site's name in the reader's language (the cookie; the
 // proxy's room language doesn't reach a file outside `[locale]`), and the icons
-// `assets/render-icons.mjs` draws. The colour is --neutral-950, as the layout's `themeColor`.
-const PAGE = "#0b141a";
+// `assets/render-icons.mjs` draws. The colour is the page's, as the layout's `themeColor`.
+const PAGE = TOKEN_VALUES["neutral-950"];
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const locale = resolveLocale((await cookies()).get(LOCALE_COOKIE)?.value);

@@ -3,18 +3,18 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { PREVIEW_SIZE } from "@/core/constants/api-endpoints.const";
+import { TOKEN_VALUES } from "@/core/styles/token-values.const";
 import { localeDirection, type Locale } from "@/core/i18n/routing";
 import { visualLtr, visualRtl } from "@/shared/utils/bidi";
 
-// The card is drawn without the stylesheet, so its colours are the tokens' values, copied here:
-// --neutral-950, -900, -800, -100, --accent-pill and --accent-exit (core/styles/tokens.scss).
+// The card is drawn without the stylesheet, so its colours are the tokens' values.
 const OG_COLORS = {
-  page: "#0b141a",
-  badge: "#111b21",
-  pill: "#202c33",
-  text: "#e9edef",
-  pillText: "#ffd279",
-  exit: "#f15c6d",
+  page: TOKEN_VALUES["neutral-950"],
+  badge: TOKEN_VALUES["neutral-900"],
+  pill: TOKEN_VALUES["neutral-800"],
+  text: TOKEN_VALUES["neutral-100"],
+  pillText: TOKEN_VALUES["accent-pill"],
+  exit: TOKEN_VALUES["accent-exit"],
 };
 
 // The big lines shrink to fit: Karantina is narrow, about 0.42em a letter.
