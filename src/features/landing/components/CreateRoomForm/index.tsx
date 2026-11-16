@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, type FieldErrors } from "react-hook-form";
 import { useLocale } from "next-intl";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
 import type { Locale } from "@/core/i18n/routing";
@@ -10,6 +10,7 @@ import {
   CreateRoomInputSchema, HOST_GENDERS, type CreateRoomInput,
 } from "@/features/landing/api/rooms.dto";
 import { useCreateRoom } from "@/features/landing/hooks/useCreateRoom";
+import { forgetDraft, loadDraft, saveDraft } from "@/features/landing/utils/wizardDraft";
 import { SERVER_ERROR } from "@/features/landing/hooks/useWizardErrors";
 import type { ChatPreview, OpenedRoom } from "@/features/landing/types/wizard.types";
 import { saveAdminToken } from "@/shared/utils/adminTokens";
@@ -49,14 +50,24 @@ export function CreateRoomForm({
 }) {
   // The room is in the language the host is reading the wizard in; the switch reloads the page.
   const locale = useLocale();
-  const [defaultValues] = useState(() => initialValues(Date.now(), locale));
+  // This tab's unsent answers, if a reload or a trip to WhatsApp interrupted them (`loadDraft`).
+  const [start] = useState(() => {
+    const now = Date.now();
+    const fresh = initialValues(now, locale);
+    const draft = loadDraft(fresh, now);
+    return draft
+      ? { values: draft.values, step: firstUnfinishedStep(draft.values, draft.step) }
+      : { values: fresh, step: 0 };
+  });
   const form = useForm<CreateRoomInput>({
     resolver: zodResolver(CreateRoomInputSchema),
-    defaultValues,
+    defaultValues: start.values,
+    // A field is checked when the host leaves it, and from then on as they type — and so is one
+    // "Next" found wrong (`submit`), so an error clears the moment it is fixed.
     mode: "onTouched",
   });
   const createRoom = useCreateRoom();
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(start.step);
   const isLast = step === FORM_STEPS.length - 1;
   const stepsRef = useRef<HTMLDivElement>(null);
 
@@ -100,20 +111,31 @@ export function CreateRoomForm({
   // A new step showing sets a new height on a phone.
   useLayoutEffect(() => fitRef.current?.(), [step]);
 
-  useEffect(
-    () =>
-      form.subscribe({
-        formState: { values: true },
-        callback: ({ values: { reason, hostName, hostGender, groupName } }) =>
-          onPreview({ story: reason, hostName, hostGender, groupName }),
-      }),
-    [form, onPreview],
-  );
+  // The chat follows the answers, from the first render: a draft given back plays its story.
+  useEffect(() => {
+    const { reason, hostName, hostGender, groupName } = form.getValues();
+    onPreview({ story: reason, hostName, hostGender, groupName });
+    return form.subscribe({
+      formState: { values: true },
+      callback: ({ values: { reason, hostName, hostGender, groupName } }) =>
+        onPreview({ story: reason, hostName, hostGender, groupName }),
+    });
+  }, [form, onPreview]);
+
+  // Every answer and step is kept for this tab until the room is open.
+  useEffect(() => {
+    saveDraft(form.getValues(), step);
+    return form.subscribe({
+      formState: { values: true },
+      callback: ({ values }) => saveDraft(values, step),
+    });
+  }, [form, step]);
 
   function create(input: CreateRoomInput) {
     createRoom.mutate(input, {
       onSuccess: (room) => {
         saveAdminToken(room.slug, room.adminToken);
+        forgetDraft();
         onCreated({ room, hostName: input.hostName.trim(), hostGender: input.hostGender });
       },
       onError: (error) => {
@@ -127,10 +149,23 @@ export function CreateRoomForm({
     });
   }
 
+  // "Create" checks every step; one found wrong behind this one is shown, not left out of sight.
+  function showFirstError(errors: FieldErrors<CreateRoomInput>) {
+    const at = FORM_STEPS.findIndex((each) => each.fields.some((name) => errors[name]));
+    if (at !== -1 && at !== step) setStep(at);
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
-    if (isLast) return form.handleSubmit(create)(event);
+    if (isLast) return form.handleSubmit(create, showFirstError)(event);
     event.preventDefault();
-    if (await form.trigger(FORM_STEPS[step].fields)) setStep(step + 1);
+    const fields = FORM_STEPS[step].fields;
+    if (await form.trigger(fields)) return setStep(step + 1);
+    // "Next" by Enter leaves the field without a blur, so it is not touched and would not be
+    // checked again as it is fixed. Touch the ones found wrong.
+    for (const name of fields) {
+      if (form.getFieldState(name).error)
+        form.setValue(name, form.getValues(name), { shouldTouch: true });
+    }
   }
 
   return (
@@ -158,6 +193,19 @@ export function CreateRoomForm({
       </form>
     </FormProvider>
   );
+}
+
+/**
+ * The step a draft comes back on: the one it was left on, or an earlier one whose answers no longer
+ * pass — so the host never lands past a question they have to answer again.
+ */
+function firstUnfinishedStep(values: CreateRoomInput, left: number) {
+  const shape = CreateRoomInputSchema.shape;
+  const last = Math.min(left, FORM_STEPS.length - 1);
+  const at = FORM_STEPS.slice(0, last).findIndex((each) =>
+    each.fields.some((name) => !shape[name].safeParse(values[name]).success),
+  );
+  return at === -1 ? last : at;
 }
 
 function initialValues(now: number, locale: Locale): CreateRoomInput {

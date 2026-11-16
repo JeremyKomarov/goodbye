@@ -10,4 +10,7 @@ export const STORAGE_KEYS = {
   storiesSeen: "exit-stories-seen",
   // The exit whose finale this browser has watched — it plays by itself once per exit.
   finaleSeen: (slug: string) => `exit-finale:${slug}`,
+  // The create wizard's unsent answers and step, in sessionStorage: one tab's, gone with the tab.
+  // New here, so not the original's.
+  createDraft: "goodbye-create-draft",
 } as const;

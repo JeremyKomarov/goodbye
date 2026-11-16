@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 import { useController, useFormContext, useWatch } from "react-hook-form";
 import {
-  HOST_GENDERS, MAX_GROUP_NAME, MAX_HOST_NAME, type CreateRoomInput,
+  HOST_GENDERS, type CreateRoomInput,
 } from "@/features/landing/api/rooms.dto";
 import { useWizardErrors } from "@/features/landing/hooks/useWizardErrors";
 import { CHOICE_GROUP_VARIANTS, ChoiceGroup } from "@/shared/components/ChoiceGroup";
@@ -11,7 +11,11 @@ import { isolate } from "@/shared/utils/isolate";
 import { identityStepClasses } from "./IdentityStep.classes";
 import { IDENTITY_STEP_NAMESPACE, identityStepKeys } from "./IdentityStep.keys.const";
 
-/** Who is leaving which group, and how to word it — previewed as the line the group will see. */
+/**
+ * Who is leaving which group, and how to word it — previewed as the line the group will see. The
+ * names have no `maxLength`: it counts UTF-16 units, so an emoji would end a name early. The
+ * schema counts characters and says so.
+ */
 export function IdentityStep() {
   const t = useTranslations(IDENTITY_STEP_NAMESPACE);
   const { register } = useFormContext<CreateRoomInput>();
@@ -30,7 +34,6 @@ export function IdentityStep() {
         <Field
           label={t(identityStepKeys.hostName)}
           placeholder={t(identityStepKeys.hostNamePlaceholder)}
-          maxLength={MAX_HOST_NAME}
           autoComplete="given-name"
           error={errors.field("hostName")}
           {...register("hostName")}
@@ -38,7 +41,6 @@ export function IdentityStep() {
         <Field
           label={t(identityStepKeys.groupName)}
           placeholder={t(identityStepKeys.groupNamePlaceholder)}
-          maxLength={MAX_GROUP_NAME}
           error={errors.field("groupName")}
           {...register("groupName")}
         />
