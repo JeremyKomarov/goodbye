@@ -18,7 +18,7 @@ interface NoticeScreenProps {
 export function NoticeScreen({ title, why, link, action }: NoticeScreenProps) {
   return (
     <main className={noticeScreenClasses.root}>
-      <SystemPill>{title}</SystemPill>
+      <SystemPill as="h1">{title}</SystemPill>
       <p className={noticeScreenClasses.why}>{why}</p>
       <div className={noticeScreenClasses.actions}>
         {action}

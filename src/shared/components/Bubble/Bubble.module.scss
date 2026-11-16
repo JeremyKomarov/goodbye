@@ -36,6 +36,11 @@
     margin-inline-start: auto;
   }
 
+  // The muted grey reads on the slate of a message in, not on the green of one out (WCAG 1.4.3).
+  &--out &__meta {
+    color: var(--bubble-out-meta);
+  }
+
   &--tail::before {
     content: "";
     position: absolute;
