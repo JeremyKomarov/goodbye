@@ -19,6 +19,12 @@ export const heroChatStrings = {
     quit: "לא התפטרתי",
     fed_up: "זה לא סתם נמאס לי",
   },
+  // Before a story is picked: an ordinary morning in the group, and the host's desk is empty.
+  prelude: {
+    l1: "בוקר טוב צוות ☀️",
+    l2: "בוקר! מישהו ראה את… הכיסא לידי עדיין ריק 👀",
+    l3: "{gender, select, f {והספל שלה} other {והספל שלו}} נעלם מהמטבחון 🤔",
+  },
   openers: {
     fired: {
       a: {

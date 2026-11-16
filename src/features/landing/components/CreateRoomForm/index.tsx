@@ -7,7 +7,7 @@ import { useLocale } from "next-intl";
 import { API_ERROR_CODES, ApiError } from "@/core/api/api-error";
 import type { Locale } from "@/core/i18n/routing";
 import {
-  CreateRoomInputSchema, HOST_GENDERS, LEAVE_REASONS, type CreateRoomInput,
+  CreateRoomInputSchema, HOST_GENDERS, type CreateRoomInput,
 } from "@/features/landing/api/rooms.dto";
 import { useCreateRoom } from "@/features/landing/hooks/useCreateRoom";
 import { SERVER_ERROR } from "@/features/landing/hooks/useWizardErrors";
@@ -167,7 +167,8 @@ function initialValues(now: number, locale: Locale): CreateRoomInput {
     hostName: "",
     hostGender: HOST_GENDERS.m,
     groupName: "",
-    reason: LEAVE_REASONS.fired,
+    // No story until the host picks one: no one starts out "fired", and "Next" reads "Skip".
+    reason: null,
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     windowStart: toLocalDateInput(now),
     days: DEFAULT_DAYS,

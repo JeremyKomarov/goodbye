@@ -9,6 +9,7 @@ import {
   FIRST_LINE_MS,
   MAX_LINES,
   OPENERS,
+  PRELUDE,
   READ_PAUSE_MS,
   TYPING_MS,
   type Colleague,
@@ -25,11 +26,12 @@ export interface ShownLine extends ScriptLine {
 
 /**
  * Plays the group chat for `story`, the way a real one arrives: a pause, someone typing for as long
- * as their line takes, then the line. The first story opens with one of its openings, a new story
- * plays one of its corrections — each picked at random — and then the chat waits. After the first
- * story, a beat later, the group's vote is announced.
+ * as their line takes, then the line. With no story yet it plays the prelude, once, and waits. The
+ * first story opens with one of its openings, a new story plays one of its corrections — each
+ * picked at random — and then the chat waits. After the first story, a beat later, the group's
+ * vote is announced.
  */
-export function useChatScript(story: LeaveReason, hostGender: HostGender) {
+export function useChatScript(story: LeaveReason | null, hostGender: HostGender) {
   const t = useTranslations(HERO_CHAT_NAMESPACE);
   const still = useReducedMotion();
   const [lines, setLines] = useState<ShownLine[]>([]);
@@ -39,6 +41,8 @@ export function useChatScript(story: LeaveReason, hostGender: HostGender) {
   // The story the chat last said a line of — set on saying it, so an effect undone before its
   // first line (a fast switch, or strict mode) starts over rather than correcting nothing.
   const told = useRef<LeaveReason | null>(null);
+  // Whether the prelude has been said, so it is never said twice.
+  const preluded = useRef(false);
   const nextId = useRef(0);
   // Read when a line is timed; a ref, so the host changing gender does not restart the chat.
   const gender = useRef(hostGender);
@@ -48,13 +52,18 @@ export function useChatScript(story: LeaveReason, hostGender: HostGender) {
 
   useEffect(() => {
     const before = told.current;
+    const isPrelude = story === null;
     const script =
-      before === null
-        ? pickOne(OPENERS[story])
-        : before === story
-          ? []
-          : pickOne(CORRECTIONS[story]);
-    const not = before === null || before === story ? null : before;
+      story === null
+        ? before === null && !preluded.current
+          ? PRELUDE
+          : []
+        : before === null
+          ? pickOne(OPENERS[story])
+          : before === story
+            ? []
+            : pickOne(CORRECTIONS[story]);
+    const not = story === null || before === null || before === story ? null : before;
     let timer: ReturnType<typeof setTimeout> | undefined;
     let isFirst = before === null;
 
@@ -63,7 +72,8 @@ export function useChatScript(story: LeaveReason, hostGender: HostGender) {
     };
 
     const say = (line: ScriptLine) => {
-      told.current = story;
+      if (isPrelude) preluded.current = true;
+      else told.current = story;
       setTyping(null);
       const shown: ShownLine = {
         ...line,
@@ -77,6 +87,8 @@ export function useChatScript(story: LeaveReason, hostGender: HostGender) {
     const play = (queue: readonly ScriptLine[]) => {
       const [line, ...rest] = queue;
       if (!line) {
+        // The vote is announced after a story, never after small talk.
+        if (isPrelude) return;
         const last = nextId.current - 1;
         wait(between(READ_PAUSE_MS), () => setNoticeAfter((after) => after ?? last));
         return;

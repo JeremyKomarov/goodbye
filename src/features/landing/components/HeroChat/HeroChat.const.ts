@@ -22,7 +22,7 @@ export const SENDER_GENDERS: Record<Colleague, HostGender> = {
   avi: HOST_GENDERS.m,
 };
 
-const { openers, corrections } = heroChatKeys;
+const { prelude, openers, corrections } = heroChatKeys;
 
 type Leaves<T> = T extends string
   ? T
@@ -31,6 +31,7 @@ type Leaves<T> = T extends string
 export interface ScriptLine {
   from: ChatSender;
   key:
+    | Leaves<typeof prelude>
     | Leaves<typeof openers>
     | Leaves<typeof corrections>;
 }
@@ -40,6 +41,16 @@ const line = (from: ChatSender, key: ScriptLine["key"]): ScriptLine => ({
   from,
   key,
 });
+
+/**
+ * What the chat plays before any story is picked: small talk, and the host's desk noticed empty.
+ * It names no reason, so whichever story is picked next opens on it as news.
+ */
+export const PRELUDE: readonly ScriptLine[] = [
+  line(dana, prelude.l1),
+  line(noa, prelude.l2),
+  line(yossi, prelude.l3),
+];
 
 /** How each story can open; one is picked at random each time the page is opened. */
 export const OPENERS: Record<LeaveReason, readonly (readonly ScriptLine[])[]> =

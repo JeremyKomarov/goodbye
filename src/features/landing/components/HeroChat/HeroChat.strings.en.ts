@@ -19,6 +19,11 @@ export const heroChatStringsEn: StringsOf<typeof heroChatStrings> = {
     quit: "I didn't resign",
     fed_up: "I'm not just fed up",
   },
+  prelude: {
+    l1: "Morning team ☀️",
+    l2: "Morning! Has anyone seen… the desk next to mine is still empty 👀",
+    l3: "And {gender, select, f {her} other {his}} mug is gone from the kitchen 🤔",
+  },
   openers: {
     fired: {
       a: {

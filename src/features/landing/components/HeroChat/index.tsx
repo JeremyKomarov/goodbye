@@ -15,8 +15,8 @@ import { TypingDots } from "./partials/TypingDots";
 import { useChatScript } from "./useChatScript";
 
 /**
- * The landing page's group chat. It plays `story` (`useChatScript`); a new story continues the
- * same chat with a correction. The header previews the names
+ * The landing page's group chat. It plays `story` (`useChatScript`) — small talk until there is
+ * one — and a new story continues the same chat with a correction. The header previews the names
  * the host is typing into the wizard, and the colleagues speak to the host in their gender.
  * To a screen reader it is one picture with a label.
  */
@@ -26,7 +26,7 @@ export function HeroChat({
   hostGender,
   groupName,
 }: {
-  story: LeaveReason;
+  story: LeaveReason | null;
   hostName: string;
   hostGender: HostGender;
   groupName: string;
