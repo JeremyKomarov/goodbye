@@ -11,7 +11,7 @@
 
   &__title {
     font-family: var(--font-display);
-    font-size: min(5.5rem, 22vw, 8.5dvh);
+    font-size: min(var(--display-4xl), 22vw, 8.5dvh);
     font-weight: 700;
     line-height: 0.82;
     letter-spacing: -0.025em;
@@ -61,7 +61,7 @@
   }
 
   .intro__title {
-    font-size: min(6.5rem, 10dvh);
+    font-size: min(var(--display-5xl), 10dvh);
   }
 
   .intro__title:lang(en) {

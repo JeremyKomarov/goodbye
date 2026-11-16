@@ -64,6 +64,6 @@
 @media (max-height: 500px) {
   .vote-detail {
     height: var(--space-12);
-    font-size: 0.8125rem;
+    font-size: var(--text-xs);
   }
 }

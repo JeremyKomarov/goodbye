@@ -38,7 +38,7 @@
   &__verdict {
     margin-block-start: var(--space-4);
     font-family: var(--font-display);
-    font-size: 3rem;
+    font-size: var(--display-lg);
     font-weight: 700;
     line-height: 1;
   }
@@ -58,7 +58,7 @@
   }
 
   .hero__verdict {
-    font-size: 2.25rem;
+    font-size: var(--display-sm);
   }
 }
 
@@ -92,6 +92,6 @@
   }
 
   .hero__verdict {
-    font-size: 3.75rem;
+    font-size: var(--display-2xl);
   }
 }

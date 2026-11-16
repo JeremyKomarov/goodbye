@@ -26,7 +26,7 @@
 
   &__headline {
     font-family: var(--font-display);
-    font-size: min(5.5rem, 20vw);
+    font-size: min(var(--display-4xl), 20vw);
     font-weight: 700;
     line-height: 0.85;
     text-wrap: balance;
@@ -121,7 +121,7 @@
 
 @media (min-width: 64rem) {
   .finale__headline {
-    font-size: 6.5rem;
+    font-size: var(--display-5xl);
   }
 }
 
@@ -132,7 +132,7 @@
   }
 
   .finale__headline {
-    font-size: 3.5rem;
+    font-size: var(--display-xl);
   }
 }
 
@@ -144,7 +144,7 @@
   }
 
   .finale__headline {
-    font-size: 2.75rem;
+    font-size: var(--display-md);
   }
 
   .finale__stats {

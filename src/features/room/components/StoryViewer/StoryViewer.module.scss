@@ -16,7 +16,7 @@
 
   &__fact {
     font-family: var(--font-display);
-    font-size: 2.75rem;
+    font-size: var(--display-lg);
     font-weight: 700;
     line-height: 1.02;
   }
@@ -24,6 +24,6 @@
 
 @media (max-height: 500px) {
   .story-viewer__fact {
-    font-size: 2rem;
+    font-size: var(--display-xs);
   }
 }

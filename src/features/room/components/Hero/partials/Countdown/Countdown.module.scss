@@ -35,13 +35,13 @@
   }
 
   .countdown__digits {
-    font-size: min(4rem, 16vw);
+    font-size: min(var(--display-3xl), 16vw);
   }
 }
 
 @media (max-height: 500px) {
   .countdown__digits {
-    font-size: 3.25rem;
+    font-size: var(--display-xl);
   }
 }
 
@@ -51,12 +51,12 @@
   }
 
   .countdown__digits {
-    font-size: 5.5rem;
+    font-size: var(--display-4xl);
   }
 }
 
 @media (min-width: 64rem) and (max-height: 700px) {
   .countdown__digits {
-    font-size: 4rem;
+    font-size: var(--display-3xl);
   }
 }

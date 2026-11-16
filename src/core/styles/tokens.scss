@@ -149,13 +149,18 @@
   --text-2xl: 1.75rem; // 28px — page titles
   --text-3xl: 2.25rem; // 36px — hero-scale numbers, empty-state headlines
 
-  // Karantina card titles: a condensed face reads a step smaller than Rubik at the same size, so
-  // its own steps, chosen by the room the screen gives (the landing headline is fluid, in place).
+  // Karantina's own steps: a condensed face reads a step smaller than Rubik at the same size. The
+  // size is chosen by the room the screen gives; a fluid headline caps at one of these.
   --display-xs: 2rem; // 32px — a step title on a short screen
   --display-sm: 2.25rem; // 36px — a step title on a phone
   --display-md: 2.5rem; // 40px — a step title on a short laptop
   --display-lg: 3rem; // 48px — "The room is ready"
   --display-xl: 3.25rem; // 52px — a step title on a laptop
+  // The room's moments, the same face a size up: the verdict, the countdown, the finale.
+  --display-2xl: 3.75rem; // 60px — the verdict on a laptop
+  --display-3xl: 4rem; // 64px — the countdown on a short screen
+  --display-4xl: 5.5rem; // 88px — the countdown on a laptop; the cap of a fluid headline
+  --display-5xl: 6.5rem; // 104px — the finale's headline on a laptop
 
   // -------------------------------------------------------------------- spacing
   // Linear, 4px per step — one multiplication table, not a curve to memorise.

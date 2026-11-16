@@ -8,7 +8,7 @@
   margin-block-start: var(--space-2);
   padding-inline: var(--space-1);
   color: var(--text-muted);
-  font-size: 0.6875rem;
+  font-size: var(--text-xs);
 
   &__swatch {
     width: var(--space-4);
