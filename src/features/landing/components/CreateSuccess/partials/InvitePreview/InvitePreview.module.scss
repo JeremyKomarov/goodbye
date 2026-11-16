@@ -1,0 +1,22 @@
+.invite-preview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+
+  // Wide enough to read as a message, not the column: the tail still points at the host's side.
+  &__bubble {
+    max-width: min(100%, 22rem);
+  }
+
+  &__text {
+    margin: 0;
+    line-height: 1.375;
+    white-space: pre-line;
+  }
+
+  // WhatsApp's link blue; an address breaks anywhere rather than pushing the bubble wide.
+  &__url {
+    color: var(--info-text);
+    overflow-wrap: anywhere;
+    unicode-bidi: isolate;
+  }
+}

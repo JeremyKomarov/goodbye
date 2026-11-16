@@ -6,8 +6,4 @@ export const linkRowClasses = classMap("LinkRow", {
   label: styles["link-row__label"],
   box: styles["link-row__box"],
   url: styles["link-row__url"],
-  tone: {
-    plain: styles["link-row--plain"],
-    secret: styles["link-row--secret"],
-  },
 });

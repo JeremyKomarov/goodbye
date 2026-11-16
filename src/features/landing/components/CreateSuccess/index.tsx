@@ -12,7 +12,9 @@ import { isolate } from "@/shared/utils/isolate";
 import { whatsappLink } from "@/shared/utils/whatsapp";
 import { createSuccessClasses } from "./CreateSuccess.classes";
 import { CREATE_SUCCESS_NAMESPACE, createSuccessKeys } from "./CreateSuccess.keys.const";
-import { LINK_ROW_TONES, LinkRow } from "./partials/LinkRow";
+import { AdminKey } from "./partials/AdminKey";
+import { InvitePreview } from "./partials/InvitePreview";
+import { LinkRow } from "./partials/LinkRow";
 
 /**
  * The room is open: send the link to the group, copy it, keep the admin link, go in. The admin
@@ -46,6 +48,7 @@ export function CreateSuccess({ opened }: { opened: OpenedRoom }) {
           </motion.span>
           <p>{t(createSuccessKeys.intro)}</p>
         </div>
+        <InvitePreview invite={invite} url={roomUrl} />
         <a
           href={whatsappLink(invite)}
           target="_blank"
@@ -57,19 +60,17 @@ export function CreateSuccess({ opened }: { opened: OpenedRoom }) {
         <LinkRow label={t(createSuccessKeys.roomLink)} url={roomUrl} />
       </div>
 
-      <div className={createSuccessClasses.section}>
-        <LinkRow
-          label={t(createSuccessKeys.adminLink)}
-          url={adminUrl}
-          tone={LINK_ROW_TONES.secret}
-        />
-        <Link
-          href={roomPath(FEATURE_KEYS.room, room.slug)}
-          className={cn(createSuccessClasses.action, createSuccessClasses.enter)}
-        >
-          {t(createSuccessKeys.enter)}
-        </Link>
-      </div>
+      <AdminKey
+        title={t(createSuccessKeys.adminTitle)}
+        why={t(createSuccessKeys.adminWhy)}
+        url={adminUrl}
+      />
+      <Link
+        href={roomPath(FEATURE_KEYS.room, room.slug)}
+        className={cn(createSuccessClasses.action, createSuccessClasses.enter)}
+      >
+        {t(createSuccessKeys.enter)}
+      </Link>
     </div>
   );
 }
