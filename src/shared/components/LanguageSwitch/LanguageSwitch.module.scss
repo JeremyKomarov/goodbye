@@ -25,6 +25,14 @@
 
 @media (pointer: coarse) {
   .language-switch__option {
+    position: relative;
     min-height: var(--space-9);
+
+    // The pill stays its drawn size; a thumb gets the 44px target, reaching past its edge.
+    &::after {
+      content: "";
+      position: absolute;
+      inset: calc((var(--space-9) - var(--space-11)) / 2) 0;
+    }
   }
 }

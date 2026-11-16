@@ -32,6 +32,9 @@ const STEP_BODIES = { reason: ReasonStep, who: IdentityStep, when: ScheduleStep 
 /** Set on the steps' box while it has more to scroll to on that side; the styles fade that edge. */
 const MORE_ABOVE = "data-more-above";
 const MORE_BELOW = "data-more-below";
+/** The heights the script measures, for the styles to choose between. */
+const TALLEST = "--steps-tallest";
+const SHOWING = "--steps-showing";
 
 /**
  * The three-step create wizard, validated by the schema the handler parses (03-DATA.md §4). Its
@@ -62,10 +65,13 @@ export function CreateRoomForm({
     stepsRef.current?.scrollTo({ top: 0 });
   }, [step]);
 
-  // The steps' box is as tall as the tallest step, whichever is showing, so the card never changes
-  // size. Only the step showing is in the flow, so a short screen scrolls that one and no further,
-  // and an edge with more past it fades out, so the cut reads as a scroll. Sized before the first
-  // paint, so the card never shows at the height of one step and then jumps to the tallest.
+  // The steps' box is sized in script, before the first paint, so it never shows at one height and
+  // then jumps to another. Script measures; the styles choose: on a laptop the box is as tall as the
+  // tallest step, so the card keeps one size beside the chat; on a phone it is as tall as the step
+  // showing, so a short step leaves its room to the chat above it. Only the step showing is in the
+  // flow, so a short screen scrolls that one and no further, and an edge with more past it fades
+  // out, so the cut reads as a scroll.
+  const fitRef = useRef<() => void>(undefined);
   useLayoutEffect(() => {
     const box = stepsRef.current;
     if (!box) return;
@@ -75,10 +81,13 @@ export function CreateRoomForm({
       box.toggleAttribute(MORE_BELOW, box.scrollTop + box.clientHeight < box.scrollHeight - 1);
     };
     const fit = () => {
-      box.style.height = `${Math.max(...steps.map((each) => each.scrollHeight))}px`;
+      const showing = steps.find((each) => each.getAttribute("aria-hidden") !== "true");
+      box.style.setProperty(TALLEST, `${Math.max(...steps.map((each) => each.scrollHeight))}px`);
+      box.style.setProperty(SHOWING, `${(showing ?? steps[0]).scrollHeight}px`);
       markEdges();
     };
     fit();
+    fitRef.current = fit;
     const observer = new ResizeObserver(fit);
     [box, ...steps].forEach((each) => observer.observe(each));
     box.addEventListener("scroll", markEdges, { passive: true });
@@ -87,6 +96,9 @@ export function CreateRoomForm({
       box.removeEventListener("scroll", markEdges);
     };
   }, []);
+
+  // A new step showing sets a new height on a phone.
+  useLayoutEffect(() => fitRef.current?.(), [step]);
 
   useEffect(
     () =>

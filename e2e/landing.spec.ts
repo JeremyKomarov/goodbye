@@ -1,6 +1,7 @@
 // The landing journey at a phone's and a laptop's size, in both languages: every wizard step fits
-// the card without a scroll, the card keeps one size, and the page never scrolls either way. It
-// stops before "Create", so it writes no room.
+// the card without a scroll, and the page never scrolls either way. On a laptop the card keeps one
+// size; on a phone it takes the step showing's height, so the hero chat above it gets the rest,
+// and the chat stays in sight. It stops before "Create", so it writes no room.
 import { expect, test, type Page } from "./test";
 
 const LOCALES = ["he", "en"] as const;
@@ -31,7 +32,7 @@ function measure(page: Page) {
 const NO_OVERFLOW = { pageDown: 0, pageSideways: 0, card: 0, stepDown: 0, stepSideways: 0 };
 
 for (const locale of LOCALES) {
-  test(`the wizard fits on every step (${locale})`, async ({ page, context, baseURL }) => {
+  test(`the wizard fits on every step (${locale})`, async ({ page, context, baseURL }, testInfo) => {
     await context.addCookies([{ name: "NEXT_LOCALE", value: locale, url: baseURL! }]);
     await page.goto("/");
     const next = page.locator('button[type="submit"]');
@@ -57,7 +58,13 @@ for (const locale of LOCALES) {
       if (step !== "when") await next.click();
     }
 
-    expect(sizes[1], "the card resized on step 2").toEqual(sizes[0]);
-    expect(sizes[2], "the card resized on step 3").toEqual(sizes[0]);
+    if (testInfo.project.name === "laptop") {
+      expect(sizes[1], "the card resized on step 2").toEqual(sizes[0]);
+      expect(sizes[2], "the card resized on step 3").toEqual(sizes[0]);
+    } else {
+      // The chat is the demonstration: on a phone it keeps its header and a line in view.
+      const chat = await page.locator("[class*=landing-screen__chat]").boundingBox();
+      expect(chat?.height ?? 0, "the chat is squeezed out").toBeGreaterThan(90);
+    }
   });
 }

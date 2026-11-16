@@ -4,10 +4,16 @@
   flex-direction: column;
   min-height: 0;
 
-  // Sized in script to the tallest step (see the component), shrinking with a short screen. The
+  // Sized from what the script measures (see the component), shrinking with a short screen. On a
+  // phone, as tall as the step showing, easing to the next one's height, so the chat above gets
+  // what a short step leaves; from 64rem, as tall as the tallest, so the card holds one size. The
   // step showing is in the flow and scrolls; the others lie over it, out of the flow.
   &__steps {
+    // The steps lay out by the card's width, not the screen's: the card is narrow on a tablet too.
+    container: wizard-step / inline-size;
     position: relative;
+    height: var(--steps-showing, auto);
+    transition: height var(--duration-slow) var(--ease-emphasized);
     flex: 0 1 auto;
     min-width: 0;
     min-height: 0;
@@ -42,5 +48,11 @@
         transparent
       );
     }
+  }
+}
+
+@media (min-width: 64rem) {
+  .create-room-form__steps {
+    height: var(--steps-tallest, auto);
   }
 }

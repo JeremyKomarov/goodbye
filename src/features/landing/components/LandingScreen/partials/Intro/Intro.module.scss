@@ -5,6 +5,10 @@
   justify-items: start;
   gap: var(--space-3);
 
+  &__switch {
+    display: flex;
+  }
+
   &__title {
     font-family: var(--font-display);
     font-size: min(5.5rem, 22vw, 8.5dvh);
@@ -30,6 +34,24 @@
 @media (max-height: 1000px) and (max-width: 63.99rem) {
   .intro__description {
     display: none;
+  }
+}
+
+// A phone gives the language switch no row of its own: it shares the headline's cell, at the end
+// of its second line, the shorter one in both languages, and the row it leaves goes to the chat.
+@media (max-width: 63.99rem) {
+  .intro__switch,
+  .intro__title {
+    grid-area: 1 / 1;
+  }
+
+  .intro__switch {
+    align-self: end;
+    justify-self: end;
+  }
+
+  .intro__description {
+    grid-area: 2 / 1;
   }
 }
 
@@ -62,5 +84,27 @@
 @media (min-width: 64rem) and (max-height: 820px) {
   .intro__description {
     display: none;
+  }
+}
+
+// A phone held sideways sets the headline beside the form, with a column's height to fill.
+@media (max-height: 500px) and (min-width: 40rem) and (max-width: 63.99rem) {
+  .intro__title {
+    font-size: min(var(--display-3xl), 16dvh);
+  }
+
+  .intro__title:lang(en) {
+    font-size: min(var(--display-xl), 13dvh);
+  }
+
+  // Beside the form there is height to spare: the switch takes its own row again, above the
+  // headline, rather than floating at the headline's end in the gap before the card.
+  .intro__switch,
+  .intro__title {
+    grid-area: auto;
+  }
+
+  .intro__switch {
+    justify-self: start;
   }
 }

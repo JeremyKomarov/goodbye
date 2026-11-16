@@ -65,8 +65,13 @@
     opacity: 1;
   }
 
+  // Full width means the width it is given, even beside a sibling in a row: on a narrow screen a
+  // long label wraps onto a second line rather than pushing the button past its container.
   &--full-width {
     width: 100%;
+    min-width: 0;
+    white-space: normal;
+    text-align: center;
   }
 
   &--sm {

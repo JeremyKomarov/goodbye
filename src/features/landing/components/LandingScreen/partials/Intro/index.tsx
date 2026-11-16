@@ -9,7 +9,9 @@ export function Intro() {
 
   return (
     <header className={introClasses.root}>
-      <LanguageSwitch />
+      <div className={introClasses.switch}>
+        <LanguageSwitch />
+      </div>
       <h1 className={introClasses.title}>
         {t(introKeys.titleFirst)}
         <br />

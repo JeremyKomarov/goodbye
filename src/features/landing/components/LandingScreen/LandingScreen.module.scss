@@ -1,11 +1,12 @@
 // Exactly one viewport tall, never a page scroll. Phones: headline, chat, form, stacked — the chat
-// takes what the other two leave, and a step too tall for what is left scrolls inside its card.
+// is the demonstration, so it keeps room for a few lines whatever the step; it takes what the
+// other two leave, and a step too tall for what is left scrolls inside its card.
 // Desktop: headline over form in the start column, the chat in the end column — on the left in
 // Hebrew.
 .landing-screen {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
   max-width: 28rem;
   height: 100dvh;
   overflow: hidden;
@@ -20,10 +21,11 @@
     min-width: 0;
   }
 
+  // The header and about two lines; a taller screen or a shorter step gives it more.
   &__chat {
     flex: 1 1 0;
     min-width: 0;
-    min-height: 7rem;
+    min-height: 9.5rem;
   }
 
   // Shrinks to what is left; the card inside scrolls its step rather than push the page.
@@ -38,15 +40,37 @@
 
 @media (max-height: 700px) {
   .landing-screen {
-    gap: var(--space-3);
     padding-block-start: max(var(--space-3), env(safe-area-inset-top));
   }
 }
 
-// Too short for the chat and the whole form: the form gets the room.
+// A short phone: the header and a line or two, still enough to see the group react.
 @media (max-height: 700px) {
   .landing-screen__chat {
+    min-height: 6.25rem;
+  }
+}
+
+// A phone held sideways has no height to share: the chat steps aside, and the headline and the
+// form sit side by side, so the form gets the whole height rather than what the headline leaves.
+@media (max-height: 500px) and (max-width: 63.99rem) {
+  .landing-screen__chat {
     display: none;
+  }
+}
+
+@media (max-height: 500px) and (min-width: 40rem) and (max-width: 63.99rem) {
+  .landing-screen {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+    align-items: center;
+    gap: var(--space-8);
+    max-width: 56rem;
+    padding-inline: max(var(--space-6), env(safe-area-inset-left), env(safe-area-inset-right));
+  }
+
+  .landing-screen__panel {
+    max-height: 100%;
   }
 }
 
