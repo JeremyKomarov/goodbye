@@ -1,13 +1,7 @@
-// A column that shrinks with the screen: the form's step scrolls inside it, the opened room's card
-// scrolls as a whole.
+// A column as tall as what it holds: on a short screen the page scrolls, never the card.
 .create-room-panel {
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  // As the steps' box: no scrollbar to narrow the card and rewrap what is in it.
-  scrollbar-width: none;
   padding: var(--space-4);
   border: 1px solid var(--border-subtle);
   border-radius: calc(2 * var(--radius-xl));
@@ -15,8 +9,8 @@
   box-shadow: var(--shadow-md);
   // The placeholder stands in until the page runs in the browser, as tall as the form's first step
   // will be, so the card does not jump when the form replaces it (it was 27rem: 39–64px of layout
-  // shift on a phone). Measured, per the breakpoints StepBody steps down at; where the screen is too
-  // short for either, both are capped alike. `e2e/landing.spec.ts` fails if they part.
+  // shift on a phone). Measured, per the breakpoints StepBody steps down at. `e2e/landing.spec.ts`
+  // fails if they part.
   --placeholder-height: 23rem;
 
   &__heading {

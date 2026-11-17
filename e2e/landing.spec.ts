@@ -1,12 +1,13 @@
-// The landing journey at a phone's and a laptop's size, in both languages: every wizard step fits
-// the card without a scroll, and the page never scrolls either way. On a laptop the card keeps one
+// The landing journey at a phone's and a laptop's size, in both languages: no wizard step scrolls
+// inside the card or the card itself — a short screen scrolls the page — and the page never scrolls
+// sideways. On a laptop the card keeps one
 // size; on a phone it takes the step showing's height, so the hero chat above it gets the rest,
 // and the chat stays in sight. It stops before "Create", so it writes no room.
 import { expect, test, type Page } from "./test";
 
 const LOCALES = ["he", "en"] as const;
 
-/** How far the page, the card and the step box can each scroll, and the card's size. */
+/** How far the page sideways, the card and the step box can each scroll, and the card's size. */
 function measure(page: Page) {
   return page.evaluate(() => {
     const panel = document.querySelector<HTMLElement>("[class*=create-room-panel]")!;
@@ -16,7 +17,6 @@ function measure(page: Page) {
     return {
       card: { width: Math.round(width), height: Math.round(height) },
       overflow: {
-        pageDown: root.scrollHeight - innerHeight,
         pageSideways: root.scrollWidth - innerWidth,
         card: panel.scrollHeight - panel.clientHeight,
         stepDown: steps.scrollHeight - steps.clientHeight,
@@ -29,7 +29,7 @@ function measure(page: Page) {
   });
 }
 
-const NO_OVERFLOW = { pageDown: 0, pageSideways: 0, card: 0, stepDown: 0, stepSideways: 0 };
+const NO_OVERFLOW = { pageSideways: 0, card: 0, stepDown: 0, stepSideways: 0 };
 
 for (const locale of LOCALES) {
   test(`the wizard fits on every step (${locale})`, async ({ page, context, baseURL }, testInfo) => {

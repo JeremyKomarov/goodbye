@@ -1,53 +1,26 @@
-// The progress and the buttons stay put; the steps between them scroll when the card is short.
+// The progress, the step showing and the buttons, stacked at their full height: a short screen
+// scrolls the page, not the steps.
 .create-room-form {
   display: flex;
   flex-direction: column;
-  min-height: 0;
 
-  // Sized from what the script measures (see the component), shrinking with a short screen. On a
-  // phone, as tall as the step showing, easing to the next one's height, so the chat above gets
-  // what a short step leaves; from 64rem, as tall as the tallest, so the card holds one size. The
-  // step showing is in the flow and scrolls; the others lie over it, out of the flow.
+  // Sized from what the script measures (see the component). On a phone, as tall as the step
+  // showing, easing to the next one's height, so the chat above gets what a short step leaves;
+  // from 64rem, as tall as the tallest, so the card holds one size. The step showing is in the
+  // flow; the others lie over it, out of the flow.
   &__steps {
     // The steps lay out by the card's width, not the screen's: the card is narrow on a tablet too.
     container: wizard-step / inline-size;
     position: relative;
     height: var(--steps-showing, auto);
     transition: height var(--duration-slow) var(--ease-emphasized);
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     min-width: 0;
-    min-height: 0;
-    // Up and down only: a step sliding in or out sits off to the side, and must not be scrolled to.
-    overflow: hidden auto;
-    overscroll-behavior: contain;
-    // A scrollbar that comes and goes would narrow the step, rewrap it and resize the card under
-    // the host's eyes; the faded edge already says there is more.
-    scrollbar-width: none;
+    // A step sliding in or out sits off to the side, and a taller one mid-ease runs past the box's
+    // bottom: neither shows, and neither can be scrolled to.
+    overflow: hidden;
     // Room for a focused field's ring, which `overflow` would otherwise clip; the steps pad it back.
     margin-inline: calc(-1 * var(--space-1));
-
-    // Only the alpha of a mask counts; the token is any opaque colour.
-    &[data-more-below] {
-      mask-image: linear-gradient(
-        to bottom,
-        var(--surface-card) calc(100% - var(--space-10)),
-        transparent
-      );
-    }
-
-    &[data-more-above] {
-      mask-image: linear-gradient(to top, var(--surface-card) calc(100% - var(--space-6)), transparent);
-    }
-
-    &[data-more-above][data-more-below] {
-      mask-image: linear-gradient(
-        to bottom,
-        transparent,
-        var(--surface-card) var(--space-6),
-        var(--surface-card) calc(100% - var(--space-10)),
-        transparent
-      );
-    }
   }
 }
 

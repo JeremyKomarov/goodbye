@@ -1,6 +1,6 @@
-// Exactly one viewport tall, never a page scroll. Phones: headline, chat, form, stacked — the chat
-// is the demonstration, so it keeps room for a few lines whatever the step; it takes what the
-// other two leave, and a step too tall for what is left scrolls inside its card.
+// At least one viewport tall; a step too tall for the screen scrolls the page, never a box inside
+// it. Phones: headline, chat, form, stacked — the chat is the demonstration, so it keeps room for a
+// few lines whatever the step, and takes whatever height the other two leave.
 // Desktop: headline over form in the start column, the chat in the end column — on the left in
 // Hebrew.
 .landing-screen {
@@ -8,8 +8,7 @@
   flex-direction: column;
   gap: var(--space-3);
   max-width: 28rem;
-  height: 100dvh;
-  overflow: hidden;
+  min-height: 100dvh;
   margin-inline: auto;
   padding-inline: var(--space-5);
   padding-block: max(var(--space-5), env(safe-area-inset-top))
@@ -28,10 +27,10 @@
     min-height: 9.5rem;
   }
 
-  // Shrinks to what is left; the card inside scrolls its step rather than push the page.
+  // Always as tall as its step; the page scrolls if the screen is shorter.
   &__panel {
     display: flex;
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     flex-direction: column;
     min-width: 0;
     min-height: 0;
@@ -68,10 +67,6 @@
     max-width: 56rem;
     padding-inline: max(var(--space-6), env(safe-area-inset-left), env(safe-area-inset-right));
   }
-
-  .landing-screen__panel {
-    max-height: 100%;
-  }
 }
 
 @media (min-width: 64rem) {
@@ -93,7 +88,6 @@
   .landing-screen__panel {
     grid-area: 2 / 1;
     align-self: start;
-    max-height: 100%;
   }
 
   // The chat spans both rows, and a grid sizes its rows from what spans them: without `contain`,

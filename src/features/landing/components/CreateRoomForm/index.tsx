@@ -30,9 +30,6 @@ import { StepProgress } from "./partials/StepProgress";
 
 const STEP_BODIES = { reason: ReasonStep, who: IdentityStep, when: ScheduleStep };
 
-/** Set on the steps' box while it has more to scroll to on that side; the styles fade that edge. */
-const MORE_ABOVE = "data-more-above";
-const MORE_BELOW = "data-more-below";
 /** The heights the script measures, for the styles to choose between. */
 const TALLEST = "--steps-tallest";
 const SHOWING = "--steps-showing";
@@ -71,41 +68,26 @@ export function CreateRoomForm({
   const isLast = step === FORM_STEPS.length - 1;
   const stepsRef = useRef<HTMLDivElement>(null);
 
-  // A short screen scrolls the steps; each one starts at its title.
-  useEffect(() => {
-    stepsRef.current?.scrollTo({ top: 0 });
-  }, [step]);
-
   // The steps' box is sized in script, before the first paint, so it never shows at one height and
   // then jumps to another. Script measures; the styles choose: on a laptop the box is as tall as the
   // tallest step, so the card keeps one size beside the chat; on a phone it is as tall as the step
-  // showing, so a short step leaves its room to the chat above it. Only the step showing is in the
-  // flow, so a short screen scrolls that one and no further, and an edge with more past it fades
-  // out, so the cut reads as a scroll.
+  // showing, so a short step leaves its room to the chat above it. The box never scrolls: a screen
+  // too short for the step scrolls the page.
   const fitRef = useRef<() => void>(undefined);
   useLayoutEffect(() => {
     const box = stepsRef.current;
     if (!box) return;
     const steps = [...box.children] as HTMLElement[];
-    const markEdges = () => {
-      box.toggleAttribute(MORE_ABOVE, box.scrollTop > 1);
-      box.toggleAttribute(MORE_BELOW, box.scrollTop + box.clientHeight < box.scrollHeight - 1);
-    };
     const fit = () => {
       const showing = steps.find((each) => each.getAttribute("aria-hidden") !== "true");
       box.style.setProperty(TALLEST, `${Math.max(...steps.map((each) => each.scrollHeight))}px`);
       box.style.setProperty(SHOWING, `${(showing ?? steps[0]).scrollHeight}px`);
-      markEdges();
     };
     fit();
     fitRef.current = fit;
     const observer = new ResizeObserver(fit);
     [box, ...steps].forEach((each) => observer.observe(each));
-    box.addEventListener("scroll", markEdges, { passive: true });
-    return () => {
-      observer.disconnect();
-      box.removeEventListener("scroll", markEdges);
-    };
+    return () => observer.disconnect();
   }, []);
 
   // A new step showing sets a new height on a phone.
