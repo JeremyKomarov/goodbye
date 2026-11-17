@@ -6,7 +6,10 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { env } from "@/core/config/env";
-import { API_ENDPOINTS, PREVIEW_SIZE } from "@/core/constants/api-endpoints.const";
+import {
+  API_ENDPOINTS,
+  PREVIEW_SIZE,
+} from "@/core/constants/api-endpoints.const";
 import { localeDirection, routing } from "@/core/i18n/routing";
 import { TOKEN_VALUES } from "@/core/styles/token-values.const";
 import { SITE_NAMESPACE, siteKeys } from "@/shared/strings/site.keys.const";
@@ -47,7 +50,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: name,
       description,
       siteName: name,
-      images: [{ url: API_ENDPOINTS.preview(locale), ...PREVIEW_SIZE, alt: name }],
+      images: [
+        { url: API_ENDPOINTS.preview(locale), ...PREVIEW_SIZE, alt: name },
+      ],
     },
     twitter: { card: "summary_large_image" },
   };
@@ -66,7 +71,11 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-export default async function LocaleLayout({ children }: { children: ReactNode }) {
+export default async function LocaleLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const locale = await rootLocale();
   if (!hasLocale(routing.locales, locale)) notFound();
 
@@ -76,7 +85,9 @@ export default async function LocaleLayout({ children }: { children: ReactNode }
       dir={localeDirection(locale)}
       className={`${karantina.variable} ${rubik.variable}`}
     >
-      <body>
+      {/* Extensions (ColorZilla, Grammarly) stamp attributes on <body> before hydration.
+          This ignores <body>'s own attributes only; mismatches below it still warn. */}
+      <body suppressHydrationWarning>
         <NextIntlClientProvider>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>
